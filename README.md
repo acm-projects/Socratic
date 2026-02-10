@@ -1,6 +1,8 @@
 ![Socratic](https://github.com/acm-projects/HackLab/blob/main/hack.png)
 ## 🧠 Socratic
-The "Socratic" method, named after the ancient Greek philosopher Socrates, is a *form of learning through disciplined questioning that challenges assumptions and reveals deeper understanding*. Socratic brings this approach to AI-powered study by evaluating the intellectual depth of student questions. The platform scores questions based on their complexity, from simple factual recall to analytical thinking to hypothetical exploration, creating a GitHub-style contribution graph that tracks growth as a thinker. This transforms studying from passive information consumption into active intellectual practice, where learning to ask better questions becomes the skill being developed. Multiplayer study rooms add collaborative challenge, making question quality visible and competitive among peers while measuring genuine understanding rather than memorization or time spent.
+The "Socratic" method, named after the ancient Greek philosopher Socrates, is a *form of learning through disciplined questioning that challenges assumptions and reveals deeper understanding*. 
+
+Socratic brings this approach to AI-powered study by evaluating the intellectual depth of student questions. The platform scores questions based on their complexity, from simple factual recall to analytical thinking to hypothetical exploration, creating a GitHub-style contribution graph that tracks growth as a thinker. This transforms studying from passive information consumption into active intellectual practice, where learning to ask better questions becomes the skill being developed. Multiplayer study rooms add collaborative challenge, making question quality visible and competitive among peers while measuring genuine understanding rather than memorization or time spent.
 
 ## 🏆 MVP
 + 
