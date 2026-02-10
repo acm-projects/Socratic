@@ -1,4 +1,4 @@
-![Socratic](https://github.com/acm-projects/HackLab/blob/main/hack.png)
+![Socratic](https://github.com/acm-projects/Socratic/blob/main/ss.png)
 ## 🧠 Socratic
 The "Socratic" method, named after the ancient Greek philosopher Socrates, is a *form of learning through disciplined questioning that challenges assumptions and reveals deeper understanding*. 
 
