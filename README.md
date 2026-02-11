@@ -5,30 +5,33 @@ The "Socratic" method, named after the ancient Greek philosopher Socrates, is a 
 Socratic brings this approach to AI-powered study by evaluating the intellectual depth of student questions. The platform scores questions based on their complexity, from simple factual recall to analytical thinking to hypothetical exploration, creating a GitHub-style contribution graph that tracks growth as a thinker. This transforms studying from passive information consumption into active intellectual practice, where learning to ask better questions becomes the skill being developed. Multiplayer study rooms add collaborative challenge, making question quality visible and competitive among peers while measuring genuine understanding rather than memorization or time spent.
 
 ## 🏆 MVP
-+ 
-+
-+
++ Solo study chat with AI
++ Question tier scoring
++ Github-style contribution graph showing question depth
++ Google Calendar + Google Meet integration
++ Study rooms (create, join, real-time multiplayer chat)
 
 ## ⌛ Stretch Goals
-+ 
-+
-+
++ Game modes (Curiosity Relay, Deep Dive, Debate Mode, Speed Quiz)
++ Weekly/Monthly wrapped (Spotify-style learning summary with top topics, deepest dives)
++ Export sessions as formatted notes with citations
++ Room leaderboards and collaborative achievements
 
 ## 📅 Timeline
 | **Week**&nbsp;(mon-fri)| **Frontend** | **Backend** |
 |--- | --- | --- |
-|1     Feb 10th - 14th | Design UI/UX wireframes and mockups for chat interface | Setup project, assign roles, research AI provider |
-|2     Feb 17th - 21st | Finalize design system and component library | Setup Express.js, DB, and AI API integration |
-|3     Feb 24th - 28th | Implement chat interface with message history | Develop AI prompt engineering and scoring algorithm |
-|4     Mar 3rd - 7th | Create depth score display and loading states | Build chat APIs and validate scoring (80%+ accuracy) |
-|5     Mar 10th - 14th | Build user profile with stats dashboard | Develop conversation context management |
-|6     Mar 17th - 21st | Build contribution heatmap component | Implement WebSocket room management |
-|7     Mar 24th - 28th | Develop room creation and real-time messaging | Create room persistence and AI broadcasting |
-|8     Mar 31st - Apr 4th | Build subject tracking interface and filters | Implement subject classification and connection handling |
-|9     Apr 7th - 11th | Refine UI/UX based on testing | End-to-end testing and optimization |
-|10   Apr 14th - 18th | Practice Presentation | Practice Presentation |
-|11   Apr 21st - 25th | Mock Presentations | Mock Presentations |
-|12   Apr 30th | Presentation Night! 🎉 | Presentation Night! 🎉 |
+|1     Feb 9th - 13th | Design UI/UX wireframes and mockups for chat interface | Setup project, assign roles, research AI provider |
+|2     Feb 16th - 20th | Finalize design system and component library | Setup Express.js, DB, and AI API integration |
+|3     Feb 23rd - 27th | Implement chat interface with message history | Develop AI prompt engineering and scoring algorithm |
+|4     Mar 2nd - 6th | Create depth score display and loading states | Build chat APIs and validate scoring |
+|5     Mar 9th - 13th | Build user profile with stats dashboard | Develop conversation context management |
+|6     Mar 16th - 20th | Build contribution heatmap component | Implement WebSocket room management |
+|7     Mar 23rd - 27th | Develop room creation and real-time messaging | Create room persistence and AI broadcasting |
+|8     Mar 30th - Apr 4rd | Build subject tracking interface and filters | Implement subject classification and connection handling |
+|9     Apr 6th - 10th | Refine UI/UX based on testing | End-to-end testing |
+|10   Apr 13th - 17th | Practice Presentation | Practice Presentation |
+|11   Apr 20th - 24th | Mock Presentations | Mock Presentations |
+|12   Apr 29th | Presentation Night! 🎉 | Presentation Night! 🎉 |
 
 ## 👨‍💻 Tech Stack
 + **Must Watch!!**
