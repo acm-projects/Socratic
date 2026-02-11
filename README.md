@@ -17,18 +17,18 @@ Socratic brings this approach to AI-powered study by evaluating the intellectual
 ## 📅 Timeline
 | **Week**&nbsp;(mon-fri)| **Frontend** | **Backend** |
 |--- | --- | --- |
-|**1**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Feb 10th - 14th* | Start Initial Wireframes and Mockups| Introduce Backend Stack |
-|**2**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Feb 17th - 21st* | **Finalize Design and Style**| Env Setup + DB Schema |
-|**3**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Feb 24th - 28th* | Implement Authentication UI | Create Auth APIs + RDS Database |
-|**4**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Mar 3rd - 7th* | Build User Profile Page | Develop User/Profile CRUD APIs |
-|**5**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Mar 10th - 14th* | Create Project Flows | Implement Project Management APIs |
-|**6**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Mar 17th - 21st* | Build Home Page + Search Functionality | Develop Reputation Calculation APIs |
-|**7**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Mar 24th - 28th* | Implement Reputation System UI | EC2 Deployment + Testing |
-|**8**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Mar 31st - Apr 4th* | **Integrations** | **Integrations** |
-|**9**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Apr 7th - 11th* | Create Presentation Slides | Finish up Remaining Integrations |
-|**10**&nbsp;&nbsp;&nbsp;*Apr 14th - 18th* | Practice Presentation | Practice Presentation |
-|**11**&nbsp;&nbsp;&nbsp;*Apr 21st - 25th* | Mock Presentations | Mock Presentations |
-|**12**&nbsp;&nbsp;&nbsp;*Apr 30th* | **Presentation Night! 🎉** | **Presentation Night! 🎉** |
+|1     Feb 10th - 14th | Design UI/UX wireframes and mockups for chat interface | Setup project, assign roles, research AI provider |
+|2     Feb 17th - 21st | Finalize design system and component library | Setup Express.js, DB, and AI API integration |
+|3     Feb 24th - 28th | Implement chat interface with message history | Develop AI prompt engineering and scoring algorithm |
+|4     Mar 3rd - 7th | Create depth score display and loading states | Build chat APIs and validate scoring (80%+ accuracy) |
+|5     Mar 10th - 14th | Build user profile with stats dashboard | Develop conversation context management |
+|6     Mar 17th - 21st | Build contribution heatmap component | Implement WebSocket room management |
+|7     Mar 24th - 28th | Develop room creation and real-time messaging | Create room persistence and AI broadcasting |
+|8     Mar 31st - Apr 4th | Build subject tracking interface and filters | Implement subject classification and connection handling |
+|9     Apr 7th - 11th | Refine UI/UX based on testing | End-to-end testing and optimization |
+|10   Apr 14th - 18th | Practice Presentation | Practice Presentation |
+|11   Apr 21st - 25th | Mock Presentations | Mock Presentations |
+|12   Apr 30th | Presentation Night! 🎉 | Presentation Night! 🎉 |
 
 ## 👨‍💻 Tech Stack
 + **Must Watch!!**
