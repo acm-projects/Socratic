@@ -58,10 +58,8 @@ Socratic brings this approach to AI-powered study by evaluating the intellectual
   + [AWS RDS](https://youtu.be/I_fTQTsz2nQ?si=mjiaxX4ci3vMTiIt)
 
 ## 🤝 The Team
-Frontend
-+ 
-+ 
-Backend
-+ 
-+
++ Snigdha Yellapu
++ Mariam Syed
++ Aakash Bhagavathi
++ Amjad Khazem
 
