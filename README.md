@@ -37,8 +37,9 @@ Socratic brings this approach to AI-powered study by evaluating the intellectual
 + **Must Watch!!**
   + [What is a frontend?](https://youtu.be/WG5ikvJ2TKA?si=mBepopDcfIZK37jk)
   + [What is a backend?](https://youtu.be/XBu54nfzxAQ?si=kuioRqmCAxXhQocA)
+  + [HTTP Requests](https://www.youtube.com/watch?v=-Zea7GB2OwA&pp=ygUNaHR0cCByZXF1ZXN0cw%3D%3D)
+  + [HTTP Request Methods](https://www.youtube.com/watch?v=tkfVQK6UxDI&pp=ygUNaHR0cCByZXF1ZXN0cw%3D%3D)
   + [REST APIs](https://youtu.be/LooL6_chvN4?si=amF2wvhjfx1-UiaM)
-  + [Basic Git & GitHub in VSCode Tutorial](https://youtu.be/z5jZ9lrSpqk?si=51sKMz2JHPklqfnV)
 + **Frontend**
   + [Designing a Web App](https://youtu.be/W8smyf1eHFk?si=QlgPgMOSFb21KPr7) 
   + [Figma](https://www.youtube.com/watch?v=FTFaQWZBqQ8)
