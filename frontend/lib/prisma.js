@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '../app/generated/prisma/client/index.js'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
 
@@ -7,7 +7,6 @@ const pool = new Pool({
 })
 
 const adapter = new PrismaPg(pool)
-
 const globalForPrisma = globalThis
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
