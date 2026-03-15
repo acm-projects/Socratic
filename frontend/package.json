@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "lucide-react": "^0.577.0",

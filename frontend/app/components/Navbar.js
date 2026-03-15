@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import {User, Users, LayoutGrid, LogOut} from "lucide-react";
+import { signOut } from "next-auth/react"
 
 
 export default function Navbar() {
@@ -20,13 +21,13 @@ export default function Navbar() {
                 </button>
                 </Link>
 
-            <Link href = "/profile">
+            <Link href = "/profilepage">
             <button className="p-2 rounded-full hover:bg-gray-100">
                 <User className="text-black" size={25} />
                 </button>
                 </Link>
 
-                <button className="p-2 rounded-full hover:bg-gray-100">
+                <button onClick={() => signOut({ callbackUrl: '/' })} className="p-2 rounded-full hover:bg-gray-100">
                     <LogOut className="text-black" size={25} />
                 </button>
 

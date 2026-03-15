@@ -1,13 +1,14 @@
-
 import { prisma } from '../../../../lib/prisma'
-import { session } from '../../../../lib/session'
 import NextAuth from 'next-auth/next'
 import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from "@auth/prisma-adapter"
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
 const authOption = {
+  adapter: PrismaAdapter(prisma),
+  debug: true,
   session: {
     strategy: 'jwt',
   },
@@ -18,49 +19,22 @@ const authOption = {
     }),
   ],
   callbacks: {
+
     async signIn({ account, profile }) {
-      if (!profile?.email) {
-        console.log('no email')
-        throw new Error('No profile')
-      } 
-
-
-      console.log('upsert')
-      await prisma.user.upsert({
-        where: {
-          email: profile.email,
-        },
-        create: {
-          email: profile.email,
-          //name: profile.name,
-        },
-        update: {
-          //name: profile.name,
-          email: profile.email,
-        },
-      })
-      console.log("user upserted")
-      return true
-    },
-    session,
-    async jwt({ token, user, account, profile }) {
-      console.log('jwt callback')
-      if (profile) {
-        const user = await prisma.user.findUnique({
-          where: {
-            email: profile.email,
-          },
-        })
-        console.log("User found in DB")
-        if (!user) {
-          throw new Error('No user found')
+        console.log("Sign in callback")
+        try {
+            if (!profile?.email) {
+            return false
+            }
+            return true
+        } catch (error) {
+            console.error("Sign in error")
+            return false
         }
-        token.id = user.id
-      }
-      return token
-    },
-  },
-}
+        },
+
+        },
+    }
 
 const handler = NextAuth(authOption)
 export { handler as GET, handler as POST }
