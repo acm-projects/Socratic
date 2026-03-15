@@ -135,7 +135,6 @@ model User {
 }
 
 model Account {
-  id                String    @db.VarChar(50)
   userId            String    @db.VarChar(50)
   provider          String    @db.VarChar(50)
   providerAccountId String    @db.VarChar(100)
