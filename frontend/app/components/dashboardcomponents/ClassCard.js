@@ -5,6 +5,8 @@ import { HiFire } from "react-icons/hi";
 
 
 export default function ClassCard({ name }) {
+
+
    {/*array of dummy data*/}
     const heatmapData = {
         "Computer Science I" : [1,0,3,5,2,0,2,4,5,5],
@@ -13,6 +15,9 @@ export default function ClassCard({ name }) {
         "Calculus II" : [5,5,3,2,4,0,2,4,1,2],
 
     }
+
+    const data = heatmapData[name] || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
   return (
     <div className=" relative w-185 h-37.5 bg-white rounded-xl p-5 transition-transform duration-200 hover:scale-102 cursor-pointer">
       
@@ -32,7 +37,7 @@ export default function ClassCard({ name }) {
 
       {/*HEATMAP*/}
         <div className="absolute top-15 left-100">
-          <Heatmap data={heatmapData[name]} />
+          <Heatmap data={data} />
         </div>
 
       {/*FOR THE 3 DOTS AND THE PAST 10 DAYS*/}
