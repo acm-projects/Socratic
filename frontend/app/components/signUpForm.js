@@ -1,13 +1,29 @@
 "use client"
 import Link from 'next/link';
 import { useState } from "react"
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react';
+
 
 export default function Signup() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [school, setSchool] = useState("")
   const [major, setMajor] = useState("")
   const [classStatus, setClassStatus] = useState("")
+
+  useEffect(() => {
+    if (status === 'loading') return
+    if (!session) return
+    if (!session.isNewUser) router.replace('/profile')  // existing user → /profile
+  }, [session, status])
+
+  if (status === 'loading' || (session && !session.isNewUser)) return null
+
 
   function saveUser() {
     const user = { firstName, lastName, school, major, classStatus }

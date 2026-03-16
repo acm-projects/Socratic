@@ -21,7 +21,7 @@ export default function Navbar() {
                 </button>
                 </Link>
 
-            <Link href = "/profilepage">
+            <Link href = "/profile">
             <button className="p-2 rounded-full hover:bg-gray-100">
                 <User className="text-black" size={25} />
                 </button>

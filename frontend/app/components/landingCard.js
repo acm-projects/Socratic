@@ -22,7 +22,7 @@ export default function LandingCard() {
         </p>
 
 
-        <button onClick={() => signIn('google', { callbackUrl: '/profilepage' })} className="bg-white border border-gray-500 px-8 py-2 rounded-xl">
+        <button onClick={() => signIn('google', { callbackUrl: '/signup' })} className="bg-white border border-gray-500 px-8 py-2 rounded-xl">
           <div className="flex gap-3 items-center justify-center">
           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.639 9.58946C17.639 8.91272 17.5829 8.41887 17.4617 7.90674H9.57617V10.9612H14.2048C14.1115 11.7203 13.6076 12.8635 12.4877 13.6317L12.472 13.7339L14.9653 15.6268L15.138 15.6437C16.7244 14.2079 17.639 12.0953 17.639 9.58946Z" fill="#4285F4"/>
