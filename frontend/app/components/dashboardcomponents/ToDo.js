@@ -17,7 +17,7 @@ export default function ToDo() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="relative w-[431px] mt-5 ml-[40px] bg-white rounded-2xl p-5 shadow-md flex flex-col">
+        <div className="relative w-[431px] bg-white rounded-xl p-5 flex flex-col">
             <h2 className="ml-5 text-xl font-semibold text-black">
                 Upcoming Tasks 
             </h2>
@@ -44,7 +44,7 @@ export default function ToDo() {
 
 
             {/*display tasks*/}
-            <div className = "flex flex-col gap-3 mt-10 ml-1">
+            <div className = "flex flex-col gap-3.5 mt-5 ml-1">
                 {tasks.map((task) => (
                     <div key = {task.id} className = "flex items-center justify-between">
                         <div className = "flex items-center gap-3">

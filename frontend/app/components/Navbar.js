@@ -8,7 +8,7 @@ export default function Navbar() {
                 
 
         <nav className="absolute top-75 left-11 w-16 h-64 shadow-md flex flex-col items-center justify-center gap-3 px-5 bg-[#D9E5FD] rounded-2xl">
-            <Link href = "/">
+            <Link href = "/dashboard">
             <button className="p-2 rounded-full hover:bg-gray-100">
                 <LayoutGrid className="text-black" size={25} />
                 </button>

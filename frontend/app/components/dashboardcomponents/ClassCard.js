@@ -14,7 +14,7 @@ export default function ClassCard({ name }) {
 
     }
   return (
-    <div className=" relative w-[740px] h-[160px] mt-5 ml-[136px] bg-white rounded-2xl p-5 shadow-md transition-transform duration-200 hover:scale-102 cursor-pointer">
+    <div className=" relative w-185 h-37.5 bg-white rounded-xl p-5 transition-transform duration-200 hover:scale-102 cursor-pointer">
       
       <div className = "flex flex-col gap-10"> 
       <h2 className="mt-1 ml-4 text-2xl font-semibold text-black">

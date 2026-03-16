@@ -30,7 +30,7 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx"
-, "app/components/Navbar.js", "app/components/Calendar.js", "app/components/ToDo.js", "app/components/Heatmap.js", "app/components/ClassCard.js"  ],
+, "app/components/Navbar.js", "app/components/dashboardcomponents/Calendar.js", "app/components/dashboardcomponents/ToDo.js", "app/components/dashboardcomponents/Heatmap.js", "app/components/dashboardcomponents/ClassCard.js"  ],
   "exclude": [
     "node_modules"
   ]
