@@ -12,15 +12,21 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "6.19.2",
+    "@prisma/extension-accelerate": "^3.0.1",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "google-auth-library": "^10.6.1",
     "googleapis": "^171.4.0",
     "http-errors": "^2.0.1",
-    "morgan": "^1.10.1"
+    "morgan": "^1.10.1",
+    "pg": "^8.20.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "prisma": "6.19.2"
   }
 }

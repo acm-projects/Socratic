@@ -1,0 +1,155 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                                                String                @id(map: "users_pkey") @db.VarChar(50)
+  email                                             String                @unique(map: "users_email_key") @db.VarChar(225)
+  total_xp                                          Int?                  @default(0)
+  weekly_xp                                         Int?                  @default(0)
+  image                                             String?
+  emailVerified                                     DateTime?             @db.Timestamp(6)
+  createdAt                                         DateTime?             @default(now()) @db.Timestamp(6)
+  updatedAt                                         DateTime?             @default(now()) @db.Timestamp(6)
+  chat_sessions                                     chat_sessions[]
+  daily_topic_metrics                               daily_topic_metrics[]
+  friend_requests_friend_requests_receiver_idToUser friend_requests[]     @relation("friend_requests_receiver_idToUser")
+  friend_requests_friend_requests_sender_idToUser   friend_requests[]     @relation("friend_requests_sender_idToUser")
+  friends_friends_friend_idToUser                   friends[]             @relation("friends_friend_idToUser")
+  friends_friends_user_idToUser                     friends[]             @relation("friends_user_idToUser")
+  user_achievements                                 user_achievements[]
+  xp_system                                         xp_system[]
+}
+
+model achievements {
+  id                String              @id @db.VarChar(50)
+  name              String              @db.VarChar(100)
+  description       String?
+  xp_reward         Int?                @default(0)
+  created_at        DateTime?           @default(now()) @db.Timestamp(6)
+  user_achievements user_achievements[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model chat_history {
+  id            String        @id @db.VarChar(50)
+  session_id    String        @db.VarChar(50)
+  sender        String        @db.VarChar(10)
+  content       String
+  created_at    DateTime?     @default(now()) @db.Timestamp(6)
+  chat_sessions chat_sessions @relation(fields: [session_id], references: [session_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_history_sessions")
+}
+
+model chat_sessions {
+  session_id   String         @id @db.VarChar(50)
+  class_code   String         @db.VarChar(50)
+  user_id      String         @db.VarChar(50)
+  topic_id     String         @db.VarChar(50)
+  started_at   DateTime?      @default(now()) @db.Timestamp(6)
+  created_at   DateTime?      @default(now()) @db.Timestamp(6)
+  chat_history chat_history[]
+  classes      classes        @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_sessions_class")
+  topics       topics         @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_sessions_topic")
+  User         User           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_sessions_user")
+}
+
+model classes {
+  class_code          String                @id @db.VarChar(50)
+  subject             String                @db.VarChar(100)
+  name                String                @db.VarChar(30)
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  chat_sessions       chat_sessions[]
+  daily_topic_metrics daily_topic_metrics[]
+  topics              topics[]
+}
+
+model daily_topic_metrics {
+  user_id     String   @db.VarChar(50)
+  class_code  String   @db.VarChar(50)
+  topic_id    String   @db.VarChar(50)
+  metric_date DateTime @db.Date
+  avg_score   Decimal? @db.Decimal(5, 2)
+  classes     classes  @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_daily_metrics_class")
+  topics      topics   @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_daily_metrics_topic")
+  User        User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_daily_metrics_user")
+
+  @@id([user_id, class_code, topic_id, metric_date])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model friend_requests {
+  id                                     String    @id @db.VarChar(50)
+  sender_id                              String    @db.VarChar(50)
+  receiver_id                            String    @db.VarChar(50)
+  status                                 String    @db.VarChar(20)
+  created_at                             DateTime? @default(now()) @db.Timestamp(6)
+  responded_at                           DateTime? @db.Timestamp(6)
+  User_friend_requests_receiver_idToUser User      @relation("friend_requests_receiver_idToUser", fields: [receiver_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_friend_requests_receiver")
+  User_friend_requests_sender_idToUser   User      @relation("friend_requests_sender_idToUser", fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_friend_requests_sender")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model friends {
+  user_id                      String    @db.VarChar(50)
+  friend_id                    String    @db.VarChar(50)
+  created_at                   DateTime? @default(now()) @db.Timestamp(6)
+  User_friends_friend_idToUser User      @relation("friends_friend_idToUser", fields: [friend_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_friends_friend")
+  User_friends_user_idToUser   User      @relation("friends_user_idToUser", fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_friends_user")
+
+  @@id([user_id, friend_id])
+}
+
+model topics {
+  id                  String                @id @db.VarChar(50)
+  class_code          String                @db.VarChar(50)
+  name                String                @db.VarChar(50)
+  chat_sessions       chat_sessions[]
+  daily_topic_metrics daily_topic_metrics[]
+  classes             classes               @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_class")
+}
+
+model user_achievements {
+  user_id        String       @db.VarChar(50)
+  achievement_id String       @db.VarChar(50)
+  earned_at      DateTime?    @default(now()) @db.Timestamp(6)
+  achievements   achievements @relation(fields: [achievement_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_achievements_achievement")
+  User           User         @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_achievements_user")
+
+  @@id([user_id, achievement_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model xp_system {
+  id         String    @id @db.VarChar(50)
+  user_id    String    @db.VarChar(50)
+  source     String    @db.VarChar(20)
+  amount     Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  User       User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_xp_system_user")
+}
+
+model Account {
+  id                String    @db.VarChar(50)
+  userId            String    @db.VarChar(50)
+  provider          String    @db.VarChar(50)
+  providerAccountId String    @db.VarChar(100)
+  access_token      String?
+  refresh_token     String?
+  expires_at        BigInt?
+  createdAt         DateTime? @default(now()) @db.Timestamp(6)
+  type              String?   @db.VarChar(50)
+  token_type        String?   @db.VarChar(50)
+  scope             String?
+  id_token          String?
+  session_state     String?
+  updatedat         DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime? @default(now()) @db.Timestamp(6)
+
+  @@id([provider, providerAccountId])
+}
