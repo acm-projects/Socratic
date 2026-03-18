@@ -12,6 +12,8 @@ export default function Sendrequestmodal({ onClose }) {
     onClose();
   }
 
+   {/*shows confirmation modal after adding friend*/}
+
   if (showConfirmation) {
     return (
       <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -31,6 +33,10 @@ export default function Sendrequestmodal({ onClose }) {
       </div>
     );
   }
+
+
+
+  {/*shows add friend modal*/}
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">

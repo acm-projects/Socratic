@@ -36,16 +36,6 @@ export default function Calendar() {
         const days = ["S", "M", "T", "W", "T", "F", "S"];
 
         
-        {/*useEffect(() => {
-
-                fetch("api/tasks")
-                .then(res => res.json())
-                .then(data => setTasks(data))
-
-
-        },[])
-        */}
-
 
     return (
         <div className ="w-[431px] bg-white rounded-xl p-6 flex flex-col">
@@ -105,16 +95,18 @@ export default function Calendar() {
 
                 return (
                 <div key = {i} className = {`text-center text-sm ${i<firstDay ? "text-gray-300" : "text-black"} `}> 
+                  {isBlue && i >= firstDay && <div className="w-1.5 h-1.5 rounded-full bg-[#1a6ae3] mx-auto mb-0.5" />}
+                  {isGrey && i >= firstDay && <div className="w-1.5 h-1.5 rounded-full bg-[#7a7979] mx-auto mb-0.5" />}
+
                 <div onClick={() => { if ((isBlue || isGrey) && i >= firstDay) setSelectedDay(dayNumber); }}
                 className = {`w-7 h-7 flex items-center justify-center rounded-full mx-auto
 
                     ${isToday ? "bg-[#FEF2D3]" : ""}
-                    ${isBlue ? "bg-[#D6E2FB]" : ""}
-                    ${isGrey ? "bg-[#DFDFDF]" : ""}
                     ${isBlue || isGrey ? "cursor-pointer" : ""}`}>
                       
                 {i < firstDay ? prevMonthDays - firstDay + i + 1 : dayNumber}
                 </div>
+
                 </div>
                 );
 

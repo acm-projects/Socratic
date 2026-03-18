@@ -7,7 +7,7 @@ import Requests from "../components/socialcomponents/Requests";
 
 export default function Home() {
     return (
-        <main className="bg-[#fafafa] min-h-screen">
+        <main className="bg-[#F5F6FA] min-h-screen">
             <Navbar />
             <div className="ml-[150px] pr-12 pt-6 pb-5 flex flex-col gap-6">
                 <Header title="Social" showPlus={false} />

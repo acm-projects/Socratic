@@ -120,7 +120,7 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
     </div>
   ))}
 
-    {/*. Search bar */}
+    {/*. Search bar that needs a bit of work */}
 <div className="w-full mt-4">
   <div className="flex items-center border border-gray-200 rounded-2xl px-4 py-2 gap-2">
     <input
@@ -130,6 +130,19 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
       onChange={(e) => setSearchQuery(e.target.value)}
     />
   </div>
+
+ {/*displaying search results */}
+  <div className="flex flex-col gap-2 mt-2">
+  {searchResults.map(friend => (
+    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#E8EDFB]" : "bg-gray-50"}`}>
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
+        <p className="text-sm font-semibold">{friend.name}</p>
+      </div>
+      <p className="text-sm text-gray-400">{friend.pts} pts</p>
+    </div>
+  ))}
+</div>
 
 
 

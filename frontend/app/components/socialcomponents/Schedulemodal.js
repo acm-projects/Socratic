@@ -24,17 +24,20 @@ export default function Schedulemodal({onClose}){
 
     const days = ["S", "M", "T", "W", "T", "F", "S"];
 
+    {/*toggle*, gets day from array*/}
       function toggleDay(i) {
     setSelectedDays(prev =>
       prev.includes(i) ? prev.filter(d => d !== i) : [...prev, i]
     );
   }
 
+  {/*closes*/}
   function handleClose() {
   setShowConfirmation(false);
   onClose();
 }
 
+{/*displays the confirmation modal*/}
 
   if (showConfirmation){
     return(
@@ -75,14 +78,19 @@ export default function Schedulemodal({onClose}){
 
 
 
-    
+        {/*acc display the scheduling modal*/}
+
     return(
+
         <div className = "fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <div className = "bg-white rounded-2xl p-6 w-[500px] flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
                 <div className = "flex justify-between items-center">
                     <h2 className = "text-lg font-semibold">Schedule Session</h2>
                     <X size={18} className = "text-gray-400 cursor-pointer" onClick ={handleClose} />
                 </div>
+
+
+        {/*session name*/}
 
         <div className = "flex flex-col gap-1">
             <label className = "text-sm font-medium">Session Name</label>
@@ -93,6 +101,8 @@ export default function Schedulemodal({onClose}){
             placeholder="Write your session name here"
             />
         </div>
+
+        {/*course name*/}
 
         <div className = "flex flex-col gap-1">
             <label className = "text-sm font-medium">Course Name</label>
@@ -108,6 +118,8 @@ export default function Schedulemodal({onClose}){
             </select>
         </div>
 
+        {/*date*/}
+
         <div className = "flex gap-3">
             <div className = "flex flex-col gap-1 flex-1">
                 <label className = "text-sm font-medium">Date</label>
@@ -119,6 +131,8 @@ export default function Schedulemodal({onClose}){
                 />
             </div>
 
+        {/*time*/}
+
             <div className = "flex flex-col gap-1 flex-1">
                 <label className = "text-sm font-medium">Time</label>
                 <input
@@ -128,6 +142,8 @@ export default function Schedulemodal({onClose}){
                 className = "border border-gray-200 rounded-xl p-3 text-sm bg-gray-50"
                 />
             </div>
+
+        {/*duration*/}
 
             <div className = "flex flex-col gap-1 flex-1">
             <label className="text-sm font-medium">Duration</label>
@@ -139,6 +155,8 @@ export default function Schedulemodal({onClose}){
             />
             </div>
         </div>
+
+        {/*add friends to meeting*/}
 
         <div className = "flex flex-col gap-1">
             <label className = "text-sm font-medium">Add Friends</label>
@@ -153,6 +171,8 @@ export default function Schedulemodal({onClose}){
             </select>
         </div>
 
+        {/*recurring toggle*/}
+
         <div className = "flex items-center gap-2">
             <label className="text-sm font-medium">Recurring</label>
             <div
@@ -161,6 +181,8 @@ export default function Schedulemodal({onClose}){
             <div className={`w-5 h-5 bg-white rounded-full transition-transform ${recurring ? "translate-x-4" : "translate-x-0"}`} />
         </div>
          </div>
+
+        {/*recurring function that dispplays days*/}
 
          {recurring &&(
             <>
@@ -179,6 +201,7 @@ export default function Schedulemodal({onClose}){
                 </div>
                 </div>
 
+        {/*ends on*/}
 
                 <div className="flex flex-col gap-1">
               <label className="text-sm font-medium">Ends on</label>
@@ -192,12 +215,13 @@ export default function Schedulemodal({onClose}){
           </>
         )}
 
+        {/*click send invite and displays confirmation modal*/}
+
         <button
         onClick={() => setShowConfirmation(true)}
         className="w-full bg-[#4A6FA5] hover:bg-[#3a5a8a] text-white text-sm font-medium py-3 rounded-xl mt-2">
           Send Invite
         </button>
-
 
 
 

@@ -32,12 +32,18 @@ function declineRequest(id) {
             <div className = "flex flex-col gap-5">
             <h2 className="text-l font-semibold text-black">Friend Requests</h2>
             <div className = "flex flex-col gap-3">
+
+             {/*displays array of requests*/}
+
             {requests.map((request) => (
                 <div key ={request.id} className = "flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3">
                 <div className = "flex flex-col">
                     <p className="text-sm font-semibold text-black">{request.name} </p>
                     <p className="text-xs text-gray-400">{request.email} </p>
                 </div>
+
+              {/*accept and decline buttons*/}
+
             <div className = "flex gap-2">
                 <button 
                 onClick={() => acceptRequest(request.id)}
@@ -56,6 +62,7 @@ function declineRequest(id) {
 
 
 
+{/*displays the modal to add friend*/}
 
         <div className="flex justify-end">
           <button 

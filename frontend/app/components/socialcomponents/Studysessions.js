@@ -21,7 +21,9 @@ export default function Studysession(){
             
             <div className = "flex flex-col gap-5">
             <h2 className="text-l font-semibold text-black">Upcoming Study Sessions</h2>
-            
+
+             {/*displays meetings upcoming*/}
+
             <div className = "flex flex-col gap-3">
                 
                     {meetings.map((meeting) => (
@@ -47,6 +49,8 @@ export default function Studysession(){
 
                 </div>
                 </div>
+
+                {/*clicking schedule meeting displays modal*/}
 
                 <div className="flex justify-end mt-4">
                 <button 
