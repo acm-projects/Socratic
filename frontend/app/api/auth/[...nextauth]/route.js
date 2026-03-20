@@ -28,7 +28,7 @@ const authOption = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ profile }) {
       if (!profile?.email) return false
       const existingUser = await prisma.user.findUnique({
         where: { email: profile.email }

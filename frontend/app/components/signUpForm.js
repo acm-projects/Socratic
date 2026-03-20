@@ -10,23 +10,30 @@ export default function Signup() {
   const { data: session, status } = useSession()
   const router = useRouter()
 
+  //hold form values
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [school, setSchool] = useState("")
   const [major, setMajor] = useState("")
   const [classStatus, setClassStatus] = useState("")
 
+  //checks if all fields were entered
+  const isValid = firstName.trim() && lastName.trim() && school.trim() && major && classStatus
+
+
   useEffect(() => {
     if (status === 'loading') return
     if (!session) return
-    if (!session.isNewUser) router.replace('/profile')  // existing user → /profile
+    if (!session.isNewUser) router.replace('/profile')  // existing user goes to profile page instead of signup
   }, [session, status])
 
-  if (status === 'loading' || (session && !session.isNewUser)) return null
+  if (status === 'loading' || (session && !session.isNewUser)) return null // to avoid seeing signup form before redirect
 
 
-  function saveUser() {
-    const user = { firstName, lastName, school, major, classStatus }
+  function handleSubmit() {
+    if (!isValid) return //checks if all fields were entered
+    const user = { firstName, lastName, school, major, classStatus } //saves the user
+    router.push("/createcourses") //go to next page if valid
   }
 
   return (
@@ -76,6 +83,13 @@ export default function Signup() {
               <option value="computerscience">Computer Science</option>
               <option value="biology">Biology</option>
               <option value="chemistry">Chemistry</option>
+              <option value="physics">Physics</option>
+              <option value="mathematics">Mathematics</option>
+              <option value="engineering">Engineering</option>
+              <option value="environmental_science">Environmental Science</option>
+              <option value="data_science">Data Science</option>
+              <option value="nursing">Nursing</option>
+              <option value="psychology">Psychology</option>
             </select>
           </div>
 
@@ -91,12 +105,24 @@ export default function Signup() {
               <option value="junior">Junior</option>
               <option value="senior">Senior</option>
               <option value="senior">Graduate</option>
+              
             </select>
           </div>
 
-          <Link href="/createcourses" onClick={saveUser} className="bg-[#2C2C2C] text-white px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-4">
+          <button
+            type="button" // to avoid auto refresh
+            onClick={handleSubmit} 
+            disabled={!isValid}
+            className={`
+            px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-4
+            transition-all duration-200
+            ${isValid
+              ? "bg-[#2C2C2C] text-white hover:bg-[#444444] hover:scale-[1.02] cursor-pointer"
+              : "bg-gray-200 text-gray-400"
+            }
+          `}>
             Submit
-         </Link>
+         </button>
         </form>
       </div>
   );
