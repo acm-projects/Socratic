@@ -1,12 +1,21 @@
 "use client"
 import { useState } from "react";
-import { CircleArrowUp } from 'lucide-react';
+import { CircleArrowUp, Bookmark } from 'lucide-react';
 
 
 export default function ChatUI(){
 
       const [input, setInput] = useState("");
       const [messages,setMessages] = useState([]);
+      const [saved, setSaved] = useState([]);
+
+function handleSave(content) {
+  if (saved.includes(content)) {
+    setSaved(saved.filter(s => s !== content));
+  } else {
+    setSaved([...saved, content]);
+  }
+}
 
       function handleSend(){
         if (!input) return;
@@ -26,20 +35,31 @@ export default function ChatUI(){
                 {message.role === "user" ? 
                 (
                     <div className = "flex flex-col items-end gap-1">
-                    <div className = "border border-gray-200 rounded-xl px-4 py-2 text-sm text-gray-600 max-w-xs">
+                    <div className = "border border-gray-200 rounded-xl px-4 py-2 text-md text-gray-600 max-w-xs">
                     {message.content}
                     </div>
                     <div className = "flex gap-1">
                     {[1,2,3,4,5].map(dot =>(
-                        <div key={dot} className = {`w-2 h-2 rounded-full ${dot <= message.score ? "bg-green-400" : "bg-gray-200"}`} />
+                        <div key={dot} className = {`w-3 h-3 rounded-full ${dot <= message.score ? "bg-green-400" : "bg-gray-200"}`} />
 
                     ))}
                     </div>
                      </div>
                     ) : (
-                 <div className="text-sm text-gray-700 max-w-lg">
-                 {message.content}
-                 </div>
+<div className="flex flex-col gap-2">
+  <div className="text-sm text-gray-700 max-w-lg">
+    {message.content}
+  </div>
+  <button
+    onClick={() => handleSave(message.content)}
+    className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50">
+    <Bookmark 
+      size={14} 
+      className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"} 
+    />
+    SAVE FOR REVIEW
+  </button>
+</div>
                  )}
                  </div>
                 ))}
@@ -51,17 +71,19 @@ export default function ChatUI(){
                 <div className = "flex items-center w-3/4 justify-between border border-gray-200 shadow-md  rounded-xl px-6 py-4 bg-white">
                     <input
                     value={input}
+                    onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
                     onChange={(e)=> setInput(e.target.value)}
                     className="w-full outline-none bg-transparent text-sm text-gray-500"
                     placeholder="Ask Socratic AI"
                     />
 
-                    <CircleArrowUp size={20} color="black"  onClick = {handleSend} className="cursor-pointer"/>
+                    <CircleArrowUp size={20} color="black"  onClick = {handleSend} className="cursor-pointer" />
 
 
                 </div>
                 <p className ="text-center text-xs text-gray-500" >Ask deeper questions to improve depth scoring.  Learn more about Socratic’s question scoring. </p>
             </div>
+
         </div>
 
     );

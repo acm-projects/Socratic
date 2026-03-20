@@ -39,7 +39,7 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
     return(
 
 
-            <div className = "bg-white w-[650px] h-[600px] rounded-2xl p-5 mt-5 items-center flex flex-col gap-7 border border-gray-200">
+            <div className = "bg-white w-[500px] h-[600px] rounded-2xl p-5 mt-5 items-center flex flex-col gap-7">
                 <h2 className = "text-xl text-center font-semibold text-black">
                         Friends
                 </h2>

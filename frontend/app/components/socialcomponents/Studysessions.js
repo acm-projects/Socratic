@@ -17,7 +17,7 @@ export default function Studysession(){
 
     return(
 
-            <div className="bg-white w-[530px] h-72 rounded-xl p-5 mt-5 border border-gray-200">
+            <div className="bg-white w-[430px] h-72 rounded-xl p-5 mt-5">
             
             <div className = "flex flex-col gap-5">
             <h2 className="text-l font-semibold text-black">Upcoming Study Sessions</h2>
@@ -55,7 +55,7 @@ export default function Studysession(){
                 <div className="flex justify-end mt-4">
                 <button 
                 onClick={()=> setShowModal(true)}
-                className="flex items-center gap-2 bg-[#4A6FA5] text-white text-sm font-medium px-4 py-2 rounded-xl cursor-pointer hover:bg-[#3a5a8a]">
+                className="flex items-center gap-2 bg-[#3D5C9B] text-white text-sm font-medium px-4 py-2 rounded-xl cursor-pointer hover:bg-[#3a5a8a]">
                 Schedule Meeting
                 </button>
                 </div>

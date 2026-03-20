@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Leaderboard from "../components/socialcomponents/Leaderboard";
 import Studysessions from "../components/socialcomponents/Studysessions";
 import Requests from "../components/socialcomponents/Requests";
-
+import RightPanel from "../components/socialcomponents/RightPanel";
 
 export default function Home() {
     return (
@@ -11,12 +11,13 @@ export default function Home() {
             <Navbar />
             <div className="ml-[150px] pr-12 pt-6 pb-5 flex flex-col gap-6">
                 <Header title="Social" showPlus={false} />
-                <div className="flex flex-row gap-9">
+                <div className="flex flex-row gap-9 items-start">
                     <Leaderboard />
                     <div className="flex flex-col gap-4 ">
                         <Studysessions />
                         <Requests />
                     </div>
+                    <RightPanel/>
                 </div>
             </div>
         </main>
