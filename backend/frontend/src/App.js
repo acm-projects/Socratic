@@ -32,6 +32,11 @@ function App() {
   const [createMeet, setCreateMeet] = useState(false);
   const [attendeeEmails, setAttendeeEmails] = useState('');
 
+  // Syllabus Extraction State
+  const [syllabusFile, setSyllabusFile] = useState(null);
+  const [extractionResult, setExtractionResult] = useState(null);
+  const [isExtracting, setIsExtracting] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:4000/api/create-event', {
@@ -61,6 +66,33 @@ function App() {
         console.log(error.message);
         alert("Error creating event. Check console for details.");
       });
+  };
+
+  const handleSyllabusUpload = async (e) => {
+    e.preventDefault();
+    if (!syllabusFile) {
+      alert("Please select a PDF file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("syllabusPdf", syllabusFile);
+
+    setIsExtracting(true);
+    setExtractionResult(null);
+
+    try {
+      const response = await axios.post("http://localhost:4000/api/extract-syllabus", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      setExtractionResult(response.data);
+      alert("Syllabus extracted successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to extract syllabus. " + (error.response?.data?.error || error.message));
+    } finally {
+      setIsExtracting(false);
+    }
   };
 
   const responseGoogle = response => {
@@ -127,6 +159,31 @@ function App() {
             <button type="submit">Create Event</button>
           </form>
         }
+
+        <hr style={{ margin: "40px 0" }} />
+        <h2>Syllabus Extraction</h2>
+        <form onSubmit={handleSyllabusUpload}>
+          <label htmlFor="syllabusPdf">Upload Syllabus (PDF):</label>
+          <br />
+          <input
+            type="file"
+            id="syllabusPdf"
+            accept="application/pdf"
+            onChange={e => setSyllabusFile(e.target.files[0])}
+          />
+          <br /><br />
+          <button type="submit" disabled={isExtracting}>
+            {isExtracting ? "Extracting..." : "Extract Syllabus"}
+          </button>
+        </form>
+
+        {extractionResult && (
+          <div style={{ textAlign: "left", marginTop: "20px", padding: "10px", background: "#f4f4f4", borderRadius: "8px" }}>
+            <h3>Extracted Data:</h3>
+            <pre>{JSON.stringify(extractionResult.data, null, 2)}</pre>
+          </div>
+        )}
+
       </div>
     </GoogleOAuthProvider>
   );

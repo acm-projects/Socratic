@@ -5,6 +5,11 @@ const cors = require("cors")
 const crypto = require("crypto")
 const { google } = require("googleapis")
 const { Pool } = require("pg")
+const { syllabusSchema, syllabusJsonSchema } = require("../utils/syllabusSchema");
+const multer = require("multer")
+const { PDFParse } = require("pdf-parse")
+const { GoogleGenAI } = require("@google/genai")
+const upload = multer({ storage: multer.memoryStorage() })
 
 // -----------------------------------------------------
 // DATABASE
@@ -26,6 +31,89 @@ const oauth2Client = new google.auth.OAuth2(
 )
 
 const router = express.Router()
+
+// -----------------------------------------------------
+// SYLLABUS PDF EXTRACTION
+// -----------------------------------------------------
+
+router.post("/extract-syllabus", upload.single("syllabusPdf"), async (req, res, next) => {
+  try {
+    let pdfText = "";
+
+    if (req.file) {
+      // 1. Process uploaded PDF buffer using pdf-parse v2 API
+      const parser = new PDFParse({ data: req.file.buffer });
+      const pdfData = await parser.getText();
+      pdfText = pdfData.text;
+      await parser.destroy();
+    } else if (req.body.pdfText) {
+      // Fallback for raw text JSON testing
+      pdfText = req.body.pdfText;
+    } else {
+      return res.status(400).json({ error: "No PDF file or pdfText provided." });
+    }
+
+    // 2. Ensure API Key exists
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: "Missing GEMINI_API_KEY in backend/.env file. Please add it and restart the server!" });
+    }
+
+    // 3. Call Live Gemini AI Model
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    
+    const prompt = `Extract the syllabus constraints and structure exactly from the following syllabus document text.
+Return ONLY valid JSON data that rigidly matches this exact schema:
+{
+  "courseName": "The full name of the course",
+  "courseCode": "The course identifier identifier (e.g. CS101)",
+  "instructor": { 
+    "name": "Full name", 
+    "email": "email address if found", 
+    "officeHours": "office hours if found" 
+  },
+  "gradingPolicy": [ 
+    { "category": "e.g. Homework, Midterm, Final", "weightPercentage": 20 } 
+  ],
+  "importantDates": [ 
+    { "eventName": "Name of exam or deadline", "date": "YYYY-MM-DD" } 
+  ]
+}
+
+Document Text to Extract From:
+${pdfText}`;
+
+    const generateResponse = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        temperature: 0.1 // Keep it perfectly analytical
+      }
+    });
+
+    const aiGeneratedJsonData = JSON.parse(generateResponse.text);
+    // 2. VALIDATION: Ensure the data perfectly matches the expected formats
+    // `.parse()` throws an error if the data is missing fields or has wrong types
+    const validatedData = syllabusSchema.parse(aiGeneratedJsonData);
+    // 3. Success! The data is clean and matches your Swagger-like definition.
+    // You can now safely insert it into your PostgreSQL database.
+    console.log("Successfully extracted and validated syllabus!");
+
+    res.json({
+      message: "Syllabus extracted and verified successfully.",
+      data: validatedData
+    });
+  } catch (error) {
+    // If Zod validation fails, it throws a specific error containing what fields were wrong
+    if (error.name === "ZodError") {
+      return res.status(400).json({
+        error: "AI failed to extract syllabus correctly matching the schema formats",
+        validationErrors: error.errors
+      });
+    }
+    next(error);
+  }
+});
 
 // -----------------------------------------------------
 // HEALTH CHECK
