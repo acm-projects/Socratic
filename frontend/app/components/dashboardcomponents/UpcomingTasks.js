@@ -4,41 +4,20 @@ import {useState} from "react";
 import {EllipsisVertical, Folder} from "lucide-react";
 
 
-export default function ToDo() {
+export default function UpcomingTasks() {
     //array of tasks
     const tasks = [
   { id: 1, title: "Midterm", course: "Calculus II", date: "Feb 15" },
   { id: 2, title: "Biology Meeting", course: "Biology", date: "Feb 17" },
-  { id: 3, title: "Assignment 3", course: "Physics II", date: "Feb 20" },
-  { id: 4, title: "Exam 2", course: "Discrete Math", date: "Feb 22" },
 ];
 
-    //set isopen to false by default, when the user clicks on the button, set it to true and show the dropdown menu
-    const [isOpen, setIsOpen] = useState(false);
+
 
     return (
-        <div className="relative w-[431px] bg-white rounded-xl p-5 flex flex-col">
-            <h2 className="ml-5 text-xl font-semibold text-black">
+        <div className="relative w-[301px] bg-white rounded-xl p-5 flex flex-col">
+            <h2 className="ml-5 text-l font-semibold text-black">
                 Upcoming Tasks 
-            </h2>
-
-{/*
-            <button onClick={() => setIsOpen(true)} className="absolute top-5 right-1 p-2 rounded-full hover:bg-gray-200">
-            <EllipsisVertical className="mr-5 text-gray-400" />
-            </button>
-
-            {isOpen && (
-                <div className = "fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>
-            )}
-
-            {isOpen && (
-                <div className="absolute top-10 right-5 bg-white rounded-lg shadow-lg p-4 w-48">
-                    <p className="text-sm text-gray-700">Add a task</p>
-                    <p className="text-sm text-gray-700">Delete a task</p>
-
-                </div>
-            )}
-                */}
+            </h2>                
             
 
 

@@ -38,7 +38,7 @@ export default function Calendar() {
         
 
     return (
-        <div className ="w-[431px] bg-white rounded-xl p-6 flex flex-col">
+        <div className ="w-[330px] bg-white rounded-xl p-6 flex flex-col">
             
         {/*header */}
          <div className="flex items-center justify-between w-full pb-3 border-b border-gray-200">
@@ -69,14 +69,14 @@ export default function Calendar() {
 
 
         {/*just displays days of the week */}
-      <div className = "grid grid-cols-7 gap-5 mt-4">
+      <div className = "grid grid-cols-7 gap-4 mt-4">
         {days.map((day, i) => (
         <div key={i} className="text-gray-400 text-center">{day}</div>
         ))}
       </div>
       
         {/*grey out the prev months days  and display days in month*/}
-        <div className = "grid grid-cols-7 gap-5 mt-4">
+        <div className = "grid grid-cols-7 gap-3 mt-4">
         {[...Array(firstDay + daysInMonth)].map((_,i) => {
                 const dayNumber = i - firstDay + 1;
                 const isToday = dayNumber === today.getDate() && month === today.getMonth();

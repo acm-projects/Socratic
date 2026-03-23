@@ -19,7 +19,8 @@ export default function ClassCard({ name }) {
     const data = heatmapData[name] || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   return (
-    <div className=" relative w-185 h-37.5 bg-white rounded-xl p-5 transition-transform duration-200 hover:scale-102 cursor-pointer">
+
+    <div className=" relative w-[603px] h-[150px] bg-white rounded-xl p-5 transition-transform duration-200 hover:scale-102 cursor-pointer">
       
       <div className = "flex flex-col gap-10"> 
       <h2 className="mt-1 ml-4 text-2xl font-semibold text-black">
@@ -36,12 +37,12 @@ export default function ClassCard({ name }) {
     
 
       {/*HEATMAP*/}
-        <div className="absolute top-15 left-100">
+        <div className="absolute top-15 left-90">
           <Heatmap data={data} />
         </div>
 
       {/*FOR THE 3 DOTS AND THE PAST 10 DAYS*/}
-        <p className="absolute top-5 left-100 font-semibold text-xl text-gray-300">Past 10 days</p>
+        <p className="absolute top-5 left-90 font-semibold text-xl text-gray-300">Past 10 days</p>
 
         <EllipsisVertical className="text-gray-300 absolute top-5 right-5" size = {18} />
 

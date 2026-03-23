@@ -1,9 +1,11 @@
 "use client"
 import { useState } from "react";
 import { CircleArrowUp, Bookmark } from 'lucide-react';
-
+import ChatModal from "./ChatModal";
 
 export default function ChatUI(){
+    const [showModal, setShowModal] = useState(false);
+
 
       const [input, setInput] = useState("");
       const [messages,setMessages] = useState([]);
@@ -51,15 +53,18 @@ function handleSave(content) {
     {message.content}
   </div>
   <button
-    onClick={() => handleSave(message.content)}
+    onClick={() => {
+        handleSave(message.content);
+         setShowModal(true);
+    }}
     className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50">
     <Bookmark 
       size={14} 
       className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"} 
     />
     SAVE FOR REVIEW
-  </button>
-</div>
+        </button>
+            </div>
                  )}
                  </div>
                 ))}
@@ -83,6 +88,7 @@ function handleSave(content) {
                 </div>
                 <p className ="text-center text-xs text-gray-500" >Ask deeper questions to improve depth scoring.  Learn more about Socratic’s question scoring. </p>
             </div>
+            {showModal && <ChatModal onClose={() => setShowModal(false)} />}
 
         </div>
 
