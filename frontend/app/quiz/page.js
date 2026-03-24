@@ -140,10 +140,11 @@ export default function Page() {
                         choice === currentQuestion.answer
                         ? "border-green-400 bg-green-50 text-green-600"
                         : choice === userAnswer && !isCorrect
-                        ? "border-red-300 bg-red-50 text-red-400"
+                        ? "border-red-400 bg-red-50 text-red-500"
                         : "border-gray-100 bg-white text-gray-400"
                     }`}
                     >
+                    {/* letter choice */}
                     <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 ${
                         choice === currentQuestion.answer
                         ? "bg-green-100 text-green-500"
@@ -160,7 +161,7 @@ export default function Page() {
  
                 {/* explanation */}
                 <div className="bg-white rounded-2xl px-8 py-6 mb-8">
-                    <p className="text-sm font-bold text-[#3D5C9B] mb-2">
+                    <p className="text-sm font-bold text-[#728AB7] mb-2">
                         EXPLANATION
                     </p>
                     <p className="text-sm font-medium text-gray-600">
@@ -182,8 +183,9 @@ export default function Page() {
                         Back
                     </button>
  
+                    {/* change to router.push(`/class/${courseId}`) */}
                     <button
-                        onClick={reviewIndex === quizQuestions.length - 1 ? () => router.push("/classpage") : handleReviewNext}
+                        onClick={reviewIndex === quizQuestions.length - 1 ? () => router.push("/class/2340") : handleReviewNext}
                         className="px-8 py-2.5 rounded-xl text-sm font-medium transition-all bg-[#3D5C9B] text-white hover:bg-[#2e4a80]"
                     >
                         {reviewIndex === quizQuestions.length - 1 ? "Exit" : "Next"}
