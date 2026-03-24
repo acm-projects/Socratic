@@ -21,6 +21,9 @@ const syllabusSchema = z.object({
             eventName: z.string(),
             date: z.string().describe("Format: YYYY-MM-DD")
         })
+    ).optional(),
+    topics: z.array(
+        z.string().describe("An academic topic being taught. EXCLUDE exams, holidays, spring break, and review sessions.")
     ).optional()
 });
 

@@ -39,7 +39,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:4000/api/create-event', {
+    axios.post('http://localhost:4000/api/calendar/create-event', {
       summary,
       description,
       location,
@@ -82,7 +82,7 @@ function App() {
     setExtractionResult(null);
 
     try {
-      const response = await axios.post("http://localhost:4000/api/extract-syllabus", formData, {
+      const response = await axios.post("http://localhost:4000/api/syllabus/extract", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       setExtractionResult(response.data);
@@ -98,7 +98,7 @@ function App() {
   const responseGoogle = response => {
     console.log(response);
     const { code } = response
-    axios.post('http://localhost:4000/api/create-tokens', { code })
+    axios.post('http://localhost:4000/api/calendar/create-tokens', { code })
       .then(response => {
         console.log(response.data)
         setIsSignedIn(true);

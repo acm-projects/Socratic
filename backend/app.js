@@ -14,7 +14,16 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 🐻' });
 });
 
-app.use('/api', require('./routes/api.route'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/classes', require('./routes/classRoutes'));
+app.use('/api/topics', require('./routes/topicRoutes'));
+app.use('/api/sessions', require('./routes/chatSessionRoutes'));
+app.use('/api/achievements', require('./routes/achievementRoutes'));
+app.use('/api/stats', require('./routes/userStatsRoutes'));
+app.use('/api/accounts', require('./routes/accountRoutes'));
+app.use('/api/friends', require('./routes/friendRoutes'));
+app.use('/api/calendar', require('./routes/calendarRoutes'));
+app.use('/api/syllabus', require('./routes/syllabusRoutes'));
 
 app.use((req, res, next) => {
   next(createError.NotFound());
