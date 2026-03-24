@@ -9,6 +9,8 @@ import Addcoursemodal from "../components/dashboardcomponents/Addcoursemodal";
 import UpcomingMeetings from "../components/dashboardcomponents/UpcomingMeetings";
 import {Plus} from "lucide-react";
 import WeeklyRecap from "../components/dashboardcomponents/WeeklyRecap";
+import DeleteCourseModal from "../components/dashboardcomponents/DeleteCourseModal";
+
 
 
 
@@ -22,12 +24,18 @@ export default function Home() {
   ]);
 
   const[showModal, setShowModal] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
+
 
 
   function addCourse(name) {
   const updated = [...courses, name];
   setCourses(updated);
   localStorage.setItem("courses", JSON.stringify(updated));
+}
+
+function deleteCourse(name) {
+  setCourses(courses.filter(course => course !== name));
 }
 
 
@@ -59,7 +67,7 @@ export default function Home() {
 
 
             {courses.map(name => (
-              <ClassCard key={name} name={name} />
+              <ClassCard key={name} name={name} onDelete={deleteCourse} onDeleteClick={setCourseToDelete} />
             ))}
           </div>
           <div className="flex flex-col gap-4">
@@ -75,6 +83,17 @@ export default function Home() {
         </div>
       </div>
       </div>
+
+
+            {/* PUT IT HERE */}
+      {courseToDelete && (
+        <DeleteCourseModal
+          name={courseToDelete}
+          onClose={() => setCourseToDelete(null)}
+          onConfirm={() => { deleteCourse(courseToDelete); setCourseToDelete(null); }}
+        />
+      )}
+
     </main>
   );
 }

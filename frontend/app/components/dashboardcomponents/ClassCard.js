@@ -1,10 +1,16 @@
-import {EllipsisVertical} from "lucide-react";
+"use client"
+import { useState } from "react";
+
+
+import {EllipsisVertical, X } from "lucide-react";
 import Heatmap from "./Heatmap";
 import { HiFire } from "react-icons/hi";
 
 
 
-export default function ClassCard({ name }) {
+export default function ClassCard({ name,onDelete, onDeleteClick  }) {
+    const [menuOpen, setMenuOpen] = useState(false);
+
 
 
    {/*array of dummy data*/}
@@ -41,11 +47,31 @@ export default function ClassCard({ name }) {
           <Heatmap data={data} />
         </div>
 
-      {/*FOR THE 3 DOTS AND THE PAST 10 DAYS*/}
+      {/* PAST 10 DAYS*/}
         <p className="absolute top-5 left-90 font-semibold text-xl text-gray-300">Past 10 days</p>
 
-        <EllipsisVertical className="text-gray-300 absolute top-5 right-5" size = {18} />
 
+      {/* EDIT DELETE CLASSES*/}
+      <button
+        onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+        className="absolute top-5 right-5 p-1 rounded-full hover:bg-gray-100">
+        <EllipsisVertical className="text-gray-300" size={18} />
+      </button>
+
+      {/* Click outside to close */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+      )}
+
+      {/* Dropdown */}
+      {menuOpen && (
+        <div className="absolute top-10 right-5 bg-white rounded-xl shadow-lg border border-gray-100 p-2 z-20 w-32">
+          <p onClick={() => { setMenuOpen(false); }} className="text-sm text-gray-700 px-3 py-2 hover:bg-gray-50 rounded-lg cursor-pointer">Edit</p>
+          <p onClick={() => { setMenuOpen(false); onDeleteClick(name); }} className="text-sm text-red-400 px-3 py-2 hover:bg-gray-50 rounded-lg cursor-pointer">Delete</p>
+        </div>
+      )}
+
+      
 
     </div>
     

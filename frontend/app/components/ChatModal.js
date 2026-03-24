@@ -1,89 +1,73 @@
 "use client"
 import { useState } from "react"
-import { X,ChevronDown } from "lucide-react"
+import { X, ChevronDown } from "lucide-react"
+
+const topics = ["Trees", "Counting", "Graphs", "Discrete Math", "Calculus II"]
 
 export default function ChatModal({ onClose }) {
   const [topic, setTopic] = useState("")
+  const [topicOpen, setTopicOpen] = useState(false)
   const [question, setQuestion] = useState("")
-  const [easy, setEasy] = useState(true)
-  const [medium, setMedium] = useState(true)
-  const [hard, setHard] = useState(true)
-
+  
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white rounded-3xl px-10 py-8 w-[520px] flex flex-col gap-8">
+      <div className="bg-white px-10 py-10 rounded-[20px] w-1/3 border border-gray-100 flex flex-col">
 
         {/* Header */}
-        <div className="flex items-center justify-center relative pt-2">
-          <h2 className="text-xl font-bold text-gray-900">Save for Review</h2>
-          <X
-            size={26}
-            className="text-gray-400 cursor-pointer absolute right-0"
-            onClick={onClose}
-          />
+        <div className="flex items-center w-full mb-8">
+          <h1 className="text-2xl font-semibold text-slate-900 text-center flex-1">Save for Review</h1>
+          <X size={18} className="text-gray-400 ml-auto cursor-pointer" onClick={onClose} />
         </div>
 
-        {/* Fields */}
-        <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-5 w-full">
 
-          {/* Topic */}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-semibold text-gray-800">Select a Topic</label>
-            <div className="relative w-52">
-              <select
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                className="w-full border border-gray-100 rounded-xl px-4 py-3 text-sm bg-gray-50 text-gray-600 appearance-none cursor-pointer pr-10"
-              >
-                <option value="" disabled>Trees</option>
-                <option>Trees</option>
-                <option>Counting</option>
-                <option>Graphs</option>
-              </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Question*/}
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-semibold text-gray-800">Edit question (optional) </label>
-            <div className="flex items-center border border-gray-100 rounded-xl bg-gray-50 w-52 px-4 py-3">
-              </div>
-            </div>
-          </div>
-
-
-        {/* Question Type */}
-        <div className="flex flex-col gap-5">
-          <p className="text-md font-bold text-center text-gray-900">Question Type</p>
-
-          {[
-            { label: "Easy",   state: easy,   set: setEasy },
-            { label: "Medium", state: medium, set: setMedium },
-            { label: "Hard",   state: hard,   set: setHard },
-          ].map(({ label, state, set }) => (
-            <div key={label} className="flex items-center justify-between">
-              <span className="text-sm font-bold text-gray-800">{label}</span>
-
+          {/* Select a Topic */}
+          <div>
+            <label className="text-sm font-normal text-gray-900 ml-1 mb-1 block">Select a Topic</label>
+            <div className="relative">
               <div
-                onClick={() => set(s => !s)}
-                className={`w-10 h-[22px] rounded-full cursor-pointer flex items-center px-0.5 transition-colors duration-200 ${state ? "bg-[#3D5C9B]" : "bg-gray-300"}`}
+                onClick={() => setTopicOpen(!topicOpen)}
+                className="w-full bg-gray-50 rounded-xl p-4 text-sm text-gray-400 cursor-pointer flex items-center justify-between"
               >
-                <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${state ? "translate-x-[18px]" : "translate-x-0"}`} />
+                <span>{topic || "e.g., Discrete Math"}</span>
+                <ChevronDown size={16} className={`text-gray-500 transition-transform ${topicOpen ? "rotate-180" : ""}`} />
               </div>
+              {topicOpen && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-100 rounded-xl shadow-lg z-10 mt-1 overflow-hidden">
+                  {topics.map((t) => (
+                    <div
+                      key={t}
+                      onClick={() => { setTopic(t); setTopicOpen(false); }}
+                      className="px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                    >
+                      {t}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* Save to topic  Button */}
-        <button
-            onClick={() => {
-                onClose()
-            }}
-            className="self-center bg-[#3D5C9B] hover:bg-[#2e4a80] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
+          {/* Edit Question */}
+          <div>
+            <label className="text-sm font-normal text-gray-900 ml-1 mb-1 block">Edit Question (optional)</label>
+            <input
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="e.g., What is a tautology?"
+              className="w-full bg-gray-50 rounded-xl p-4 text-sm text-gray-400 outline-none"
+            />
+          </div>
+
+
+          {/* Save Button */}
+          <button
+            onClick={onClose}
+            className="bg-[#2C2C2C] text-white px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2">
             Save to Topic
-        </button>
+          </button>
 
+        </div>
       </div>
     </div>
   )
