@@ -99,7 +99,7 @@ export default function QuizModal({ onClose }) {
 
               <div
                 onClick={() => set(s => !s)}
-                className={`w-10 h-[22px] rounded-full cursor-pointer flex items-center px-0.5 transition-colors duration-200 ${state ? "bg-[#3D5C9B]" : "bg-gray-300"}`}
+                className={`w-10 h-[22px] rounded-full cursor-pointer flex items-center px-0.5 transition-colors duration-200 ${state ? "bg-[#4a68eb]" : "bg-gray-300"}`}
               >
                 <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${state ? "translate-x-[18px]" : "translate-x-0"}`} />
               </div>
@@ -113,7 +113,7 @@ export default function QuizModal({ onClose }) {
                 onClose()
                 router.push("/quiz")
             }}
-            className="self-center bg-[#3D5C9B] hover:bg-[#2e4a80] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
+            className="self-center bg-[#4a68eb] hover:bg-[#455bc8] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
             Start Quiz
         </button>
 

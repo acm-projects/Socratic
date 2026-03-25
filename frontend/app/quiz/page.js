@@ -108,8 +108,16 @@ export default function Page() {
             <main className="min-h-screen bg-[#F5F6FA] flex">
             <Navbar />
             <div className="flex flex-col flex-1 pl-16">
-                <AnchoredHeader title="Discrete Math" showPlus={false} />
-                <div className="flex flex-col flex-1 w-full max-w-4xl mx-auto px-20 py-8">
+                {/* header */}
+               <div className="px-8 py-6 bg-[#F5F6FA]">
+                <h1 className="text-2xl font-bold text-[#14153A]">
+                    Discrete Math{" "}
+                    <span className="text-gray-300 font-normal">—</span>{" "}
+                    <span className="text-gray-400 font-semibold">{QUIZ_SELECTION.topic}</span>
+                </h1>
+                </div>
+                
+                <div className="flex flex-col flex-1 w-full max-w-4xl mx-auto px-20 py-2">
  
                 {/* progress */}
                 <p className="text-md font-semibold text-[#3D5C9B] mb-8">
@@ -204,7 +212,15 @@ export default function Page() {
     <main className="min-h-screen bg-[#F5F6FA] flex">
       <Navbar />
       <div className="flex flex-col flex-1 pl-16">
-        <AnchoredHeader title="Discrete Math" showPlus={false} />
+
+        {/* header */}
+        <div className="px-8 py-6 bg-[#F5F6FA]">
+        <h1 className="text-2xl font-bold text-[#14153A]">
+            Discrete Math{" "}
+            <span className="text-gray-300 font-normal">—</span>{" "}
+            <span className="text-gray-400 font-semibold">Trees</span>
+        </h1>
+        </div>
 
         {/* body */}
         <div className="flex flex-col flex-1 w-full max-w-4xl mx-auto px-6 py-24">

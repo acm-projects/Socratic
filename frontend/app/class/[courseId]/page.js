@@ -3,10 +3,10 @@ import { useState } from "react"
 import Navbar from "../../components/Navbar"
 import UpcomingTasks from "../../components/UpcomingTasks"
 import PastQuizzes from "../../components/PastQuizzes"
-import { MessageSquare, ClipboardCheck, FileText, Clock, User } from "lucide-react"
+import { MessageSquare, ClipboardCheck, FileText, Clock, User, ArrowRight } from "lucide-react"
 import StudyHeatmap from "../../components/StudyHeatmap"
 import QuizModal from "../../components/QuizModal"
-// import TopicBreakdown from "../../components/TopicBreakdown"
+import TopicBreakdown from "../../components/TopicBreakdown"
 
 
 export default function ClassPage({ params }) {
@@ -24,7 +24,7 @@ export default function ClassPage({ params }) {
 
           {/* Left column — topic map */}
           <div className="w-120 bg-white rounded-2xl p-5">
-            <p className="text-md font-semibold text-gray-800">Topic Breakdown</p>
+            <p className="text-md font-bold text-gray-800 p-2">Topic Breakdown</p>
             {/* <TopicBreakdown /> */}
           </div>
 
@@ -44,7 +44,7 @@ export default function ClassPage({ params }) {
                 <div className="w-9 h-9 rounded-lg bg-[#EEEFFE] flex items-center justify-center shrink-0">
                     <MessageSquare size={18} color="#3451D1" />
                 </div>
-                <p className="text-md font-bold text-[#14153A]">AI Chat</p>
+                <p className="text-md font-bold text-[#14153A] flex-1">AI Chat</p>
                 </div>
             </button>
 
