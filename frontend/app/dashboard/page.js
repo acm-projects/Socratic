@@ -43,8 +43,10 @@ function deleteCourse(name) {
       <Navbar />
         
 
-      <div className="ml-[130px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
-        <Header title="Dashboard" showPlus={false} />
+      <div className="ml-[120px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
+              <h2 className="text-3xl font-bold text-[#3959E9]">Dashboard</h2>
+       
+       {/*} <Header title="Dashboard" showPlus={false} /> */}
         {showModal && <Addcoursemodal onClose={() => setShowModal(false)} onAdd={addCourse} />}
         
         <div className="flex gap-9">
@@ -67,8 +69,12 @@ function deleteCourse(name) {
               <ClassCard key={name} name={name} onDelete={deleteCourse} onDeleteClick={setCourseToDelete} />
             ))}
           </div>
+
+         {/* right column */}
+
           <div className="flex flex-col gap-4">
         <WeeklyRecap />
+
 
           <div className="flex gap-4">
             <Calendar />
@@ -82,7 +88,7 @@ function deleteCourse(name) {
       </div>
 
 
-            {/* PUT IT HERE */}
+            {/* Delete course */}
       {courseToDelete && (
         <DeleteCourseModal
           name={courseToDelete}

@@ -17,7 +17,7 @@ export default function Studysession(){
 
     return(
 
-            <div className="bg-white w-[430px] h-72 rounded-xl p-5 mt-5">
+            <div className="bg-white w-[430px] h-77 rounded-xl p-7 mt-5">
             
             <div className = "flex flex-col gap-5">
             <h2 className="text-l font-semibold text-black">Upcoming Study Sessions</h2>
@@ -37,7 +37,7 @@ export default function Studysession(){
                             <div className="flex items-center gap-3">
                             <p className="text-xs font-semibold text-gray-400">{meeting.time}</p>
     
-                             <span className="text-xs bg-[#D6E2FB] text-black font-medium px-4 py-1.5 rounded-full">
+                             <span className="text-xs bg-[#E1FDF6] text-black font-medium px-4 py-1.5 rounded-full">
                             {meeting.date}
                             </span>
                             <EllipsisVertical size = {16} className = "text-gray-400"/>
@@ -55,7 +55,7 @@ export default function Studysession(){
                 <div className="flex justify-end mt-4">
                 <button 
                 onClick={()=> setShowModal(true)}
-                className="flex items-center gap-2 bg-[#3D5C9B] text-white text-sm font-medium px-4 py-2 rounded-xl cursor-pointer hover:bg-[#3a5a8a]">
+                className="flex items-center gap-2 bg-[#3959E9] text-white text-sm font-medium px-4 py-2 rounded-xl cursor-pointer hover:bg-[#2039AF]">
                 Schedule Meeting
                 </button>
                 </div>
