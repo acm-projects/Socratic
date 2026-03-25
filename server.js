@@ -22,7 +22,7 @@ app.use(cors())
 app.use(express.json())
 
 app.get('/', (req, res) => {
-  res.send('Server is running!')
+  res.send({ message: 'Socratic API is live 🚀' })
 })
 
 // -----------------------------------------------------
