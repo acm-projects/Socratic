@@ -2,7 +2,7 @@ import {Plus} from "lucide-react";
 
 export default function Header({title, showPlus}) {
     return (
-        <header className="flex items-center gap-3 bg-[#D9E5FD] bg-cover bg-center rounded-2xl px-8 py-5 shadow-sm mx-8"> 
+        <header className="flex items-center gap-3 bg-[#D9E5FD] bg-cover bg-center rounded-2xl px-8 py-5 shadow-sm"> 
         <h1 className="text-3xl font-bold text-[#728AB7] mt-1.5 tracking-tight">
           {title}
         </h1>

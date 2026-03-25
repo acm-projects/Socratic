@@ -12,8 +12,6 @@ import WeeklyRecap from "../components/dashboardcomponents/WeeklyRecap";
 import DeleteCourseModal from "../components/dashboardcomponents/DeleteCourseModal";
 
 
-
-
 export default function Home() {
 
       const [courses, setCourses] = useState([
@@ -40,21 +38,20 @@ function deleteCourse(name) {
 
 
 
-
-
-
   return (
     <main className="bg-[#F5F6FA] min-h-screen">
       <Navbar />
+        
+
+      <div className="ml-[130px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
         <Header title="Dashboard" showPlus={false} />
         {showModal && <Addcoursemodal onClose={() => setShowModal(false)} onAdd={addCourse} />}
-
-      <div className="ml-[130px] pr-6 pt-5 pb-5 flex flex-col gap-6">
+        
         <div className="flex gap-9">
 
           {/* Left column - My Courses */}
           <div className="flex flex-col gap-4">
-                        <div className="flex items-center justify-between w-[603px]">
+                <div className="flex items-center justify-between w-[603px]">
               <h2 className="text-2xl font-bold text-gray-900">My Courses</h2>
               <button
                 onClick={() => setShowModal(true)}
