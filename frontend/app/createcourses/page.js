@@ -1,11 +1,9 @@
-import LandingCard from "./components/landingCard"
+import CourseForm from "../components/courseForm"
 
 export default function Page() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#d9e5fd]">
-      <LandingCard />
+      <CourseForm />
     </main>
   )
 }
-
-
