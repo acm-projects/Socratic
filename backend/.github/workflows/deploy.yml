@@ -1,3 +1,4 @@
+# CI/CD Pipeline for Socratic Backend
 name: Deploy to EC2
 
 on:
