@@ -23,3 +23,4 @@ jobs:
             git pull origin backend
             npm install
             pm2 restart server
+ 
