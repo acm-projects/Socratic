@@ -1,10 +1,9 @@
 "use client"
 import { useState } from "react";
-
-
 import {EllipsisVertical, X } from "lucide-react";
 import Heatmap from "./Heatmap";
 import { HiFire } from "react-icons/hi";
+import Link from "next/link";
 
 
 
@@ -26,6 +25,7 @@ export default function ClassCard({ name,onDelete, onDeleteClick  }) {
 
   return (
 
+    <Link href="/class/cs2340" className="block">
     <div className=" relative w-[603px] h-[150px] bg-white rounded-xl p-5 transition-transform duration-200 hover:scale-102 cursor-pointer">
       
       <div className = "flex flex-col gap-10"> 
@@ -74,6 +74,6 @@ export default function ClassCard({ name,onDelete, onDeleteClick  }) {
       
 
     </div>
-    
+    </Link>
   );
 }

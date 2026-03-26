@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function ClassHeatmap({ data }) {
   // 1. Start with an empty array (or all zeros) so the Server and Client match at first
@@ -27,7 +27,7 @@ export default function ClassHeatmap({ data }) {
     if (score >= 4) return "bg-[#004D41]";
     return "bg-[#ECEDF0]";
   };
-
+  
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
   const cols = 36;
   const rows = 6;
@@ -37,13 +37,14 @@ export default function ClassHeatmap({ data }) {
   const displayData = heatmapData.length > 0 ? heatmapData : Array(216).fill(0);
 
   return (
-    <div className="w-full font-sans">
+    <div className="w-full relative">
       <p className="text-md font-semibold text-[#14153A] pt-2 pb-4">Study Activity</p>
 
       <div className="flex mb-2" style={{ gap: GAP }}>
         {months.map((month) => (
           <div 
             key={month} 
+          
             className="text-xs text-[#8589B0] font-medium" 
             style={{ width: `${(100 / months.length)}%` }}
           >
@@ -60,9 +61,17 @@ export default function ClassHeatmap({ data }) {
               return (
                 <div
                   key={col}
-                  className={`flex-1 aspect-square ${getColor(value)} transition-colors duration-500`}
+                  className={`flex-1 aspect-square ${getColor(value)} transition-colors duration-500 cursor-pointer relative group`}
                   style={{ borderRadius: "2px" }}
-                />
+                >
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
+                    <div className="bg-[#14153A] text-white text-xs rounded px-3 py-2 whitespace-nowrap flex flex-col gap-0.5 items-center">
+                      <span className="font-semibold">January {col + 1}</span>
+                      <span className="text-gray-100">Questions asked: 20</span>
+                      <span className="text-gray-100">Avg score: 3.3 / 5</span>
+                    </div>
+                  </div>
+                </div>
               );
             })}
           </div>

@@ -1,85 +1,68 @@
-"use client"
+"use client";
+import React from "react";
 import { useState } from "react"
 
-const topics = {
-  Trees:        { level: 7, progress: 0.85 },
-  Probability:  { level: 3, progress: 0.30 },
-  Graphs:       { level: 1, progress: 1.00 },
-  Counting:     { level: 8, progress: 0.10 },
-  "Set Theory": { level: 2, progress: 0.20 },
-}
+const topics = [
+  { id: 1, label: "TREES", top: "5%", left: "15%", size: "w-36 h-36" },
+  { id: 2, label: "PROBABILITY", top: "25%", left: "55%", size: "w-40 h-40" },
+  { id: 3, label: "COUNTING", top: "45%", left: "8%", size: "w-32 h-32" },
+  { id: 4, label: "GRAPHS", top: "60%", left: "55%", size: "w-32 h-32" },
+  { id: 5, label: "SETS", top: "80%", left: "15%", size: "w-28 h-28" },
+];
 
-const layout = [
-  ["Trees"],
-  ["Probability", "Graphs"],
-  ["Counting", "Set Theory"],
-]
-
-function DonutRing({ progress, size, stroke, hovered }) {
-  const r = (size - stroke) / 2
-  const circ = 2 * Math.PI * r
-  const filled = circ * progress
+export default function TopicBreakdown({ onStudyClick }) {
+  const [activeIndex, setActiveIndex] = useState(null) //tracks which is clicked
 
   return (
-    <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#E0F2F1" strokeWidth={stroke} />
-      <circle
-        cx={size/2} cy={size/2} r={r}
-        fill="none"
-        stroke={hovered ? "#00695C" : "#00897B"}
-        strokeWidth={stroke}
-        strokeDasharray={`${filled} ${circ - filled}`}
-        strokeLinecap="round"
-        style={{ transition: "stroke 0.2s" }}
-      />
-    </svg>
-  )
-}
+    <div className="relative w-full h-[750px] overflow-hidden bg-white">
+      {/* Background Decorative Dots */}
+      <div className="absolute top-[20%] left-[80%] w-2 h-2 bg-blue-100 rounded-full opacity-60" />
+      <div className="absolute top-[70%] left-[30%] w-3 h-3 bg-blue-50 rounded-full" />
+      <div className="absolute top-[40%] left-[40%] w-1.5 h-1.5 bg-blue-100 rounded-full opacity-40" />
+      
+      {topics.map((topic) => (
+        <div
+          key={topic.id}
+          style={{ top: topic.top, left: topic.left }}
+          onClick={() => setActiveIndex(topic.id)}
+          className={`absolute flex items-center justify-center transition-all duration-500 cursor-pointer hover:scale-110 group ${topic.size}`}
+        >
+          {/*glow */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#2dd8be] via-[#77d4c6] to-transparent opacity-95 blur-[20px] group-hover:opacity-100 transition-opacity" />
+          
+          {/* border ring */}
+          <div className="absolute inset-0 rounded-full p-[6px] bg-gradient-to-tr from-[#41B7A5] to-[#379E90]">
+            {/* inner white circle */}
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-white shadow-inner">
+               <span className="text-[12px] font-bold tracking-widest text-[#4B5563] uppercase">
+                {topic.label}
+              </span>
+            </div>
+          </div>
 
-function TopicCircle({ name, size }) {
-  const [hovered, setHovered] = useState(false)
-  const t = topics[name]
-  const stroke = size >= 90 ? 9 : 8
+          {/* when topic is clicked - show modal below*/}
+          {activeIndex === topic.id && (
+          <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-200 p-2 z-[100] rounded-lg">
+            <div className="text-[11px] text-gray-600 my-1 text-center">
+              <div>Quizzes: 12</div>
+              <div>Avg Score: 88%</div>
+            </div>
+            
+            <button 
+              onClick={(e) =>{
+                e.stopPropagation();
+                onStudyClick();
+                setActiveIndex(null);
+              }}
+              className="w-full bg-[#01332b] text-white text-[10px] py-1 font-bold uppercase rounded-sm"
+            >
+              Study Topic
+            </button>
+          </div>
+        )}
 
-  return (
-    <div
-      className="flex flex-col items-center cursor-pointer"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div
-        style={{
-          width: size, height: size,
-          transform: hovered ? "scale(1.06)" : "scale(1)",
-          transition: "transform 0.2s",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <DonutRing progress={t.progress} size={size} stroke={stroke} hovered={hovered} />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[12px] font-semibold text-[#14153A] text-center px-2 leading-tight">
-            {name}
-          </span>
-        </div>
-      </div>
-      <span className="text-xs font-medium text-gray-500 mt-2">Lv. {t.level}</span>
-    </div>
-  )
-}
-
-export default function TopicBreakdown() {
-  return (
-    <div className="flex flex-col items-center gap-6 py-4">
-      {layout.map((row, i) => (
-        <div key={i} className="flex gap-6 justify-center">
-          {row.map(name => (
-            <TopicCircle key={name} name={name} size={row.length > 1 ? 80 : 90} />
-          ))}
         </div>
       ))}
     </div>
-  )
+  );
 }

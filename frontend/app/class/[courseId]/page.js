@@ -7,6 +7,7 @@ import { MessageSquare, ClipboardCheck, FileText, Clock, User, ArrowRight } from
 import StudyHeatmap from "../../components/StudyHeatmap"
 import QuizModal from "../../components/QuizModal"
 import TopicBreakdown from "../../components/TopicBreakdown"
+import Link from "next/link";
 
 
 export default function ClassPage({ params }) {
@@ -25,7 +26,7 @@ export default function ClassPage({ params }) {
           {/* Left column — topic map */}
           <div className="w-120 bg-white rounded-2xl p-5">
             <p className="text-md font-bold text-gray-800 p-2">Topic Breakdown</p>
-            {/* <TopicBreakdown /> */}
+            <TopicBreakdown onStudyClick={() => setShowQuizModal(true)}/>
           </div>
 
           {/* Right column */}
@@ -39,14 +40,14 @@ export default function ClassPage({ params }) {
             <div className="grid grid-cols-3 gap-4">
 
             {/* add hover */}
-            <button className="bg-white rounded-2xl p-5 text-left"> 
+            <Link href="/chat" className="bg-white rounded-2xl p-5 text-left"> 
                 <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-[#EEEFFE] flex items-center justify-center shrink-0">
                     <MessageSquare size={18} color="#3451D1" />
                 </div>
                 <p className="text-md font-bold text-[#14153A] flex-1">AI Chat</p>
                 </div>
-            </button>
+            </Link>
 
             <button
                 onClick={() => setShowQuizModal(true)}
@@ -98,7 +99,7 @@ export default function ClassPage({ params }) {
                     <p className="text-xs text-gray-400">Professor</p>
                     <p className="text-sm font-medium text-[#14153A] pt-1">Dr. Roberts</p>
                     <a href="mailto:roberts@uni.edu" className="text-xs text-[#3451D1] hover:underline truncate block">
-                    roberts@uni.edu
+                    roberts@utdallas.edu
                     </a>
                 </div>
                 </div>
@@ -112,7 +113,7 @@ export default function ClassPage({ params }) {
                     <p className="text-xs text-gray-400">Teaching Assistant</p>
                     <p className="text-sm font-medium text-[#14153A] pt-1">Alex Kim</p>
                     <a href="mailto:akim@uni.edu" className="text-xs text-[#3451D1] hover:underline truncate block">
-                    akim@uni.edu
+                    akim@utdallas.edu
                     </a>
                 </div>
                 </div>
@@ -125,7 +126,7 @@ export default function ClassPage({ params }) {
                 <div>
                     <p className="text-xs text-gray-400">Office Hours</p>
                     <p className="text-sm font-medium text-[#14153A] pt-1">Tue & Thu, 2:00 – 4:00 PM</p>
-                    <p className="text-xs text-gray-400">Room 214, Math Hall</p>
+                    <p className="text-xs text-gray-400">ECSS 4.226</p>
                 </div>
                 </div>
 
