@@ -39,7 +39,7 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
     return(
 
 
-            <div className = "bg-white w-[500px] h-[600px] rounded-2xl p-5 mt-5 items-center flex flex-col gap-7">
+            <div className = "bg-white w-[500px] h-[650px] rounded-2xl p-9 mt-5 items-center flex flex-col gap-7">
                 <h2 className = "text-xl text-center font-semibold text-black">
                         Friends
                 </h2>
@@ -53,16 +53,16 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
                 <div className = "flex flex-col items-center gap-3">
                 <div className = "relative">
                 <div className = "w-18 h-18 bg-gray-400 rounded-full"/>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#D0F4FF] rounded-full flex items-center justify-center">
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
                 <p className="text-black text-xs font-bold">2</p>
                 </div>
                 </div>
                 
-                <div className="w-27 h-20 bg-[#6B80B3] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
-                <p className = "text-white font-semibold text-xs text-center"> {podium[1].name} </p>   
+                <div className="w-27 h-20 bg-[#D3E4FD] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
+                <p className = "text-black font-semibold text-xs text-center"> {podium[1].name} </p>   
                 <div className="flex items-center gap-1">
-                <HiFire className="text-white" size={16}/>
-                <p className="text-white text-xs font-semibold">{podium[1].streak}</p>
+                <HiFire className="text-black" size={16}/>
+                <p className="text-black text-xs font-semibold">{podium[1].streak}</p>
                 </div>
 
                 </div>
@@ -72,15 +72,15 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
                 <div className = "flex flex-col items-center gap-3">
                 <div className = "relative">
                 <div className = "w-18 h-18 bg-gray-400 rounded-full"/>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#D0F4FF] rounded-full flex items-center justify-center">
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
                 <p className="text-black text-xs font-bold">1</p>
                 </div>
                 </div>
-                <div className="w-27 h-35 bg-[#6B80B3] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
-                <p className = "text-white font-semibold text-xs text-center"> {podium[0].name} </p>   
+                <div className="w-27 h-35 bg-[#D3E4FD] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
+                <p className = "text-black font-semibold text-xs text-center"> {podium[0].name} </p>   
                 <div className="flex items-center gap-1">
-                <HiFire className="text-white" size={16}/>
-                <p className="text-white text-xs font-semibold">{podium[0].streak}</p>
+                <HiFire className="text-black" size={16}/>
+                <p className="text-black text-xs font-semibold">{podium[0].streak}</p>
                 </div>
 
 
@@ -91,15 +91,15 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
                 <div className = "flex flex-col items-center gap-3">
                 <div className = "relative">
                 <div className = "w-18 h-18 bg-gray-400 rounded-full"/>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#D0F4FF] rounded-full flex items-center justify-center">
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
                 <p className="text-black text-xs font-bold">3</p>
                 </div>
                 </div>
-                <div className="w-27 h-20 bg-[#6B80B3] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
-                                    <p className = "text-white font-semibold text-xs text-center"> {podium[2].name} </p>   
+                <div className="w-27 h-20 bg-[#D3E4FD] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
+                 <p className = "text-black font-semibold text-xs text-center"> {podium[2].name} </p>   
                 <div className="flex items-center gap-1">
-                <HiFire className="text-white" size={16}/>
-                <p className="text-white text-xs font-semibold">{podium[2].streak}</p>
+                <HiFire className="text-black" size={16}/>
+                <p className="text-black text-xs font-semibold">{podium[2].streak}</p>
                 </div>
                 </div>
                 </div>
@@ -110,7 +110,7 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
 
     <div className="flex flex-col gap-1 w-full">
   {rest.map((friend, i) => (
-    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#E8EDFB]" : ""}`}>
+    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#EEEFFE]" : ""}`}>
       <div className="flex items-center gap-3">
         <p className="text-gray-400 font-semibold text-sm">{i + 4}</p>
         <div className="w-8 h-8 bg-gray-400 rounded-full"></div>

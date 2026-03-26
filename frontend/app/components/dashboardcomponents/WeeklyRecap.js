@@ -16,7 +16,7 @@ export default function WeeklyRecap() {
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Bar dataKey="value" fill="#4fc3c3" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="value" fill="#D3E4FD" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
