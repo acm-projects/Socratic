@@ -177,7 +177,7 @@ export default function Schedulemodal({onClose}){
             <label className="text-sm font-medium">Recurring</label>
             <div
             onClick={() => setRecurring(!recurring)}
-            className = {`w-10 h-6 rounded-full cursor-pointer flex items-center transition-colors ${recurring ? "bg-[#4A6FA5]" : "bg-gray-300"}`}>
+            className = {`w-10 h-6 rounded-full cursor-pointer flex items-center transition-colors ${recurring ? "bg-[#3959E9]" : "bg-gray-300"}`}>
             <div className={`w-5 h-5 bg-white rounded-full transition-transform ${recurring ? "translate-x-4" : "translate-x-0"}`} />
         </div>
          </div>
@@ -194,7 +194,7 @@ export default function Schedulemodal({onClose}){
                         key={i}
                         onClick={() => toggleDay(i)}
                         className={`w-9 h-9 rounded-full flex items-center justify-center text-sm cursor-pointer border
-                            ${selectedDays.includes(i) ? "bg-[#4A6FA5] text-white border-[#4A6FA5]" : "border-gray-300 text-gray-500"}`}>
+                            ${selectedDays.includes(i) ? "bg-[#3959E9] text-white border-[#4A6FA5]" : "border-gray-300 text-gray-500"}`}>
                             {day}
                             </div>
                     ))}
@@ -219,7 +219,7 @@ export default function Schedulemodal({onClose}){
 
         <button
         onClick={() => setShowConfirmation(true)}
-        className="w-full bg-[#4A6FA5] hover:bg-[#3a5a8a] text-white text-sm font-medium py-3 rounded-xl mt-2">
+        className="w-full bg-[#3959E9] hover:bg-[#2039AF] text-white text-sm font-medium py-3 rounded-xl mt-2">
           Send Invite
         </button>
 
