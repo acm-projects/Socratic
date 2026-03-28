@@ -5,12 +5,16 @@
     "version": "1.0.0",
     "description": "API for the Socratic platform — handles users, classes, topics, chat sessions, achievements, friends, OAuth accounts, and Google Calendar integration."
   },
-  "servers": [
-    {
-      "url": "http://localhost:5000",
-      "description": "Local development server"
-    }
-  ],
+"servers": [
+  {
+    "url": "http://3.128.186.118:5000",
+    "description": "Production EC2 server"
+  },
+  {
+    "url": "http://localhost:5000",
+    "description": "Local development server"
+  }
+],
   "paths": {
     "/": {
       "get": {
