@@ -14,9 +14,6 @@ export default function HeroPage() {
   return (
     <div className="min-h-screen font-sans overflow-x-hidden" style={{ background: "#f0f4f8" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap');
-        .font-display { font-family: 'Fraunces', serif; }
-        .font-body { font-family: 'DM Sans', sans-serif; }
 
         .dot-grid {
           background-color: #f0f4f8;
@@ -141,9 +138,9 @@ export default function HeroPage() {
             YOUR ALL-IN-ONE STUDY SPACE
           </div>
 
-          <h1 className="fade-up-2 font-display text-7xl font-semibold leading-tight mb-6" style={{ color: "#1e40af" }}>
-            Study smarter.<br />
-            <span className="italic" style={{ color: "#2563eb" }}>Think deeper.</span>
+          <h1 className="fade-up-2 font-display text-5xl font-semibold leading-tight mb-6" style={{ color: "#1e40af" }}>
+            Ask Better Questions.<br />
+            <span className="italic" style={{ color: "#2563eb" }}>Get Better Results.</span>
           </h1>
 
           <p className="fade-up-3 font-body text-xl leading-relaxed max-w-xl mx-auto mb-10" style={{ color: "#6b83a8" }}>
@@ -155,8 +152,8 @@ export default function HeroPage() {
               onClick={() => signIn('google', { callbackUrl: '/signup' })}
               className="font-body px-8 py-3.5 rounded-full text-base transition-all hover:scale-105"
               style={{
-                background: "#2563eb",
-                color: "white",
+                background: "#D3E4FD",
+                color: "black",
                 boxShadow: "0 8px 24px rgba(37,99,235,0.3)"
               }}
             >

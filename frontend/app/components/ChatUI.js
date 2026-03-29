@@ -44,7 +44,7 @@ function handleSave(content) {
     </div>
 )}
 
-              {/* suggestions */}
+              {/* suggestions
 
 {messages.length === 0 && (
     <div className="flex flex-wrap gap-2 justify-center mt-4">
@@ -64,6 +64,7 @@ function handleSave(content) {
         ))}
     </div>
 )}
+*/}
 
             {messages.map((message, i) => (
                 <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -109,7 +110,7 @@ function handleSave(content) {
             <div className = "items-center flex flex-col gap-2">
 <div className="flex items-center w-3/4 justify-between rounded-xl px-6 py-8 bg-white"
     style={{
-        border: "2px solid #0d9488",
+        border: "2px solid #C2E7FF",
         boxShadow: "0 0 16px rgba(45, 212, 191, 0.4), 0 0 32px rgba(45, 212, 191, 0.15)"
     }}
 >                    <input

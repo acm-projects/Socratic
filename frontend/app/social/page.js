@@ -12,7 +12,7 @@ export default function Home() {
                 
                 <div className="ml-[120px] pr-6 pt-6 pb-3 flex flex-col gap-6">
 
-              <h2 className="text-3xl font-bold text-[#3959E9]">Social</h2>
+              <h2 className="text-3xl font-bold text-black">Social</h2>
 
 
                 <div className="flex flex-row gap-9 items-start">

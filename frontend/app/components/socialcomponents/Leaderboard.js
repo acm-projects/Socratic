@@ -1,34 +1,51 @@
 "use client"
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react"
 
-import { useState } from "react";
 import { HiFire } from "react-icons/hi";
 
 export default function Leaderboard(){
 
     {/*array of friends and their streaks or points*/}
-    const friends = [
-  { id: 1, name: "Bryan Smith", streak: 8, pts: 34 },
-  { id: 2, name: "Meghan Jes", streak: 24, pts: 51 },
-  { id: 3, name: "Alex Turner", streak: 3, pts: 22 },
-  { id: 4, name: "Marsha Fisher", streak: 17, pts: 40 },
-  { id: 5, name: "Juanita Cormier", streak: 31, pts: 63 },
-  { id: 6, name: "You", streak: 5, pts: 29 },
-  { id: 7, name: "Jake Lee", streak: 12, pts: 37 },
-  { id: 8, name: "Sara Kim", streak: 19, pts: 45 },
-  { id: 9, name: "Tom Brady", streak: 2, pts: 18 },
-];
+    const [friends, setFriends] = useState([])
+      const { data: session } = useSession()
+
+
+    {/*fetch data*/}
+useEffect(() => {
+  fetch(`/backend/users/u1/friends`)
+    .then(res => res.json())
+    .then(async (data) => {
+      const friendDetails = await Promise.all(
+        data.map(async (f) => {
+          const user = await fetch(`/backend/users/${f.friend_id}`).then(r => r.json())
+          console.log("user:", user) // just add this line
+          return {
+            id: f.friend_id,
+            name: user.name || user.email,
+            pts: user.total_xp,
+            streak: 0,
+          }
+        })
+      )
+      console.log(friendDetails)
+      setFriends([...friendDetails, { id: "you", name: "You", pts: 29, streak: 5 }])
+    })
+}, [])
+
 
     const sorted = friends.sort((a,b)=> b.streak - a.streak);
     const podium = sorted.slice(0,3);
     const top5 = sorted.slice(0,5);
     const you = friends.find(f => f.name === "You")
     const youInTop5 = top5.some(f => f.name === "You")
-    const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you]
-const [searchQuery, setSearchQuery] = useState("");
-const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
+const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you].filter(Boolean)
+    const [searchQuery, setSearchQuery] = useState("");
+    const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
 
 
 
+if (friends.length < 3) return <div>Loading...</div>
 
 
 
@@ -110,13 +127,13 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
 
     <div className="flex flex-col gap-1 w-full">
   {rest.map((friend, i) => (
-    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#EEEFFE]" : ""}`}>
+    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#F9FAFB]" : ""}`}>
       <div className="flex items-center gap-3">
         <p className="text-gray-400 font-semibold text-sm">{i + 4}</p>
         <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-        <p className={`text-sm ${friend.name === "You" ? "font-bold" : "font-semibold"}`}>{friend.name}</p>
+        <p className={`text-sm ${friend.id === "You" ? "font-bold" : "font-semibold"}`}>{friend.id}</p>
       </div>
-      <p className={`text-sm ${friend.name === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
+      <p className={`text-sm ${friend.id === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
     </div>
   ))}
 
@@ -134,7 +151,7 @@ const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().inc
  {/*displaying search results */}
   <div className="flex flex-col gap-2 mt-2">
   {searchResults.map(friend => (
-    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#E8EDFB]" : "bg-gray-50"}`}>
+    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#D3E4FD]" : "bg-gray-50"}`}>
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
         <p className="text-sm font-semibold">{friend.name}</p>
