@@ -43,11 +43,7 @@ function deleteCourse(name) {
         
 
       <div className="ml-[120px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
-<<<<<<< HEAD
               <h2 className="text-3xl font-bold text-black">Dashboard</h2>
-=======
-              <h2 className="text-3xl font-bold text-black ">Dashboard</h2>
->>>>>>> c7020db9526848bef000d810e517b6163cfaa95f
        
        {/*} <Header title="Dashboard" showPlus={false} /> */}
         {showModal && <Addcoursemodal onClose={() => setShowModal(false)} onAdd={addCourse} />}

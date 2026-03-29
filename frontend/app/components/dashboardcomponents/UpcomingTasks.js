@@ -35,11 +35,7 @@ export default function UpcomingTasks() {
                             <p className="text-xs font-semibold text-gray-400">{task.course}</p>
                             </div>
                             </div>
-<<<<<<< HEAD
                              <span className="text-xs bg-sky-100 text-sky-700 font-medium px-4 py-1.5 rounded-full">
-=======
-                             <span className="text-xs bg-[#EEEFFE] text-black font-medium px-4 py-1.5 rounded-full">
->>>>>>> c7020db9526848bef000d810e517b6163cfaa95f
                             {task.date}
                             </span>
                             </div>
