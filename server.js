@@ -320,6 +320,19 @@ app.get("/users/:id/friends", async (req, res) => {
   }
 })
 
+app.post("/friends", async (req, res) => {
+  try {
+    const { user_id, friend_id, first_name, last_name, streak, total_xp } = req.body
+    const result = await pool.query(
+      "INSERT INTO friends (user_id, friend_id, first_name, last_name, streak, total_xp) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [user_id, friend_id, first_name, last_name, streak, total_xp]
+    )
+    res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 app.get("/users/:id/friend-requests", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM friend_requests WHERE receiver_id = $1", [req.params.id])
