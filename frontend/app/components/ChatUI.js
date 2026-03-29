@@ -29,7 +29,7 @@ function handleSave(content) {
     
     return(
 
-        <div className = "bg-white rounded-xl w-[1235px] h-[650px] flex flex-col justify-between p-6">
+        <div className = "bg-white rounded-xl w-[1235px] h-[700px] flex flex-col justify-between p-6 mt-6">
           
               {/* messages area */}
              <div className="flex-1 overflow-y-auto flex flex-col gap-4 p-10">
@@ -46,7 +46,7 @@ function handleSave(content) {
 
               {/* suggestions */}
 
-{messages.length === 0 && (
+{/* {messages.length === 0 && (
     <div className="flex flex-wrap gap-2 justify-center mt-4">
         {[
             "Explain this concept to me",
@@ -63,7 +63,7 @@ function handleSave(content) {
             </button>
         ))}
     </div>
-)}
+)} */}
 
             {messages.map((message, i) => (
                 <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -75,7 +75,7 @@ function handleSave(content) {
                     </div>
                     <div className = "flex gap-1">
                     {[1,2,3,4,5].map(dot =>(
-                        <div key={dot} className = {`w-3 h-3 rounded-full ${dot <= message.score ? "bg-green-400" : "bg-gray-200"}`} />
+                        <div key={dot} className = {`w-3 h-3 rounded-full ${dot <= message.score ? "bg-[#72C559]" : "bg-gray-200"}`} />
 
                     ))}
                     </div>
@@ -124,7 +124,7 @@ function handleSave(content) {
 
 
                 </div>
-                <p className ="text-center text-xs text-gray-500" >Ask deeper questions to improve depth scoring.  Learn more about Socratic’s question scoring. </p>
+                <p className ="text-center text-xs text-gray-500 mt-4 mb-2" >Ask deeper questions to improve depth scoring.  Learn more about Socratic’s question scoring. </p>
             </div>
             {showModal && <ChatModal onClose={() => setShowModal(false)} />}
 

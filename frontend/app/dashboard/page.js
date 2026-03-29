@@ -37,14 +37,13 @@ function deleteCourse(name) {
 }
 
 
-
   return (
     <main className="bg-[#F5F6FA] min-h-screen">
       <Navbar />
         
 
       <div className="ml-[120px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
-              <h2 className="text-3xl font-bold text-[#3959E9]">Dashboard</h2>
+              <h2 className="text-3xl font-bold text-black">Dashboard</h2>
        
        {/*} <Header title="Dashboard" showPlus={false} /> */}
         {showModal && <Addcoursemodal onClose={() => setShowModal(false)} onAdd={addCourse} />}
@@ -58,7 +57,7 @@ function deleteCourse(name) {
               <button
                 onClick={() => setShowModal(true)}
                 className="transition-transform duration-200 hover:scale-110 cursor-pointer">
-                <div className="w-[30px] h-[30px] rounded-full bg-[#91A9D5] flex items-center justify-center hover:bg-[#7187b0]">
+                <div className="w-[30px] h-[30px] rounded-full bg-gray-300 flex items-center justify-center hover:bg-[#7187b0]">
                   <Plus size={20} color="white" strokeWidth={2.5} />
                 </div>
               </button>

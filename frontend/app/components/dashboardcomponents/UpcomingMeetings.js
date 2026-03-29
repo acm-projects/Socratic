@@ -35,13 +35,14 @@ export default function UpcomingMeetings() {
                             <p className="text-xs font-semibold text-gray-400">{task.course}</p>
                             </div>
                             </div>
-                             <span className="text-xs bg-[#3959E9] text-white font-medium px-4 py-1.5 rounded-full">
+                             <span className="text-xs bg-green-100 text-green-700 font-medium px-4 py-1.5 rounded-full">
                             {task.date}
                             </span>
                             </div>
 
 
                 ))}
+ 
 
 
                 </div>

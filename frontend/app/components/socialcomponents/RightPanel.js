@@ -13,9 +13,9 @@ export default function RightPanel() {
   return (
     <div className="flex flex-col gap-7 w-72 mt-5 min-w-[280px]">
       {/* Study Sessions This Week */}
-      <div className="flex items-center gap-4 bg-[#3959E9] text-white rounded-2xl px-6 py-5">
-        <span className="text-5xl font-bold">5</span>
-        <span className="text-base leading-snug">Study Sessions this week</span>
+      <div className="flex items-center gap-4 bg-[#9ebbe7] text-white rounded-2xl px-6 py-5">
+        <span className="text-3xl font-bold">5</span>
+        <span className="text-base font-medium leading-snug">Study Sessions this week</span>
       </div>
 
       {/* Friends Achievements */}

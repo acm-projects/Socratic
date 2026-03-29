@@ -10,12 +10,12 @@ export default function Home() {
         <main className="bg-[#F5F6FA] min-h-screen">
             <Navbar />
                 
-                <div className="ml-[120px] pr-6 pt-6 pb-3 flex flex-col gap-6">
+                <div className="ml-[120px] pr-6 pt-8 pb-3 flex flex-col gap-6">
 
-              <h2 className="text-3xl font-bold text-[#3959E9]">Social</h2>
+              <h2 className="text-3xl font-bold text-black">Social</h2>
 
 
-                <div className="flex flex-row gap-9 items-start">
+                <div className="flex flex-row gap-9 items-start pt-4">
                     <Leaderboard />
                     <div className="flex flex-col gap-4 ">
                         <Studysessions />
