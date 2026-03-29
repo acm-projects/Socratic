@@ -62,10 +62,10 @@ app.get("/users/:id", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   try {
-    const { id, email, total_xp, weekly_xp, image } = req.body
+    const { id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak } = req.body
     const result = await pool.query(
-      'INSERT INTO "User" (id, email, total_xp, weekly_xp, image) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [id, email, total_xp, weekly_xp, image]
+      'INSERT INTO "User" (id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+      [id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak]
     )
     res.json(result.rows[0])
   } catch (error) {
@@ -75,10 +75,10 @@ app.post("/users", async (req, res) => {
 
 app.put("/users/:id", async (req, res) => {
   try {
-    const { email, total_xp, weekly_xp, image } = req.body
+    const { email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak } = req.body
     const result = await pool.query(
-      'UPDATE "User" SET email = $1, total_xp = $2, weekly_xp = $3, image = $4 WHERE id = $5 RETURNING *',
-      [email, total_xp, weekly_xp, image, req.params.id]
+      'UPDATE "User" SET email = $1, total_xp = $2, weekly_xp = $3, image = $4, first_name = $5, last_name = $6, school = $7, major = $8, class_status = $9, streak = $10 WHERE id = $11 RETURNING *',
+      [email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak, req.params.id]
     )
     res.json(result.rows[0])
   } catch (error) {
