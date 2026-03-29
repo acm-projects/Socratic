@@ -5,16 +5,16 @@
     "version": "1.0.0",
     "description": "API for the Socratic platform — handles users, classes, topics, chat sessions, achievements, friends, OAuth accounts, and Google Calendar integration."
   },
-"servers": [
-  {
-    "url": "http://3.128.186.118:5000",
-    "description": "Production EC2 server"
-  },
-  {
-    "url": "http://localhost:5000",
-    "description": "Local development server"
-  }
-],
+  "servers": [
+    {
+      "url": "http://3.128.186.118:5000",
+      "description": "Production EC2 server"
+    },
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development server"
+    }
+  ],
   "paths": {
     "/": {
       "get": {
@@ -208,7 +208,13 @@
                   "email": { "type": "string", "format": "email" },
                   "total_xp": { "type": "integer" },
                   "weekly_xp": { "type": "integer" },
-                  "image": { "type": "string" }
+                  "image": { "type": "string" },
+                  "first_name": { "type": "string" },
+                  "last_name": { "type": "string" },
+                  "school": { "type": "string" },
+                  "major": { "type": "string" },
+                  "class_status": { "type": "string", "enum": ["Freshman", "Sophomore", "Junior", "Senior"] },
+                  "streak": { "type": "integer" }
                 }
               }
             }
@@ -776,6 +782,31 @@
         }
       }
     },
+    "/friends": {
+      "post": {
+        "summary": "Add a Friend",
+        "description": "Adds a new friend to a user's friends list",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Friend" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Friend added successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Friend" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
     "/users/{id}/friend-requests": {
       "get": {
         "summary": "Get Friend Requests by User",
@@ -875,6 +906,12 @@
         "properties": {
           "id": { "type": "string", "example": "user_123" },
           "email": { "type": "string", "format": "email", "example": "student@example.com" },
+          "first_name": { "type": "string", "example": "John" },
+          "last_name": { "type": "string", "example": "Doe" },
+          "school": { "type": "string", "example": "University of Texas at Dallas" },
+          "major": { "type": "string", "example": "Computer Science" },
+          "class_status": { "type": "string", "enum": ["Freshman", "Sophomore", "Junior", "Senior"], "example": "Freshman" },
+          "streak": { "type": "integer", "example": 7 },
           "total_xp": { "type": "integer", "example": 500 },
           "weekly_xp": { "type": "integer", "example": 120 },
           "image": { "type": "string", "example": "https://example.com/avatar.png" }
@@ -944,7 +981,11 @@
         "type": "object",
         "properties": {
           "user_id": { "type": "string", "example": "user_123" },
-          "friend_id": { "type": "string", "example": "user_456" }
+          "friend_id": { "type": "string", "example": "user_456" },
+          "first_name": { "type": "string", "example": "Jane" },
+          "last_name": { "type": "string", "example": "Smith" },
+          "streak": { "type": "integer", "example": 5 },
+          "total_xp": { "type": "integer", "example": 300 }
         }
       },
       "FriendRequest": {
