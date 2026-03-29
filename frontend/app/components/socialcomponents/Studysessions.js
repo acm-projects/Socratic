@@ -27,7 +27,7 @@ export default function Studysession(){
             <div className = "flex flex-col gap-3">
                 
                     {meetings.map((meeting) => (
-                    < div key = {meeting.id} className = "flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3">
+                    < div key = {meeting.id} className = "flex items-center justify-between bg-[#F9FAFB] rounded-xl px-4 py-3">
                         <div className = "flex flex-col">
                     
                             <p className="text-sm font-semibold text-black">{meeting.course}</p>

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sendrequestmodal from "./Sendrequestmodal";
 
 
@@ -7,13 +7,29 @@ import Sendrequestmodal from "./Sendrequestmodal";
 
 
 export default function Requests(){
-      const [requests, setRequests] = useState([
-    { id: 1, name: "Bryan Smith", email: "bryansmith21@gmail.com" },
-    { id: 2, name: "Alex Turner", email: "alexturner121@gmail.com" },
-
-  ]);
-
+  const [requests, setRequests] = useState([]);
   const [showAddFriend, setShowAddFriend] = useState(false);
+
+
+
+    useEffect(() => {
+    fetch(`/backend/users/u1/friend-requests`)
+      .then(res => res.json())
+      .then(async (data) => {
+        const pending = data.filter(req => req.status === "pending")
+        const requestDetails = await Promise.all(
+          pending.map(async (req) => {
+            const sender = await fetch(`/backend/users/${req.sender_id}`).then(r => r.json())
+            return {
+              id: req.id,
+              name: sender.name || sender.email,
+              email: sender.email,
+            }
+          })
+        )
+        setRequests(requestDetails)
+      })
+  }, [])
 
 
 
@@ -36,7 +52,7 @@ function declineRequest(id) {
              {/*displays array of requests*/}
 
             {requests.map((request) => (
-                <div key ={request.id} className = "flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3">
+                <div key ={request.id} className = "flex items-center justify-between bg-[#F9FAFB] rounded-xl px-4 py-3">
                 <div className = "flex flex-col">
                     <p className="text-sm font-semibold text-black">{request.name} </p>
                     <p className="text-xs text-gray-400">{request.email} </p>
@@ -47,7 +63,7 @@ function declineRequest(id) {
             <div className = "flex gap-2">
                 <button 
                 onClick={() => acceptRequest(request.id)}
-                  className="cursor-pointer bg-[#3959E9] hover:bg-[#2039AF] text-white text-xs font-medium px-4 py-1.5 rounded-full">
+                  className="cursor-pointer bg-[#EEEFFE] text-black text-xs font-medium px-4 py-1.5 rounded-full">
                   Accept
                 </button>
                 <button

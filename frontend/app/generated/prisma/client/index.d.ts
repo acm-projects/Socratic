@@ -14417,9 +14417,9 @@ export namespace Prisma {
     scope: string | null
     id_token: string | null
     session_state: string | null
-    refresh_token_expires_in: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    refresh_token_expires_in: number | null
   }
 
   export type AccountMaxAggregateOutputType = {
@@ -14434,9 +14434,9 @@ export namespace Prisma {
     scope: string | null
     id_token: string | null
     session_state: string | null
-    refresh_token_expires_in: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    refresh_token_expires_in: number | null
   }
 
   export type AccountCountAggregateOutputType = {
@@ -14451,9 +14451,9 @@ export namespace Prisma {
     scope: number
     id_token: number
     session_state: number
-    refresh_token_expires_in: number
     createdAt: number
     updatedAt: number
+    refresh_token_expires_in: number
     _all: number
   }
 
@@ -14480,9 +14480,9 @@ export namespace Prisma {
     scope?: true
     id_token?: true
     session_state?: true
-    refresh_token_expires_in?: true
     createdAt?: true
     updatedAt?: true
+    refresh_token_expires_in?: true
   }
 
   export type AccountMaxAggregateInputType = {
@@ -14497,9 +14497,9 @@ export namespace Prisma {
     scope?: true
     id_token?: true
     session_state?: true
-    refresh_token_expires_in?: true
     createdAt?: true
     updatedAt?: true
+    refresh_token_expires_in?: true
   }
 
   export type AccountCountAggregateInputType = {
@@ -14514,9 +14514,9 @@ export namespace Prisma {
     scope?: true
     id_token?: true
     session_state?: true
-    refresh_token_expires_in?: true
     createdAt?: true
     updatedAt?: true
+    refresh_token_expires_in?: true
     _all?: true
   }
 
@@ -14618,9 +14618,9 @@ export namespace Prisma {
     scope: string | null
     id_token: string | null
     session_state: string | null
-    refresh_token_expires_in: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    refresh_token_expires_in: number | null
     _count: AccountCountAggregateOutputType | null
     _avg: AccountAvgAggregateOutputType | null
     _sum: AccountSumAggregateOutputType | null
@@ -14654,9 +14654,9 @@ export namespace Prisma {
     scope?: boolean
     id_token?: boolean
     session_state?: boolean
-    refresh_token_expires_in?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    refresh_token_expires_in?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -14672,9 +14672,9 @@ export namespace Prisma {
     scope?: boolean
     id_token?: boolean
     session_state?: boolean
-    refresh_token_expires_in?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    refresh_token_expires_in?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -14690,9 +14690,9 @@ export namespace Prisma {
     scope?: boolean
     id_token?: boolean
     session_state?: boolean
-    refresh_token_expires_in?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    refresh_token_expires_in?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -14708,12 +14708,12 @@ export namespace Prisma {
     scope?: boolean
     id_token?: boolean
     session_state?: boolean
-    refresh_token_expires_in?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    refresh_token_expires_in?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "provider" | "providerAccountId" | "access_token" | "refresh_token" | "expires_at" | "type" | "token_type" | "scope" | "id_token" | "session_state" | "refresh_token_expires_in" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "provider" | "providerAccountId" | "access_token" | "refresh_token" | "expires_at" | "type" | "token_type" | "scope" | "id_token" | "session_state" | "createdAt" | "updatedAt" | "refresh_token_expires_in", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -14741,9 +14741,9 @@ export namespace Prisma {
       scope: string | null
       id_token: string | null
       session_state: string | null
-      refresh_token_expires_in: number | null
       createdAt: Date | null
       updatedAt: Date | null
+      refresh_token_expires_in: number | null
     }, ExtArgs["result"]["account"]>
     composites: {}
   }
@@ -15179,9 +15179,9 @@ export namespace Prisma {
     readonly scope: FieldRef<"Account", 'String'>
     readonly id_token: FieldRef<"Account", 'String'>
     readonly session_state: FieldRef<"Account", 'String'>
-    readonly refresh_token_expires_in: FieldRef<"Account", 'Int'>
     readonly createdAt: FieldRef<"Account", 'DateTime'>
     readonly updatedAt: FieldRef<"Account", 'DateTime'>
+    readonly refresh_token_expires_in: FieldRef<"Account", 'Int'>
   }
     
 
@@ -15746,9 +15746,9 @@ export namespace Prisma {
     scope: 'scope',
     id_token: 'id_token',
     session_state: 'session_state',
-    refresh_token_expires_in: 'refresh_token_expires_in',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    refresh_token_expires_in: 'refresh_token_expires_in'
   };
 
   export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -16551,9 +16551,9 @@ export namespace Prisma {
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
     session_state?: StringNullableFilter<"Account"> | string | null
-    refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
     createdAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -16569,9 +16569,9 @@ export namespace Prisma {
     scope?: SortOrderInput | SortOrder
     id_token?: SortOrderInput | SortOrder
     session_state?: SortOrderInput | SortOrder
-    refresh_token_expires_in?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
+    refresh_token_expires_in?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -16591,9 +16591,9 @@ export namespace Prisma {
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
     session_state?: StringNullableFilter<"Account"> | string | null
-    refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
     createdAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "provider_providerAccountId">
 
@@ -16609,9 +16609,9 @@ export namespace Prisma {
     scope?: SortOrderInput | SortOrder
     id_token?: SortOrderInput | SortOrder
     session_state?: SortOrderInput | SortOrder
-    refresh_token_expires_in?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
+    refresh_token_expires_in?: SortOrderInput | SortOrder
     _count?: AccountCountOrderByAggregateInput
     _avg?: AccountAvgOrderByAggregateInput
     _max?: AccountMaxOrderByAggregateInput
@@ -16634,9 +16634,9 @@ export namespace Prisma {
     scope?: StringNullableWithAggregatesFilter<"Account"> | string | null
     id_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
     session_state?: StringNullableWithAggregatesFilter<"Account"> | string | null
-    refresh_token_expires_in?: IntNullableWithAggregatesFilter<"Account"> | number | null
     createdAt?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
+    refresh_token_expires_in?: IntNullableWithAggregatesFilter<"Account"> | number | null
   }
 
   export type achievementsCreateInput = {
@@ -17301,9 +17301,9 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
-    refresh_token_expires_in?: number | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    refresh_token_expires_in?: number | null
     user: UserCreateNestedOneWithoutAccountInput
   }
 
@@ -17319,9 +17319,9 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
-    refresh_token_expires_in?: number | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    refresh_token_expires_in?: number | null
   }
 
   export type AccountUpdateInput = {
@@ -17335,9 +17335,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutAccountNestedInput
   }
 
@@ -17353,9 +17353,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountCreateManyInput = {
@@ -17370,9 +17370,9 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
-    refresh_token_expires_in?: number | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    refresh_token_expires_in?: number | null
   }
 
   export type AccountUpdateManyMutationInput = {
@@ -17386,9 +17386,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountUncheckedUpdateManyInput = {
@@ -17403,9 +17403,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -18060,9 +18060,9 @@ export namespace Prisma {
     scope?: SortOrder
     id_token?: SortOrder
     session_state?: SortOrder
-    refresh_token_expires_in?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    refresh_token_expires_in?: SortOrder
   }
 
   export type AccountAvgOrderByAggregateInput = {
@@ -18082,9 +18082,9 @@ export namespace Prisma {
     scope?: SortOrder
     id_token?: SortOrder
     session_state?: SortOrder
-    refresh_token_expires_in?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    refresh_token_expires_in?: SortOrder
   }
 
   export type AccountMinOrderByAggregateInput = {
@@ -18099,9 +18099,9 @@ export namespace Prisma {
     scope?: SortOrder
     id_token?: SortOrder
     session_state?: SortOrder
-    refresh_token_expires_in?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    refresh_token_expires_in?: SortOrder
   }
 
   export type AccountSumOrderByAggregateInput = {
@@ -20738,9 +20738,9 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
-    refresh_token_expires_in?: number | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    refresh_token_expires_in?: number | null
   }
 
   export type AccountUncheckedCreateWithoutUserInput = {
@@ -20754,9 +20754,9 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
-    refresh_token_expires_in?: number | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    refresh_token_expires_in?: number | null
   }
 
   export type AccountCreateOrConnectWithoutUserInput = {
@@ -20988,9 +20988,9 @@ export namespace Prisma {
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
     session_state?: StringNullableFilter<"Account"> | string | null
-    refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
     createdAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
   }
 
   export type chat_sessionsUpsertWithWhereUniqueWithoutUsersInput = {
@@ -21452,9 +21452,9 @@ export namespace Prisma {
     scope?: string | null
     id_token?: string | null
     session_state?: string | null
-    refresh_token_expires_in?: number | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    refresh_token_expires_in?: number | null
   }
 
   export type chat_sessionsCreateManyUsersInput = {
@@ -21521,9 +21521,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountUncheckedUpdateWithoutUserInput = {
@@ -21537,9 +21537,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountUncheckedUpdateManyWithoutUserInput = {
@@ -21553,9 +21553,9 @@ export namespace Prisma {
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
     session_state?: NullableStringFieldUpdateOperationsInput | string | null
-    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type chat_sessionsUpdateWithoutUsersInput = {
