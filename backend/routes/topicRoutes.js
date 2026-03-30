@@ -2,6 +2,13 @@ const express = require('express');
 const router = express.Router();
 const topicModel = require('../models/topicModel');
 
+router.get('/', async (req, res, next) => {
+  try {
+    const topics = await topicModel.getAllTopics();
+    res.json(topics);
+  } catch (error) { next(error); }
+});
+
 router.get('/class/:code', async (req, res, next) => {
   try {
     const topics = await topicModel.getTopicsByClassCode(req.params.code);

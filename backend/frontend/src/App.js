@@ -36,6 +36,8 @@ function App() {
   const [syllabusFile, setSyllabusFile] = useState(null);
   const [extractionResult, setExtractionResult] = useState(null);
   const [isExtracting, setIsExtracting] = useState(false);
+  const [savedClasses, setSavedClasses] = useState([]);
+  const [allTopics, setAllTopics] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -92,6 +94,68 @@ function App() {
       alert("Failed to extract syllabus. " + (error.response?.data?.error || error.message));
     } finally {
       setIsExtracting(false);
+    }
+  };
+
+  const handleSaveSyllabus = async () => {
+    if (!extractionResult?.data) return;
+    
+    try {
+      const response = await axios.post("http://localhost:4000/api/syllabus/save", extractionResult.data);
+      alert("Syllabus successfully saved to the database!");
+      console.log("Save Response:", response.data);
+      // Automatically refresh the classes list if it's currently showing
+      fetchSavedClasses();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save syllabus: " + (error.response?.data?.error || error.message));
+    }
+  };
+
+  const fetchSavedClasses = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/classes");
+      const classesData = response.data;
+      
+      // Fetch topics for each class to prove they are dynamically stored
+      const classesWithTopics = await Promise.all(
+        classesData.map(async (cls) => {
+          try {
+            const topicRes = await axios.get(`http://localhost:4000/api/topics/class/${cls.class_code}`);
+            return { ...cls, topics: topicRes.data };
+          } catch (e) {
+            return { ...cls, topics: [] };
+          }
+        })
+      );
+      
+      setSavedClasses(classesWithTopics);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch classes: " + error.message);
+    }
+  };
+
+  const fetchAllTopics = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/topics");
+      setAllTopics(response.data);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch topics: " + error.message);
+    }
+  };
+
+  const handleClearDatabase = async () => {
+    try {
+      await axios.delete("http://localhost:4000/api/classes");
+      setSavedClasses([]);
+      setAllTopics([]);
+      setExtractionResult(null);
+      alert("Database wiped successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to clear database: " + error.message);
     }
   };
 
@@ -181,6 +245,38 @@ function App() {
           <div style={{ textAlign: "left", marginTop: "20px", padding: "10px", background: "#f4f4f4", borderRadius: "8px" }}>
             <h3>Extracted Data:</h3>
             <pre>{JSON.stringify(extractionResult.data, null, 2)}</pre>
+            <button 
+              onClick={handleSaveSyllabus} 
+              style={{ padding: "10px 15px", marginTop: "10px", background: "#28a745", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
+            >
+              Confirm & Save to Database
+            </button>
+          </div>
+        )}
+
+        <hr style={{ margin: "40px 0" }} />
+        <h2>Database viewer</h2>
+        <button onClick={fetchSavedClasses} style={{ padding: "10px 15px", cursor: "pointer", background: "#007bff", color: "white", border: "none", borderRadius: "4px" }}>
+          Fetch Saved Classes from Database
+        </button>
+        <button onClick={fetchAllTopics} style={{ padding: "10px 15px", cursor: "pointer", background: "#0056b3", color: "white", border: "none", borderRadius: "4px", marginLeft: "10px" }}>
+          Fetch All Topics from Database
+        </button>
+        <button onClick={handleClearDatabase} style={{ padding: "10px 15px", cursor: "pointer", background: "#dc3545", color: "white", border: "none", borderRadius: "4px", marginLeft: "10px" }}>
+          Clear All Database Data
+        </button>
+
+        {savedClasses.length > 0 && (
+          <div style={{ textAlign: "left", marginTop: "20px", padding: "10px", background: "#eef", borderRadius: "8px" }}>
+            <h3>Classes in Database:</h3>
+            <pre>{JSON.stringify(savedClasses, null, 2)}</pre>
+          </div>
+        )}
+
+        {allTopics.length > 0 && (
+          <div style={{ textAlign: "left", marginTop: "20px", padding: "10px", background: "#e6f2ff", borderRadius: "8px" }}>
+            <h3>All Topics in Database:</h3>
+            <pre>{JSON.stringify(allTopics, null, 2)}</pre>
           </div>
         )}
 

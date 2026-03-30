@@ -1,7 +1,9 @@
 const { PDFParse } = require("pdf-parse");
 const { GoogleGenAI } = require("@google/genai");
 const { syllabusSchema } = require("../utils/syllabusSchema");
-
+const crypto = require("crypto");
+const classModel = require("../models/classModel");
+const topicModel = require("../models/topicModel");
 const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   let pdfText = "";
 
@@ -66,6 +68,47 @@ ${pdfText}`;
   return validatedData;
 };
 
+const saveSyllabusData = async (payload) => {
+  const { courseName, courseCode, topics } = payload;
+  
+  // Sanitize courseCode to be URL-safe (e.g. "STAT/CS/SE 3341.501" -> "STAT-CS-SE-3341-501")
+  const safeCourseCode = courseCode.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
+  
+  // Extract subject from courseCode (letters only), default to the first word of courseName if no letters found
+  const subjectMatch = courseCode.match(/[a-zA-Z]+/);
+  const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
+
+  // Store Class - truncating to fit strict Postgres VARCHAR limits
+  // classes.name is varchar(30), class_code is varchar(50)
+  const classData = {
+    class_code: safeCourseCode.substring(0, 50),
+    subject: subject,
+    name: courseName.substring(0, 30)
+  };
+  const newClass = await classModel.createClass(classData);
+
+  // Store Topics
+  const savedTopics = [];
+  if (Array.isArray(topics)) {
+    for (const topicStr of topics) {
+      // topics.name is varchar(50)
+      const topicData = {
+        id: crypto.randomUUID(),
+        class_code: safeCourseCode.substring(0, 50),
+        name: topicStr.substring(0, 50)
+      };
+      const newTopic = await topicModel.createTopic(topicData);
+      savedTopics.push(newTopic);
+    }
+  }
+
+  return {
+    savedClass: newClass,
+    savedTopics: savedTopics
+  };
+};
+
 module.exports = {
-  extractSyllabusData
+  extractSyllabusData,
+  saveSyllabusData
 };
