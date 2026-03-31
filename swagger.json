@@ -1013,30 +1013,40 @@
       }
     },
     "/friend-requests": {
-      "post": {
-        "summary": "Send a Friend Request",
-        "description": "Creates a new friend request using sender and receiver emails",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/FriendRequest" }
-            }
+  "post": {
+    "summary": "Send a Friend Request",
+    "description": "Creates a new friend request using sender and receiver emails. ID is auto-generated.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "sender_email": { "type": "string", "format": "email" },
+              "receiver_email": { "type": "string", "format": "email" },
+              "status": { "type": "string", "example": "pending" }
+            },
+            "required": ["sender_email", "receiver_email"]
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Friend request sent successfully",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/FriendRequest" }
-              }
-            }
-          },
-          "500": { "description": "Server error" }
         }
       }
     },
+    "responses": {
+      "200": {
+        "description": "Friend request sent successfully",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/FriendRequest" }
+          }
+        }
+      },
+      "500": {
+        "description": "Server error"
+      }
+    }
+  }
+},
     "/friend-requests/{id}": {
       "put": {
         "summary": "Update Friend Request Status",
