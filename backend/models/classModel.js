@@ -19,8 +19,14 @@ const createClass = async (data) => {
   return result.rows[0];
 };
 
+const deleteAllClasses = async () => {
+  await db.query("DELETE FROM topics");
+  await db.query("DELETE FROM classes");
+};
+
 module.exports = {
   getAllClasses,
   getClassByCode,
-  createClass
+  createClass,
+  deleteAllClasses
 };

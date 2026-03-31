@@ -1,5 +1,10 @@
 const db = require('../db');
 
+const getAllTopics = async () => {
+  const result = await db.query("SELECT * FROM topics");
+  return result.rows;
+};
+
 const getTopicsByClassCode = async (classCode) => {
   const result = await db.query("SELECT * FROM topics WHERE class_code = $1", [classCode]);
   return result.rows;
@@ -20,6 +25,7 @@ const createTopic = async (data) => {
 };
 
 module.exports = {
+  getAllTopics,
   getTopicsByClassCode,
   getTopicById,
   createTopic

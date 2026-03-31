@@ -23,4 +23,11 @@ router.post('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+router.delete('/', async (req, res, next) => {
+  try {
+    await classModel.deleteAllClasses();
+    res.json({ message: "Successfully deleted all classes and topics." });
+  } catch (error) { next(error); }
+});
+
 module.exports = router;
