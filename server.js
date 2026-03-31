@@ -15,11 +15,12 @@ const PORT = 5000
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerDoc = require('./swagger.json')
-
+const syllabusRoutes = require('./backend/routes/syllabusRoutes')
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 app.use(cors())
 app.use(express.json())
+app.use('/', syllabusRoutes)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })
