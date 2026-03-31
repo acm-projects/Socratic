@@ -23,7 +23,9 @@ function LoginButton({ onSuccess }) {
 }
 
 function App() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(() => {
+    return localStorage.getItem('isSignedIn') === 'true';
+  });
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -38,6 +40,7 @@ function App() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [savedClasses, setSavedClasses] = useState([]);
   const [allTopics, setAllTopics] = useState([]);
+  const [upcomingMeetings, setUpcomingMeetings] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -146,6 +149,16 @@ function App() {
     }
   };
 
+  const fetchUpcomingMeetings = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/calendar/upcoming-events");
+      setUpcomingMeetings(response.data);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch upcoming meetings. Make sure you have authorized calendar access this session.");
+    }
+  };
+
   const handleClearDatabase = async () => {
     try {
       await axios.delete("http://localhost:4000/api/classes");
@@ -164,8 +177,9 @@ function App() {
     const { code } = response
     axios.post('http://localhost:4000/api/calendar/create-tokens', { code })
       .then(response => {
-        console.log(response.data)
+        console.log(response.data);
         setIsSignedIn(true);
+        localStorage.setItem('isSignedIn', 'true');
       })
       .catch(error => console.log(error.message)
       )
@@ -223,6 +237,44 @@ function App() {
             <button type="submit">Create Event</button>
           </form>
         }
+
+        <hr style={{ margin: "40px 0" }} />
+        <h2>Upcoming Meetings</h2>
+        <button onClick={fetchUpcomingMeetings} style={{ padding: "10px 15px", cursor: "pointer", background: "#17a2b8", color: "white", border: "none", borderRadius: "4px", marginBottom: "20px" }}>
+          Fetch Upcoming Meetings
+        </button>
+
+        {upcomingMeetings && (
+          <div style={{ textAlign: "left", padding: "10px", background: "#fff3cd", borderRadius: "8px" }}>
+            {upcomingMeetings.length === 0 ? (
+              <p>No upcoming meetings found.</p>
+            ) : (
+              <ul>
+                {upcomingMeetings.map((event) => {
+                  const meetingDate = event.start.dateTime ? new Date(event.start.dateTime).toLocaleString() : new Date(event.start.date).toLocaleDateString();
+                  const summary = event.summary || "Untitled Event";
+                  const attendeeString = event.attendees ? event.attendees.map(a => a.email).join(", ") : "None";
+
+                  return (
+                    <li key={event.id} style={{ marginBottom: "15px", paddingBottom: "10px", borderBottom: "1px dashed #ccc" }}>
+                      <strong>{summary}</strong> 
+                      <br/>
+                      <span>Upcoming meeting at {meetingDate}</span>
+                      <br/>
+                      <span style={{ fontSize: "0.9em", color: "#555" }}>Invitees: {attendeeString}</span>
+                      <br/>
+                      {event.hangoutLink ? (
+                        <span>Google Meet Link: <a href={event.hangoutLink} target="_blank" rel="noopener noreferrer" style={{ color: "#0056b3", textDecoration: "underline" }}>Join Meeting</a></span>
+                      ) : (
+                        <span style={{ fontStyle: "italic", color: "#888" }}>(No Google Meet attached)</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        )}
 
         <hr style={{ margin: "40px 0" }} />
         <h2>Syllabus Extraction</h2>

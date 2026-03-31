@@ -1,5 +1,9 @@
 const { google } = require("googleapis");
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+const TOKEN_PATH = path.join(__dirname, '..', 'tokens.json');
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -7,9 +11,19 @@ const oauth2Client = new google.auth.OAuth2(
   'postmessage'
 );
 
+try {
+  if (fs.existsSync(TOKEN_PATH)) {
+    const tokens = JSON.parse(fs.readFileSync(TOKEN_PATH, 'utf8'));
+    oauth2Client.setCredentials(tokens);
+  }
+} catch (err) {
+  console.error("Error loading tokens.json:", err.message);
+}
+
 const getCalendarTokens = async (code) => {
   const { tokens } = await oauth2Client.getToken(code);
   oauth2Client.setCredentials(tokens);
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
   return tokens;
 };
 
@@ -49,7 +63,21 @@ const createCalendarEvent = async (eventData) => {
   return response.data;
 };
 
+const getUpcomingMeetings = async () => {
+  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+  const response = await calendar.events.list({
+    calendarId: 'primary',
+    timeMin: new Date().toISOString(),
+    maxResults: 10,
+    singleEvents: true,
+    orderBy: 'startTime',
+  });
+
+  return response.data.items;
+};
+
 module.exports = {
   getCalendarTokens,
-  createCalendarEvent
+  createCalendarEvent,
+  getUpcomingMeetings
 };

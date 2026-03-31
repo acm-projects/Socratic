@@ -24,4 +24,13 @@ router.post('/create-event', async (req, res, next) => {
   }
 });
 
+router.get('/upcoming-events', async (req, res, next) => {
+  try {
+    const events = await calendarService.getUpcomingMeetings();
+    res.send(events);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
