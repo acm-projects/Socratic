@@ -122,6 +122,172 @@
         }
       }
     },
+    "/extract": {
+      "post": {
+        "summary": "Extract Syllabus Data",
+        "description": "Upload a syllabus PDF and extract course data using Gemini AI",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "syllabusPdf": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The syllabus PDF file to upload"
+                  },
+                  "pdfText": {
+                    "type": "string",
+                    "description": "Raw text fallback if no PDF is provided"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Syllabus extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/SyllabusData" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Validation error" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/save": {
+      "post": {
+        "summary": "Save Syllabus Data",
+        "description": "Save extracted syllabus data (class and topics) to the database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SyllabusData" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Syllabus data saved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "savedClass": { "$ref": "#/components/schemas/Class" },
+                        "savedTopics": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/Topic" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing required fields" },
+          "409": { "description": "Class or topic already exists" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/upload": {
+      "post": {
+        "summary": "Upload Syllabus PDF to S3",
+        "description": "Upload a syllabus PDF to S3 and save the URL to the classes table",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["syllabusPdf", "class_code"],
+                "properties": {
+                  "syllabusPdf": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The syllabus PDF file to upload"
+                  },
+                  "class_code": {
+                    "type": "string",
+                    "example": "CS101",
+                    "description": "The class code to link the syllabus to"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Syllabus uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "syllabus_url": { "type": "string", "example": "https://socratic-syllabi.s3.us-east-2.amazonaws.com/syllabi/uuid-filename.pdf" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing file or class_code" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/syllabus/{class_code}": {
+      "get": {
+        "summary": "Get Syllabus URL for a Class",
+        "description": "Returns the S3 URL of the syllabus PDF for a specific class",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "CS101"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Syllabus URL returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "syllabus_url": { "type": "string", "example": "https://socratic-syllabi.s3.us-east-2.amazonaws.com/syllabi/uuid-filename.pdf" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "No syllabus found for this class" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
     "/users": {
       "get": {
         "summary": "Get All Users",
@@ -934,7 +1100,8 @@
           "class_code": { "type": "string", "example": "CS101" },
           "subject": { "type": "string", "example": "Computer Science" },
           "name": { "type": "string", "example": "Introduction to Programming" },
-          "user_id": { "type": "string", "example": "user_123" }
+          "user_id": { "type": "string", "example": "user_123" },
+          "syllabus_url": { "type": "string", "example": "https://socratic-syllabi.s3.us-east-2.amazonaws.com/syllabi/uuid-filename.pdf" }
         }
       },
       "Topic": {
@@ -1007,6 +1174,46 @@
           "sender_email": { "type": "string", "format": "email", "example": "sender@example.com" },
           "receiver_email": { "type": "string", "format": "email", "example": "receiver@example.com" },
           "status": { "type": "string", "example": "pending", "enum": ["pending", "accepted", "rejected"] }
+        }
+      },
+      "SyllabusData": {
+        "type": "object",
+        "properties": {
+          "courseName": { "type": "string", "example": "Introduction to Programming" },
+          "courseCode": { "type": "string", "example": "CS101" },
+          "instructor": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "example": "Dr. Smith" },
+              "email": { "type": "string", "example": "smith@university.edu" },
+              "officeHours": { "type": "string", "example": "MWF 2-3pm" }
+            }
+          },
+          "gradingPolicy": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": { "type": "string", "example": "Homework" },
+                "weightPercentage": { "type": "integer", "example": 20 }
+              }
+            }
+          },
+          "importantDates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "eventName": { "type": "string", "example": "Midterm" },
+                "date": { "type": "string", "example": "2026-03-15" }
+              }
+            }
+          },
+          "topics": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["Variables", "Loops", "Functions"]
+          }
         }
       }
     }
