@@ -63,26 +63,24 @@ function handleSave(content) {
             </button>
         ))}
     </div>
-<<<<<<< HEAD
 )} */}
-=======
-)}
-*/}
->>>>>>> c7020db9526848bef000d810e517b6163cfaa95f
 
             {messages.map((message, i) => (
                 <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 {message.role === "user" ? 
                 (
                     <div className = "flex flex-col items-end gap-1">
-                    <div className = "border border-gray-200 rounded-xl px-4 py-2 text-md text-gray-600 max-w-xs">
+                    <div className = "border border-gray-200 rounded-xl px-4 py-2 text-md text-gray-600 max-w-xs w-full break-words">
+                    <div className="flex flex-col gap-3">
                     {message.content}
-                    </div>
-                    <div className = "flex gap-1">
+                     <div className = "flex gap-1">
                     {[1,2,3,4,5].map(dot =>(
                         <div key={dot} className = {`w-3 h-3 rounded-full ${dot <= message.score ? "bg-[#72C559]" : "bg-gray-200"}`} />
 
                     ))}
+                    </div>
+                    </div>
+
                     </div>
                      </div>
                     ) : (
