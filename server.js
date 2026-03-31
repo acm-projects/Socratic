@@ -342,7 +342,10 @@ app.post("/friends", async (req, res) => {
 
 app.get("/users/:id/friend-requests", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM friend_requests WHERE receiver_email = $1", [req.params.id])
+    const result = await pool.query(
+      "SELECT * FROM friend_requests WHERE receiver_id = $1",
+      [req.params.id]
+    )
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
