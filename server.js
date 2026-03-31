@@ -101,7 +101,13 @@ app.delete("/users/:id", async (req, res) => {
 
 app.get("/classes", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM classes")
+    const { user_id } = req.query
+    let result
+    if (user_id) {
+      result = await pool.query("SELECT * FROM classes WHERE user_id = $1", [user_id])
+    } else {
+      result = await pool.query("SELECT * FROM classes")
+    }
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -119,10 +125,10 @@ app.get("/classes/:code", async (req, res) => {
 
 app.post("/classes", async (req, res) => {
   try {
-    const { class_code, subject, name } = req.body
+    const { class_code, subject, name, user_id } = req.body
     const result = await pool.query(
-      "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) RETURNING *",
-      [class_code, subject, name]
+      "INSERT INTO classes (class_code, subject, name, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [class_code, subject, name, user_id]
     ) 
     res.json(result.rows[0])
   } catch (error) {

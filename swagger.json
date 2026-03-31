@@ -263,7 +263,17 @@
     "/classes": {
       "get": {
         "summary": "Get All Classes",
-        "description": "Returns a list of all classes",
+        "description": "Returns all classes. Pass optional ?user_id= to filter by user.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "Filter classes by user ID",
+            "example": "user_123"
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of classes",
@@ -281,7 +291,7 @@
       },
       "post": {
         "summary": "Create a Class",
-        "description": "Creates a new class in the database",
+        "description": "Creates a new class linked to a user",
         "requestBody": {
           "required": true,
           "content": {
@@ -923,7 +933,8 @@
         "properties": {
           "class_code": { "type": "string", "example": "CS101" },
           "subject": { "type": "string", "example": "Computer Science" },
-          "name": { "type": "string", "example": "Introduction to Programming" }
+          "name": { "type": "string", "example": "Introduction to Programming" },
+          "user_id": { "type": "string", "example": "user_123" }
         }
       },
       "Topic": {
