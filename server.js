@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+const { randomUUID } = require("crypto")
 
 const express = require("express")
 const cors = require("cors")
@@ -355,6 +356,8 @@ app.get("/users/:id/friend-requests", async (req, res) => {
   }
 })
 
+const { randomUUID } = require("crypto")
+
 app.post("/friend-requests", async (req, res) => {
   try {
     const { sender_email, receiver_email, status } = req.body
@@ -363,7 +366,6 @@ app.post("/friend-requests", async (req, res) => {
       return res.status(400).json({ error: "sender_email and receiver_email are required" })
     }
 
-    // find users by email
     const senderResult = await pool.query(
       'SELECT id FROM "User" WHERE email = $1',
       [sender_email]
@@ -381,10 +383,11 @@ app.post("/friend-requests", async (req, res) => {
       return res.status(404).json({ error: "Sender or receiver not found" })
     }
 
-    // insert using IDs (NOT emails)
+    const id = randomUUID()
+
     const result = await pool.query(
-      "INSERT INTO friend_requests (sender_id, receiver_id, status) VALUES ($1, $2, $3) RETURNING *",
-      [sender.id, receiver.id, status || "pending"]
+      "INSERT INTO friend_requests (id, sender_id, receiver_id, status) VALUES ($1, $2, $3, $4) RETURNING *",
+      [id, sender.id, receiver.id, status || "pending"]
     )
 
     res.json(result.rows[0])
