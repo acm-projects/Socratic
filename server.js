@@ -1,4 +1,4 @@
-﻿require('dotenv').config()
+require('dotenv').config()
 
 
 const express = require("express")
@@ -16,11 +16,14 @@ const PORT = 5000
 const swaggerUi = require('swagger-ui-express')
 const swaggerDoc = require('./swagger.json')
 const syllabusRoutes = require('./backend/routes/syllabusRoutes')
+const calendarRoutes = require('./backend/routes/calendarRoutes')
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 app.use(cors())
 app.use(express.json())
 app.use('/', syllabusRoutes)
+app.use('/api/calendar', calendarRoutes)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })

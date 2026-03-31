@@ -33,4 +33,27 @@ router.get('/upcoming-events', async (req, res, next) => {
   }
 });
 
+router.get('/events', async (req, res, next) => {
+  try {
+    const { timeMin, timeMax, maxResults } = req.query;
+    const events = await calendarService.getEvents(
+      timeMin, 
+      timeMax, 
+      maxResults ? parseInt(maxResults, 10) : undefined
+    );
+    res.send(events);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/events', async (req, res, next) => {
+  try {
+    const result = await calendarService.clearSocraticEvents();
+    res.send({ message: `Successfully deleted ${result.deletedCount} Socratic events.` });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
