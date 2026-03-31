@@ -335,7 +335,7 @@ app.post("/friends", async (req, res) => {
 
 app.get("/users/:id/friend-requests", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM friend_requests WHERE receiver_id = $1", [req.params.id])
+    const result = await pool.query("SELECT * FROM friend_requests WHERE receiver_email = $1", [req.params.id])
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -344,10 +344,10 @@ app.get("/users/:id/friend-requests", async (req, res) => {
 
 app.post("/friend-requests", async (req, res) => {
   try {
-    const { id, sender_id, receiver_id, status } = req.body
+    const { id, sender_email, receiver_email, status } = req.body
     const result = await pool.query(
-      "INSERT INTO friend_requests (id, sender_id, receiver_id, status) VALUES ($1, $2, $3, $4) RETURNING *",
-      [id, sender_id, receiver_id, status]
+      "INSERT INTO friend_requests (id, sender_email, receiver_email, status) VALUES ($1, $2, $3, $4) RETURNING *",
+      [id, sender_email, receiver_email, status]
     )
     res.json(result.rows[0])
   } catch (error) {
