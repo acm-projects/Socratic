@@ -809,14 +809,15 @@
     },
     "/users/{id}/friend-requests": {
       "get": {
-        "summary": "Get Friend Requests by User",
-        "description": "Returns all incoming friend requests for a specific user",
+        "summary": "Get Friend Requests by User Email",
+        "description": "Returns all incoming friend requests for a specific user by email",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": { "type": "string" },
+            "description": "The user's email address"
           }
         ],
         "responses": {
@@ -838,7 +839,7 @@
     "/friend-requests": {
       "post": {
         "summary": "Send a Friend Request",
-        "description": "Creates a new friend request between two users",
+        "description": "Creates a new friend request using sender and receiver emails",
         "requestBody": {
           "required": true,
           "content": {
@@ -992,8 +993,8 @@
         "type": "object",
         "properties": {
           "id": { "type": "string", "example": "req_001" },
-          "sender_id": { "type": "string", "example": "user_123" },
-          "receiver_id": { "type": "string", "example": "user_456" },
+          "sender_email": { "type": "string", "format": "email", "example": "sender@example.com" },
+          "receiver_email": { "type": "string", "format": "email", "example": "receiver@example.com" },
           "status": { "type": "string", "example": "pending", "enum": ["pending", "accepted", "rejected"] }
         }
       }
