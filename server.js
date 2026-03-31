@@ -351,13 +351,39 @@ app.get("/users/:id/friend-requests", async (req, res) => {
 
 app.post("/friend-requests", async (req, res) => {
   try {
-    const { id, sender_email, receiver_email, status } = req.body
-    const result = await pool.query(
-      "INSERT INTO friend_requests (id, sender_email, receiver_email, status) VALUES ($1, $2, $3, $4) RETURNING *",
-      [id, sender_email, receiver_email, status]
+    const { sender_email, receiver_email, status } = req.body
+
+    if (!sender_email || !receiver_email) {
+      return res.status(400).json({ error: "sender_email and receiver_email are required" })
+    }
+
+    // find users by email
+    const senderResult = await pool.query(
+      'SELECT id FROM "User" WHERE email = $1',
+      [sender_email]
     )
+
+    const receiverResult = await pool.query(
+      'SELECT id FROM "User" WHERE email = $1',
+      [receiver_email]
+    )
+
+    const sender = senderResult.rows[0]
+    const receiver = receiverResult.rows[0]
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: "Sender or receiver not found" })
+    }
+
+    // insert using IDs (NOT emails)
+    const result = await pool.query(
+      "INSERT INTO friend_requests (sender_id, receiver_id, status) VALUES ($1, $2, $3) RETURNING *",
+      [sender.id, receiver.id, status || "pending"]
+    )
+
     res.json(result.rows[0])
   } catch (error) {
+    console.error(error)
     res.status(500).json({ error: error.message })
   }
 })
