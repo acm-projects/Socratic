@@ -7,13 +7,13 @@ import Navbar from '../components/Navbar';
 // ── TOPBAR PLACEHOLDER ──
 function Topbar() {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div className="bg-white rounded-xl p-3 mb-6">
       <div className="flex items-center justify-between">
         
         {/* Study Sessions */}
         <div className="flex-1 text-center">
           <div className="text-3xl font-bold text-teal-600">5</div>
-          <div className="text-sm text-gray-400 font-medium">Study sessions this week</div>
+          <div className="text-sm text-gray-400 font-medium">Study sessions</div>
         </div>
 
         {/* Vertical Divider */}
@@ -49,6 +49,16 @@ function Topbar() {
 }
  
 // ── UPCOMING SESSIONS ──
+function UpcomingSessions() {
+  return (
+    <div className="bg-white rounded-xl p-6 mb-6">
+      <div className="flex items-center justify-between">
+        <h2>Upcoming</h2>
+        </div>
+        </div>
+  );
+}
+
 
 
 // ── SHARED CLASSES ──
@@ -65,9 +75,10 @@ export default function SocialPage() {
   return (
     <main className="flex-col gap-6 p-6 min-h-screen bg-gray-100">
     <Navbar/>
-    <div className="ml-[130px]">
+    <div className="ml-[100px]">
 
       <Topbar />
+      <UpcomingSessions />
           </div>
 
     </main>
