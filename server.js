@@ -133,7 +133,7 @@ app.post("/classes", async (req, res) => {
     const result = await pool.query(
       "INSERT INTO classes (class_code, subject, name, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [class_code, subject, name, user_id]
-    ) 
+    )
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
