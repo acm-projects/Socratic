@@ -127,22 +127,15 @@ app.post("/classes", async (req, res) => {
     const { class_code, subject, name } = req.body
 
     const result = await pool.query(
-<<<<<<< HEAD
-      "INSERT INTO classes (class_code, subject, name, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
-      [class_code, subject, name, user_id]
-    )
-=======
       "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) RETURNING *",
       [class_code, subject, name]
     )
 
->>>>>>> 8348161 (Add update and delete routes for classes)
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
-
 app.put("/classes/:code", async (req, res) => {
   try {
     const { subject, name } = req.body
