@@ -74,9 +74,9 @@
         }
       }
     },
-    "/create-event": {
-      "post": {
-        "summary": "Create a Google Calendar Event",
+    "/api/calendar/create-event": {
+  "post": {
+    "summary": "Create a Google Calendar Event",
         "description": "Creates a new event on the user's primary Google Calendar, optionally with a Google Meet link",
         "requestBody": {
           "required": true,
