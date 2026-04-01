@@ -106,13 +106,7 @@ app.delete("/users/:id", async (req, res) => {
 
 app.get("/classes", async (req, res) => {
   try {
-    const { user_id } = req.query
-    let result
-    if (user_id) {
-      result = await pool.query("SELECT * FROM classes WHERE user_id = $1", [user_id])
-    } else {
-      result = await pool.query("SELECT * FROM classes")
-    }
+    const result = await pool.query("SELECT * FROM classes")
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -130,12 +124,56 @@ app.get("/classes/:code", async (req, res) => {
 
 app.post("/classes", async (req, res) => {
   try {
-    const { class_code, subject, name, user_id } = req.body
+    const { class_code, subject, name } = req.body
+
     const result = await pool.query(
+<<<<<<< HEAD
       "INSERT INTO classes (class_code, subject, name, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [class_code, subject, name, user_id]
     )
+=======
+      "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) RETURNING *",
+      [class_code, subject, name]
+    )
+
+>>>>>>> 8348161 (Add update and delete routes for classes)
     res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.put("/classes/:code", async (req, res) => {
+  try {
+    const { subject, name } = req.body
+
+    const result = await pool.query(
+      "UPDATE classes SET subject = $1, name = $2 WHERE class_code = $3 RETURNING *",
+      [subject, name, req.params.code]
+    )
+
+    if (!result.rows[0]) {
+      return res.status(404).json({ error: "Class not found" })
+    }
+
+    res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.delete("/classes/:code", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "DELETE FROM classes WHERE class_code = $1 RETURNING *",
+      [req.params.code]
+    )
+
+    if (!result.rows[0]) {
+      return res.status(404).json({ error: "Class not found" })
+    }
+
+    res.json({ message: "Class deleted successfully", deletedClass: result.rows[0] })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
