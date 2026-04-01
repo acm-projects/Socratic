@@ -543,31 +543,82 @@
       }
     },
     "/classes/{code}": {
-      "get": {
-        "summary": "Get Class by Code",
-        "description": "Returns a single class by its class code",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" },
-            "example": "CS101"
+  "get": {
+    "summary": "Get class by code",
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "CS101"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Class found"
+      },
+      "404": {
+        "description": "Class not found"
+      }
+    }
+  },
+  "put": {
+    "summary": "Update a class",
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "CS101"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "subject": { "type": "string" },
+              "name": { "type": "string" }
+            },
+            "required": ["subject", "name"]
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "A single class",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Class" }
-              }
-            }
-          },
-          "500": { "description": "Server error" }
         }
       }
     },
+    "responses": {
+      "200": {
+        "description": "Class updated successfully"
+      },
+      "404": {
+        "description": "Class not found"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete a class",
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "CS101"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Class deleted successfully"
+      },
+      "404": {
+        "description": "Class not found"
+      }
+    }
+  }
+},
     "/classes/{code}/topics": {
       "get": {
         "summary": "Get Topics by Class Code",

@@ -1,4 +1,9 @@
-const { PDFParse } = require("pdf-parse");
+let PDFParse;
+try {
+  ({ PDFParse } = require("pdf-parse"));
+} catch (error) {
+  console.warn("pdf-parse failed to load:", error.message);
+}
 const { GoogleGenAI } = require("@google/genai");
 const { syllabusSchema } = require("../utils/syllabusSchema");
 const crypto = require("crypto");
@@ -8,10 +13,13 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   let pdfText = "";
 
   if (fileBuffer) {
-    const parser = new PDFParse({ data: fileBuffer });
-    const pdfData = await parser.getText();
-    pdfText = pdfData.text;
-    await parser.destroy();
+  if (!PDFParse) {
+    throw new Error("PDF parsing is currently unavailable on this server. Use raw text fallback or fix pdf-parse compatibility.");
+  }
+  const parser = new PDFParse({ data: fileBuffer });
+  const pdfData = await parser.getText();
+  pdfText = pdfData.text;
+  await parser.destroy();
   } else if (rawTextFallback) {
     pdfText = rawTextFallback;
   } else {
