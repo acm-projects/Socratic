@@ -1,7 +1,7 @@
 "use client"
 import Link from 'next/link';
 import { useState , useEffect} from "react"
-
+import { useSession } from "next-auth/react"
 
 export default function ConfirmCoursesForm() {
   // const [courses, setCourses] = useState([
@@ -10,17 +10,35 @@ export default function ConfirmCoursesForm() {
   //     {id: 3, name: "Physics I", code: "PHYS1301", hasSyllabus: false},
   //     {id: 4, name: "Calculus II", code: "MATH2419", hasSyllabus: true},
   // ])
+  const { data: session } = useSession()
   const [courses, setCourses] = useState([])
 
-  useEffect(() => {
-    const savedCourses = JSON.parse(localStorage.getItem("courses") || "[]")
-    setCourses(savedCourses)}, 
-    [])
+    useEffect(() => {
+      if (!session?.user?.email) return
 
-  const handleDelete = (id) => {
-    const newCourses = courses.filter((course) => course.id !== id);
-    setCourses(newCourses);
-  }
+      // get user id 
+      fetch("http://3.128.186.118:5000/users")
+        .then(r => r.json())
+        .then(users => {
+          const me = users.find(u => u.email === session.user.email)
+          // fetch only their classes
+          return fetch(`http://3.128.186.118:5000/classes?user_id=${me.id}`)
+        })
+        .then(r => r.json())
+        .then(data => setCourses(data))
+    }, [session])
+
+    async function handleDelete(class_code) {
+      const res = await fetch(`http://3.128.186.118:5000/classes/${class_code}`, {
+        method: "DELETE"
+      })
+
+      if (res.ok) {
+        setCourses(courses.filter(c => c.class_code !== class_code))
+      } else {
+        console.error("Failed to delete class")
+      }
+    }
 
   return (
       <div className="bg-white rounded-2xl p-6 w-full max-w-2xl">
@@ -32,7 +50,7 @@ export default function ConfirmCoursesForm() {
             let syllabusText
             let syllabusStyle
 
-            if (course.hasSyllabus) {
+            if (course.syllabus_url) {
                 syllabusText = "SYLLABUS UPLOADED"
                 syllabusStyle = "text-[10px] font-semibold text-[#3D5C9B] bg-[#d9e5fd] border border-blue-100 px-2 py-0.5 rounded-xl"
             } else {
@@ -42,11 +60,11 @@ export default function ConfirmCoursesForm() {
 
             return (
             // shows information for one class
-            <div key={course.id} className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div key={course.class_code} className="px-5 py-4 border-b border-gray-200 flex items-center justify-between">
               <div>
                 <p className="font-semibold text-gray-900">{course.name}</p>
                 <div className="flex items-center gap-2 mt-1">
-                    <p className="text-sm text-gray-400">{course.code}</p>
+                    <p className="text-sm text-gray-400">{course.class_code}</p>
                     <span className={syllabusStyle}>{syllabusText}</span>
                 </div>
               </div>
@@ -60,7 +78,7 @@ export default function ConfirmCoursesForm() {
                 </button>
 
                 {/* delete button */}
-                <button onClick={() => handleDelete(course.id)} className="p-1 border-2 border-gray-400 rounded-md">
+                <button onClick={() => handleDelete(course.class_code)} className="p-1 border-2 border-gray-400 rounded-md">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_474_1218)">
                         <path d="M17.9769 3.26842H13.8914V1.63421C13.8914 1.20079 13.7192 0.785124 13.4127 0.47865C13.1062 0.172175 12.6906 0 12.2571 0L7.35451 0C6.92109 0 6.50542 0.172175 6.19895 0.47865C5.89247 0.785124 5.7203 1.20079 5.7203 1.63421V3.26842H1.63477V4.90264H3.26898V17.1592C3.26898 17.8094 3.52724 18.4329 3.98695 18.8926C4.44666 19.3523 5.07017 19.6105 5.7203 19.6105H13.8914C14.5415 19.6105 15.165 19.3523 15.6247 18.8926C16.0844 18.4329 16.3427 17.8094 16.3427 17.1592V4.90264H17.9769V3.26842ZM7.35451 1.63421H12.2571V3.26842H7.35451V1.63421ZM14.7085 17.1592C14.7085 17.3759 14.6224 17.5838 14.4691 17.737C14.3159 17.8902 14.1081 17.9763 13.8914 17.9763H5.7203C5.50359 17.9763 5.29575 17.8902 5.14251 17.737C4.98928 17.5838 4.90319 17.3759 4.90319 17.1592V4.90264H14.7085V17.1592Z" fill="#7C879B"/>
@@ -92,7 +110,7 @@ export default function ConfirmCoursesForm() {
         </div>
         
           {/* link to dashboard */}
-          <Link href="/" className="bg-black text-white px-8 py-3 rounded-xl font-semibold flex items-center justify-center mt-4">
+          <Link href="/dashboard" className="bg-black text-white px-8 py-3 rounded-xl font-semibold flex items-center justify-center mt-4">
             Create Dashboard
          </Link>
 

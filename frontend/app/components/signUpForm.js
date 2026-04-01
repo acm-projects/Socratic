@@ -7,10 +7,12 @@ import { useEffect } from 'react';
 
 
 export default function Signup() {
+
+  
   const { data: session, status } = useSession()
   const router = useRouter()
 
-  //hold form values
+  //hold form values hardcoded
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [school, setSchool] = useState("")
@@ -30,10 +32,37 @@ export default function Signup() {
   if (status === 'loading' || (session && !session.isNewUser)) return null // to avoid seeing signup form before redirect
 
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!isValid) return //checks if all fields were entered
-    const user = { firstName, lastName, school, major, classStatus } //saves the user
-    router.push("/createcourses") //go to next page if valid
+
+    const usersRes = await fetch("http://3.128.186.118:5000/users")
+    const users = await usersRes.json()
+    const me = users.find(u => u.email === session.user.email) //change this
+
+    if (!me) {
+      console.error("User not found")
+      return
+    }
+
+    const res = await fetch(`http://3.128.186.118:5000/users/${me.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: session.user.email,
+      first_name: firstName,
+      last_name: lastName,
+      school: school,
+      major: major,
+      class_status: classStatus,
+    })
+  })
+
+    if (res.ok) {
+      router.push("/createcourses") //go to next page if valid
+    } else {
+      const errorText = await res.text()
+      console.error("User save failed:", res.status, errorText)
+    }
   }
 
   return (
@@ -79,17 +108,16 @@ export default function Signup() {
               value={major}
               onChange={(e) => setMajor(e.target.value)}
               className="w-full bg-gray-50 rounded-lg p-3 text-sm text-gray-400">
-              <option value="">Select</option>
-              <option value="computerscience">Computer Science</option>
-              <option value="biology">Biology</option>
-              <option value="chemistry">Chemistry</option>
-              <option value="physics">Physics</option>
-              <option value="mathematics">Mathematics</option>
-              <option value="engineering">Engineering</option>
-              <option value="environmental_science">Environmental Science</option>
-              <option value="data_science">Data Science</option>
-              <option value="nursing">Nursing</option>
-              <option value="psychology">Psychology</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Biology">Biology</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Physics">Physics</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Environmental Science">Environmental Science</option>
+              <option value="Data Science">Data Science</option>
+              <option value="Nursing">Nursing</option>
+              <option value="Psychology">Psychology</option>
             </select>
           </div>
 
@@ -99,12 +127,11 @@ export default function Signup() {
               value={classStatus}
               onChange={(e) => setClassStatus(e.target.value)}
               className="w-full bg-gray-50 rounded-lg p-3 text-sm text-gray-400">
-              <option value="">Select</option>
-              <option value="freshman">Freshman</option>
-              <option value="sophomore">Sophomore</option>
-              <option value="junior">Junior</option>
-              <option value="senior">Senior</option>
-              <option value="senior">Graduate</option>
+              <option value="Freshman">Freshman</option>
+              <option value="Sophomore">Sophomore</option>
+              <option value="Junior">Junior</option>
+              <option value="Senior">Senior</option>
+              <option value="Graduate">Graduate</option>
               
             </select>
           </div>

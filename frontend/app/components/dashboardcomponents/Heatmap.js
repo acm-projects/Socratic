@@ -20,14 +20,14 @@ export default function Heatmap({ data = [] }) {
         {/*first row of map*/}
         <div className = "flex gap-2">
         {data.slice(0, 5).map((score, i) => (
-        <div key={i} className={`w-[25px] h-[25px] ${getColor(score)} rounded-xs`}/>
+        <div key={i} className={`w-[22px] h-[22px] ${getColor(score)} rounded-xs`}/>
         ))}
         </div>
         
         {/*second row of map*/}
         <div className = "flex gap-2">
         {data.slice(5, 10).map((score, i) => (
-        <div key={i} className = {`w-[25px] h-[25px] ${getColor(score)} rounded-xs`}/>
+        <div key={i} className = {`w-[22px] h-[22px] ${getColor(score)} rounded-xs`}/>
         ))}
         </div>
         </div>

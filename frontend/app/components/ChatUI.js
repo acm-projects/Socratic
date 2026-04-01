@@ -63,13 +63,7 @@ function handleSave(content) {
             </button>
         ))}
     </div>
-<<<<<<< HEAD
-)} */}
-=======
-)}
-*/}
->>>>>>> c7020db9526848bef000d810e517b6163cfaa95f
-
+)}*/}
             {messages.map((message, i) => (
                 <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                 {message.role === "user" ? 

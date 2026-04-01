@@ -1,24 +1,96 @@
 "use client"
-import Link from 'next/link';
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 export default function Home() {
+  const { data: session } = useSession()
+  const router = useRouter()
   const [subject, setSubject] = useState("")
   const [courseCode, setCourseCode] = useState("")
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(null)
 
-  const currentCourses = JSON.parse(localStorage.getItem("courses") || "[]") 
+    async function saveCourse() {
+      console.log("session:", session)
+      console.log("courseCode:", courseCode, "subject:", subject)
 
-  function saveCourse() {
-    const newCourse = {
-    id: currentCourses.length + 1,
-    name: subject,
-    code: courseCode,
-    hasSyllabus: file !== null
-  }
-    currentCourses.push(newCourse)
-    localStorage.setItem("courses", JSON.stringify(currentCourses))
-  }
+      //get user
+      const usersRes = await fetch("http://3.128.186.118:5000/users")
+      const users = await usersRes.json()
+      const me = users.find(u => u.email === session.user.email)
+
+      if (!me) { //user isnt found
+        console.error("User not found")
+        return
+      }
+
+      const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          class_code: courseCode,
+          subject: subject,
+          name: subject,
+          user_id: me.id,
+        })
+        })
+
+        if (!courseRes.ok) {
+          const err = await courseRes.text()
+          console.error("Failed to save class:", err)
+          return
+        }
+
+        console.log("Class saved")
+
+        //syllabus file added
+        if (file) {
+         //upload form to s3 
+        const uploadForm = new FormData()
+        uploadForm.append("syllabusPdf", file)
+        uploadForm.append("class_code", courseCode)
+
+        const uploadRes = await fetch("http://3.128.186.118:5000/upload", {
+            method: "POST",
+            body: uploadForm
+          })
+          const uploadData = await uploadRes.json()
+        console.log("Uploaded:", uploadData.syllabus_url)
+
+        //extract from file
+        const extractForm = new FormData()
+        extractForm.append("syllabusPdf", file)
+
+        const extractRes = await fetch("http://3.128.186.118:5000/extract", {
+          method: "POST",
+          body: extractForm
+        })
+
+        if (!extractRes.ok) {
+          const err = await extractRes.text()
+          console.error("Extract failed:", extractRes.status, err)
+          return
+        }
+
+        const extractData = await extractRes.json()
+        console.log("Extracted data:", extractData)
+
+
+        //save extracted data to syllabus
+        const saveRes = await fetch("http://3.128.186.118:5000/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(extractData.data)
+        })
+        const saveData = await saveRes.json()
+        console.log("Saved topics:", saveData.data.savedTopics)
+        }
+        
+      }
+
+      
+
 
   // to add an additional course, save current information and reset inputs
   function addNewCourse() {

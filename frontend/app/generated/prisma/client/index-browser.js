@@ -172,7 +172,11 @@ exports.Prisma.Friend_requestsScalarFieldEnum = {
 exports.Prisma.FriendsScalarFieldEnum = {
   user_id: 'user_id',
   friend_id: 'friend_id',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  first_name: 'first_name',
+  last_name: 'last_name',
+  streak: 'streak',
+  total_xp: 'total_xp'
 };
 
 exports.Prisma.TopicsScalarFieldEnum = {
@@ -203,7 +207,14 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  name: 'name'
+  name: 'name',
+  first_name: 'first_name',
+  last_name: 'last_name',
+  school: 'school',
+  major: 'major',
+  class_status: 'class_status',
+  streak: 'streak',
+  weekly_xp: 'weekly_xp'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {

@@ -10,7 +10,7 @@ const data = [
 export default function WeeklyRecap() {
   return (
     <div className="bg-white rounded-xl p-4 mt-12 w-full">
-      <p className="text-lg font-bold text-gray-900 mb-4">Weekly Recap</p>
+      <p className="text-lg font-bold text-gray-900 mb-6 mt-2 ml-2">Weekly Recap</p>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />

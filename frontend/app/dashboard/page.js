@@ -18,7 +18,8 @@ export default function Home() {
     "Computer Science I",
     "Discrete Math",
     "Physics I",
-    "Calculus II"
+    "Calculus II",
+     "Linear Algebra"
   ]);
 
   const[showModal, setShowModal] = useState(false);
@@ -43,7 +44,7 @@ function deleteCourse(name) {
         
 
       <div className="ml-[120px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
-              <h2 className="text-3xl font-bold text-black ">Dashboard</h2> 
+              {/* <h2 className="text-3xl font-bold text-black ">Dashboard</h2>  */}
        {/*} <Header title="Dashboard" showPlus={false} /> */}
         {showModal && <Addcoursemodal onClose={() => setShowModal(false)} onAdd={addCourse} />}
         
@@ -52,7 +53,7 @@ function deleteCourse(name) {
           {/* Left column - My Courses */}
           <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between w-[603px]">
-              <h2 className="text-2xl font-bold text-gray-900">My Courses</h2>
+              <h2 className="text-2xl font-bold text-gray-900 pt-4">My Courses</h2>
               <button
                 onClick={() => setShowModal(true)}
                 className="transition-transform duration-200 hover:scale-110 cursor-pointer">
