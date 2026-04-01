@@ -387,8 +387,6 @@ app.get("/users/:id/friend-requests", async (req, res) => {
   }
 })
 
-const { randomUUID } = require("crypto")
-
 app.post("/friend-requests", async (req, res) => {
   try {
     const { sender_email, receiver_email, status } = req.body
