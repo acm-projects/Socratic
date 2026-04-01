@@ -20,9 +20,9 @@ const authOption = {
             scope: 'openid email profile https://www.googleapis.com/auth/calendar',
 
             //extra for testing, shows permissions at every login
-            // prompt: "consent",
-            // access_type: "offline",
-            // response_type: "code"
+            //prompt: "consent",
+            //access_type: "offline",
+            //response_type: "code"
         }
   }
     }),

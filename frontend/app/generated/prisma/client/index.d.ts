@@ -5429,6 +5429,8 @@ export namespace Prisma {
     subject: string | null
     name: string | null
     created_at: Date | null
+    user_id: string | null
+    syllabus_url: string | null
   }
 
   export type ClassesMaxAggregateOutputType = {
@@ -5436,6 +5438,8 @@ export namespace Prisma {
     subject: string | null
     name: string | null
     created_at: Date | null
+    user_id: string | null
+    syllabus_url: string | null
   }
 
   export type ClassesCountAggregateOutputType = {
@@ -5443,6 +5447,8 @@ export namespace Prisma {
     subject: number
     name: number
     created_at: number
+    user_id: number
+    syllabus_url: number
     _all: number
   }
 
@@ -5452,6 +5458,8 @@ export namespace Prisma {
     subject?: true
     name?: true
     created_at?: true
+    user_id?: true
+    syllabus_url?: true
   }
 
   export type ClassesMaxAggregateInputType = {
@@ -5459,6 +5467,8 @@ export namespace Prisma {
     subject?: true
     name?: true
     created_at?: true
+    user_id?: true
+    syllabus_url?: true
   }
 
   export type ClassesCountAggregateInputType = {
@@ -5466,6 +5476,8 @@ export namespace Prisma {
     subject?: true
     name?: true
     created_at?: true
+    user_id?: true
+    syllabus_url?: true
     _all?: true
   }
 
@@ -5546,6 +5558,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at: Date | null
+    user_id: string | null
+    syllabus_url: string | null
     _count: ClassesCountAggregateOutputType | null
     _min: ClassesMinAggregateOutputType | null
     _max: ClassesMaxAggregateOutputType | null
@@ -5570,6 +5584,8 @@ export namespace Prisma {
     subject?: boolean
     name?: boolean
     created_at?: boolean
+    user_id?: boolean
+    syllabus_url?: boolean
     chat_sessions?: boolean | classes$chat_sessionsArgs<ExtArgs>
     daily_topic_metrics?: boolean | classes$daily_topic_metricsArgs<ExtArgs>
     topics?: boolean | classes$topicsArgs<ExtArgs>
@@ -5581,6 +5597,8 @@ export namespace Prisma {
     subject?: boolean
     name?: boolean
     created_at?: boolean
+    user_id?: boolean
+    syllabus_url?: boolean
   }, ExtArgs["result"]["classes"]>
 
   export type classesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5588,6 +5606,8 @@ export namespace Prisma {
     subject?: boolean
     name?: boolean
     created_at?: boolean
+    user_id?: boolean
+    syllabus_url?: boolean
   }, ExtArgs["result"]["classes"]>
 
   export type classesSelectScalar = {
@@ -5595,9 +5615,11 @@ export namespace Prisma {
     subject?: boolean
     name?: boolean
     created_at?: boolean
+    user_id?: boolean
+    syllabus_url?: boolean
   }
 
-  export type classesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"class_code" | "subject" | "name" | "created_at", ExtArgs["result"]["classes"]>
+  export type classesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"class_code" | "subject" | "name" | "created_at" | "user_id" | "syllabus_url", ExtArgs["result"]["classes"]>
   export type classesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_sessions?: boolean | classes$chat_sessionsArgs<ExtArgs>
     daily_topic_metrics?: boolean | classes$daily_topic_metricsArgs<ExtArgs>
@@ -5619,6 +5641,8 @@ export namespace Prisma {
       subject: string
       name: string
       created_at: Date | null
+      user_id: string | null
+      syllabus_url: string | null
     }, ExtArgs["result"]["classes"]>
     composites: {}
   }
@@ -6049,6 +6073,8 @@ export namespace Prisma {
     readonly subject: FieldRef<"classes", 'String'>
     readonly name: FieldRef<"classes", 'String'>
     readonly created_at: FieldRef<"classes", 'DateTime'>
+    readonly user_id: FieldRef<"classes", 'String'>
+    readonly syllabus_url: FieldRef<"classes", 'String'>
   }
     
 
@@ -8735,46 +8761,80 @@ export namespace Prisma {
 
   export type AggregateFriends = {
     _count: FriendsCountAggregateOutputType | null
+    _avg: FriendsAvgAggregateOutputType | null
+    _sum: FriendsSumAggregateOutputType | null
     _min: FriendsMinAggregateOutputType | null
     _max: FriendsMaxAggregateOutputType | null
+  }
+
+  export type FriendsAvgAggregateOutputType = {
+    streak: number | null
+    total_xp: number | null
+  }
+
+  export type FriendsSumAggregateOutputType = {
+    streak: number | null
+    total_xp: number | null
   }
 
   export type FriendsMinAggregateOutputType = {
     user_id: string | null
     friend_id: string | null
     created_at: Date | null
+    streak: number | null
+    total_xp: number | null
   }
 
   export type FriendsMaxAggregateOutputType = {
     user_id: string | null
     friend_id: string | null
     created_at: Date | null
+    streak: number | null
+    total_xp: number | null
   }
 
   export type FriendsCountAggregateOutputType = {
     user_id: number
     friend_id: number
     created_at: number
+    streak: number
+    total_xp: number
     _all: number
   }
 
+
+  export type FriendsAvgAggregateInputType = {
+    streak?: true
+    total_xp?: true
+  }
+
+  export type FriendsSumAggregateInputType = {
+    streak?: true
+    total_xp?: true
+  }
 
   export type FriendsMinAggregateInputType = {
     user_id?: true
     friend_id?: true
     created_at?: true
+    streak?: true
+    total_xp?: true
   }
 
   export type FriendsMaxAggregateInputType = {
     user_id?: true
     friend_id?: true
     created_at?: true
+    streak?: true
+    total_xp?: true
   }
 
   export type FriendsCountAggregateInputType = {
     user_id?: true
     friend_id?: true
     created_at?: true
+    streak?: true
+    total_xp?: true
     _all?: true
   }
 
@@ -8816,6 +8876,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: FriendsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FriendsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: FriendsMinAggregateInputType
@@ -8846,6 +8918,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: FriendsCountAggregateInputType | true
+    _avg?: FriendsAvgAggregateInputType
+    _sum?: FriendsSumAggregateInputType
     _min?: FriendsMinAggregateInputType
     _max?: FriendsMaxAggregateInputType
   }
@@ -8854,7 +8928,11 @@ export namespace Prisma {
     user_id: string
     friend_id: string
     created_at: Date | null
+    streak: number | null
+    total_xp: number | null
     _count: FriendsCountAggregateOutputType | null
+    _avg: FriendsAvgAggregateOutputType | null
+    _sum: FriendsSumAggregateOutputType | null
     _min: FriendsMinAggregateOutputType | null
     _max: FriendsMaxAggregateOutputType | null
   }
@@ -8877,6 +8955,8 @@ export namespace Prisma {
     user_id?: boolean
     friend_id?: boolean
     created_at?: boolean
+    streak?: boolean
+    total_xp?: boolean
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["friends"]>
@@ -8885,6 +8965,8 @@ export namespace Prisma {
     user_id?: boolean
     friend_id?: boolean
     created_at?: boolean
+    streak?: boolean
+    total_xp?: boolean
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["friends"]>
@@ -8893,6 +8975,8 @@ export namespace Prisma {
     user_id?: boolean
     friend_id?: boolean
     created_at?: boolean
+    streak?: boolean
+    total_xp?: boolean
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["friends"]>
@@ -8901,9 +8985,11 @@ export namespace Prisma {
     user_id?: boolean
     friend_id?: boolean
     created_at?: boolean
+    streak?: boolean
+    total_xp?: boolean
   }
 
-  export type friendsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "friend_id" | "created_at", ExtArgs["result"]["friends"]>
+  export type friendsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "friend_id" | "created_at" | "streak" | "total_xp", ExtArgs["result"]["friends"]>
   export type friendsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
@@ -8927,6 +9013,8 @@ export namespace Prisma {
       user_id: string
       friend_id: string
       created_at: Date | null
+      streak: number | null
+      total_xp: number | null
     }, ExtArgs["result"]["friends"]>
     composites: {}
   }
@@ -9355,6 +9443,8 @@ export namespace Prisma {
     readonly user_id: FieldRef<"friends", 'String'>
     readonly friend_id: FieldRef<"friends", 'String'>
     readonly created_at: FieldRef<"friends", 'DateTime'>
+    readonly streak: FieldRef<"friends", 'Int'>
+    readonly total_xp: FieldRef<"friends", 'Int'>
   }
     
 
@@ -13025,10 +13115,14 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     total_xp: number | null
+    streak: number | null
+    weekly_xp: number | null
   }
 
   export type UserSumAggregateOutputType = {
     total_xp: number | null
+    streak: number | null
+    weekly_xp: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -13040,6 +13134,13 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     name: string | null
+    first_name: string | null
+    last_name: string | null
+    school: string | null
+    major: string | null
+    class_status: string | null
+    streak: number | null
+    weekly_xp: number | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -13051,6 +13152,13 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     name: string | null
+    first_name: string | null
+    last_name: string | null
+    school: string | null
+    major: string | null
+    class_status: string | null
+    streak: number | null
+    weekly_xp: number | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -13062,16 +13170,27 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     name: number
+    first_name: number
+    last_name: number
+    school: number
+    major: number
+    class_status: number
+    streak: number
+    weekly_xp: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
     total_xp?: true
+    streak?: true
+    weekly_xp?: true
   }
 
   export type UserSumAggregateInputType = {
     total_xp?: true
+    streak?: true
+    weekly_xp?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -13083,6 +13202,13 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     name?: true
+    first_name?: true
+    last_name?: true
+    school?: true
+    major?: true
+    class_status?: true
+    streak?: true
+    weekly_xp?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -13094,6 +13220,13 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     name?: true
+    first_name?: true
+    last_name?: true
+    school?: true
+    major?: true
+    class_status?: true
+    streak?: true
+    weekly_xp?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -13105,6 +13238,13 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     name?: true
+    first_name?: true
+    last_name?: true
+    school?: true
+    major?: true
+    class_status?: true
+    streak?: true
+    weekly_xp?: true
     _all?: true
   }
 
@@ -13203,6 +13343,13 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     name: string | null
+    first_name: string | null
+    last_name: string | null
+    school: string | null
+    major: string | null
+    class_status: string | null
+    streak: number | null
+    weekly_xp: number | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -13233,6 +13380,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     name?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    school?: boolean
+    major?: boolean
+    class_status?: boolean
+    streak?: boolean
+    weekly_xp?: boolean
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
     daily_topic_metrics?: boolean | User$daily_topic_metricsArgs<ExtArgs>
@@ -13254,6 +13408,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     name?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    school?: boolean
+    major?: boolean
+    class_status?: boolean
+    streak?: boolean
+    weekly_xp?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13265,6 +13426,13 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     name?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    school?: boolean
+    major?: boolean
+    class_status?: boolean
+    streak?: boolean
+    weekly_xp?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -13276,9 +13444,16 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     name?: boolean
+    first_name?: boolean
+    last_name?: boolean
+    school?: boolean
+    major?: boolean
+    class_status?: boolean
+    streak?: boolean
+    weekly_xp?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "total_xp" | "image" | "emailVerified" | "createdAt" | "updatedAt" | "name", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "total_xp" | "image" | "emailVerified" | "createdAt" | "updatedAt" | "name" | "first_name" | "last_name" | "school" | "major" | "class_status" | "streak" | "weekly_xp", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
@@ -13316,6 +13491,13 @@ export namespace Prisma {
       createdAt: Date | null
       updatedAt: Date | null
       name: string | null
+      first_name: string | null
+      last_name: string | null
+      school: string | null
+      major: string | null
+      class_status: string | null
+      streak: number | null
+      weekly_xp: number | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -13756,6 +13938,13 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly name: FieldRef<"User", 'String'>
+    readonly first_name: FieldRef<"User", 'String'>
+    readonly last_name: FieldRef<"User", 'String'>
+    readonly school: FieldRef<"User", 'String'>
+    readonly major: FieldRef<"User", 'String'>
+    readonly class_status: FieldRef<"User", 'String'>
+    readonly streak: FieldRef<"User", 'Int'>
+    readonly weekly_xp: FieldRef<"User", 'Int'>
   }
     
 
@@ -14420,6 +14609,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     refresh_token_expires_in: number | null
+    updatedat: Date | null
   }
 
   export type AccountMaxAggregateOutputType = {
@@ -14437,6 +14627,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     refresh_token_expires_in: number | null
+    updatedat: Date | null
   }
 
   export type AccountCountAggregateOutputType = {
@@ -14454,6 +14645,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     refresh_token_expires_in: number
+    updatedat: number
     _all: number
   }
 
@@ -14483,6 +14675,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     refresh_token_expires_in?: true
+    updatedat?: true
   }
 
   export type AccountMaxAggregateInputType = {
@@ -14500,6 +14693,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     refresh_token_expires_in?: true
+    updatedat?: true
   }
 
   export type AccountCountAggregateInputType = {
@@ -14517,6 +14711,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     refresh_token_expires_in?: true
+    updatedat?: true
     _all?: true
   }
 
@@ -14613,7 +14808,7 @@ export namespace Prisma {
     access_token: string | null
     refresh_token: string | null
     expires_at: bigint | null
-    type: string
+    type: string | null
     token_type: string | null
     scope: string | null
     id_token: string | null
@@ -14621,6 +14816,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     refresh_token_expires_in: number | null
+    updatedat: Date | null
     _count: AccountCountAggregateOutputType | null
     _avg: AccountAvgAggregateOutputType | null
     _sum: AccountSumAggregateOutputType | null
@@ -14657,6 +14853,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     refresh_token_expires_in?: boolean
+    updatedat?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -14675,6 +14872,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     refresh_token_expires_in?: boolean
+    updatedat?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -14693,6 +14891,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     refresh_token_expires_in?: boolean
+    updatedat?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -14711,9 +14910,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     refresh_token_expires_in?: boolean
+    updatedat?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "provider" | "providerAccountId" | "access_token" | "refresh_token" | "expires_at" | "type" | "token_type" | "scope" | "id_token" | "session_state" | "createdAt" | "updatedAt" | "refresh_token_expires_in", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "provider" | "providerAccountId" | "access_token" | "refresh_token" | "expires_at" | "type" | "token_type" | "scope" | "id_token" | "session_state" | "createdAt" | "updatedAt" | "refresh_token_expires_in" | "updatedat", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -14736,7 +14936,7 @@ export namespace Prisma {
       access_token: string | null
       refresh_token: string | null
       expires_at: bigint | null
-      type: string
+      type: string | null
       token_type: string | null
       scope: string | null
       id_token: string | null
@@ -14744,6 +14944,7 @@ export namespace Prisma {
       createdAt: Date | null
       updatedAt: Date | null
       refresh_token_expires_in: number | null
+      updatedat: Date | null
     }, ExtArgs["result"]["account"]>
     composites: {}
   }
@@ -15182,6 +15383,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Account", 'DateTime'>
     readonly updatedAt: FieldRef<"Account", 'DateTime'>
     readonly refresh_token_expires_in: FieldRef<"Account", 'Int'>
+    readonly updatedat: FieldRef<"Account", 'DateTime'>
   }
     
 
@@ -15653,7 +15855,9 @@ export namespace Prisma {
     class_code: 'class_code',
     subject: 'subject',
     name: 'name',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    user_id: 'user_id',
+    syllabus_url: 'syllabus_url'
   };
 
   export type ClassesScalarFieldEnum = (typeof ClassesScalarFieldEnum)[keyof typeof ClassesScalarFieldEnum]
@@ -15685,7 +15889,9 @@ export namespace Prisma {
   export const FriendsScalarFieldEnum: {
     user_id: 'user_id',
     friend_id: 'friend_id',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    streak: 'streak',
+    total_xp: 'total_xp'
   };
 
   export type FriendsScalarFieldEnum = (typeof FriendsScalarFieldEnum)[keyof typeof FriendsScalarFieldEnum]
@@ -15728,7 +15934,14 @@ export namespace Prisma {
     emailVerified: 'emailVerified',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    name: 'name'
+    name: 'name',
+    first_name: 'first_name',
+    last_name: 'last_name',
+    school: 'school',
+    major: 'major',
+    class_status: 'class_status',
+    streak: 'streak',
+    weekly_xp: 'weekly_xp'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -15748,7 +15961,8 @@ export namespace Prisma {
     session_state: 'session_state',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    refresh_token_expires_in: 'refresh_token_expires_in'
+    refresh_token_expires_in: 'refresh_token_expires_in',
+    updatedat: 'updatedat'
   };
 
   export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -16059,6 +16273,8 @@ export namespace Prisma {
     subject?: StringFilter<"classes"> | string
     name?: StringFilter<"classes"> | string
     created_at?: DateTimeNullableFilter<"classes"> | Date | string | null
+    user_id?: StringNullableFilter<"classes"> | string | null
+    syllabus_url?: StringNullableFilter<"classes"> | string | null
     chat_sessions?: Chat_sessionsListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     topics?: TopicsListRelationFilter
@@ -16069,6 +16285,8 @@ export namespace Prisma {
     subject?: SortOrder
     name?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    user_id?: SortOrderInput | SortOrder
+    syllabus_url?: SortOrderInput | SortOrder
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
     daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
     topics?: topicsOrderByRelationAggregateInput
@@ -16082,6 +16300,8 @@ export namespace Prisma {
     subject?: StringFilter<"classes"> | string
     name?: StringFilter<"classes"> | string
     created_at?: DateTimeNullableFilter<"classes"> | Date | string | null
+    user_id?: StringNullableFilter<"classes"> | string | null
+    syllabus_url?: StringNullableFilter<"classes"> | string | null
     chat_sessions?: Chat_sessionsListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     topics?: TopicsListRelationFilter
@@ -16092,6 +16312,8 @@ export namespace Prisma {
     subject?: SortOrder
     name?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    user_id?: SortOrderInput | SortOrder
+    syllabus_url?: SortOrderInput | SortOrder
     _count?: classesCountOrderByAggregateInput
     _max?: classesMaxOrderByAggregateInput
     _min?: classesMinOrderByAggregateInput
@@ -16105,6 +16327,8 @@ export namespace Prisma {
     subject?: StringWithAggregatesFilter<"classes"> | string
     name?: StringWithAggregatesFilter<"classes"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
+    user_id?: StringNullableWithAggregatesFilter<"classes"> | string | null
+    syllabus_url?: StringNullableWithAggregatesFilter<"classes"> | string | null
   }
 
   export type daily_topic_metricsWhereInput = {
@@ -16241,6 +16465,8 @@ export namespace Prisma {
     user_id?: StringFilter<"friends"> | string
     friend_id?: StringFilter<"friends"> | string
     created_at?: DateTimeNullableFilter<"friends"> | Date | string | null
+    streak?: IntNullableFilter<"friends"> | number | null
+    total_xp?: IntNullableFilter<"friends"> | number | null
     users_friends_friend_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
     users_friends_user_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -16249,6 +16475,8 @@ export namespace Prisma {
     user_id?: SortOrder
     friend_id?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    streak?: SortOrderInput | SortOrder
+    total_xp?: SortOrderInput | SortOrder
     users_friends_friend_idTousers?: UserOrderByWithRelationInput
     users_friends_user_idTousers?: UserOrderByWithRelationInput
   }
@@ -16261,6 +16489,8 @@ export namespace Prisma {
     user_id?: StringFilter<"friends"> | string
     friend_id?: StringFilter<"friends"> | string
     created_at?: DateTimeNullableFilter<"friends"> | Date | string | null
+    streak?: IntNullableFilter<"friends"> | number | null
+    total_xp?: IntNullableFilter<"friends"> | number | null
     users_friends_friend_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
     users_friends_user_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "user_id_friend_id">
@@ -16269,9 +16499,13 @@ export namespace Prisma {
     user_id?: SortOrder
     friend_id?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    streak?: SortOrderInput | SortOrder
+    total_xp?: SortOrderInput | SortOrder
     _count?: friendsCountOrderByAggregateInput
+    _avg?: friendsAvgOrderByAggregateInput
     _max?: friendsMaxOrderByAggregateInput
     _min?: friendsMinOrderByAggregateInput
+    _sum?: friendsSumOrderByAggregateInput
   }
 
   export type friendsScalarWhereWithAggregatesInput = {
@@ -16281,6 +16515,8 @@ export namespace Prisma {
     user_id?: StringWithAggregatesFilter<"friends"> | string
     friend_id?: StringWithAggregatesFilter<"friends"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"friends"> | Date | string | null
+    streak?: IntNullableWithAggregatesFilter<"friends"> | number | null
+    total_xp?: IntNullableWithAggregatesFilter<"friends"> | number | null
   }
 
   export type topicsWhereInput = {
@@ -16452,6 +16688,13 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"User"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     name?: StringNullableFilter<"User"> | string | null
+    first_name?: StringNullableFilter<"User"> | string | null
+    last_name?: StringNullableFilter<"User"> | string | null
+    school?: StringNullableFilter<"User"> | string | null
+    major?: StringNullableFilter<"User"> | string | null
+    class_status?: StringNullableFilter<"User"> | string | null
+    streak?: IntNullableFilter<"User"> | number | null
+    weekly_xp?: IntNullableFilter<"User"> | number | null
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
@@ -16472,6 +16715,13 @@ export namespace Prisma {
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    first_name?: SortOrderInput | SortOrder
+    last_name?: SortOrderInput | SortOrder
+    school?: SortOrderInput | SortOrder
+    major?: SortOrderInput | SortOrder
+    class_status?: SortOrderInput | SortOrder
+    streak?: SortOrderInput | SortOrder
+    weekly_xp?: SortOrderInput | SortOrder
     Account?: AccountOrderByRelationAggregateInput
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
     daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
@@ -16495,6 +16745,13 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"User"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     name?: StringNullableFilter<"User"> | string | null
+    first_name?: StringNullableFilter<"User"> | string | null
+    last_name?: StringNullableFilter<"User"> | string | null
+    school?: StringNullableFilter<"User"> | string | null
+    major?: StringNullableFilter<"User"> | string | null
+    class_status?: StringNullableFilter<"User"> | string | null
+    streak?: IntNullableFilter<"User"> | number | null
+    weekly_xp?: IntNullableFilter<"User"> | number | null
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
@@ -16515,6 +16772,13 @@ export namespace Prisma {
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    first_name?: SortOrderInput | SortOrder
+    last_name?: SortOrderInput | SortOrder
+    school?: SortOrderInput | SortOrder
+    major?: SortOrderInput | SortOrder
+    class_status?: SortOrderInput | SortOrder
+    streak?: SortOrderInput | SortOrder
+    weekly_xp?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -16534,6 +16798,13 @@ export namespace Prisma {
     createdAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    first_name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    last_name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    school?: StringNullableWithAggregatesFilter<"User"> | string | null
+    major?: StringNullableWithAggregatesFilter<"User"> | string | null
+    class_status?: StringNullableWithAggregatesFilter<"User"> | string | null
+    streak?: IntNullableWithAggregatesFilter<"User"> | number | null
+    weekly_xp?: IntNullableWithAggregatesFilter<"User"> | number | null
   }
 
   export type AccountWhereInput = {
@@ -16546,7 +16817,7 @@ export namespace Prisma {
     access_token?: StringNullableFilter<"Account"> | string | null
     refresh_token?: StringNullableFilter<"Account"> | string | null
     expires_at?: BigIntNullableFilter<"Account"> | bigint | number | null
-    type?: StringFilter<"Account"> | string
+    type?: StringNullableFilter<"Account"> | string | null
     token_type?: StringNullableFilter<"Account"> | string | null
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
@@ -16554,6 +16825,7 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
+    updatedat?: DateTimeNullableFilter<"Account"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -16564,7 +16836,7 @@ export namespace Prisma {
     access_token?: SortOrderInput | SortOrder
     refresh_token?: SortOrderInput | SortOrder
     expires_at?: SortOrderInput | SortOrder
-    type?: SortOrder
+    type?: SortOrderInput | SortOrder
     token_type?: SortOrderInput | SortOrder
     scope?: SortOrderInput | SortOrder
     id_token?: SortOrderInput | SortOrder
@@ -16572,6 +16844,7 @@ export namespace Prisma {
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     refresh_token_expires_in?: SortOrderInput | SortOrder
+    updatedat?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -16586,7 +16859,7 @@ export namespace Prisma {
     access_token?: StringNullableFilter<"Account"> | string | null
     refresh_token?: StringNullableFilter<"Account"> | string | null
     expires_at?: BigIntNullableFilter<"Account"> | bigint | number | null
-    type?: StringFilter<"Account"> | string
+    type?: StringNullableFilter<"Account"> | string | null
     token_type?: StringNullableFilter<"Account"> | string | null
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
@@ -16594,6 +16867,7 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
+    updatedat?: DateTimeNullableFilter<"Account"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "provider_providerAccountId">
 
@@ -16604,7 +16878,7 @@ export namespace Prisma {
     access_token?: SortOrderInput | SortOrder
     refresh_token?: SortOrderInput | SortOrder
     expires_at?: SortOrderInput | SortOrder
-    type?: SortOrder
+    type?: SortOrderInput | SortOrder
     token_type?: SortOrderInput | SortOrder
     scope?: SortOrderInput | SortOrder
     id_token?: SortOrderInput | SortOrder
@@ -16612,6 +16886,7 @@ export namespace Prisma {
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     refresh_token_expires_in?: SortOrderInput | SortOrder
+    updatedat?: SortOrderInput | SortOrder
     _count?: AccountCountOrderByAggregateInput
     _avg?: AccountAvgOrderByAggregateInput
     _max?: AccountMaxOrderByAggregateInput
@@ -16629,7 +16904,7 @@ export namespace Prisma {
     access_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
     refresh_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
     expires_at?: BigIntNullableWithAggregatesFilter<"Account"> | bigint | number | null
-    type?: StringWithAggregatesFilter<"Account"> | string
+    type?: StringNullableWithAggregatesFilter<"Account"> | string | null
     token_type?: StringNullableWithAggregatesFilter<"Account"> | string | null
     scope?: StringNullableWithAggregatesFilter<"Account"> | string | null
     id_token?: StringNullableWithAggregatesFilter<"Account"> | string | null
@@ -16637,6 +16912,7 @@ export namespace Prisma {
     createdAt?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
     refresh_token_expires_in?: IntNullableWithAggregatesFilter<"Account"> | number | null
+    updatedat?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
   }
 
   export type achievementsCreateInput = {
@@ -16823,6 +17099,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
@@ -16833,6 +17111,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
@@ -16843,6 +17123,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
@@ -16853,6 +17135,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
@@ -16863,6 +17147,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
   }
 
   export type classesUpdateManyMutationInput = {
@@ -16870,6 +17156,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type classesUncheckedUpdateManyInput = {
@@ -16877,6 +17165,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type daily_topic_metricsCreateInput = {
@@ -16995,6 +17285,8 @@ export namespace Prisma {
 
   export type friendsCreateInput = {
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
     users_friends_friend_idTousers: UserCreateNestedOneWithoutFriends_friends_friend_idTousersInput
     users_friends_user_idTousers: UserCreateNestedOneWithoutFriends_friends_user_idTousersInput
   }
@@ -17003,10 +17295,14 @@ export namespace Prisma {
     user_id: string
     friend_id: string
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
   }
 
   export type friendsUpdateInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
     users_friends_friend_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_friend_idTousersNestedInput
     users_friends_user_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_user_idTousersNestedInput
   }
@@ -17015,22 +17311,30 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     friend_id?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friendsCreateManyInput = {
     user_id: string
     friend_id: string
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
   }
 
   export type friendsUpdateManyMutationInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friendsUncheckedUpdateManyInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     friend_id?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type topicsCreateInput = {
@@ -17186,6 +17490,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -17206,6 +17517,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -17226,6 +17544,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -17246,6 +17571,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -17266,6 +17598,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -17277,6 +17616,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -17288,6 +17634,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountCreateInput = {
@@ -17296,7 +17649,7 @@ export namespace Prisma {
     access_token?: string | null
     refresh_token?: string | null
     expires_at?: bigint | number | null
-    type: string
+    type?: string | null
     token_type?: string | null
     scope?: string | null
     id_token?: string | null
@@ -17304,6 +17657,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     refresh_token_expires_in?: number | null
+    updatedat?: Date | string | null
     user: UserCreateNestedOneWithoutAccountInput
   }
 
@@ -17314,7 +17668,7 @@ export namespace Prisma {
     access_token?: string | null
     refresh_token?: string | null
     expires_at?: bigint | number | null
-    type: string
+    type?: string | null
     token_type?: string | null
     scope?: string | null
     id_token?: string | null
@@ -17322,6 +17676,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     refresh_token_expires_in?: number | null
+    updatedat?: Date | string | null
   }
 
   export type AccountUpdateInput = {
@@ -17330,7 +17685,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17338,6 +17693,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutAccountNestedInput
   }
 
@@ -17348,7 +17704,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17356,6 +17712,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AccountCreateManyInput = {
@@ -17365,7 +17722,7 @@ export namespace Prisma {
     access_token?: string | null
     refresh_token?: string | null
     expires_at?: bigint | number | null
-    type: string
+    type?: string | null
     token_type?: string | null
     scope?: string | null
     id_token?: string | null
@@ -17373,6 +17730,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     refresh_token_expires_in?: number | null
+    updatedat?: Date | string | null
   }
 
   export type AccountUpdateManyMutationInput = {
@@ -17381,7 +17739,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17389,6 +17747,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AccountUncheckedUpdateManyInput = {
@@ -17398,7 +17757,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17406,6 +17765,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -17689,6 +18049,8 @@ export namespace Prisma {
     subject?: SortOrder
     name?: SortOrder
     created_at?: SortOrder
+    user_id?: SortOrder
+    syllabus_url?: SortOrder
   }
 
   export type classesMaxOrderByAggregateInput = {
@@ -17696,6 +18058,8 @@ export namespace Prisma {
     subject?: SortOrder
     name?: SortOrder
     created_at?: SortOrder
+    user_id?: SortOrder
+    syllabus_url?: SortOrder
   }
 
   export type classesMinOrderByAggregateInput = {
@@ -17703,6 +18067,8 @@ export namespace Prisma {
     subject?: SortOrder
     name?: SortOrder
     created_at?: SortOrder
+    user_id?: SortOrder
+    syllabus_url?: SortOrder
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -17832,18 +18198,34 @@ export namespace Prisma {
     user_id?: SortOrder
     friend_id?: SortOrder
     created_at?: SortOrder
+    streak?: SortOrder
+    total_xp?: SortOrder
+  }
+
+  export type friendsAvgOrderByAggregateInput = {
+    streak?: SortOrder
+    total_xp?: SortOrder
   }
 
   export type friendsMaxOrderByAggregateInput = {
     user_id?: SortOrder
     friend_id?: SortOrder
     created_at?: SortOrder
+    streak?: SortOrder
+    total_xp?: SortOrder
   }
 
   export type friendsMinOrderByAggregateInput = {
     user_id?: SortOrder
     friend_id?: SortOrder
     created_at?: SortOrder
+    streak?: SortOrder
+    total_xp?: SortOrder
+  }
+
+  export type friendsSumOrderByAggregateInput = {
+    streak?: SortOrder
+    total_xp?: SortOrder
   }
 
   export type topicsCountOrderByAggregateInput = {
@@ -18000,10 +18382,19 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     name?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
+    school?: SortOrder
+    major?: SortOrder
+    class_status?: SortOrder
+    streak?: SortOrder
+    weekly_xp?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     total_xp?: SortOrder
+    streak?: SortOrder
+    weekly_xp?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -18015,6 +18406,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     name?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
+    school?: SortOrder
+    major?: SortOrder
+    class_status?: SortOrder
+    streak?: SortOrder
+    weekly_xp?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -18026,10 +18424,19 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     name?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
+    school?: SortOrder
+    major?: SortOrder
+    class_status?: SortOrder
+    streak?: SortOrder
+    weekly_xp?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     total_xp?: SortOrder
+    streak?: SortOrder
+    weekly_xp?: SortOrder
   }
 
   export type BigIntNullableFilter<$PrismaModel = never> = {
@@ -18063,6 +18470,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     refresh_token_expires_in?: SortOrder
+    updatedat?: SortOrder
   }
 
   export type AccountAvgOrderByAggregateInput = {
@@ -18085,6 +18493,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     refresh_token_expires_in?: SortOrder
+    updatedat?: SortOrder
   }
 
   export type AccountMinOrderByAggregateInput = {
@@ -18102,6 +18511,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     refresh_token_expires_in?: SortOrder
+    updatedat?: SortOrder
   }
 
   export type AccountSumOrderByAggregateInput = {
@@ -19437,6 +19847,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
   }
@@ -19446,6 +19858,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
   }
@@ -19483,6 +19897,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
@@ -19502,6 +19923,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
@@ -19560,6 +19988,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
   }
@@ -19569,6 +19999,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
   }
@@ -19618,6 +20050,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -19637,6 +20076,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -19808,6 +20254,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
   }
@@ -19817,6 +20265,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
   }
@@ -19854,6 +20304,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
@@ -19873,6 +20330,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
@@ -19904,6 +20368,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
   }
@@ -19913,6 +20379,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
   }
@@ -19962,6 +20430,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -19981,6 +20456,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -20000,6 +20482,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -20019,6 +20508,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -20043,6 +20539,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -20062,6 +20565,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -20097,6 +20607,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -20116,6 +20633,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -20146,6 +20670,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -20165,6 +20696,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -20184,6 +20722,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -20203,6 +20748,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -20227,6 +20779,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -20246,6 +20805,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -20281,6 +20847,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -20300,6 +20873,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -20330,6 +20910,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -20349,6 +20936,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -20416,6 +21010,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
   }
@@ -20425,6 +21021,8 @@ export namespace Prisma {
     subject: string
     name: string
     created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
   }
@@ -20482,6 +21080,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
   }
@@ -20491,6 +21091,8 @@ export namespace Prisma {
     subject?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
   }
@@ -20525,6 +21127,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -20544,6 +21153,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -20606,6 +21222,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -20625,6 +21248,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -20644,6 +21274,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -20663,6 +21300,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -20698,6 +21342,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -20717,6 +21368,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -20733,7 +21391,7 @@ export namespace Prisma {
     access_token?: string | null
     refresh_token?: string | null
     expires_at?: bigint | number | null
-    type: string
+    type?: string | null
     token_type?: string | null
     scope?: string | null
     id_token?: string | null
@@ -20741,6 +21399,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     refresh_token_expires_in?: number | null
+    updatedat?: Date | string | null
   }
 
   export type AccountUncheckedCreateWithoutUserInput = {
@@ -20749,7 +21408,7 @@ export namespace Prisma {
     access_token?: string | null
     refresh_token?: string | null
     expires_at?: bigint | number | null
-    type: string
+    type?: string | null
     token_type?: string | null
     scope?: string | null
     id_token?: string | null
@@ -20757,6 +21416,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     refresh_token_expires_in?: number | null
+    updatedat?: Date | string | null
   }
 
   export type AccountCreateOrConnectWithoutUserInput = {
@@ -20875,12 +21535,16 @@ export namespace Prisma {
 
   export type friendsCreateWithoutUsers_friends_friend_idTousersInput = {
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
     users_friends_user_idTousers: UserCreateNestedOneWithoutFriends_friends_user_idTousersInput
   }
 
   export type friendsUncheckedCreateWithoutUsers_friends_friend_idTousersInput = {
     user_id: string
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
   }
 
   export type friendsCreateOrConnectWithoutUsers_friends_friend_idTousersInput = {
@@ -20895,12 +21559,16 @@ export namespace Prisma {
 
   export type friendsCreateWithoutUsers_friends_user_idTousersInput = {
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
     users_friends_friend_idTousers: UserCreateNestedOneWithoutFriends_friends_friend_idTousersInput
   }
 
   export type friendsUncheckedCreateWithoutUsers_friends_user_idTousersInput = {
     friend_id: string
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
   }
 
   export type friendsCreateOrConnectWithoutUsers_friends_user_idTousersInput = {
@@ -20983,7 +21651,7 @@ export namespace Prisma {
     access_token?: StringNullableFilter<"Account"> | string | null
     refresh_token?: StringNullableFilter<"Account"> | string | null
     expires_at?: BigIntNullableFilter<"Account"> | bigint | number | null
-    type?: StringFilter<"Account"> | string
+    type?: StringNullableFilter<"Account"> | string | null
     token_type?: StringNullableFilter<"Account"> | string | null
     scope?: StringNullableFilter<"Account"> | string | null
     id_token?: StringNullableFilter<"Account"> | string | null
@@ -20991,6 +21659,7 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Account"> | Date | string | null
     refresh_token_expires_in?: IntNullableFilter<"Account"> | number | null
+    updatedat?: DateTimeNullableFilter<"Account"> | Date | string | null
   }
 
   export type chat_sessionsUpsertWithWhereUniqueWithoutUsersInput = {
@@ -21092,6 +21761,8 @@ export namespace Prisma {
     user_id?: StringFilter<"friends"> | string
     friend_id?: StringFilter<"friends"> | string
     created_at?: DateTimeNullableFilter<"friends"> | Date | string | null
+    streak?: IntNullableFilter<"friends"> | number | null
+    total_xp?: IntNullableFilter<"friends"> | number | null
   }
 
   export type friendsUpsertWithWhereUniqueWithoutUsers_friends_user_idTousersInput = {
@@ -21162,6 +21833,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
@@ -21181,6 +21859,13 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
@@ -21216,6 +21901,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -21235,6 +21927,13 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -21447,7 +22146,7 @@ export namespace Prisma {
     access_token?: string | null
     refresh_token?: string | null
     expires_at?: bigint | number | null
-    type: string
+    type?: string | null
     token_type?: string | null
     scope?: string | null
     id_token?: string | null
@@ -21455,6 +22154,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     refresh_token_expires_in?: number | null
+    updatedat?: Date | string | null
   }
 
   export type chat_sessionsCreateManyUsersInput = {
@@ -21491,11 +22191,15 @@ export namespace Prisma {
   export type friendsCreateManyUsers_friends_friend_idTousersInput = {
     user_id: string
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
   }
 
   export type friendsCreateManyUsers_friends_user_idTousersInput = {
     friend_id: string
     created_at?: Date | string | null
+    streak?: number | null
+    total_xp?: number | null
   }
 
   export type user_achievementsCreateManyUsersInput = {
@@ -21516,7 +22220,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21524,6 +22228,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AccountUncheckedUpdateWithoutUserInput = {
@@ -21532,7 +22237,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21540,6 +22245,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AccountUncheckedUpdateManyWithoutUserInput = {
@@ -21548,7 +22254,7 @@ export namespace Prisma {
     access_token?: NullableStringFieldUpdateOperationsInput | string | null
     refresh_token?: NullableStringFieldUpdateOperationsInput | string | null
     expires_at?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    type?: StringFieldUpdateOperationsInput | string
+    type?: NullableStringFieldUpdateOperationsInput | string | null
     token_type?: NullableStringFieldUpdateOperationsInput | string | null
     scope?: NullableStringFieldUpdateOperationsInput | string | null
     id_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21556,6 +22262,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     refresh_token_expires_in?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type chat_sessionsUpdateWithoutUsersInput = {
@@ -21655,32 +22362,44 @@ export namespace Prisma {
 
   export type friendsUpdateWithoutUsers_friends_friend_idTousersInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
     users_friends_user_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_user_idTousersNestedInput
   }
 
   export type friendsUncheckedUpdateWithoutUsers_friends_friend_idTousersInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersInput = {
     user_id?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friendsUpdateWithoutUsers_friends_user_idTousersInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
     users_friends_friend_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_friend_idTousersNestedInput
   }
 
   export type friendsUncheckedUpdateWithoutUsers_friends_user_idTousersInput = {
     friend_id?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersInput = {
     friend_id?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type user_achievementsUpdateWithoutUsersInput = {

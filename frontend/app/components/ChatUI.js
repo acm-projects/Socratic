@@ -1,138 +1,172 @@
 "use client"
 import { useState } from "react";
-import { CircleArrowUp, Bookmark } from 'lucide-react';
+import { CircleArrowUp, Bookmark, PanelLeftOpen, PanelLeftClose, SquarePen } from 'lucide-react';
 import ChatModal from "./ChatModal";
 
 export default function ChatUI(){
     const [showModal, setShowModal] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [saved, setSaved] = useState([]);
+    const [chats, setChats] = useState([
+        { id: 1, title: "What is a tautology?" },
+        { id: 2, title: "Explain recursion" },
+        { id: 3, title: "Help with Calculus II" },
+    ]);
+    const [activeChatId, setActiveChatId] = useState(null);
 
+    function handleSave(content) {
+        if (saved.includes(content)) {
+            setSaved(saved.filter(s => s !== content));
+        } else {
+            setSaved([...saved, content]);
+        }
+    }
 
-      const [input, setInput] = useState("");
-      const [messages,setMessages] = useState([]);
-      const [saved, setSaved] = useState([]);
-
-function handleSave(content) {
-  if (saved.includes(content)) {
-    setSaved(saved.filter(s => s !== content));
-  } else {
-    setSaved([...saved, content]);
-  }
-}
-
-      function handleSend(){
+    function handleSend() {
         if (!input) return;
-        setMessages([...messages, {role: "user", content: input, score: 2}, {role: "ai", content: "A tautology is a statement that is always true."} ])
+        const newMessages = [...messages, {role: "user", content: input, score: 2}, {role: "ai", content: "A tautology in discrete mathematics is a compound proposition or statement that is always true, regardless of the truth values of its individual components. It acts as a logical constant true in truth tables and is crucial for constructing valid logical arguments, mathematical proofs, and simplifying boolean algebra expressions."}];
+        setMessages(newMessages);
+        if (!activeChatId) {
+            const newChat = { id: Date.now(), title: input.slice(0, 30) };
+            setChats(prev => [newChat, ...prev]);
+            setActiveChatId(newChat.id);
+        }
         setInput("");
-      }
+    }
 
+    function handleNewChat() {
+        setMessages([]);
+        setActiveChatId(null);
+        setInput("");
+    }
 
-    
-    return(
+    return (
+        <div className="flex gap-4 mt-6">
 
-        <div className = "bg-white rounded-xl w-[1235px] h-[700px] flex flex-col justify-between p-6 mt-6">
-          
-              {/* messages area */}
-             <div className="flex-1 overflow-y-auto flex flex-col gap-4 p-10">
+            {/* sidebar */}
+            <div className={`transition-all duration-300 ${sidebarOpen ? "w-56" : "w-15"} flex-shrink-0`}>
+                <div className="bg-white rounded-xl h-[700px] flex flex-col overflow-hidden border border-gray-100">
 
-
-              {/* welcome text */}
-
-              {messages.length === 0 && (
-    <div className="flex-1 flex flex-col items-center justify-center h-full mt-32">
-        <p className="text-4xl font-bold text-black mb-2">Welcome back!</p>
-        <p className="text-gray-400 text-xl">How can I help you today?</p>
-    </div>
-)}
-
-              {/* suggestions
-
-{/* {messages.length === 0 && (
-    <div className="flex flex-wrap gap-2 justify-center mt-4">
-        {[
-            "Explain this concept to me",
-            "Quiz me on my last topic",
-            "What should I study next?",
-        ].map((suggestion) => (
-            <button
-                key={suggestion}
-                onClick={() => setInput(suggestion)}
-                className="text-sm px-4 py-2 rounded-full text-[#3551D2] cursor-pointer transition-all bg-[#EEEFFE]"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-            >
-                {suggestion}
-            </button>
-        ))}
-    </div>
-)} */}
-
-            {messages.map((message, i) => (
-                <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                {message.role === "user" ? 
-                (
-                    <div className = "flex flex-col items-end gap-1">
-                    <div className = "border border-gray-200 rounded-xl px-4 py-2 text-md text-gray-600 max-w-xs w-full break-words">
-                    <div className="flex flex-col gap-3">
-                    {message.content}
-                     <div className = "flex gap-1">
-                    {[1,2,3,4,5].map(dot =>(
-                        <div key={dot} className = {`w-3 h-3 rounded-full ${dot <= message.score ? "bg-[#72C559]" : "bg-gray-200"}`} />
-
-                    ))}
-                    </div>
+                    {/* sidebar header */}
+                    <div className="flex items-center justify-between p-3 border-b border-gray-100">
+                        {sidebarOpen && <span className="text-sm font-medium text-gray-700">Chats</span>}
+                        <div className="flex items-center gap-2 ml-auto">
+                            {sidebarOpen && (
+                                <button onClick={handleNewChat} className="text-gray-400 hover:text-gray-600">
+                                    <SquarePen size={16} />
+                                </button>
+                            )}
+                            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-400 hover:text-gray-600">
+                                {sidebarOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+                            </button>
+                        </div>
                     </div>
 
-                    </div>
-                     </div>
-                    ) : (
-<div className="flex flex-col gap-2">
-  <div className="text-sm text-gray-700 max-w-lg">
-    {message.content}
-  </div>
-  
-  <button
-    onClick={() => {
-        handleSave(message.content);
-         setShowModal(true);
-    }}
-    className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50">
-    <Bookmark 
-      size={14} 
-      className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"} 
-    />
-    SAVE FOR REVIEW
-        </button>
-            </div>
-                 )}
-                 </div>
-                ))}
-             </div>
+                    {/* new chat button */}
+                    {sidebarOpen && (
+                        <div className="p-3">
+                            <button
+                                onClick={handleNewChat}
+                                className="w-full text-sm bg-[#DCFCE7] text-[#03876E] rounded-lg py-2 px-3 text-left hover:bg-[#bbf7d0] transition-colors">
+                                + New Chat
+                            </button>
+                        </div>
+                    )}
 
-
-            {/*search bar*/}
-            <div className = "items-center flex flex-col gap-2">
-<div className="flex items-center w-3/4 justify-between rounded-xl px-6 py-8 bg-white"
-    style={{
-        border: "2px solid #C2E7FF",
-        boxShadow: "0 0 16px rgba(45, 212, 191, 0.4), 0 0 32px rgba(45, 212, 191, 0.15)"
-    }}
->                    <input
-                    value={input}
-                    onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
-                    onChange={(e)=> setInput(e.target.value)}
-                    className="w-full outline-none bg-transparent text-sm text-gray-500"
-                    placeholder="Ask Socratic AI"
-                    />
-
-                    <CircleArrowUp size={20} color="black"  onClick = {handleSend} className="cursor-pointer" />
-
-
+                    {/* chat history */}
+                    {sidebarOpen && (
+                        <div className="flex-1 overflow-y-auto flex flex-col gap-1 px-3">
+                            <p className="text-xs text-gray-400 mb-1">Recent</p>
+                            {chats.map(chat => (
+                                <button
+                                    key={chat.id}
+                                    onClick={() => setActiveChatId(chat.id)}
+                                    className={`text-left text-xs px-3 py-2 rounded-lg truncate transition-colors w-full
+                                        ${activeChatId === chat.id ? "bg-[#DCFCE7] text-[#03876E]" : "text-gray-600 hover:bg-gray-100"}`}>
+                                    {chat.title}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
-                <p className ="text-center text-xs text-gray-500 mt-4 mb-2" >Ask deeper questions to improve depth scoring.  Learn more about Socratic’s question scoring. </p>
             </div>
-            {showModal && <ChatModal onClose={() => setShowModal(false)} />}
 
+            {/* main chat */}
+            <div className="bg-gray-100 rounded-xl flex-1 h-[700px] flex flex-col p-6">
+
+                {/* messages area OR welcome screen */}
+                {messages.length === 0 ? (
+                    <div className="flex-1 flex flex-col items-center justify-center gap-2">
+                        <p className="text-4xl font-bold text-black mb-2">Welcome back!</p>
+                        <p className="text-gray-400 text-xl mb-6">How can I help you today?</p>
+
+                        {/* search bar centered */}
+                        <div className="flex items-center w-3/4 justify-between rounded-xl px-6 py-8 bg-white border border-gray-200">
+                            <input
+                                value={input}
+                                onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
+                                onChange={(e) => setInput(e.target.value)}
+                                className="w-full outline-none bg-transparent text-sm text-gray-500"
+                                placeholder="Ask Socratic AI"
+                            />
+                            <CircleArrowUp size={20} color="black" onClick={handleSend} className="cursor-pointer" />
+                        </div>
+                        <p className="text-center text-xs text-gray-500 mt-2">Ask deeper questions to improve depth scoring. Learn more about Socratic's question scoring.</p>
+                    </div>
+                ) : (
+                    <>
+                        {/* messages */}
+                <div className="flex-1 overflow-y-auto flex flex-col gap-2 p-10 max-w-4xl w-full mx-auto">                            {messages.map((message, i) => (
+                                <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                                    {message.role === "user" ? (
+                                        <div className="flex flex-col items-end gap-1">
+                                            <div className="border border-gray-300 bg-white rounded-xl px-4 py-2 text-md text-gray-600 max-w-xs w-full break-words">
+                                                <div className="flex flex-col gap-3">
+                                                    {message.content}
+                                                    <div className="flex gap-1">
+                                                        {[1,2,3,4,5].map(dot => (
+                                                            <div key={dot} className={`w-3 h-3 rounded-full ${dot <= message.score ? "bg-[#72C559]" : "bg-gray-200"}`} />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-2">
+                                            <div className="text-sm text-gray-700 max-w-lg">{message.content}</div>
+                                            <button
+                                                onClick={() => { handleSave(message.content); setShowModal(true); }}
+                                                className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50">
+                                                <Bookmark size={14} className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"} />
+                                                SAVE FOR REVIEW
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* search bar at bottom */}
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="flex items-center w-3/4 justify-between rounded-xl px-6 py-8 bg-white border border-gray-200">
+                                <input
+                                    value={input}
+                                    onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    className="w-full outline-none bg-transparent text-sm text-gray-500"
+                                    placeholder="Ask Socratic AI"
+                                />
+                                <CircleArrowUp size={20} color="black" onClick={handleSend} className="cursor-pointer" />
+                            </div>
+                            <p className="text-center text-xs text-gray-500 mt-2 mb-2">Ask deeper questions to improve depth scoring. Learn more about Socratic's question scoring.</p>
+                        </div>
+                    </>
+                )}
+
+                {showModal && <ChatModal onClose={() => setShowModal(false)} />}
+            </div>
         </div>
-
     );
-
 }

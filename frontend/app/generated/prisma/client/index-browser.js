@@ -149,7 +149,9 @@ exports.Prisma.ClassesScalarFieldEnum = {
   class_code: 'class_code',
   subject: 'subject',
   name: 'name',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  user_id: 'user_id',
+  syllabus_url: 'syllabus_url'
 };
 
 exports.Prisma.Daily_topic_metricsScalarFieldEnum = {
@@ -172,7 +174,9 @@ exports.Prisma.Friend_requestsScalarFieldEnum = {
 exports.Prisma.FriendsScalarFieldEnum = {
   user_id: 'user_id',
   friend_id: 'friend_id',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  streak: 'streak',
+  total_xp: 'total_xp'
 };
 
 exports.Prisma.TopicsScalarFieldEnum = {
@@ -203,7 +207,14 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  name: 'name'
+  name: 'name',
+  first_name: 'first_name',
+  last_name: 'last_name',
+  school: 'school',
+  major: 'major',
+  class_status: 'class_status',
+  streak: 'streak',
+  weekly_xp: 'weekly_xp'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -220,7 +231,8 @@ exports.Prisma.AccountScalarFieldEnum = {
   session_state: 'session_state',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  refresh_token_expires_in: 'refresh_token_expires_in'
+  refresh_token_expires_in: 'refresh_token_expires_in',
+  updatedat: 'updatedat'
 };
 
 exports.Prisma.SortOrder = {
