@@ -42,7 +42,7 @@ async function run() {
     // Initialize LLMs and Chains
     const evaluatorLLM = new ChatGoogleGenerativeAI({
       model: TARGET_MODEL,
-      temperature: 0,
+      temperature: 0, //keep things foccussed andconsistent less vibey
       apiKey: process.env.GEMINI_RESPONSE_API,
     });
 
