@@ -149,7 +149,9 @@ exports.Prisma.ClassesScalarFieldEnum = {
   class_code: 'class_code',
   subject: 'subject',
   name: 'name',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  user_id: 'user_id',
+  syllabus_url: 'syllabus_url'
 };
 
 exports.Prisma.Daily_topic_metricsScalarFieldEnum = {
@@ -173,8 +175,6 @@ exports.Prisma.FriendsScalarFieldEnum = {
   user_id: 'user_id',
   friend_id: 'friend_id',
   created_at: 'created_at',
-  first_name: 'first_name',
-  last_name: 'last_name',
   streak: 'streak',
   total_xp: 'total_xp'
 };
@@ -231,7 +231,8 @@ exports.Prisma.AccountScalarFieldEnum = {
   session_state: 'session_state',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  refresh_token_expires_in: 'refresh_token_expires_in'
+  refresh_token_expires_in: 'refresh_token_expires_in',
+  updatedat: 'updatedat'
 };
 
 exports.Prisma.SortOrder = {

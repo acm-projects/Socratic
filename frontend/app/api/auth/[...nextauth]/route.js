@@ -20,9 +20,9 @@ const authOption = {
             scope: 'openid email profile https://www.googleapis.com/auth/calendar',
 
             //extra for testing, shows permissions at every login
-            // prompt: "consent",
-            // access_type: "offline",
-            // response_type: "code"
+            //prompt: "consent",
+            //access_type: "offline",
+            //response_type: "code"
         }
   }
     }),
@@ -37,26 +37,25 @@ const authOption = {
       return true
     },
 
-    async jwt({ token, account, profile }) {
-      if (account) {
-        token.accessToken = account.access_token
-        // token.id = profile.id
-        token.isNewUser = newUsers.has(profile.email)  
-        newUsers.delete(profile.email)     
-        
-        const dbUser = await prisma.user.findUnique({
-          where: { email: profile.email }
-          })
-        token.id = dbUser?.id
-        
-      }
-      return token
-    },
+    
+async jwt({ token, account, profile }) {
+  if (account) {
+    token.accessToken = account.access_token
+    token.isNewUser = newUsers.has(profile.email)  
+    newUsers.delete(profile.email)
+    
+    const dbUser = await prisma.user.findUnique({
+      where: { email: profile.email }
+    })
+    token.id = dbUser?.id
+  }
+  return token
+},
 
     async session({ session, token }) {
       session.user.id = token.id
       session.isNewUser = token.isNewUser
-      session.accessToken = token.accessToken //added this line
+      session.accessToken = token.accessToken
       return session
     },
 

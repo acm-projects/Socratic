@@ -8,30 +8,37 @@ export default function Leaderboard(){
 
     {/*array of friends and their streaks or points*/}
     const [friends, setFriends] = useState([])
-      const { data: session } = useSession()
+    const { data: session, status } = useSession()
 
 
     {/*fetch data*/}
 useEffect(() => {
-  fetch(`/backend/users/u1/friends`)
+    if (!session) return  // add this line
+  fetch(`/backend/users/${session.user.id}/friends`)
     .then(res => res.json())
     .then(async (data) => {
       const friendDetails = await Promise.all(
         data.map(async (f) => {
           const user = await fetch(`/backend/users/${f.friend_id}`).then(r => r.json())
           console.log("user:", user) // just add this line
-          return {
-            id: f.friend_id,
-            name: user.name || user.email,
-            pts: user.total_xp,
-            streak: 0,
-          }
+        return {
+        id: f.friend_id,
+        name: user.name,
+        pts: user.total_xp,
+        streak: user.streak,  
+}
         })
       )
-      console.log(friendDetails)
-      setFriends([...friendDetails, { id: "you", name: "You", pts: 29, streak: 5 }])
+      const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
+      setFriends([...friendDetails, { 
+        id: session.user.id, 
+        name: "You", 
+        pts: me.total_xp, 
+        streak: me.streak
+      }])
     })
-}, [])
+}, [session])
+
 
 
     const sorted = friends.sort((a,b)=> b.streak - a.streak);
@@ -39,14 +46,15 @@ useEffect(() => {
     const top5 = sorted.slice(0,5);
     const you = friends.find(f => f.name === "You")
     const youInTop5 = top5.some(f => f.name === "You")
-const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you].filter(Boolean)
+    const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you].filter(Boolean)
     const [searchQuery, setSearchQuery] = useState("");
     const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
 
 
 
-if (friends.length < 3) return <div>Loading...</div>
 
+if (status === "loading") return <div>Loading...</div>
+if (friends.length < 3) return <div>Loading...</div>
 
 
 
@@ -127,13 +135,13 @@ if (friends.length < 3) return <div>Loading...</div>
 
     <div className="flex flex-col gap-1 w-full">
   {rest.map((friend, i) => (
-    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#F9FAFB]" : ""}`}>
+    <div key={friend.name} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#F9FAFB]" : ""}`}>
       <div className="flex items-center gap-3">
         <p className="text-gray-400 font-semibold text-sm">{i + 4}</p>
         <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-        <p className={`text-sm ${friend.id === "You" ? "font-bold" : "font-semibold"}`}>{friend.id}</p>
+        <p className={`text-sm ${friend.name === "You" ? "font-bold" : "font-semibold"}`}>{friend.name}</p>
       </div>
-      <p className={`text-sm ${friend.id === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
+      <p className={`text-sm ${friend.name === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
     </div>
   ))}
 

@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react"
 import Sendrequestmodal from "./Sendrequestmodal";
 
 
@@ -7,13 +8,15 @@ import Sendrequestmodal from "./Sendrequestmodal";
 
 
 export default function Requests(){
+  const { data: session, status } = useSession()
   const [requests, setRequests] = useState([]);
   const [showAddFriend, setShowAddFriend] = useState(false);
 
 
 
     useEffect(() => {
-    fetch(`/backend/users/u1/friend-requests`)
+    if (!session) return
+    fetch(`/backend/users/${session.user.id}/friend-requests`)
       .then(res => res.json())
       .then(async (data) => {
         const pending = data.filter(req => req.status === "pending")
@@ -22,7 +25,7 @@ export default function Requests(){
             const sender = await fetch(`/backend/users/${req.sender_id}`).then(r => r.json())
             return {
               id: req.id,
-              name: sender.name || sender.email,
+              name: sender.name,
               email: sender.email,
             }
           })

@@ -1,7 +1,9 @@
 "use client"
 import { EllipsisVertical } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Schedulemodal from "./Schedulemodal";
+import { useSession } from "next-auth/react";
+
 
 
 
@@ -9,12 +11,12 @@ import Schedulemodal from "./Schedulemodal";
 export default function Studysession(){
   const [showModal, setShowModal] = useState(false);
 
-    const meetings = [
-  { id: 1, course: "Discrete Math", time: "4:00-5:00 PM", date: "Feb 22", members: ["Sara", "Jane"] },
-  { id: 2, course: "Calculus II", time: "4:00-5:00 PM", date: "Feb 24", members: ["Sara", "Jane"] },
-];
+  const [meetings, setMeetings] = useState([]);
+  const { data: session } = useSession()
 
 
+  {/*fetch data*/}
+    
     return(
 
             <div className="bg-white w-[430px] h-77 rounded-xl p-7 mt-5">

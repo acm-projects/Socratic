@@ -5,10 +5,9 @@ import ChatUI from "../components/ChatUI";
  
 export default function Home() {
     return (
-        <main className="bg-[#F5F6FA] min-h-screen">
-            <Navbar />
-                 <div className="ml-[150px] pr-12 pt-6 pb-5 flex flex-col gap-6">
-                                  <h2 className="text-3xl font-bold text-black">Discrete Math</h2>
+        <main className="bg-[#F5F5F5] min-h-screen">
+                 <div className="ml-10 pr-12 pt-6 pb-6 flex flex-col gap-2">
+                                  <h2 className="text-2xl font-bold text-black">Discrete Math</h2>
 
                     <div>
                     <ChatUI/>

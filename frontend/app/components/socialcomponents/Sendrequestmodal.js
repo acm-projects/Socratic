@@ -1,8 +1,13 @@
 "use client"
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { X } from "lucide-react";
 
+
 export default function Sendrequestmodal({ onClose }) {
+
+  const [error, setError] = useState("");
+  const { data: session } = useSession()
   const [email, setEmail] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -10,6 +15,44 @@ export default function Sendrequestmodal({ onClose }) {
     setShowConfirmation(false);
     setEmail("");
     onClose();
+  }
+
+
+
+  async function handleSendRequest() {
+      console.log("my email:", session.user.email) // add this
+
+    setError("")
+    // step 1 - find user by email
+    const users = await fetch(`/backend/users`).then(r => r.json())
+      console.log("all users:", users)
+
+    const receiver = users.find(u => u.email === email)
+      console.log("receiver:", receiver)
+
+
+    if (!receiver) {
+      setError("No user found with that email")
+      return
+    }
+
+    // step 2 - send the request
+    const res = await fetch(`/backend/friend-requests`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender_email: session.user.email,
+        receiver_email: receiver.email
+      })
+    })
+
+  console.log("response status:", res.status)
+  const data = await res.json()
+  console.log("response data:", data)
+
+
+
+    setShowConfirmation(true)
   }
 
    {/*shows confirmation modal after adding friend*/}
@@ -51,8 +94,10 @@ export default function Sendrequestmodal({ onClose }) {
           className="border border-gray-200 rounded-xl p-3 text-sm bg-gray-50"
           placeholder="Enter email"
         />
+        {error && <p className="text-red-500 text-xs">{error}</p>}
+
         <button
-          onClick={() => setShowConfirmation(true)}
+          onClick={handleSendRequest}
           className="w-full bg-[#3959E9] hover:bg-[#2039AF] text-white text-sm font-medium py-3 rounded-xl">
           Send Friend Request
         </button>
