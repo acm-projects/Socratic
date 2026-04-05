@@ -1,9 +1,19 @@
+import { PineconeStore } from '@langchain/pinecone';
+import { Pinecone } from '@pinecone-database/pinecone';
+import { Embeddings } from '@langchain/core/embeddings';
+import { Document } from '@langchain/core/documents';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+//stored locally using Xenova/bge-small-en-v1.5 (ONNX, 384-dim, no API key).
+//stored in pinecone (socratic-tutor, 384-dim cosine index).
+
 const courseData = [
   // --- CS 1436: Fundamentals ---
   "CS 1436: Variables in C++ must be declared before they are used.",
   "CS 1436: A for loop is used when the number of iterations is known.",
   "CS 1436: Arrays are contiguous memory blocks holding elements of the same type.",
-
+  "CS 1436: A while loop is used when the number of iterations is unknown.",
   // --- CS 3345: Complexity & Analysis ---
   "CS 3345: Time complexity is the number of operations performed for a given input size.",
   "CS 3345: Big-O represents the Upper Bound (worst-case) of an algorithm's running time.",
@@ -33,18 +43,88 @@ const courseData = [
   "CS 3345: Prim's and Kruskal's algorithms are greedy approaches to find the Minimum Spanning Tree (MST)."
 ];
 
-export async function getVectorStore() {
-  return {
-    asRetriever: (limit: number) => ({
-      invoke: async (query: string) => {
-        const lowercaseQuery = query.toLowerCase();
-        const matches = courseData
-          .filter(text => text.toLowerCase().split(' ').some(word => word.length > 3 && lowercaseQuery.includes(word)))
-          .slice(0, limit);
 
-        const results = matches.length > 0 ? matches : courseData.slice(0, limit);
-        return results.map(text => ({ pageContent: text }));
-      }
-    })
-  };
+class LocalEmbeddings extends Embeddings { //embed the documents locally
+  private pipe: any = null; //feed the documents to the model
+
+  constructor() { super({}); } //constructor
+
+  private async getPipeline() { //get model to embed the documents
+    if (!this.pipe) { //if the model is not loaded, load it
+      const { pipeline, env } = await import('@xenova/transformers'); //import pipeline and env
+      env.allowLocalModels = false; //allow local models
+      this.pipe = await pipeline('feature-extraction', 'Xenova/bge-small-en-v1.5'); //load the model
+    }
+    return this.pipe;
+  }
+
+  async embedDocuments(documents: string[]): Promise<number[][]> {
+    const pipe = await this.getPipeline();
+    const results: number[][] = [];
+    for (const text of documents) {
+      const output = await pipe(text, { pooling: 'mean', normalize: true });
+      // output is a Tensor with a flat .data Float32Array (384-dim)
+      results.push(Array.from(output.data as Float32Array) as number[]);
+    }
+    return results;
+  }
+
+  async embedQuery(document: string): Promise<number[]> {
+    const pipe = await this.getPipeline();
+    const output = await pipe(document, { pooling: 'mean', normalize: true });
+    // output is a Tensor with a flat .data Float32Array (384-dim)
+    return Array.from(output.data as Float32Array) as number[];
+  }
+}
+
+// Singleton — only initialize once per process run
+let vectorStoreInstance: PineconeStore | null = null;
+
+export async function getVectorStore(): Promise<PineconeStore> {
+  if (vectorStoreInstance) return vectorStoreInstance;
+
+  const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
+  const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
+
+  // Wait for the Pinecone index to be ready (handles cold-start after creation)
+  let ready = false;
+  for (let i = 0; i < 10; i++) {
+    const desc = await pinecone.describeIndex(indexName);
+    if (desc.status?.ready) { ready = true; break; }
+    console.log('[VectorStore] Waiting for Pinecone index to be ready...');
+    await new Promise(res => setTimeout(res, 3000));
+  }
+  if (!ready) throw new Error('Pinecone index not ready after 30 seconds.');
+
+  const pineconeIndex = pinecone.Index(indexName);
+  const embeddings = new LocalEmbeddings();
+
+  // Create the store instance — this does NOT hit the network for embeddings
+  vectorStoreInstance = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex });
+
+  // Seed index if empty
+  const stats = await pineconeIndex.describeIndexStats();
+  const totalVectors = stats.totalRecordCount ?? 0;
+
+  if (totalVectors === 0) {
+    console.log('[VectorStore] Index is empty — embedding course data locally with ONNX...');
+    // @langchain/pinecone v1 calls upsert(array) but Pinecone SDK v7 requires upsert({ records: [] })
+    // so we bypass addDocuments and upsert directly via the raw SDK.
+    const vectors = await embeddings.embedDocuments(courseData);
+    const records = courseData.map((text, i) => ({
+      id: `course-${i}`,
+      values: vectors[i],
+      metadata: { text, source: 'course-data', chunk: i },
+    }));
+    // Upsert in batches of 100
+    const batchSize = 100;
+    for (let i = 0; i < records.length; i += batchSize) {
+      await pineconeIndex.upsert({ records: records.slice(i, i + batchSize) });
+    }
+    console.log(`[VectorStore] Seeded ${courseData.length} vectors into Pinecone.`);
+  } else {
+    console.log(`[VectorStore] Found ${totalVectors} existing vectors in Pinecone — skipping seed.`);
+  }
+
+  return vectorStoreInstance;
 }
