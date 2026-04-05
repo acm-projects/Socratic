@@ -32,15 +32,14 @@ To test with front end you can do `cd backend/frontend` then `npm run dev`.
 
 ## Fetching Upcoming Meetings & Google Meet Links
 
-Here is the exact breakdown of how we pull upcoming meetings (with their Google Meet links) using the stored user tokens:
-
 ### 1. `backend/services/calendarService.js` (The Code)
-This file is responsible for holding the persistent `oauth2Client`, and executing the Google Calendar `events.list()` API.
--   **Token Setup**: We load the saved token from `backend/tokens.json` directly into `oauth2Client` on startup. 
+This file it holds the `oauth2Client` and gets events from the Google Calendar `events.list()`.
+-   **Token Setup**: 
+It loads the tokens from `backend/tokens.json` directly into `oauth2Client`
 -   **Fetching Logic**:
 ```javascript
 const getUpcomingMeetings = async () => {
-  // Use the authorized global oauth2Client
+
   const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
   
   // Call the Google Calendar API

@@ -1,35 +1,54 @@
 const { google } = require("googleapis");
 const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
+const accountModel = require("../models/accountModel");
 
-const TOKEN_PATH = path.join(__dirname, '..', 'tokens.json');
-
-const oauth2Client = new google.auth.OAuth2(
+const getOAuth2Client = () => new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
   'postmessage'
 );
 
-try {
-  if (fs.existsSync(TOKEN_PATH)) {
-    const tokens = JSON.parse(fs.readFileSync(TOKEN_PATH, 'utf8'));
-    oauth2Client.setCredentials(tokens);
+const getClientForUser = async (userId) => {
+  const accounts = await accountModel.getAccountsByUserId(userId);
+  const googleAccount = accounts.find(acc => acc.provider === 'google');
+
+  if (!googleAccount) {
+    throw new Error(`No Google account found for user ${userId}`);
   }
-} catch (err) {
-  console.error("Error loading tokens.json:", err.message);
-}
+
+  const client = getOAuth2Client();
+  const tokens = {
+    access_token: googleAccount.access_token,
+    refresh_token: googleAccount.refresh_token,
+    token_type: googleAccount.type || 'Bearer',
+  };
+
+  client.setCredentials(tokens);
+
+  // Listen for token refresh events and update the database
+  client.on('tokens', async (newTokens) => {
+    console.log(`Tokens refreshed for user ${userId}`);
+    await accountModel.updateAccountTokens(
+      'google',
+      googleAccount.providerAccountId,
+      newTokens.access_token,
+      newTokens.refresh_token || googleAccount.refresh_token
+    );
+  });
+
+  return client;
+};
 
 const getCalendarTokens = async (code) => {
-  const { tokens } = await oauth2Client.getToken(code);
-  oauth2Client.setCredentials(tokens);
-  fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+  const client = getOAuth2Client();
+  const { tokens } = await client.getToken(code);
   return tokens;
 };
 
-const createCalendarEvent = async (eventData) => {
+const createCalendarEvent = async (userId, eventData) => { //create calendar event 
   const { summary, description, location, startDateTime, endDateTime, createMeet, attendeeEmails } = eventData;
-  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+  const auth = await getClientForUser(userId);
+  const calendar = google.calendar({ version: 'v3', auth });
 
   const attendees = Array.isArray(attendeeEmails) && attendeeEmails.length > 0
     ? attendeeEmails.map(email => ({ email }))
@@ -79,8 +98,9 @@ const formatEvent = (event) => ({
   hangoutLink: event.hangoutLink || null,
 });
 
-const getUpcomingMeetings = async () => {
-  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+const getUpcomingMeetings = async (userId) => {
+  const auth = await getClientForUser(userId);
+  const calendar = google.calendar({ version: 'v3', auth });
   const response = await calendar.events.list({
     calendarId: 'primary',
     timeMin: new Date().toISOString(),
@@ -93,9 +113,10 @@ const getUpcomingMeetings = async () => {
   return (response.data.items || []).map(formatEvent);
 };
 
-const getEvents = async (timeMin, timeMax, maxResults = 100) => {
-  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
-  
+const getEvents = async (userId, timeMin, timeMax, maxResults = 100) => {
+  const auth = await getClientForUser(userId);
+  const calendar = google.calendar({ version: 'v3', auth });
+
   const options = {
     calendarId: 'primary',
     singleEvents: true,
@@ -111,15 +132,16 @@ const getEvents = async (timeMin, timeMax, maxResults = 100) => {
   return (response.data.items || []).map(formatEvent);
 };
 
-const clearSocraticEvents = async () => {
-  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
-  
+const clearSocraticEvents = async (userId) => {
+  const auth = await getClientForUser(userId);
+  const calendar = google.calendar({ version: 'v3', auth });
+
   // Find all events created by app
   const response = await calendar.events.list({
     calendarId: 'primary',
     privateExtendedProperty: 'createdBy=socraticApp',
   });
-  
+
   const events = response.data.items;
   if (!events || events.length === 0) return { deletedCount: 0 };
 
@@ -131,7 +153,7 @@ const clearSocraticEvents = async () => {
     });
     deletedCount++;
   }
-  
+
   return { deletedCount };
 };
 

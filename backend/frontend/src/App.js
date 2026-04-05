@@ -1,7 +1,20 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+
+// Axios Interceptor for "Restart Logout" Logic
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.warn("Session expired or server restarted. Logging out...");
+      sessionStorage.clear();
+      window.location.reload(); // Force a fresh state
+    }
+    return Promise.reject(error);
+  }
+);
 
 function LoginButton({ onSuccess }) {
   const login = useGoogleLogin({
@@ -24,7 +37,7 @@ function LoginButton({ onSuccess }) {
 
 function App() {
   const [isSignedIn, setIsSignedIn] = useState(() => {
-    return localStorage.getItem('isSignedIn') === 'true';
+    return sessionStorage.getItem('isSignedIn') === 'true';
   });
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
@@ -40,11 +53,25 @@ function App() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [savedClasses, setSavedClasses] = useState([]);
   const [allTopics, setAllTopics] = useState([]);
+  const [userId, setUserId] = useState(() => {
+    return sessionStorage.getItem('userId') || null;
+  });
   const [upcomingMeetings, setUpcomingMeetings] = useState(null);
+
+  // Proactive Session Check (Sync with Backend Restart)
+  useEffect(() => {
+    if (isSignedIn && userId) {
+      axios.get(`http://localhost:4000/api/calendar/session-check?userId=${userId}`)
+        .catch(() => {
+          /* Interceptor handles logout on 401 */
+        });
+    }
+  }, [isSignedIn, userId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:4000/api/calendar/create-event', {
+      userId,
       summary,
       description,
       location,
@@ -102,7 +129,7 @@ function App() {
 
   const handleSaveSyllabus = async () => {
     if (!extractionResult?.data) return;
-    
+
     try {
       const response = await axios.post("http://localhost:4000/api/syllabus/save", extractionResult.data);
       alert("Syllabus successfully saved to the database!");
@@ -119,7 +146,7 @@ function App() {
     try {
       const response = await axios.get("http://localhost:4000/api/classes");
       const classesData = response.data;
-      
+
       // Fetch topics for each class to prove they are dynamically stored
       const classesWithTopics = await Promise.all(
         classesData.map(async (cls) => {
@@ -131,7 +158,7 @@ function App() {
           }
         })
       );
-      
+
       setSavedClasses(classesWithTopics);
     } catch (error) {
       console.error(error);
@@ -150,8 +177,12 @@ function App() {
   };
 
   const fetchUpcomingMeetings = async () => {
+    if (!userId) {
+      alert("Please sign in first.");
+      return;
+    }
     try {
-      const response = await axios.get("http://localhost:4000/api/calendar/upcoming-events");
+      const response = await axios.get(`http://localhost:4000/api/calendar/upcoming-events?userId=${userId}`);
       setUpcomingMeetings(response.data);
     } catch (error) {
       console.error(error);
@@ -177,12 +208,18 @@ function App() {
     const { code } = response
     axios.post('http://localhost:4000/api/calendar/create-tokens', { code })
       .then(response => {
-        console.log(response.data);
+        console.log("Token response:", response.data);
+        const { userId: newUserId } = response.data;
         setIsSignedIn(true);
-        localStorage.setItem('isSignedIn', 'true');
+        setUserId(newUserId);
+        sessionStorage.setItem('isSignedIn', 'true');
+        sessionStorage.setItem('userId', newUserId);
+        alert("Successfully signed in with Google!");
       })
-      .catch(error => console.log(error.message)
-      )
+      .catch(error => {
+        console.log(error.message);
+        alert("Failed to sign in: " + error.message);
+      });
   }
   const responseError = error => {
     console.log(error)
@@ -257,12 +294,12 @@ function App() {
 
                   return (
                     <li key={event.id} style={{ marginBottom: "15px", paddingBottom: "10px", borderBottom: "1px dashed #ccc" }}>
-                      <strong>{summary}</strong> 
-                      <br/>
+                      <strong>{summary}</strong>
+                      <br />
                       <span>Upcoming meeting at {meetingDate}</span>
-                      <br/>
+                      <br />
                       <span style={{ fontSize: "0.9em", color: "#555" }}>Invitees: {attendeeString}</span>
-                      <br/>
+                      <br />
                       {event.hangoutLink ? (
                         <span>Google Meet Link: <a href={event.hangoutLink} target="_blank" rel="noopener noreferrer" style={{ color: "#0056b3", textDecoration: "underline" }}>Join Meeting</a></span>
                       ) : (
@@ -297,8 +334,8 @@ function App() {
           <div style={{ textAlign: "left", marginTop: "20px", padding: "10px", background: "#f4f4f4", borderRadius: "8px" }}>
             <h3>Extracted Data:</h3>
             <pre>{JSON.stringify(extractionResult.data, null, 2)}</pre>
-            <button 
-              onClick={handleSaveSyllabus} 
+            <button
+              onClick={handleSaveSyllabus}
               style={{ padding: "10px 15px", marginTop: "10px", background: "#28a745", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
             >
               Confirm & Save to Database
