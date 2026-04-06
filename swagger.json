@@ -37,7 +37,7 @@
         }
       }
     },
-    "/create-tokens": {
+    "/api/calendar/create-tokens": {
       "post": {
         "summary": "Exchange Google Auth Code for Tokens",
         "description": "Sends a Google OAuth authorization code and receives access/refresh tokens",
@@ -122,7 +122,7 @@
         }
       }
     },
-    "/upcoming-events": {
+    "/api/calendar/upcoming-events": {
       "get": {
         "summary": "Get Upcoming Events",
         "description": "Returns the next 10 upcoming events from Google Calendar that were created by Socratic",
@@ -142,7 +142,7 @@
         }
       }
     },
-    "/events": {
+    "/api/calendar/events": {
       "get": {
         "summary": "Get All Events",
         "description": "Returns upcoming events from Google Calendar created by Socratic, with optional filters",
