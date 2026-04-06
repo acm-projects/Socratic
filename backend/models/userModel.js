@@ -32,9 +32,15 @@ const deleteUser = async (id) => {
   await db.query('DELETE FROM "User" WHERE id = $1', [id]);
 };
 
+const getUserByEmail = async (email) => {
+  const result = await db.query('SELECT * FROM "User" WHERE email = $1', [email]);
+  return result.rows[0];
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
+  getUserByEmail,
   createUser,
   updateUser,
   deleteUser
