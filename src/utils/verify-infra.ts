@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { pool } from './lib/db';
+import { pool } from '../db';
 import { Pinecone } from '@pinecone-database/pinecone';
 
 dotenv.config();

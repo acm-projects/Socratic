@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getChats } from '../../lib/db';
+import { getAllChats } from '../../routes/historyController';
+import { withLogger } from '../../middleware/logger';
 
 /**
  * @openapi
@@ -25,15 +25,4 @@ import { getChats } from '../../lib/db';
  *                   accumulated_score:
  *                     type: number
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method Not Allowed' });
-  }
-
-  try {
-    const chats = await getChats();
-    res.status(200).json(chats);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-}
+export default withLogger(getAllChats);

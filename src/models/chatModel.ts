@@ -1,16 +1,6 @@
-import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { pool } from '../db'; // Assuming it's in src/db.ts
 
-// --- PostgreSQL Connection Pool ---
-// Replaces the old SQLite (better-sqlite3) setup.
-// ssl: rejectUnauthorized: false is required for AWS RDS which uses self-signed certs.
-export const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-  ssl: { rejectUnauthorized: false },
-});
-
-// Exported so index.ts can await this before starting the session.
+// Exported so app.ts can await this before starting the session.
 // LangChain's PostgresChatMessageHistory will create its OWN table separately.
 export async function initTables(): Promise<void> {
   await pool.query(`
@@ -35,7 +25,7 @@ export async function initTables(): Promise<void> {
   console.log('[DB] PostgreSQL tables ready.');
 }
 
-// --- TypeScript Interfaces (same shape as before, just async now) ---
+// --- TypeScript Interfaces ---
 
 export interface Chat {
   id: string;
@@ -54,7 +44,7 @@ export interface Message {
   created_at: string;
 }
 
-// --- CRUD Functions (all async — pg uses promises, not sync like sqlite) ---
+// --- CRUD Functions ---
 
 export async function createChat(id: string, title: string): Promise<void> {
   await pool.query(

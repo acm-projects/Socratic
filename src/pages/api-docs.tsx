@@ -2,7 +2,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import 'swagger-ui-react/swagger-ui.css';
-import { spec } from '../lib/swagger';
+import { spec } from '../utils/swagger';
 import type { SwaggerUIProps } from 'swagger-ui-react';
 
 const SwaggerUI = dynamic<SwaggerUIProps>(() => import('swagger-ui-react'), { ssr: false });

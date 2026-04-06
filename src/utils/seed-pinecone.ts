@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import { Pinecone } from '@pinecone-database/pinecone';
-import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 
 dotenv.config();
 
