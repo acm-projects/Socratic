@@ -125,30 +125,26 @@ app.get("/classes/:code", async (req, res) => {
 app.post("/classes", async (req, res) => {
   try {
     const { class_code, subject, name } = req.body
-
     const result = await pool.query(
       "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) RETURNING *",
       [class_code, subject, name]
     )
-
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
+
 app.put("/classes/:code", async (req, res) => {
   try {
     const { subject, name } = req.body
-
     const result = await pool.query(
       "UPDATE classes SET subject = $1, name = $2 WHERE class_code = $3 RETURNING *",
       [subject, name, req.params.code]
     )
-
     if (!result.rows[0]) {
       return res.status(404).json({ error: "Class not found" })
     }
-
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -161,11 +157,9 @@ app.delete("/classes/:code", async (req, res) => {
       "DELETE FROM classes WHERE class_code = $1 RETURNING *",
       [req.params.code]
     )
-
     if (!result.rows[0]) {
       return res.status(404).json({ error: "Class not found" })
     }
-
     res.json({ message: "Class deleted successfully", deletedClass: result.rows[0] })
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -434,6 +428,70 @@ app.put("/friend-requests/:id", async (req, res) => {
       [status, req.params.id]
     )
     res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// QUIZZES API
+// -----------------------------------------------------
+
+app.get("/users/:id/quizzes", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM quizzes WHERE user_id = $1 ORDER BY date DESC",
+      [req.params.id]
+    )
+    res.json(result.rows)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.get("/quizzes/:id/questions", async (req, res) => {
+  try {
+    const quiz = await pool.query("SELECT * FROM quizzes WHERE id = $1", [req.params.id])
+    const questions = await pool.query(
+      "SELECT * FROM quiz_questions WHERE quiz_id = $1",
+      [req.params.id]
+    )
+    if (!quiz.rows[0]) {
+      return res.status(404).json({ error: "Quiz not found" })
+    }
+    res.json({
+      ...quiz.rows[0],
+      questions: questions.rows
+    })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.post("/quizzes", async (req, res) => {
+  try {
+    const { id, user_id, topic_id, score, date, retake_count, questions } = req.body
+
+    const quiz = await pool.query(
+      "INSERT INTO quizzes (id, user_id, topic_id, score, date, retake_count) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [id, user_id, topic_id, score, date || new Date(), retake_count || 0]
+    )
+
+    const savedQuestions = []
+    if (Array.isArray(questions)) {
+      for (const q of questions) {
+        const savedQ = await pool.query(
+          "INSERT INTO quiz_questions (id, quiz_id, question, user_answer, correct_answer, is_correct, depth_score) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+          [q.id, id, q.question, q.user_answer, q.correct_answer, q.is_correct, q.depth_score || 0]
+        )
+        savedQuestions.push(savedQ.rows[0])
+      }
+    }
+
+    res.json({
+      ...quiz.rows[0],
+      questions: savedQuestions
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
