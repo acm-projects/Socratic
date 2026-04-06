@@ -10,21 +10,11 @@ const activeSessions = new Set();
 
 // Middleware to check if the user has an active session in local server memory
 const checkSession = (req, res, next) => {
-  let userId = req.headers['x-user-id'] || (req.body && req.body.userId) || req.query.userId;
-  
-  // Developer Fallback: Automatically use the known user ID if none is supplied
-  const DEV_FALLBACK_USER_ID = "100121881546793141091";
-  if (!userId) {
-    userId = DEV_FALLBACK_USER_ID;
-  }
-
-  if (!userId || (!activeSessions.has(userId) && userId !== DEV_FALLBACK_USER_ID)) {
+  const userId = req.headers['x-user-id'] || (req.body && req.body.userId) || req.query.userId;
+  if (!userId || !activeSessions.has(userId)) {
     console.warn(`Unauthorized access attempt or server restarted for user: ${userId}`);
     return res.status(401).send({ error: "Session expired or server restarted. Please log in again." });
   }
-
-  // Attach resolved userId to request so downstream routes use the correct one
-  req.resolvedUserId = userId;
   next();
 };
 
@@ -101,7 +91,7 @@ router.post('/create-tokens', async (req, res, next) => {
 
 router.post('/create-event', checkSession, async (req, res, next) => {
   try {
-    const userId = req.resolvedUserId;
+    const userId = req.headers['x-user-id'] || req.body.userId;
     const responseData = await calendarService.createCalendarEvent(userId, req.body);
     res.send(responseData);
   } catch (error) {
@@ -111,7 +101,7 @@ router.post('/create-event', checkSession, async (req, res, next) => {
 
 router.get('/upcoming-events', checkSession, async (req, res, next) => {
   try {
-    const userId = req.resolvedUserId;
+    const userId = req.headers['x-user-id'] || req.query.userId;
     const events = await calendarService.getUpcomingMeetings(userId);
     res.send(events);
   } catch (error) {
@@ -121,7 +111,7 @@ router.get('/upcoming-events', checkSession, async (req, res, next) => {
 
 router.get('/events', checkSession, async (req, res, next) => {
   try {
-    const userId = req.resolvedUserId;
+    const userId = req.headers['x-user-id'] || req.query.userId;
     const { timeMin, timeMax, maxResults } = req.query;
     const events = await calendarService.getEvents(
       userId,
