@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5000",
-      "description": "Local development server"
-    },
-    {
       "url": "http://3.128.186.118:5000",
       "description": "Production EC2 server"
+    },
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development server"
     }
   ],
   "paths": {
@@ -75,8 +75,8 @@
       }
     },
     "/api/calendar/create-event": {
-      "post": {
-        "summary": "Create a Google Calendar Event",
+  "post": {
+    "summary": "Create a Google Calendar Event",
         "description": "Creates a new event on the user's primary Google Calendar, optionally with a Google Meet link",
         "requestBody": {
           "required": true,
@@ -147,9 +147,27 @@
         "summary": "Get All Events",
         "description": "Returns upcoming events from Google Calendar created by Socratic, with optional filters",
         "parameters": [
-          { "name": "timeMin", "in": "query", "required": false, "schema": { "type": "string", "format": "date-time" } },
-          { "name": "timeMax", "in": "query", "required": false, "schema": { "type": "string", "format": "date-time" } },
-          { "name": "maxResults", "in": "query", "required": false, "schema": { "type": "integer", "default": 100 } }
+          {
+            "name": "timeMin",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "format": "date-time" },
+            "description": "Lower bound for an event's end time to filter by"
+          },
+          {
+            "name": "timeMax",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "format": "date-time" },
+            "description": "Upper bound for an event's start time to filter by"
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100 },
+            "description": "Maximum number of events returned on one result page"
+          }
         ],
         "responses": {
           "200": {
@@ -178,15 +196,35 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "syllabusPdf": { "type": "string", "format": "binary" },
-                  "pdfText": { "type": "string" }
+                  "syllabusPdf": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The syllabus PDF file to upload"
+                  },
+                  "pdfText": {
+                    "type": "string",
+                    "description": "Raw text fallback if no PDF is provided"
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Syllabus extracted successfully", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" }, "data": { "$ref": "#/components/schemas/SyllabusData" } } } } } },
+          "200": {
+            "description": "Syllabus extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/SyllabusData" }
+                  }
+                }
+              }
+            }
+          },
           "400": { "description": "Validation error" },
           "500": { "description": "Server error" }
         }
@@ -198,10 +236,36 @@
         "description": "Save extracted syllabus data (class and topics) to the database",
         "requestBody": {
           "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SyllabusData" } } }
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SyllabusData" }
+            }
+          }
         },
         "responses": {
-          "200": { "description": "Syllabus data saved successfully" },
+          "200": {
+            "description": "Syllabus data saved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "savedClass": { "$ref": "#/components/schemas/Class" },
+                        "savedTopics": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/Topic" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "400": { "description": "Missing required fields" },
           "409": { "description": "Class or topic already exists" },
           "500": { "description": "Server error" }
@@ -220,15 +284,36 @@
                 "type": "object",
                 "required": ["syllabusPdf", "class_code"],
                 "properties": {
-                  "syllabusPdf": { "type": "string", "format": "binary" },
-                  "class_code": { "type": "string", "example": "CS101" }
+                  "syllabusPdf": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The syllabus PDF file to upload"
+                  },
+                  "class_code": {
+                    "type": "string",
+                    "example": "CS101",
+                    "description": "The class code to link the syllabus to"
+                  }
                 }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Syllabus uploaded successfully" },
+          "200": {
+            "description": "Syllabus uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "syllabus_url": { "type": "string", "example": "https://socratic-syllabi.s3.us-east-2.amazonaws.com/syllabi/uuid-filename.pdf" }
+                  }
+                }
+              }
+            }
+          },
           "400": { "description": "Missing file or class_code" },
           "500": { "description": "Server error" }
         }
@@ -237,9 +322,30 @@
     "/syllabus/{class_code}": {
       "get": {
         "summary": "Get Syllabus URL for a Class",
-        "parameters": [{ "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
+        "description": "Returns the S3 URL of the syllabus PDF for a specific class",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "CS101"
+          }
+        ],
         "responses": {
-          "200": { "description": "Syllabus URL returned successfully" },
+          "200": {
+            "description": "Syllabus URL returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "syllabus_url": { "type": "string", "example": "https://socratic-syllabi.s3.us-east-2.amazonaws.com/syllabi/uuid-filename.pdf" }
+                  }
+                }
+              }
+            }
+          },
           "404": { "description": "No syllabus found for this class" },
           "500": { "description": "Server error" }
         }
@@ -250,25 +356,77 @@
         "summary": "Get All Users",
         "description": "Returns a list of all users",
         "responses": {
-          "200": { "description": "A list of users", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/User" } } } } },
+          "200": {
+            "description": "A list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
+          },
           "500": { "description": "Server error" }
         }
       },
       "post": {
         "summary": "Create a User",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
-        "responses": { "200": { "description": "User created successfully" }, "500": { "description": "Server error" } }
+        "description": "Creates a new user in the database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/User" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}": {
       "get": {
         "summary": "Get User by ID",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A single user" }, "500": { "description": "Server error" } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single user",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       },
       "put": {
         "summary": "Update a User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -291,99 +449,329 @@
             }
           }
         },
-        "responses": { "200": { "description": "User updated successfully" }, "500": { "description": "Server error" } }
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       },
       "delete": {
         "summary": "Delete a User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "User deleted" }, "500": { "description": "Server error" } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "User deleted" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/classes": {
       "get": {
         "summary": "Get All Classes",
         "description": "Returns all classes. Pass optional ?user_id= to filter by user.",
-        "parameters": [{ "name": "user_id", "in": "query", "required": false, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A list of classes" }, "500": { "description": "Server error" } }
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "Filter classes by user ID",
+            "example": "user_123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of classes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Class" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       },
       "post": {
         "summary": "Create a Class",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Class" } } } },
-        "responses": { "200": { "description": "Class created successfully" }, "500": { "description": "Server error" } }
-      }
-    },
-    "/classes/{code}": {
-      "get": {
-        "summary": "Get Class by Code",
-        "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
-        "responses": { "200": { "description": "Class found" }, "404": { "description": "Class not found" } }
-      },
-      "put": {
-        "summary": "Update a Class",
-        "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
+        "description": "Creates a new class linked to a user",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["subject", "name"],
-                "properties": {
-                  "subject": { "type": "string" },
-                  "name": { "type": "string" }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/Class" }
             }
           }
         },
-        "responses": { "200": { "description": "Class updated successfully" }, "404": { "description": "Class not found" } }
-      },
-      "delete": {
-        "summary": "Delete a Class",
-        "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
-        "responses": { "200": { "description": "Class deleted successfully" }, "404": { "description": "Class not found" } }
+        "responses": {
+          "200": {
+            "description": "Class created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Class" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
+    "/classes/{code}": {
+  "get": {
+    "summary": "Get class by code",
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "CS101"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Class found"
+      },
+      "404": {
+        "description": "Class not found"
+      }
+    }
+  },
+  "put": {
+    "summary": "Update a class",
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "CS101"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "subject": { "type": "string" },
+              "name": { "type": "string" }
+            },
+            "required": ["subject", "name"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Class updated successfully"
+      },
+      "404": {
+        "description": "Class not found"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete a class",
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" },
+        "example": "CS101"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Class deleted successfully"
+      },
+      "404": {
+        "description": "Class not found"
+      }
+    }
+  }
+},
     "/classes/{code}/topics": {
       "get": {
         "summary": "Get Topics by Class Code",
-        "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
-        "responses": { "200": { "description": "A list of topics" }, "500": { "description": "Server error" } }
+        "description": "Returns all topics belonging to a specific class",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "CS101"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of topics for the class",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Topic" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/topics": {
       "post": {
         "summary": "Create a Topic",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Topic" } } } },
-        "responses": { "200": { "description": "Topic created successfully" }, "500": { "description": "Server error" } }
+        "description": "Creates a new topic linked to a class",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Topic" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Topic created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Topic" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/topics/{id}": {
       "get": {
         "summary": "Get Topic by ID",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A single topic" }, "500": { "description": "Server error" } }
+        "description": "Returns a single topic by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single topic",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Topic" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}/sessions": {
       "get": {
         "summary": "Get Chat Sessions by User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A list of chat sessions" }, "500": { "description": "Server error" } }
+        "description": "Returns all chat sessions for a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of chat sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ChatSession" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/sessions": {
       "post": {
         "summary": "Create a Chat Session",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ChatSession" } } } },
-        "responses": { "200": { "description": "Session created successfully" }, "500": { "description": "Server error" } }
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChatSession" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChatSession" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/sessions/{id}": {
       "get": {
         "summary": "Get Session by ID",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A single chat session" }, "500": { "description": "Server error" } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single chat session",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChatSession" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/api/history": {
@@ -436,189 +824,426 @@
     "/achievements": {
       "get": {
         "summary": "Get All Achievements",
-        "responses": { "200": { "description": "A list of achievements" }, "500": { "description": "Server error" } }
+        "description": "Returns a list of all achievements",
+        "responses": {
+          "200": {
+            "description": "A list of achievements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Achievement" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}/achievements": {
       "get": {
         "summary": "Get Achievements by User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A list of user achievements" }, "500": { "description": "Server error" } }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of user achievements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Achievement" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}/stats": {
       "get": {
         "summary": "Get User Stats",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "User stats returned successfully" }, "500": { "description": "Server error" } }
+        "description": "Returns XP system stats for a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User stats returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/UserStats" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/topics/{id}/metrics": {
       "get": {
         "summary": "Get Topic Metrics",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "Topic metrics returned successfully" }, "500": { "description": "Server error" } }
+        "description": "Returns daily metrics for a specific topic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Topic metrics returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TopicMetrics" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}/accounts": {
       "get": {
         "summary": "Get OAuth Accounts by User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A list of OAuth accounts" }, "500": { "description": "Server error" } }
+        "description": "Returns all linked OAuth accounts for a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of OAuth accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Account" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/accounts": {
       "post": {
         "summary": "Link an OAuth Account",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Account" } } } },
-        "responses": { "200": { "description": "Account linked successfully" }, "500": { "description": "Server error" } }
+        "description": "Links a new OAuth provider account to a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Account" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account linked successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Account" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/accounts/{provider}/{providerAccountId}": {
       "get": {
         "summary": "Get Account by Provider",
+        "description": "Returns a specific OAuth account by provider and provider account ID",
         "parameters": [
-          { "name": "provider", "in": "path", "required": true, "schema": { "type": "string" }, "example": "google" },
-          { "name": "providerAccountId", "in": "path", "required": true, "schema": { "type": "string" }, "example": "1234567890" }
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "google"
+          },
+          {
+            "name": "providerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "1234567890"
+          }
         ],
-        "responses": { "200": { "description": "A single OAuth account" }, "500": { "description": "Server error" } }
+        "responses": {
+          "200": {
+            "description": "A single OAuth account",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Account" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       },
       "put": {
         "summary": "Update OAuth Account Tokens",
+        "description": "Updates the access and refresh tokens for an OAuth account",
         "parameters": [
-          { "name": "provider", "in": "path", "required": true, "schema": { "type": "string" } },
-          { "name": "providerAccountId", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "google"
+          },
+          {
+            "name": "providerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "1234567890"
+          }
         ],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "access_token": { "type": "string" }, "refresh_token": { "type": "string" } } } } } },
-        "responses": { "200": { "description": "Account tokens updated successfully" }, "500": { "description": "Server error" } }
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "access_token": { "type": "string" },
+                  "refresh_token": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account tokens updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Account" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       },
       "delete": {
         "summary": "Unlink OAuth Account",
+        "description": "Removes a linked OAuth account",
         "parameters": [
-          { "name": "provider", "in": "path", "required": true, "schema": { "type": "string" } },
-          { "name": "providerAccountId", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "google"
+          },
+          {
+            "name": "providerAccountId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "1234567890"
+          }
         ],
-        "responses": { "200": { "description": "Account unlinked" }, "500": { "description": "Server error" } }
+        "responses": {
+          "200": {
+            "description": "Account unlinked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Account unlinked" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}/friends": {
       "get": {
         "summary": "Get Friends by User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A list of friends" }, "500": { "description": "Server error" } }
+        "description": "Returns all friends for a specific user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of friends",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Friend" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/friends": {
       "post": {
         "summary": "Add a Friend",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Friend" } } } },
-        "responses": { "200": { "description": "Friend added successfully" }, "500": { "description": "Server error" } }
+        "description": "Adds a new friend to a user's friends list",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Friend" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Friend added successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Friend" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users/{id}/friend-requests": {
       "get": {
-        "summary": "Get Friend Requests by User",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "A list of friend requests" }, "500": { "description": "Server error" } }
-      }
-    },
-    "/friend-requests": {
-      "post": {
-        "summary": "Send a Friend Request",
-        "description": "Creates a new friend request using sender and receiver emails. ID is auto-generated.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["sender_email", "receiver_email"],
-                "properties": {
-                  "sender_email": { "type": "string", "format": "email" },
-                  "receiver_email": { "type": "string", "format": "email" },
-                  "status": { "type": "string", "example": "pending" }
-                }
-              }
-            }
+        "summary": "Get Friend Requests by User Email",
+        "description": "Returns all incoming friend requests for a specific user by email",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "The user's email address"
           }
-        },
-        "responses": { "200": { "description": "Friend request sent successfully" }, "404": { "description": "Sender or receiver not found" }, "500": { "description": "Server error" } }
-      }
-    },
-    "/friend-requests/{id}": {
-      "put": {
-        "summary": "Update Friend Request Status",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": { "status": { "type": "string", "example": "accepted", "enum": ["pending", "accepted", "rejected"] } }
-              }
-            }
-          }
-        },
-        "responses": { "200": { "description": "Friend request updated successfully" }, "500": { "description": "Server error" } }
-      }
-    },
-    "/users/{id}/quizzes": {
-      "get": {
-        "summary": "Get Quizzes by User",
-        "description": "Returns a list of all past quizzes for a specific user",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        ],
         "responses": {
           "200": {
-            "description": "A list of quizzes",
-            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Quiz" } } } }
-          },
-          "500": { "description": "Server error" }
-        }
-      }
-    },
-    "/quizzes/{id}/questions": {
-      "get": {
-        "summary": "Get Quiz Questions",
-        "description": "Returns a quiz with all its questions and answers",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": {
-          "200": {
-            "description": "Quiz with questions",
+            "description": "A list of friend requests",
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    { "$ref": "#/components/schemas/Quiz" },
-                    { "type": "object", "properties": { "questions": { "type": "array", "items": { "$ref": "#/components/schemas/QuizQuestion" } } } }
-                  ]
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FriendRequest" }
                 }
               }
             }
           },
-          "404": { "description": "Quiz not found" },
           "500": { "description": "Server error" }
         }
       }
     },
-    "/quizzes": {
-      "post": {
-        "summary": "Create a Quiz Attempt",
-        "description": "Creates a new quiz with its questions and answers",
+    "/friend-requests": {
+  "post": {
+    "summary": "Send a Friend Request",
+    "description": "Creates a new friend request using sender and receiver emails. ID is auto-generated.",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "sender_email": { "type": "string", "format": "email" },
+              "receiver_email": { "type": "string", "format": "email" },
+              "status": { "type": "string", "example": "pending" }
+            },
+            "required": ["sender_email", "receiver_email"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Friend request sent successfully",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/FriendRequest" }
+          }
+        }
+      },
+      "500": {
+        "description": "Server error"
+      }
+    }
+  }
+},
+    "/friend-requests/{id}": {
+      "put": {
+        "summary": "Update Friend Request Status",
+        "description": "Accepts or rejects a friend request",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "allOf": [
-                  { "$ref": "#/components/schemas/Quiz" },
-                  { "type": "object", "properties": { "questions": { "type": "array", "items": { "$ref": "#/components/schemas/QuizQuestion" } } } }
-                ]
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "example": "accepted", "enum": ["pending", "accepted", "rejected"] }
+                }
               }
             }
           }
         },
-        "responses": { "200": { "description": "Quiz created successfully" }, "500": { "description": "Server error" } }
+        "responses": {
+          "200": {
+            "description": "Friend request updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/FriendRequest" }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
       }
     }
   },
@@ -737,13 +1362,29 @@
           },
           "gradingPolicy": {
             "type": "array",
-            "items": { "type": "object", "properties": { "category": { "type": "string" }, "weightPercentage": { "type": "integer" } } }
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": { "type": "string", "example": "Homework" },
+                "weightPercentage": { "type": "integer", "example": 20 }
+              }
+            }
           },
           "importantDates": {
             "type": "array",
-            "items": { "type": "object", "properties": { "eventName": { "type": "string" }, "date": { "type": "string" } } }
+            "items": {
+              "type": "object",
+              "properties": {
+                "eventName": { "type": "string", "example": "Midterm" },
+                "date": { "type": "string", "example": "2026-03-15" }
+              }
+            }
           },
-          "topics": { "type": "array", "items": { "type": "string" }, "example": ["Variables", "Loops", "Functions"] }
+          "topics": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["Variables", "Loops", "Functions"]
+          }
         }
       },
       "CalendarEvent": {
@@ -751,35 +1392,32 @@
         "properties": {
           "id": { "type": "string", "example": "9mng8age7auf5vdop05mcqg6cg" },
           "summary": { "type": "string", "example": "Socratic Tag Test" },
-          "description": { "type": "string" },
-          "location": { "type": "string" },
-          "start": { "type": "object", "properties": { "dateTime": { "type": "string", "format": "date-time" }, "timeZone": { "type": "string" } } },
-          "end": { "type": "object", "properties": { "dateTime": { "type": "string", "format": "date-time" }, "timeZone": { "type": "string" } } },
-          "attendees": { "type": "array", "items": { "type": "object", "properties": { "email": { "type": "string", "format": "email" } } } },
-          "hangoutLink": { "type": "string" }
-        }
-      },
-      "Quiz": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string", "example": "quiz_001" },
-          "user_id": { "type": "string", "example": "user_123" },
-          "topic_id": { "type": "string", "example": "topic_456" },
-          "score": { "type": "integer", "example": 82 },
-          "date": { "type": "string", "format": "date-time", "example": "2026-03-01T10:00:00" },
-          "retake_count": { "type": "integer", "example": 0 }
-        }
-      },
-      "QuizQuestion": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string", "example": "q1" },
-          "quiz_id": { "type": "string", "example": "quiz_001" },
-          "question": { "type": "string", "example": "What is a directed graph?" },
-          "user_answer": { "type": "string", "example": "A graph where edges have direction" },
-          "correct_answer": { "type": "string", "example": "A graph where edges have a specific direction from one vertex to another" },
-          "is_correct": { "type": "boolean", "example": true },
-          "depth_score": { "type": "integer", "example": 4 }
+          "description": { "type": "string", "example": "Making sure the extendedProperties tag works perfectly." },
+          "location": { "type": "string", "example": "Virtual Testing Labs" },
+          "start": {
+            "type": "object",
+            "properties": {
+              "dateTime": { "type": "string", "format": "date-time", "example": "2026-04-01T13:00:00-05:00" },
+              "timeZone": { "type": "string", "example": "America/Chicago" }
+            }
+          },
+          "end": {
+            "type": "object",
+            "properties": {
+              "dateTime": { "type": "string", "format": "date-time", "example": "2026-04-01T14:00:00-05:00" },
+              "timeZone": { "type": "string", "example": "America/Chicago" }
+            }
+          },
+          "attendees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "email": { "type": "string", "format": "email", "example": "yourfriend@example.com" }
+              }
+            }
+          },
+          "hangoutLink": { "type": "string", "example": "https://meet.google.com/oqj-ibsn-rmb" }
         }
       }
     }
