@@ -774,6 +774,53 @@
         }
       }
     },
+    "/api/history": {
+      "get": {
+        "summary": "Retrieve all chat sessions from PostgreSQL",
+        "description": "Retrieve all chat sessions from PostgreSQL",
+        "responses": {
+          "200": {
+            "description": "A list of chat sessions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/history/{chatId}": {
+      "get": {
+        "summary": "Retrieve all messages for a specific chat ID",
+        "description": "Retrieve all messages for a specific chat ID",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the chat session",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of messages.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/achievements": {
       "get": {
         "summary": "Get All Achievements",
