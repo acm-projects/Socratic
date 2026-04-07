@@ -1,143 +1,127 @@
 "use client"
 import { useState } from "react"
-import Navbar from "../../components/Navbar"
-import UpcomingTasks from "../../components/UpcomingTasks"
-import PastQuizzes from "../../components/PastQuizzes"
-import { MessageSquare, ClipboardCheck, FileText, Clock, User, ArrowRight } from "lucide-react"
 import StudyHeatmap from "../../components/StudyHeatmap"
+import { Flame, ChevronLeft } from 'lucide-react'
+import Link from "next/link"
+import UpcomingTasks from "../../components/classPageComponents/classUpcomingTasks"
+import CourseMaterial from "../../components/classPageComponents/CourseMaterial"
+import TopicsPanel from "../../components/classPageComponents/TopicsPanel.js"
 import QuizModal from "../../components/QuizModal"
-import TopicBreakdown from "../../components/TopicBreakdown"
-import Link from "next/link";
 
 
-export default function ClassPage({ params }) {
+const courseColors = {
+  "Discrete Math":      "#3a9e94",
+  "Physics I":          "#9C52E3",
+  "Calculus II":        "#4E78FF",
+  "Computer Science I": "#1D9E75",
+  "Linear Algebra":     "#6B21C8",
+  "Chemistry I":        "#15B7E6",
+}
+
+const upcomingTasks = [
+    { title: "Problem Set 4", course: "Discrete Math",  due: "Apr 3"  },
+    { title: "Lab Report",    course: "Physics I",      due: "Apr 5"  },
+    { title: "Homework 7",    course: "Calculus II",    due: "Apr 8"  },
+    { title: "Problem Set 5", course: "Discrete Math",  due: "Apr 10" },
+    { title: "Homework 8",    course: "Calculus II",    due: "Apr 15" },
+  ]
+
+  const courseMaterials = [
+  { name: "Syllabus.pdf",       date: "Apr 1"  },
+  { name: "Lecture Notes Ch.3", date: "Mar 28" },
+  { name: "HW 4 Solutions",     date: "Mar 20" },
+  { name: "HW 5 Solutions",     date: "Mar 20" },
+  { name: "HW 5 Solutions",     date: "Mar 20" },
+  { name: "HW 5 Solutions",     date: "Mar 20" },
+  { name: "HW 5 Solutions",     date: "Mar 20" },
+]
+
+const topics = [
+  { name: "Set Theory",     quizzes: 6, pct: 82 },
+  { name: "Graph Theory",   quizzes: 8, pct: 95 },
+  { name: "Logic & Proofs", quizzes: 3, pct: 61 },
+  { name: "Combinatorics",  quizzes: 2, pct: 40 },
+  { name: "Number Theory",  quizzes: 0, pct: 0  },
+]
+
+export default function HomePage() {
   const [showQuizModal, setShowQuizModal] = useState(false)
+  
   return (
-    
-    <main className="min-h-screen bg-[#F5F5FE] flex">
-      <Navbar />
+   <div
+      className={`min-h-screen flex`}
+      style={{ background: "linear-gradient(135deg, #EAF4F2 0%, #F5F8F7 60%, #F7F5FB 100%)" }}
+    >
 
-      <div className="flex flex-col flex-1 ml-16 p-5 gap-4">
+      {/* Left column */}
+      <div className="p-9 flex flex-col flex-1 gap-7">
+        
+       {/* Header */}
+        <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
 
-        <h1 className="text-2xl px-4 font-bold text-[#14153A]">Discrete Math</h1>
-
-        <div className="flex flex-1 gap-4">
-
-          {/* Left column — topic map */}
-          <div className="w-120 bg-white rounded-2xl p-5">
-            <p className="text-md font-bold text-gray-800 p-2">Topic Breakdown</p>
-            <TopicBreakdown onStudyClick={() => setShowQuizModal(true)}/>
-          </div>
-
-          {/* Right column */}
-          <div className="flex flex-col flex-1 gap-4">
-
-            <div className="bg-white rounded-2xl py-4 px-8">
-              <StudyHeatmap />
-            </div>
-
-            {/* 3 cards */}
-            <div className="grid grid-cols-3 gap-4">
-
-            {/* add hover */}
-            <Link href="/chat" className="bg-white rounded-2xl p-5 text-left"> 
-                <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#EEEFFE] flex items-center justify-center shrink-0">
-                    <MessageSquare size={18} color="#3451D1" />
-                </div>
-                <p className="text-md font-bold text-[#14153A] flex-1">AI Chat</p>
-                </div>
+            {/* Home button */}
+            <Link href="/home" className="flex items-center gap-1.5 px-4 h-12 rounded-full bg-white/80 hover:bg-white transition-all mr-1">
+            <ChevronLeft size={18} className="text-[#141f1d]" />
+            <span className="text-sm font-semibold text-[#141f1d]">Home</span>
             </Link>
 
-            <button
-                onClick={() => setShowQuizModal(true)}
-                className="bg-white rounded-2xl p-5 text-left hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#E0FDF6] flex items-center justify-center shrink-0">
-                    <ClipboardCheck size={18} color="#00876D" />
-                </div>
-                <p className="text-md font-bold text-[#14153A]">Take Quiz</p>
-                </div>
-            </button>
+            {/* Icon */}
+            {/* <div className="w-12 h-12 rounded-full bg-[#D0E8E4] flex items-center justify-center" /> */}
 
-            <button className="bg-white rounded-2xl p-5 text-left">
-                <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#F5EEFF] flex items-center justify-center shrink-0">
-                    <FileText size={18} color="#9333EA" />
-                </div>
-                <p className="text-md font-bold text-[#14153A]">Syllabus</p>
-                </div>
-            </button>
-
+            <div>
+            <h1 className="text-xl font-medium text-[#141f1d] tracking-tight leading-tight">
+                Discrete Math
+            </h1>
+            <p className="text-sm text-[#90aba7] mt-0.5 font-medium">CS2305</p>
             </div>
 
-            {/* review */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-2xl p-5 col-span-2">
-                <p className="text-md font-semibold text-gray-800 px-2 pb-4">Past Quizzes</p>
-                <PastQuizzes />
-              </div>
-
-              {/* upcoming tasks */}
-            <div className="bg-white rounded-2xl p-5">
-                <p className="text-md font-semibold text-[#14153A] mb-4 px-2">Upcoming Tasks</p>
-                <UpcomingTasks />
-            </div>
-
-            </div>
-
-            {/* Course Info */}
-            <div className="bg-white rounded-2xl p-5">
-            <div className="grid grid-cols-3 gap-4 px-2">
-
-                {/* Prof */}
-                <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#EEEFFE] flex items-center justify-center shrink-0">
-                    <User size={18} color="#3451D1" />
-                </div>
-                <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-400">Professor</p>
-                    <p className="text-sm font-medium text-[#14153A] pt-1">Dr. Roberts</p>
-                    <a href="mailto:roberts@uni.edu" className="text-xs text-[#3451D1] hover:underline truncate block">
-                    roberts@utdallas.edu
-                    </a>
-                </div>
-                </div>
-
-                {/* TA */}
-                <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#E0FDF6] flex items-center justify-center shrink-0">
-                    <span className="text-xs font-semibold text-[#00876D]">TA</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-400">Teaching Assistant</p>
-                    <p className="text-sm font-medium text-[#14153A] pt-1">Alex Kim</p>
-                    <a href="mailto:akim@uni.edu" className="text-xs text-[#3451D1] hover:underline truncate block">
-                    akim@utdallas.edu
-                    </a>
-                </div>
-                </div>
-
-                {/* Office Hours */}
-                <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#F5EEFF] flex items-center justify-center shrink-0">
-                    <Clock size={18} color="#9333EA" />
-                </div>
-                <div>
-                    <p className="text-xs text-gray-400">Office Hours</p>
-                    <p className="text-sm font-medium text-[#14153A] pt-1">Tue & Thu, 2:00 – 4:00 PM</p>
-                    <p className="text-xs text-gray-400">ECSS 4.226</p>
-                </div>
-                </div>
-
-            </div>
-            </div>
-
-          </div>
         </div>
+
+        {/* pill buttons */}
+        <div className="flex gap-2">
+            <button className="px-4 py-3 rounded-full bg-white text-sm font-semibold text-[#ea9607] hover:bg-white transition-all flex items-center gap-2">
+            <Flame size={18} className="text-[#ea9607]" />
+            12 days
+            </button>
+        </div>
+        </div>
+
+        {/* placeholders for ai chat and quiz cards */}
+        <div className="flex gap-5 items-start">
+            <div className="flex flex-col gap-4 w-100 h-full">
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1" />
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1" />
+        </div>
+
+        {/* topics/past quizzes */}
+
+        <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex-1">
+            <TopicsPanel topics={topics} onQuizClick={() => setShowQuizModal(true)} />
+        </div>
+        </div>
+
+        <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-12 py-6 h-fit">
+        <StudyHeatmap />
+        </div>
+
       </div>
 
-      {showQuizModal && <QuizModal onClose={() => setShowQuizModal(false)} />}
-    </main>
+      {/* Right side anchored */}
+
+    <div className="p-9 border-l border-[#E0E5E4] w-1/4 flex flex-col gap-8">
+        {/* Upcoming Tasks */}
+        <div>
+            <UpcomingTasks tasks={upcomingTasks} />
+        </div>
+
+        {/* course material */}
+        <div>
+            <CourseMaterial files={courseMaterials} />
+        </div>
+    </div>
+    {showQuizModal && <QuizModal onClose={() => setShowQuizModal(false)} />}
+    </div>
+    
   )
 }

@@ -1,154 +1,127 @@
 "use client"
-import { useState, useEffect } from "react"
-import Navbar from "../components/Navbar"
-import StudyHeatmap from "../components/StudyHeatmap"
-import Link from "next/link";
-import EngagementChart from "../components/EngagementChart"
-import ExperienceChart from "../components/ExperienceChart"
-import UserInfoCard from "../components/UserInfoCard"
-import { useSession } from "next-auth/react"
+import { ChevronLeft, Flame, Users, Trophy } from 'lucide-react'
+import Link from 'next/link'
+import EngagementChart from "../components/profileComponents/EngagementChart"
+import ExperienceChart from "../components/profileComponents/ExperienceChart"
 import QuizOverview from "../components/profileComponents/QuizOverview"
-import LearningStats from "../components/profileComponents/LearningStats";
+import Achievements from "../components/profileComponents/Achievements"
+import { useSession } from "next-auth/react"
+import { useState, useEffect } from "react"
+import ProfileStats from "../components/profileComponents/ProfileStats"
+import UserInfoCard from "../components/profileComponents/UserInfo"
 
-export default function ProfilePage() {
-  //store session and user data
-  const { data: session } = useSession()
-  const [userData, setUserData] = useState(null)
-
-  useEffect(() => {
-    console.log(session)
-    if (!session?.user?.email) return
-
-    fetch(`http://3.128.186.118:5000/users`) ///${session.user.email} change to this
-      .then(res => res.json())
-      .then(users => { 
-        const me = users.find(u => u.email === session.user.email) //change this when new route is added
-        setUserData(me)
-      })
-    }, [session])
-
-    const name = userData ? `${userData.first_name} ${userData.last_name}` : ""
-    const email = userData?.email ?? ""
-    const school = userData?.school ?? ""
-    const major = userData?.major ?? ""
-    const classStatus = userData?.class_status ?? ""
-
-
-    const [isEditing, setIsEditing] = useState(false)
+export default function ProfilePage3() {
+      //store session and user data
+      const { data: session } = useSession()
+      const [userData, setUserData] = useState(null)
+    
+      useEffect(() => {
+        console.log(session)
+        if (!session?.user?.email) return
+    
+        fetch(`http://3.128.186.118:5000/users`) ///${session.user.email} change to this
+          .then(res => res.json())
+          .then(users => { 
+            const me = users.find(u => u.email === session.user.email) //change this when new route is added
+            setUserData(me)
+          })
+        }, [session])
+    
+        const name = userData ? `${userData.first_name} ${userData.last_name}` : ""
+        const email = userData?.email ?? ""
+        const school = userData?.school ?? ""
+        const major = userData?.major ?? ""
+        const classStatus = userData?.class_status ?? ""
+    
 
   return (
-    <main className="min-h-screen bg-[#F5F5FE] flex">
-      <Navbar />
+    <div
+      className="min-h-screen flex px-2"
+       style={{ background: "linear-gradient(135deg, #EAF4F2 0%, #F5F8F7 60%, #F7F5FB 100%)" }}
+    >
+      <div className="p-7 flex flex-col flex-1 gap-5">
 
-      <div className="flex flex-col flex-1 ml-16 p-5 gap-4">
-        {/* <h1 className="text-2xl px-4 font-bold text-[#14153A]">Profile</h1> */}
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/home" className="flex items-center gap-1.5 px-4 h-12 rounded-full bg-white/80 hover:bg-white transition-all mr-1">
+              <ChevronLeft size={18} className="text-[#141f1d]" />
+              <span className="text-sm font-semibold text-[#141f1d]">Home</span>
+            </Link>
+            <h1 className="text-xl font-medium text-[#141f1d] tracking-tight leading-tight">Profile</h1>
+          </div>
+          <div className="flex gap-2">
+            <button className="px-4 py-3 rounded-full bg-white text-sm font-semibold text-[black] flex items-center gap-2">
+              <Users size={18} className="text-gray-700" />
+              15 Friends
+            </button>
+            <button className="px-4 py-3 rounded-full bg-white text-sm font-semibold text-black flex items-center gap-2">
+              <Trophy size={18} className="text-gray-700" />
+              3 Achievements
+            </button>
+          </div>
+        </div>
 
-        <div className="flex flex-1 gap-4">
+        {/* Grid */}
+        <div className="flex gap-5 flex-1 py-2">
 
-          {/* Left column - profile and achievements*/}
-          <div className="w-120 flex flex-col gap-4">
-            
-          {/* Student Name Card */}
-          <div className="flex flex-col px-6 py-6 bg-white rounded-2xl">
-            
-            {/* pfp, Name, and Edit Button */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-18 h-18 rounded-full bg-gray-300" />
-                <div>
-                  <p className="text-lg font-bold text-gray-900">{name}</p>
-                  <p className="text-gray-400 text-sm font-normal">{email}</p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setIsEditing(!isEditing)}
-                className="bg-gray-400 hover:bg-gray-500 transition-colors text-white px-6 py-2.5 rounded-lg text-sm font-semibold">
-                {isEditing ? "Save" : "Edit"}
-              </button>
+          {/* Left column */}
+          <div className="flex flex-col gap-5 w-4/12">
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1 flex flex-col">
+                <UserInfoCard
+                name={name}
+                email={email}
+                school={school}
+                major={major}
+                classStatus={classStatus}
+                />
             </div>
-
-            {/* user info - gray divider line here */}
-            <div className="mt-6 grid grid-cols-2 gap-4 border-t border-gray-200 pt-4">
-              <div className="flex flex-col">
-                <span className="text-sm text-gray-400 font-bold">School</span>
-                <p className="text-sm text-gray-700">{school}</p>
-              </div>
-              
-              <div className="flex flex-col">
-                <span className="text-sm  text-gray-400 font-bold">Active Since</span>
-                <p className="text-sm text-gray-700">March 2026</p>
-              </div>
-
-              <div className="flex flex-col">
-                <span className="text-sm  text-gray-400 font-bold">Major</span>
-                <p className="text-sm text-gray-700">{major}</p>
-              </div>
-
-              <div className="flex flex-col">
-                <span className="text-sm  text-gray-400 font-bold">Class Status</span>
-                <p className="text-sm text-gray-700">{classStatus}</p>
-              </div>
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1">
+                <p className="text-md font-semibold text-[#14153A] pb-1">Quiz Overview</p>
+                <QuizOverview />
             </div>
           </div>
 
+          {/* Right column */}
+          <div className="flex flex-col gap-5 flex-1">
 
-
-            {/* Achievements Card */}
-            <div className="bg-white rounded-2xl p-5 h-122">
-               <p className="text-md font-bold text-gray-800 p-2">Achievements</p>
-               {/* Achievement content */}
+            {/* Learning stats —right col */}
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4">
+                <ProfileStats />
             </div>
-            
-          </div>
 
-          {/* Right column - flex-1 */}
-          <div className="flex flex-col flex-1 gap-4">
-
-            {/* 4 cards in a square  */}
-            <div className="grid grid-cols-2 gap-4">
-              
-              {/* quiz scores line graph*/}
-              <div className="bg-white rounded-2xl p-5 h-80 flex flex-col">
+            {/* Experience + Engagement side by side */}
+            <div className="grid grid-cols-2 gap-7 flex-1">
+              <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-4 pt-4 flex flex-col">
                 <div className="flex justify-between items-baseline mb-2 px-1">
-                  <p className="text-md font-bold text-[#14153A]">Points earned</p>
+                  <p className="text-md font-semibold text-[#14153A]">Points earned</p>
                 </div>
                 
-                <div className="flex-1 min-h-0 w-full">
+                <div className="flex-1 min-h-0 w-full p-5">
                   <ExperienceChart />
                 </div>
-              </div>
 
-              {/* engagement donut chart */}
-              <div className="bg-white rounded-2xl p-5 h-80 flex flex-col">
-              <div className="flex justify-between items-baseline mb-2 px-1">
-                <p className="text-md font-bold text-[#14153A]">Engagement</p>
+            </div>
+              <div className="bg-white/65 backdrop-blur-sm rounded-2xl py-4 px-4 flex flex-col">
+             <div className="flex justify-between items-baseline px-1">
+                <p className="text-md font-semibold text-[#14153A] px-4">Engagement</p>
               </div>
               
               <div className="flex-1 min-h-0 px-5">
                 <EngagementChart />
               </div>
+              </div>
             </div>
 
-              {/* Learning Stats */}
-              <div className="bg-white rounded-2xl px-6 py-4">
-                <p className="text-md font-semibold text-[#14153A] pb-2">Learning Stats</p>
-                <LearningStats />
-              </div>
-
-              {/* Quiz overview */}
-              <div className="bg-white rounded-2xl p-5">
-                <p className="text-md font-semibold text-[#14153A] pb-1">Quiz Overview</p>
-                  <QuizOverview />
-              </div>
-
+            {/* Achievements — right col */}
+            <div className="rounded-2xl flex-1 min-w-0 overflow-hidden">
+                <Achievements />
             </div>
 
           </div>
         </div>
-      </div>
 
-    </main>
+      </div>
+    </div>
   )
 }
-

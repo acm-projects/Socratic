@@ -1,8 +1,9 @@
+
 "use client";
 import { useState, useEffect } from "react";
 
 export default function ClassHeatmap({ data }) {
-  // 1. Start with an empty array (or all zeros) so the Server and Client match at first
+  // 1. Start with an empty array 
   const [heatmapData, setHeatmapData] = useState([]);
 
   useEffect(() => {
