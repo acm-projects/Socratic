@@ -19,7 +19,7 @@ export default function Navbar() {
                 </button>
                 </Link>
 
-            <Link href = "/social">
+            <Link href = "/social2">
                  <button className={`p-2 px-6 rounded-lg ${pathname === "/social" ? "bg-[#F5F6FA]" : "hover:bg-gray-100"}`}>
                 <Users className="text-black" size={25} />
                 </button>

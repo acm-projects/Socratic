@@ -1,255 +1,453 @@
 'use client';
-import { useState } from 'react';
-import Navbar from '../components/Navbar';
+import { useState, useEffect } from 'react';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import Head from 'next/head';
+import { EllipsisVertical } from "lucide-react";
+import { useSession } from "next-auth/react"
+import { HiFire } from "react-icons/hi";
+import {CircleCheck, CircleX} from "lucide-react";
+
+
+import Schedulemodal from "../components/socialcomponents/Schedulemodal";
+
+
+const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['400','500','600','700','800'] })
 
 
 
-// ── TOPBAR PLACEHOLDER ──
-function Topbar() {
-  return (
-    <div className="bg-white rounded-xl p-3 mb-6">
-      <div className="flex items-center justify-between">
-        
-        {/* Study Sessions */}
-        <div className="flex-1 text-center">
-          <div className="text-3xl font-bold text-teal-600">5</div>
-          <div className="text-sm text-gray-400 font-medium">Study sessions</div>
-        </div>
-
-        {/* Vertical Divider */}
-        <div className="w-px h-12 bg-gray-100"></div>
-
-        {/* Top Streak */}
-        <div className="flex-1 text-center">
-          <div className="text-3xl font-bold text-blue-300">31</div>
-          <div className="text-sm text-gray-400 font-medium">Top streak (Juanita)</div>
-        </div>
-
-        {/* Vertical Divider */}
-        <div className="w-px h-12 bg-gray-100"></div>
-
-        {/* Friends */}
-        <div className="flex-1 text-center">
-          <div className="text-3xl font-bold text-blue-500">6</div>
-          <div className="text-sm text-gray-400 font-medium">Friends</div>
-        </div>
-
-        {/* Vertical Divider */}
-        <div className="w-px h-12 bg-gray-100"></div>
-
-        {/* Pending Requests */}
-        <div className="flex-1 text-center">
-          <div className="text-3xl font-bold text-purple-500">2</div>
-          <div className="text-sm text-gray-400 font-medium">Pending requests</div>
-        </div>
-
-      </div>
-    </div>
-  );
-}
- 
-// ── UPCOMING SESSIONS ──
-function UpcomingSessions() {
-  const sessions = [
-    { subject: 'Discrete Math', teacher: 'Sara, Jane', date: 'Feb 22', time: '4:00–5:00 PM', color: 'bg-teal-500' },
-    { subject: 'Calculus II', teacher: 'Sara, Jane', date: 'Feb 24', time: '4:00–5:00 PM', color: 'bg-teal-500' },
-    { subject: 'Physics I', teacher: 'Meghan', date: 'Feb 26', time: '2:00–3:00 PM', color: 'bg-blue-400' },
-  ];
-
-  return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">Upcoming Sessions</h2>
-        <button className="text-teal-600 text-sm font-semibold">+ Schedule new</button>
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        {sessions.map((s, i) => (
-          <div key={i} className="bg-white p-4 rounded-xl border-l-4 border-teal-500 flex justify-between items-start">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${s.color}`}></div>
-                <h3 className="font-bold text-gray-800">{s.subject}</h3>
-              </div>
-              <p className="text-xs text-gray-400 mt-1">with {s.teacher}</p>
-            </div>
-            <div className="text-right">
-              <span className="text-teal-600 font-bold text-xs bg-teal-50 px-2 py-1 rounded">{s.date}</span>
-              <p className="text-[10px] text-gray-400 mt-2">{s.time}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-
-
-// ── SHARED CLASSES ──
-
-{/*}
-function SharedClasses() {
-  const classes = [
-    { name: 'Discrete Math', students: [{ n: 'Meghan Jes', c: 'bg-purple-400' }, { n: 'Juanita Cormier', c: 'bg-red-400' }] },
-    { name: 'Calculus II', students: [{ n: 'Sara Kim', c: 'bg-blue-400' }] },
-    { name: 'Physics I', students: [{ n: 'Sara Kim', c: 'bg-blue-400' }] },
-    { name: 'CS I', students: [{ n: 'Meghan Jes', c: 'bg-purple-400' }] },
-  ];
-
-  return (
-    <div className="mb-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-gray-800">Shared Classes</h2>
-        <button className="text-teal-600 text-sm">See all</button>
-      </div>
-      <div className="grid grid-cols-4 gap-4">
-        {classes.map((cls, i) => (
-          <div key={i} className="bg-white p-4 rounded-xl  border-gray-50 h-32">
-            <h3 className="font-bold text-sm text-gray-800 mb-3">{cls.name}</h3>
-            {cls.students.map((st, j) => (
-              <div key={j} className="flex items-center gap-2 mb-2">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] text-white font-bold ${st.c}`}>
-                  {st.n.split(' ').map(x => x[0]).join('')}
+function StatsTopBar() {
+    return (
+        <div className="bg-white/70 rounded-xl p-4 flex flex-col gap-4">
+            <div className="flex justify-around">
+                <div className="flex flex-col items-center gap-1">
+                    <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>5</span>
+                    <span className="text-xs text-gray-400">Study Sessions</span>
                 </div>
-                <span className="text-xs text-gray-600">{st.n}</span>
+                <div className="flex flex-col items-center gap-1">
+                    <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>20</span>
+                    <span className="text-xs text-gray-400">Day Streak</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                    <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>6</span>
+                    <span className="text-xs text-gray-400">Friends</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                    <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>2</span>
+                    <span className="text-xs text-gray-400">Pending Requests</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+function Podium() {
+
+    {/*array of friends and their streaks or points*/}
+    const [friends, setFriends] = useState([])
+    const { data: session, status } = useSession()
+
+
+    {/*fetch data*/}
+useEffect(() => {
+    if (!session) return  // add this line
+  fetch(`/backend/users/${session.user.id}/friends`)
+    .then(res => res.json())
+    .then(async (data) => {
+      const friendDetails = await Promise.all(
+        data.map(async (f) => {
+          const user = await fetch(`/backend/users/${f.friend_id}`).then(r => r.json())
+          console.log("user:", user) // just add this line
+        return {
+        id: f.friend_id,
+        name: user.name,
+        pts: user.total_xp,
+        streak: user.streak,  
+}
+        })
+      )
+      const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
+      setFriends([...friendDetails, { 
+        id: session.user.id, 
+        name: "You", 
+        pts: me.total_xp, 
+        streak: me.streak
+      }])
+    })
+}, [session])
+
+
+
+    const sorted = friends.sort((a,b)=> b.streak - a.streak);
+    const podium = sorted.slice(0,3);
+    const top5 = sorted.slice(0,5);
+    const you = friends.find(f => f.name === "You")
+    const youInTop5 = top5.some(f => f.name === "You")
+    const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you].filter(Boolean)
+    const [searchQuery, setSearchQuery] = useState("");
+    const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
+
+
+
+
+if (status === "loading") return <div>Loading...</div>
+if (friends.length < 3) return <div>Loading...</div>
+
+
+
+
+
+
+    return(
+
+
+            <div className = "bg-white/70 w-[500px] h-[700px] rounded-2xl p-5 items-center flex flex-col gap-7">
+                <div className = "flex gap-5 w-full">
+                <h2 className = "text-l self-start items-center font-semibold text-[#198788] border-b border-bg-[#198788]">
+                        Podium
+                </h2>
+                <h2 className = "text-l self-start items-center font-semibold text-black">
+                        All Friends
+                </h2>
+                </div>
+
+
+             {/*3 leaderboard rectangles*/}
+
+                <div className = "flex gap-3 items-end">
+
+             
+               
+                <div className = "flex flex-col items-center gap-3">
+                <div className = "relative">
+                <div className = "w-15 h-15 bg-gray-300 rounded-full"/>
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
+                <p className="text-black text-xs font-bold">2</p>
+                </div>
+                </div>
+                
+                <div className="w-27 h-20  bg-gradient-to-b from-[#4DB5AC]/70 to-[#6cd6e0]/70 rounded-md flex flex-col items-center justify-between py-3 px-3">
+                <p className = "text-black font-semibold text-xs text-center"> {podium[1].name} </p>   
+                <div className="flex items-center gap-1">
+                <HiFire className="text-black" size={16}/>
+                <p className="text-black text-xs font-semibold">{podium[1].streak}</p>
+                </div>
+
+                </div>
+                </div>
+
+
+                <div className = "flex flex-col items-center gap-3">
+                <div className = "relative">
+                <div className = "w-15 h-15 bg-gray-300 rounded-full"/>
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
+                <p className="text-black text-xs font-bold">1</p>
+                </div>
+                </div>
+                <div className="w-27 h-35 bg-gradient-to-b from-[#4DB5AC]/70 to-[#6cd6e0]/70 rounded-md flex flex-col items-center justify-between py-3 px-3">
+                <p className = "text-black font-semibold text-xs text-center"> {podium[0].name} </p>   
+                <div className="flex items-center gap-1">
+                <HiFire className="text-black" size={16}/>
+                <p className="text-black text-xs font-semibold">{podium[0].streak}</p>
+                </div>
+
+
+                </div>
+                </div>
+
+                
+                <div className = "flex flex-col items-center gap-3">
+                <div className = "relative">
+                <div className = "w-15 h-15 bg-gray-300 rounded-full"/>
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
+                <p className="text-black text-xs font-bold">3</p>
+                </div>
+                </div>
+                <div className="w-27 h-20 bg-gradient-to-b from-[#4DB5AC]/70 to-[#6cd6e0]/70 rounded-md flex flex-col items-center justify-between py-3 px-3">
+                 <p className = "text-black font-semibold text-xs text-center"> {podium[2].name} </p>   
+                <div className="flex items-center gap-1">
+                <HiFire className="text-black" size={16}/>
+                <p className="text-black text-xs font-semibold">{podium[2].streak}</p>
+                </div>
+                </div>
+                </div>
+
+                </div>
+
+    {/*. Displaying the rest and YOU */}
+
+    <div className="flex flex-col gap-1 w-full">
+  {rest.map((friend, i) => (
+    <div key={friend.name} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#F9FAFB]" : ""}`}>
+      <div className="flex items-center gap-3">
+        <p className="text-gray-400 font-semibold text-sm">{i + 4}</p>
+        <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+        <p className={`text-sm ${friend.name === "You" ? "font-bold" : "font-semibold"}`}>{friend.name}</p>
+      </div>
+      <p className={`text-sm ${friend.name === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
+    </div>
+  ))}
+
+    {/*. Search bar that needs a bit of work */}
+<div className="w-full mt-4">
+  <div className="flex items-center rounded-xl bg-[#ededed] px-4 py-2 gap-2">
+    <input
+      className="w-full outline-none text-sm text-gray-500"
+      placeholder="Search friends"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  </div>
+
+ {/*displaying search results */}
+  <div className="flex flex-col gap-2 mt-2">
+  {searchResults.map(friend => (
+    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#D3E4FD]" : "bg-gray-50"}`}>
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
+        <p className="text-sm font-semibold">{friend.name}</p>
+      </div>
+      <p className="text-sm text-gray-400">{friend.pts} pts</p>
+    </div>
+  ))}
+</div>
+
+
+
+</div>
+
+     </div>
+
+     </div>
+
+       
+        
+    );
+}
+
+function UpcomingStudySessions() {
+    
+    const [showModal, setShowModal] = useState(false);
+    const [meetings, setMeetings] = useState([]);
+    const { data: session } = useSession();
+    console.log(session);
+
+    useEffect(() => {
+        fetch('http://3.128.186.118:5000/api/calendar/upcoming-events')
+            .then(res => res.json())
+            .then(data => setMeetings(data))
+            .catch(err => console.error(err));
+    }, []);
+
+
+return (
+        <>
+        <div className="bg-white/70 rounded-xl p-5 h-[320px] flex flex-col">
+            <h2 className="text-l font-semibold text-black mb-4">Upcoming Study Sessions</h2>
+            
+            {/* THIS IS THE SCROLLABLE BOX */}
+            <div className="flex-1 overflow-y-auto flex flex-col gap-3 pr-2">
+                {meetings.map((meeting) => (
+                    <div key={meeting.id} className="border-b border-gray-100 flex items-center justify-between p-3 shrink-0">
+                        <div className="flex items-center gap-4">
+                            <div className="text-center min-w-[36px]">
+                                <p className="text-xs font-semibold" style={{color: '#0F6E56'}}>
+                                    {new Date(meeting.start.dateTime).toLocaleDateString([], { month: 'short' }).toUpperCase()}
+                                </p>
+                                <p className="text-xl font-semibold text-black leading-tight">
+                                    {new Date(meeting.start.dateTime).getDate()}
+                                </p>
+                            </div>
+                            <div className="w-px bg-gray-200 h-9" />
+                            <div className="flex flex-col">
+                                <p className="text-sm font-semibold text-black">{meeting.summary}</p>
+                                <p className="text-xs text-gray-400">{meeting.description} · {new Date(meeting.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                            </div>
+                        </div>
+
+                        <span className="text-xs bg-[#DCFCE7] text-[#198788] font-light uppercase px-4 py-1.5 rounded-full">
+                            Juanita
+                        </span>
+                    </div>
+                ))}
+            </div>
+
+            {/* BUTTON STAYS OUTSIDE THE SCROLL BOX */}
+            <div className="flex justify-end mt-1">
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="flex items-center gap-2 text-[#198788] text-sm font-medium px-4 py-0.5 rounded-xl cursor-pointer">
+                    Schedule Meeting
+                </button>
+            </div>
+        </div>
+
+        {showModal && <Schedulemodal onClose={() => setShowModal(false)} />}
+    </>
+    );
+}
+
+
+function SharedClasses() {
+    const sharedFriends = [
+        { 
+            id: 1, 
+            name: "Juanita", 
+            classes: ["CS 3345", "MATH 2305", "PHYS 2325"], 
+            color: "#F5EEFF" 
+        },
+        { 
+            id: 2, 
+            name: "Marcus", 
+            classes: ["PHYS 2325", "CS 3340"], 
+            color: "#C2E7FF" 
+        },
+        { 
+            id: 3, 
+            name: "Sanya", 
+            classes: ["CS 3345", "MATH 2418", "CS 3340"], 
+            color: "#DCFCE7" 
+        },
+        { 
+            id: 4, 
+            name: "Leo", 
+            classes: ["MATH 2418", "MATH 2305"], 
+            color: "#D3E4FD" 
+        },
+        { 
+            id: 5, 
+            name: "Elena", 
+            classes: ["CS 3340", "PHYS 2325", "CS 3345"], 
+            color: "#E3E4F8" 
+        }
+    ];
+
+    return (
+        <div className="bg-white/70 rounded-xl p-4 flex-1 min-h-[390px] flex flex-col gap-4">
+            <h2 className="text-l font-semibold text-black mb-1">Shared Classes</h2>
+            
+            <div className="flex flex-col">
+                {sharedFriends.map((friend) => (
+                    <div 
+                        key={friend.id} 
+                        className="flex items-center justify-between p-3 mb-1 border-b border-gray-100 transition-colors"
+                    >
+                        {/* LEFT SIDE: Avatar and Name */}
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0" />
+                            <p className="text-sm font-bold text-black leading-tight">{friend.name}</p>
+                        </div>
+
+                        {/* RIGHT SIDE: Class Pills */}
+                        <div className="flex gap-1.5 flex-wrap justify-end max-w-[220px]">
+                            {friend.classes.map((cls) => (
+                                <span 
+                                    key={cls} 
+                                    className="text-[10px] px-2.5 py-1 rounded-lg font-medium text-black/80 whitespace-nowrap"
+                                    style={{ backgroundColor: friend.color }}
+                                >
+                                    {cls}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function RightSidebar() {
+  const { data: session, status } = useSession()
+  const [requests, setRequests] = useState([]);
+  const [showAddFriend, setShowAddFriend] = useState(false);
+
+  useEffect(() => {
+    if (!session) return
+    fetch(`/backend/users/${session.user.id}/friend-requests`)
+      .then(res => res.json())
+      .then(async (data) => {
+        const pending = data.filter(req => req.status === "pending")
+        const requestDetails = await Promise.all(
+          pending.map(async (req) => {
+            const sender = await fetch(`/backend/users/${req.sender_id}`).then(r => r.json())
+            return { id: req.id, name: sender.name, email: sender.email }
+          })
+        )
+        setRequests(requestDetails)
+      })
+  }, [session])
+
+  function acceptRequest(id) {
+    setRequests(requests.filter(r => r.id !== id));
+  }
+
+  function declineRequest(id) {
+    setRequests(requests.filter(r => r.id !== id));
+  }
+
+  return (
+    <>
+      <div className="p-5 pl-0 flex flex-col gap-5 w-84 shrink-0">
+        <div className="bg-white/70 rounded-xl p-6 min-h-[180px] flex flex-col gap-3 w-full">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-l font-semibold text-black">Friend Requests</h2>
+
+
+          {requests.map((request) => (
+            <div key={request.id} className="flex items-center justify-between w-full px-4 py-3">
+              <div className="flex flex-col ">
+                <p className="text-sm font-semibold text-black">{request.name}</p>
+                <p className="text-xs text-gray-400">{request.email}</p>
               </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-    */}
-
-// ── LEADERBOARD ──
-
-function Leaderboard() {
-  const leaders = [
-    { rank: 1, name: 'Juanita Cormier', score: 31, color: 'bg-gray-200' },
-    { rank: 2, name: 'Meghan Jes', score: 24, color: 'bg-gray-200' },
-    { rank: 3, name: 'Sara Kim', score: 19, color: 'bg-gray-200' },
-    { rank: 4, name: 'Marsha Fisher', score: 17, color: 'bg-gray-200' },
-  ];
-
-  return (
-    <div className="bg-white rounded-xl  border border-gray-50 overflow-hidden">
-      <div className="flex border-b border-gray-100">
-        <button className="px-6 py-3 text-teal-600 border-b-2 border-teal-600 font-bold text-sm">Leaderboard</button>
-        <button className="px-6 py-3 text-gray-400 font-medium text-sm">All Friends</button>
-      </div>
-      <div className="p-2">
-        {leaders.map((person, i) => (
-          <div key={i} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-bold text-gray-400 w-4">{person.rank}</span>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs text-white font-bold ${person.color}`}>
-                {person.name.split(' ').map(x => x[0]).join('')}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => acceptRequest(request.id)}
+                  className="cursor-pointer text-gray-500">
+                  <CircleCheck size = {28} strokeWidth={1} />
+                </button>
+                <button
+                  onClick={() => declineRequest(request.id)}
+                  className="cursor-pointer text-gray-500">
+                  <CircleX size = {28} strokeWidth={1}/>
+                </button>
               </div>
-              <span className="text-sm font-semibold text-gray-700">{person.name}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-bold text-gray-700">{person.score}</span>
-              <span className="text-gray-500"></span>
-            </div>
+          ))}
+          <div className="flex justify-end mt-2">
+            <button
+              onClick={() => setShowAddFriend(true)}
+              className="cursor-pointer text-[#198788] text-sm font-medium">
+              Add Friend
+            </button>
           </div>
-        ))}
-        <div className="flex justify-center py-2 text-gray-200">...</div>
-        <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100 mt-2">
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-bold text-blue-500 w-4">6</span>
-            <div className="w-8 h-8 rounded-full bg-blue-300 flex items-center justify-center text-xs text-white font-bold">Y</div>
-            <span className="text-sm font-bold text-gray-700">You <span className="text-blue-400 font-normal ml-2">you</span></span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-sm font-bold text-gray-700">5</span>
-            <span className="text-orange-500"></span>
           </div>
         </div>
+
+        <div className="bg-white/70 rounded-xl p-6 flex-1 flex items-start">
+          <h2 className="text-l font-semibold text-black">Friend Achievements</h2>
+        </div>
       </div>
-    </div>
+
+      {showAddFriend && <Sendrequestmodal onClose={() => setShowAddFriend(false)} />}
+    </>
   );
 }
-
-
-// ── RIGHT PANEL ──
-function RightPanel() {
-  return (
-    <div className="w-80 flex flex-col gap-6">
-      <div className="bg-white rounded-xl p-5  border-gray-50">
-        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Quick Rebook</h3>
-        {[
-          { title: 'Discrete Math w/ Sara', sub: 'Mon 4-5 PM • 6x this month' },
-          { title: 'Calculus II w/ Jane', sub: 'Wed 4-5 PM • 4x this month' },
-          { title: 'CS Study Group', sub: 'Fri 2-4 PM • 3x this month' }
-        ].map((item, i) => (
-          <div key={i} className="flex justify-between items-center mb-4 last:mb-0 border-b border-gray-50 pb-4 last:border-0 last:pb-0">
-            <div>
-              <p className="text-sm font-bold text-gray-800">{item.title}</p>
-              <p className="text-[10px] text-gray-400">{item.sub}</p>
+export default function Social2() {
+    return (
+        <main className={`pt-10 min-h-screen bg-gradient-to-b from-[#EEF3F4] to-[#ededed] flex ${jakarta.className}`}>
+            <div className="flex flex-col gap-5 w-full p-5">
+                
+                <StatsTopBar />
+                <div className="flex gap-4 flex-1 items-start">
+                    <Podium />
+                    <div className="flex flex-col gap-4 flex-1 min-h-0">
+                        <UpcomingStudySessions />
+                        <SharedClasses />
+                    </div>
+                </div>
             </div>
-            <button className="text-[10px] font-bold text-teal-500 border border-teal-500 px-3 py-1 rounded-lg hover:bg-teal-50">Rebook</button>
-          </div>
-        ))}
-        <button className="w-full bg-blue-500 text-white py-3 rounded-xl font-bold text-sm mt-4 shadow-blue-100 flex items-center justify-center gap-2">
-          <span className="text-lg">+</span> Schedule Meeting
-        </button>
-      </div>
-
-      <div className="bg-white rounded-xl p-5  border border-gray-50">
-        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Friend Requests</h3>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-white font-bold">BS</div>
-            <div>
-              <p className="text-xs font-bold text-gray-800">Bryan Smith</p>
-              <p className="text-[10px] text-gray-400">bryansmith21@gma...</p>
-            </div>
-          </div>
-          <button className="bg-blue-500 text-white text-[10px] font-bold px-4 py-2 rounded-lg">Accept</button>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl p-5  border border-gray-50">
-        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Friends' Achievements</h3>
-        {[
-          { name: 'Bryan', ach: '7 Day Streak', sub: 'Logged in 7 days in a row', icon: '', color: 'text-yellow-500' },
-          { name: 'Sarah', ach: '7 Day Streak', sub: 'Logged in 7 days in a row', icon: '', color: 'text-yellow-500' },
-          { name: 'John', ach: '14 Day Streak', sub: 'Logged in 14 days in a row', icon: '', color: 'text-yellow-600' }
-        ].map((a, i) => (
-          <div key={i} className="flex gap-3 mb-4 last:mb-0 items-start bg-gray-50/50 p-2 rounded-lg">
-            <div className={`w-8 h-8 rounded border border-gray-200 flex items-center justify-center bg-white ${a.color}`}>{a.icon}</div>
-            <div>
-              <p className="text-[10px] font-bold text-teal-600">{a.name}</p>
-              <p className="text-[11px] font-bold text-gray-800">{a.ach}</p>
-              <p className="text-[9px] text-gray-400">{a.sub}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── SOCIAL PAGE ──
-export default function SocialPage() {
-  return (
-    <main className="flex min-h-screen bg-[#F8FAFC]">
-      <Navbar/>
-      <div className="w-[100px] flex-shrink-0"></div>
-      
-      <div className="flex-1 p-8 flex gap-8">
-        {/* Main Content Area */}
-        <div className="flex-1 max-w-4xl">
-          <Topbar />
-          <UpcomingSessions />
-          
-          <Leaderboard />
-        </div>
-
-        {/* Right Sidebar */}
-        <RightPanel />
-      </div>
-    </main>
-  );
+            <RightSidebar />
+        </main>
+    );
 }

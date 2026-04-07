@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UpcomingTasks from "../components/dashboardcomponents/UpcomingTasks";
 import Calendar from "../components/dashboardcomponents/Calendar";
 import ClassCard from "../components/dashboardcomponents/ClassCard";
@@ -10,20 +10,35 @@ import UpcomingMeetings from "../components/dashboardcomponents/UpcomingMeetings
 import {Plus} from "lucide-react";
 import WeeklyRecap from "../components/dashboardcomponents/WeeklyRecap";
 import DeleteCourseModal from "../components/dashboardcomponents/DeleteCourseModal";
-
+import { useSession } from "next-auth/react";
 
 export default function Home() {
 
       const [courses, setCourses] = useState([
-    "Computer Science I",
-    "Discrete Math",
-    "Physics I",
-    "Calculus II",
-     "Linear Algebra"
+
   ]);
 
   const[showModal, setShowModal] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
+  const { data: session } = useSession()
+
+  useEffect(() => {  
+    if (!session) return; 
+    fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
+    .then(res => res.json())
+    .then(data => {
+      setCourses(data)
+      console.log("courses:", data)
+
+
+
+    })
+    .catch(err => console.error(err));
+   }, [session]);
+   console.log("session", session)
+   
+
+
 
 
 
@@ -44,7 +59,6 @@ function deleteCourse(name) {
         
 
       <div className="ml-[120px] pr-6 pt-5 pb-5 flex flex-col gap-6 w-fit">
-              <h2 className="text-3xl font-bold text-black">Dashboard</h2>
        
        {/*} <Header title="Dashboard" showPlus={false} /> */}
         {showModal && <Addcoursemodal onClose={() => setShowModal(false)} onAdd={addCourse} />}
@@ -65,8 +79,8 @@ function deleteCourse(name) {
               </div>
 
 
-            {courses.map(name => (
-              <ClassCard key={name} name={name} onDelete={deleteCourse} onDeleteClick={setCourseToDelete} />
+            {courses.map(course => (
+              <ClassCard key={course.name} name={course.subject} onDelete={deleteCourse} onDeleteClick={setCourseToDelete} />
             ))}
           </div>
 

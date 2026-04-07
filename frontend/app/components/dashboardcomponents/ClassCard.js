@@ -42,6 +42,7 @@ export default function ClassCard({ name, onDeleteClick }) {
               Past 10 days
             </p>
             <div className="flex items-end">
+            
               <Heatmap data={data} />
             </div>
           </div>
