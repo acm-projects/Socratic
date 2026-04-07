@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './backend/.env' })
+require('dotenv').config()
 
 const { randomUUID } = require("crypto")
 
@@ -18,22 +18,20 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerDoc = require('./swagger.json')
 const syllabusRoutes = require('./backend/routes/syllabusRoutes')
 const calendarRoutes = require('./backend/routes/calendarRoutes')
-const historyRoutes = require('./backend/routes/historyRoutes')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 app.use(cors())
 app.use(express.json())
-app.use('/api/syllabus', syllabusRoutes)
+app.use('/', syllabusRoutes)
 app.use('/api/calendar', calendarRoutes)
-app.use('/api/history', historyRoutes)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })
 })
 
 // -----------------------------------------------------
-// TABLE DISCOVERY — hit /tables to see all table names
+// TABLE DISCOVERY
 // -----------------------------------------------------
 
 app.get("/tables", async (req, res) => {
@@ -97,6 +95,45 @@ app.delete("/users/:id", async (req, res) => {
   try {
     await pool.query('DELETE FROM "User" WHERE id = $1', [req.params.id])
     res.json({ message: "User deleted" })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// XP HISTORY (Points Earned Over Time)
+// -----------------------------------------------------
+
+app.get("/users/:id/xp-history", async (req, res) => {
+  try {
+    const days = parseInt(req.query.days) || 30
+    const userId = req.params.id
+
+    // Get XP grouped by date from xp_system
+    const result = await pool.query(
+      `SELECT DATE(created_at) as date, SUM(amount) as xp_earned
+       FROM xp_system
+       WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '${days} days'
+       GROUP BY DATE(created_at)
+       ORDER BY date ASC`,
+      [userId]
+    )
+
+    // Zero-fill missing days
+    const xpMap = {}
+    result.rows.forEach(row => {
+      xpMap[row.date.toISOString().split('T')[0]] = parseInt(row.xp_earned)
+    })
+
+    const filled = []
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      const dateStr = d.toISOString().split('T')[0]
+      filled.push({ date: dateStr, xp_earned: xpMap[dateStr] || 0 })
+    }
+
+    res.json(filled)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -242,10 +279,32 @@ app.get("/sessions/:id", async (req, res) => {
 // ACHIEVEMENTS API
 // -----------------------------------------------------
 
+const ACHIEVEMENT_LIST = [
+  { id: 1,  name: "First Quiz Completed",         description: "Completed your first quiz",                slug: "first-quiz" },
+  { id: 2,  name: "10 Quizzes Completed",          description: "Completed 10 quizzes",                     slug: "ten-quizzes" },
+  { id: 3,  name: "First Retake Completed",        description: "Completed your first retake",              slug: "first-retake" },
+  { id: 4,  name: "20 Chat Messages Sent",         description: "Sent 20 chat messages",                    slug: "twenty-messages" },
+  { id: 5,  name: "Perfect Score on a Quiz",       description: "Scored 100% on a quiz",                    slug: "perfect-score" },
+  { id: 6,  name: "5 Day Study Streak",            description: "Studied 5 days in a row",                  slug: "five-day-streak" },
+  { id: 7,  name: "5 Perfect Quiz Scores",         description: "Scored 100% on 5 quizzes",                 slug: "five-perfect" },
+  { id: 8,  name: "10 Perfect Quiz Scores",        description: "Scored 100% on 10 quizzes",                slug: "ten-perfect" },
+  { id: 9,  name: "5 Retakes Completed",           description: "Completed 5 retakes",                      slug: "five-retakes" },
+  { id: 10, name: "10 Day Study Streak",           description: "Studied 10 days in a row",                 slug: "ten-day-streak" },
+  { id: 11, name: "First Study Session Scheduled", description: "Scheduled your first study session",       slug: "first-session-scheduled" },
+  { id: 12, name: "10 Perfect Score Questions",    description: "Answered 10 questions perfectly",          slug: "ten-perfect-questions" },
+  { id: 13, name: "20 Retakes Completed",          description: "Completed 20 retakes",                     slug: "twenty-retakes" },
+  { id: 14, name: "10 Study Sessions Scheduled",   description: "Scheduled 10 study sessions",              slug: "ten-sessions-scheduled" },
+  { id: 15, name: "30 Day Study Streak",           description: "Studied 30 days in a row",                 slug: "thirty-day-streak" },
+  { id: 16, name: "20 Perfect Score Questions",    description: "Answered 20 questions perfectly",          slug: "twenty-perfect-questions" },
+  { id: 17, name: "100 Chat Messages Sent",        description: "Sent 100 chat messages",                   slug: "hundred-messages" },
+  { id: 18, name: "50 Perfect Score Questions",    description: "Answered 50 questions perfectly",          slug: "fifty-perfect-questions" },
+  { id: 19, name: "50 Day Study Streak",           description: "Studied 50 days in a row",                 slug: "fifty-day-streak" },
+  { id: 20, name: "20 Study Sessions Scheduled",   description: "Scheduled 20 study sessions",              slug: "twenty-sessions-scheduled" },
+]
+
 app.get("/achievements", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM achievements")
-    res.json(result.rows)
+    res.json(ACHIEVEMENT_LIST)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -253,8 +312,33 @@ app.get("/achievements", async (req, res) => {
 
 app.get("/users/:id/achievements", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM user_achievements WHERE user_id = $1", [req.params.id])
-    res.json(result.rows)
+    const userId = req.params.id
+
+    const userResult = await pool.query('SELECT first_name, last_name FROM "User" WHERE id = $1', [userId])
+    const user = userResult.rows[0]
+    const userName = user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : ''
+
+    const earnedResult = await pool.query(
+      "SELECT achievement_id, earned_at FROM user_achievements WHERE user_id = $1",
+      [userId]
+    )
+
+    const earnedMap = {}
+    earnedResult.rows.forEach(row => {
+      earnedMap[row.achievement_id] = row.earned_at
+    })
+
+    const achievements = ACHIEVEMENT_LIST.map(a => ({
+      id: String(a.id),
+      name: a.name,
+      description: a.description,
+      slug: a.slug,
+      unlocked: !!earnedMap[String(a.id)],
+      unlocked_at: earnedMap[String(a.id)] || null,
+      user_name: userName
+    }))
+
+    res.json(achievements)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -277,6 +361,117 @@ app.get("/topics/:id/metrics", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM daily_topic_metrics WHERE topic_id = $1", [req.params.id])
     res.json(result.rows)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// HEATMAP METRICS
+// -----------------------------------------------------
+
+// Overall heatmap — all classes for a user
+app.get("/users/:id/metrics", async (req, res) => {
+  try {
+    const userId = req.params.id
+    const days = parseInt(req.query.days) || 30
+
+    const result = await pool.query(
+      `SELECT metric_date as date, SUM(questions_asked) as questions_asked, AVG(avg_score) as avg_score
+       FROM daily_topic_metrics
+       WHERE user_id = $1 AND metric_date >= NOW() - INTERVAL '${days} days'
+       GROUP BY metric_date
+       ORDER BY metric_date ASC`,
+      [userId]
+    )
+
+    // Zero-fill missing days
+    const dataMap = {}
+    result.rows.forEach(row => {
+      dataMap[row.date.toISOString().split('T')[0]] = {
+        questions_asked: parseInt(row.questions_asked) || 0,
+        avg_score: parseFloat(row.avg_score) || 0
+      }
+    })
+
+    const filled = []
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      const dateStr = d.toISOString().split('T')[0]
+      filled.push({
+        date: dateStr,
+        questions_asked: dataMap[dateStr]?.questions_asked || 0,
+        avg_score: dataMap[dateStr]?.avg_score || 0
+      })
+    }
+
+    res.json(filled)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Per class heatmap
+app.get("/classes/:code/metrics", async (req, res) => {
+  try {
+    const classCode = req.params.code
+    const days = parseInt(req.query.days) || 30
+
+    const result = await pool.query(
+      `SELECT metric_date as date, SUM(questions_asked) as questions_asked, AVG(avg_score) as avg_score
+       FROM daily_topic_metrics
+       WHERE class_code = $1 AND metric_date >= NOW() - INTERVAL '${days} days'
+       GROUP BY metric_date
+       ORDER BY metric_date ASC`,
+      [classCode]
+    )
+
+    const dataMap = {}
+    result.rows.forEach(row => {
+      dataMap[row.date.toISOString().split('T')[0]] = {
+        questions_asked: parseInt(row.questions_asked) || 0,
+        avg_score: parseFloat(row.avg_score) || 0
+      }
+    })
+
+    const filled = []
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      const dateStr = d.toISOString().split('T')[0]
+      filled.push({
+        date: dateStr,
+        questions_asked: dataMap[dateStr]?.questions_asked || 0,
+        avg_score: dataMap[dateStr]?.avg_score || 0
+      })
+    }
+
+    res.json(filled)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// CLASS DISTRIBUTION (Engagement pie chart)
+// -----------------------------------------------------
+
+app.get("/users/:id/engagement/class-distribution", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT cs.class_code, c.name as class_name, COUNT(*) as question_count
+       FROM chat_sessions cs
+       JOIN classes c ON c.class_code = cs.class_code
+       WHERE cs.user_id = $1
+       GROUP BY cs.class_code, c.name
+       ORDER BY question_count DESC`,
+      [req.params.id]
+    )
+    res.json(result.rows.map(row => ({
+      class_name: row.class_name || row.class_code,
+      question_count: parseInt(row.question_count)
+    })))
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -391,15 +586,8 @@ app.post("/friend-requests", async (req, res) => {
       return res.status(400).json({ error: "sender_email and receiver_email are required" })
     }
 
-    const senderResult = await pool.query(
-      'SELECT id FROM "User" WHERE email = $1',
-      [sender_email]
-    )
-
-    const receiverResult = await pool.query(
-      'SELECT id FROM "User" WHERE email = $1',
-      [receiver_email]
-    )
+    const senderResult = await pool.query('SELECT id FROM "User" WHERE email = $1', [sender_email])
+    const receiverResult = await pool.query('SELECT id FROM "User" WHERE email = $1', [receiver_email])
 
     const sender = senderResult.rows[0]
     const receiver = receiverResult.rows[0]
@@ -409,7 +597,6 @@ app.post("/friend-requests", async (req, res) => {
     }
 
     const id = randomUUID()
-
     const result = await pool.query(
       "INSERT INTO friend_requests (id, sender_id, receiver_id, status) VALUES ($1, $2, $3, $4) RETURNING *",
       [id, sender.id, receiver.id, status || "pending"]
@@ -454,17 +641,11 @@ app.get("/users/:id/quizzes", async (req, res) => {
 app.get("/quizzes/:id/questions", async (req, res) => {
   try {
     const quiz = await pool.query("SELECT * FROM quizzes WHERE id = $1", [req.params.id])
-    const questions = await pool.query(
-      "SELECT * FROM quiz_questions WHERE quiz_id = $1",
-      [req.params.id]
-    )
+    const questions = await pool.query("SELECT * FROM quiz_questions WHERE quiz_id = $1", [req.params.id])
     if (!quiz.rows[0]) {
       return res.status(404).json({ error: "Quiz not found" })
     }
-    res.json({
-      ...quiz.rows[0],
-      questions: questions.rows
-    })
+    res.json({ ...quiz.rows[0], questions: questions.rows })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -490,10 +671,7 @@ app.post("/quizzes", async (req, res) => {
       }
     }
 
-    res.json({
-      ...quiz.rows[0],
-      questions: savedQuestions
-    })
+    res.json({ ...quiz.rows[0], questions: savedQuestions })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
