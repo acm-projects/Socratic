@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ path: './backend/.env' })
 
 const { randomUUID } = require("crypto")
 
@@ -18,13 +18,15 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerDoc = require('./swagger.json')
 const syllabusRoutes = require('./backend/routes/syllabusRoutes')
 const calendarRoutes = require('./backend/routes/calendarRoutes')
+const historyRoutes = require('./backend/routes/historyRoutes')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 app.use(cors())
 app.use(express.json())
-app.use('/', syllabusRoutes)
+app.use('/api/syllabus', syllabusRoutes)
 app.use('/api/calendar', calendarRoutes)
+app.use('/api/history', historyRoutes)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })

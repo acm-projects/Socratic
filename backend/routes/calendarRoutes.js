@@ -9,23 +9,37 @@ const accountModel = require('../models/accountModel');
 const activeSessions = new Set();
 
 // Middleware to check if the user has an active session in local server memory
-const checkSession = (req, res, next) => {
+const checkSession = async (req, res, next) => {
   let userId = req.headers['x-user-id'] || (req.body && req.body.userId) || req.query.userId;
   
   // Developer Fallback: Automatically use the known user ID if none is supplied
-  const DEV_FALLBACK_USER_ID = "100121881546793141091";
+  const DEV_FALLBACK_USER_ID = "cmndnfpv4000ekbuaopj8a773";
   if (!userId) {
     userId = DEV_FALLBACK_USER_ID;
   }
 
-  if (!userId || (!activeSessions.has(userId) && userId !== DEV_FALLBACK_USER_ID)) {
-    console.warn(`Unauthorized access attempt or server restarted for user: ${userId}`);
-    return res.status(401).send({ error: "Session expired or server restarted. Please log in again." });
+  // 1. Check in-memory session (fastest)
+  if (activeSessions.has(userId) || userId === DEV_FALLBACK_USER_ID) {
+    req.resolvedUserId = userId;
+    return next();
   }
 
-  // Attach resolved userId to request so downstream routes use the correct one
-  req.resolvedUserId = userId;
-  next();
+  // 2. Check Database for user (allows test users to persist server restarts)
+  try {
+    const user = await userModel.getUserById(userId);
+    if (!user) {
+      console.warn(`Unauthorized access attempt for user: ${userId}`);
+      return res.status(401).send({ error: "No user found with this ID. Please register or log in." });
+    }
+
+    // 3. Register in volatile memory for future requests
+    activeSessions.add(userId);
+    req.resolvedUserId = userId;
+    next();
+  } catch (error) {
+    console.error("Session verification error:", error.message);
+    res.status(500).send({ error: "Internal server error during session verification." });
+  }
 };
 
 router.get('/session-check', checkSession, (req, res) => {
