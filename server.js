@@ -417,14 +417,15 @@ app.get("/classes/:code/metrics", async (req, res) => {
   try {
     const classCode = req.params.code
     const days = parseInt(req.query.days) || 30
+    const userId = req.query.user_id
 
     const result = await pool.query(
       `SELECT metric_date as date, SUM(questions_asked) as questions_asked, AVG(avg_score) as avg_score
        FROM daily_topic_metrics
-       WHERE class_code = $1 AND metric_date >= NOW() - INTERVAL '${days} days'
+       WHERE class_code = $1 AND user_id = $2 AND metric_date >= NOW() - INTERVAL '${days} days'
        GROUP BY metric_date
        ORDER BY metric_date ASC`,
-      [classCode]
+      [classCode, userId]
     )
 
     const dataMap = {}
