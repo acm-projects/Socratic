@@ -1558,6 +1558,73 @@
         }
       }
     },
+    "/api/quizzes/generate": {
+      "post": {
+        "summary": "Generate AI Quiz",
+        "description": "Generates a dynamic 4-option multiple-choice quiz using Gemini AI over the class Pinecone Vector Knowledge Base.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["classCode", "topic", "numQuestions"],
+                "properties": {
+                  "classCode": {
+                    "type": "string",
+                    "example": "CS 1436",
+                    "description": "The target class for context retrieval"
+                  },
+                  "topic": {
+                    "type": "string",
+                    "example": "Binary Search Trees",
+                    "description": "The specific topic to test"
+                  },
+                  "numQuestions": {
+                    "type": "integer",
+                    "example": 5,
+                    "default": 5,
+                    "description": "Number of questions to generate"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated Quiz successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "questions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "question": { "type": "string" },
+                              "options": { "type": "array", "items": { "type": "string" } },
+                              "correct_answer": { "type": "string" },
+                              "depth_score": { "type": "integer" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/quizzes/{id}/questions": {
       "get": {
         "summary": "Get Quiz Questions",
@@ -1639,11 +1706,6 @@
                   "message"
                 ],
                 "properties": {
-                  "chatId": {
-                    "type": "string",
-                    "description": "Optional: ID of an existing chat session to continue memory.",
-                    "example": "53ca190d-eebf-461c-a7b6-8c44e4448b7e"
-                  },
                   "userId": {
                     "type": "string",
                     "description": "The ID of the user.",
@@ -1667,7 +1729,6 @@
                 }
               },
               "example": {
-                "chatId": "53ca190d-eebf-461c-a7b6-8c44e4448b7e",
                 "userId": "aakash",
                 "classCode": "CS 1000",
                 "topic": "Introduction to Algebra",
