@@ -20,6 +20,7 @@ const syllabusRoutes = require('./backend/routes/syllabusRoutes')
 const calendarRoutes = require('./backend/routes/calendarRoutes')
 const historyRoutes = require('./backend/routes/historyRoutes')
 const tutorRoutes = require('./backend/routes/tutorRoutes')
+const ingestRoutes = require('./backend/routes/ingestRoutes')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
@@ -29,6 +30,7 @@ app.use('/', syllabusRoutes)
 app.use('/api/calendar', calendarRoutes)
 app.use('/api/history', historyRoutes)
 app.use('/api/tutor', tutorRoutes)
+app.use('/api/ingest', ingestRoutes)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })

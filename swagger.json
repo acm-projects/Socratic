@@ -1588,6 +1588,97 @@
           }
         }
       }
+    },
+    "/api/ingest/upload": {
+      "post": {
+        "summary": "Upload Document to S3 and Pinecone",
+        "description": "Upload PDF(s) to S3, chunk them using LangChain, and index into the shared Pinecone class namespace.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "file",
+                  "classCode"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The PDF file(s) to upload"
+                  },
+                  "classCode": {
+                    "type": "string",
+                    "example": "CS 1436",
+                    "description": "Class code to associate with the documents"
+                  },
+                  "docType": {
+                    "type": "string",
+                    "example": "syllabus",
+                    "description": "Type of document (syllabus, textbook, notes, document)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Documents successfully ingested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "vectorsIngested": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ingest/status/{classCode}": {
+      "get": {
+        "summary": "Get Pinecone Vector Count",
+        "description": "Get the current number of shared knowledge vectors indexed for a specific class.",
+        "parameters": [
+          {
+            "name": "classCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CS 1436"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "vectorCount": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
