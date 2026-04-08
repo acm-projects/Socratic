@@ -26,7 +26,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 app.use(cors())
 app.use(express.json())
-app.use('/', syllabusRoutes)
+app.use('/api/syllabus', syllabusRoutes)
 app.use('/api/calendar', calendarRoutes)
 app.use('/api/history', historyRoutes)
 app.use('/api/tutor', tutorRoutes)
@@ -286,26 +286,26 @@ app.get("/sessions/:id", async (req, res) => {
 // -----------------------------------------------------
 
 const ACHIEVEMENT_LIST = [
-  { id: 1,  name: "First Quiz Completed",         description: "Completed your first quiz",                slug: "first-quiz" },
-  { id: 2,  name: "10 Quizzes Completed",          description: "Completed 10 quizzes",                     slug: "ten-quizzes" },
-  { id: 3,  name: "First Retake Completed",        description: "Completed your first retake",              slug: "first-retake" },
-  { id: 4,  name: "20 Chat Messages Sent",         description: "Sent 20 chat messages",                    slug: "twenty-messages" },
-  { id: 5,  name: "Perfect Score on a Quiz",       description: "Scored 100% on a quiz",                    slug: "perfect-score" },
-  { id: 6,  name: "5 Day Study Streak",            description: "Studied 5 days in a row",                  slug: "five-day-streak" },
-  { id: 7,  name: "5 Perfect Quiz Scores",         description: "Scored 100% on 5 quizzes",                 slug: "five-perfect" },
-  { id: 8,  name: "10 Perfect Quiz Scores",        description: "Scored 100% on 10 quizzes",                slug: "ten-perfect" },
-  { id: 9,  name: "5 Retakes Completed",           description: "Completed 5 retakes",                      slug: "five-retakes" },
-  { id: 10, name: "10 Day Study Streak",           description: "Studied 10 days in a row",                 slug: "ten-day-streak" },
-  { id: 11, name: "First Study Session Scheduled", description: "Scheduled your first study session",       slug: "first-session-scheduled" },
-  { id: 12, name: "10 Perfect Score Questions",    description: "Answered 10 questions perfectly",          slug: "ten-perfect-questions" },
-  { id: 13, name: "20 Retakes Completed",          description: "Completed 20 retakes",                     slug: "twenty-retakes" },
-  { id: 14, name: "10 Study Sessions Scheduled",   description: "Scheduled 10 study sessions",              slug: "ten-sessions-scheduled" },
-  { id: 15, name: "30 Day Study Streak",           description: "Studied 30 days in a row",                 slug: "thirty-day-streak" },
-  { id: 16, name: "20 Perfect Score Questions",    description: "Answered 20 questions perfectly",          slug: "twenty-perfect-questions" },
-  { id: 17, name: "100 Chat Messages Sent",        description: "Sent 100 chat messages",                   slug: "hundred-messages" },
-  { id: 18, name: "50 Perfect Score Questions",    description: "Answered 50 questions perfectly",          slug: "fifty-perfect-questions" },
-  { id: 19, name: "50 Day Study Streak",           description: "Studied 50 days in a row",                 slug: "fifty-day-streak" },
-  { id: 20, name: "20 Study Sessions Scheduled",   description: "Scheduled 20 study sessions",              slug: "twenty-sessions-scheduled" },
+  { id: 1, name: "First Quiz Completed", description: "Completed your first quiz", slug: "first-quiz" },
+  { id: 2, name: "10 Quizzes Completed", description: "Completed 10 quizzes", slug: "ten-quizzes" },
+  { id: 3, name: "First Retake Completed", description: "Completed your first retake", slug: "first-retake" },
+  { id: 4, name: "20 Chat Messages Sent", description: "Sent 20 chat messages", slug: "twenty-messages" },
+  { id: 5, name: "Perfect Score on a Quiz", description: "Scored 100% on a quiz", slug: "perfect-score" },
+  { id: 6, name: "5 Day Study Streak", description: "Studied 5 days in a row", slug: "five-day-streak" },
+  { id: 7, name: "5 Perfect Quiz Scores", description: "Scored 100% on 5 quizzes", slug: "five-perfect" },
+  { id: 8, name: "10 Perfect Quiz Scores", description: "Scored 100% on 10 quizzes", slug: "ten-perfect" },
+  { id: 9, name: "5 Retakes Completed", description: "Completed 5 retakes", slug: "five-retakes" },
+  { id: 10, name: "10 Day Study Streak", description: "Studied 10 days in a row", slug: "ten-day-streak" },
+  { id: 11, name: "First Study Session Scheduled", description: "Scheduled your first study session", slug: "first-session-scheduled" },
+  { id: 12, name: "10 Perfect Score Questions", description: "Answered 10 questions perfectly", slug: "ten-perfect-questions" },
+  { id: 13, name: "20 Retakes Completed", description: "Completed 20 retakes", slug: "twenty-retakes" },
+  { id: 14, name: "10 Study Sessions Scheduled", description: "Scheduled 10 study sessions", slug: "ten-sessions-scheduled" },
+  { id: 15, name: "30 Day Study Streak", description: "Studied 30 days in a row", slug: "thirty-day-streak" },
+  { id: 16, name: "20 Perfect Score Questions", description: "Answered 20 questions perfectly", slug: "twenty-perfect-questions" },
+  { id: 17, name: "100 Chat Messages Sent", description: "Sent 100 chat messages", slug: "hundred-messages" },
+  { id: 18, name: "50 Perfect Score Questions", description: "Answered 50 questions perfectly", slug: "fifty-perfect-questions" },
+  { id: 19, name: "50 Day Study Streak", description: "Studied 50 days in a row", slug: "fifty-day-streak" },
+  { id: 20, name: "20 Study Sessions Scheduled", description: "Scheduled 20 study sessions", slug: "twenty-sessions-scheduled" },
 ]
 
 app.get("/achievements", async (req, res) => {

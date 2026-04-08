@@ -40,7 +40,7 @@
     "/api/ingest/upload": {
       "post": {
         "summary": "Upload Document to S3 and Pinecone",
-        "description": "Upload PDF(s) to S3, chunk them using LangChain, and index into the shared Pinecone class namespace.",
+        "description": "Uploads PDF documents (syllabi, textbooks, or slides) to AWS S3, processes them with LangChain PDFLoader and RecursiveCharacterTextSplitter, and upserts them into a class-shared Pinecone namespace for Socratic AI retrieval.",
         "requestBody": {
           "required": true,
           "content": {
@@ -49,15 +49,112 @@
                 "type": "object",
                 "required": ["file", "classCode"],
                 "properties": {
-                  "file": { "type": "string", "format": "binary", "description": "The PDF file(s) to upload" },
-                  "classCode": { "type": "string", "example": "CS 1436" },
-                  "docType": { "type": "string", "example": "syllabus" }
+"file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The PDF file(s) to upload. (Supports multiple files if sent as multiple 'file' keys)"
+                  },
+                  "classCode": {
+                    "type": "string",
+                    "example": "CS 1436",
+                    "description": "The unique class identifier (e.g. 'CS 1436'). This organizes documents into a shared knowledge base for all students in that class."
+                  },
+                  "docType": {
+                    "type": "string",
+                    "enum": [
+                      "syllabus",
+                      "textbook",
+                      "slides",
+                      "notes",
+                      "document"
+                    ],
+                    "default": "document",
+                    "example": "textbook",
+                    "description": "Categorizes the document. This help the Socratic AI understand the context (e.g. 'According to the slides...')."
+                  }
                 }
+              },
+              "example": {
+                "classCode": "CS 1436",
+                "docType": "textbook",
+                "file": "(Binary PDF Content)"
               }
             }
           }
         },
-        "responses": { "200": { "description": "Documents successfully ingested" } }
+"responses": {
+          "200": {
+            "description": "Documents successfully ingested into S3 and vectorized in Pinecone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "classCode": {
+                      "type": "string",
+                      "example": "CS 1436"
+                    },
+                    "namespace": {
+                      "type": "string",
+                      "example": "class-cs1436"
+                    },
+                    "docType": {
+                      "type": "string",
+                      "example": "syllabus"
+                    },
+                    "filesProcessed": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "vectorsIngested": {
+                      "type": "integer",
+                      "example": 42
+                    },
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "fileName": {
+                            "type": "string",
+                            "example": "Fall2026_Syllabus.pdf"
+                          },
+                          "s3Url": {
+                            "type": "string",
+                            "example": "https://socratic-syllabi.s3.amazonaws.com/course-docs/CS1436/syllabus/...pdf"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "uploaded"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "classCode": "CS 1436",
+                  "namespace": "class-cs1436",
+                  "docType": "syllabus",
+                  "filesProcessed": 1,
+                  "vectorsIngested": 42,
+                  "files": [
+                    {
+                      "fileName": "Fall2026_Syllabus.pdf",
+                      "s3Url": "https://socratic-syllabi.s3.amazonaws.com/course-docs/CS1436/syllabus/1712530000-Fall2026_Syllabus.pdf",
+                      "status": "uploaded"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/ingest/status/{classCode}": {
@@ -123,7 +220,7 @@
         }
       }
     },
-    "/users/{id}/metrics": {
+"/users/{id}/metrics": {
       "get": {
         "summary": "Get Overall Heatmap Metrics",
         "description": "Returns daily activity across all classes for a user — used for the overall heatmap",
@@ -223,7 +320,89 @@
       }
     },
     "/quizzes/{id}/questions": { "get": { "summary": "Get Quiz Questions", "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Quiz with questions" }, "404": { "description": "Quiz not found" }, "500": { "description": "Server error" } } } },
-    "/quizzes": { "post": { "summary": "Create a Quiz Attempt", "requestBody": { "required": true, "content": { "application/json": { "schema": { "allOf": [{ "$ref": "#/components/schemas/Quiz" }, { "type": "object", "properties": { "questions": { "type": "array", "items": { "$ref": "#/components/schemas/QuizQuestion" } } } }] } } } }, "responses": { "200": { "description": "Quiz created" }, "500": { "description": "Server error" } } } }
+    "/quizzes": { "post": { "summary": "Create a Quiz Attempt", "requestBody": { "required": true, "content": { "application/json": { "schema": { "allOf": [{ "$ref": "#/components/schemas/Quiz" }, { "type": "object", "properties": { "questions": { "type": "array", "items": { "$ref": "#/components/schemas/QuizQuestion" } } } }] } } } }, "responses": { "200": { "description": "Quiz created" }, "500": { "description": "Server error" } } } },
+"/api/tutor/chat": {
+      "post": {
+        "summary": "Chat with Socratic AI Tutor",
+        "description": "Send a message to the Socratic AI Tutor. It uses memory (Postgres) and RAG (Pinecone) to guide the student.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "classCode",
+                  "topic",
+                  "message"
+                ],
+                "properties": {
+                  "chatId": {
+                    "type": "string",
+                    "description": "Optional: ID of an existing chat session to continue memory.",
+                    "example": "53ca190d-eebf-461c-a7b6-8c44e4448b7e"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "The ID of the user.",
+                    "example": "aakash"
+                  },
+                  "classCode": {
+                    "type": "string",
+                    "description": "The class code (e.g. CS 1000).",
+                    "example": "CS 1000"
+                  },
+                  "topic": {
+                    "type": "string",
+                    "description": "The specific topic being studied.",
+                    "example": "Introduction to Algebra"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "The student's message.",
+                    "example": "what is my name"
+                  }
+                }
+              },
+              "example": {
+                "chatId": "53ca190d-eebf-461c-a7b6-8c44e4448b7e",
+                "userId": "aakash",
+                "classCode": "CS 1000",
+                "topic": "Introduction to Algebra",
+                "message": "what is my name"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tutor response generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatId": {
+                      "type": "string"
+                    },
+                    "response": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "integer"
+                    },
+                    "reason": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
   "components": {
     "schemas": {
