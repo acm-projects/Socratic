@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { randomUUID } = require('crypto');
-const { getVectorStore } = require('../services/vectorService');
+const { getClassVectorStore } = require('../services/vectorService');
 const { evalChain, parser, getTutorChainWithHistory } = require('../services/tutorService');
 const { addMessage, createChat, updateChatScore } = require('../models/chatModel');
 
@@ -21,12 +21,8 @@ router.post('/chat', async (req, res, next) => {
       await createChat(chatId, title);
     }
 
-    // Isolate vector search to specific user + class
-    const formattedClass = classCode.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const formattedUser = userId.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const userClassNamespace = `${formattedUser}-${formattedClass}`;
-
-    const vectorStore = await getVectorStore(userClassNamespace);
+    // Search the shared class knowledge base (populated by PDF ingest)
+    const vectorStore = await getClassVectorStore(classCode);
     const tutorChainWithHistory = getTutorChainWithHistory();
 
     // 1. Evaluate User Input

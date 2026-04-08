@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "chat": "node scripts/chat-cli.js"
+    "chat": "node scripts/chat-cli.js",
+    "ingest": "node scripts/ingest-cli.js"
   },
   "keywords": [],
   "author": "",

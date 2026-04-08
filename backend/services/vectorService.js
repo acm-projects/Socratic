@@ -73,6 +73,49 @@ class LocalEmbeddings extends Embeddings {
 // Cache instances per namespace to avoid re-initializing
 const vectorStoreInstances = {};
 
+/**
+ * Returns the shared class-level Pinecone store (namespace: class-cs1436).
+ * This is populated by the PDF ingestion pipeline and is read-only from the tutor.
+ */
+async function getClassVectorStore(classCode) {
+  const namespace = `class-${classCode.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+  if (vectorStoreInstances[namespace]) return vectorStoreInstances[namespace];
+
+  const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+  const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
+
+  // Wait for index readiness
+  let ready = false;
+  for (let i = 0; i < 10; i++) {
+    const desc = await pinecone.describeIndex(indexName);
+    if (desc.status && desc.status.ready) { ready = true; break; }
+    await new Promise(res => setTimeout(res, 3000));
+  }
+  if (!ready) throw new Error('Pinecone index not ready.');
+
+  const pineconeIndex = pinecone.Index(indexName);
+  const embeddings = new LocalEmbeddings();
+
+  const storeInstance = await PineconeStore.fromExistingIndex(embeddings, {
+    pineconeIndex,
+    namespace,
+  });
+
+  vectorStoreInstances[namespace] = storeInstance;
+
+  // Check how many vectors exist — for the class store we never auto-seed
+  const stats = await pineconeIndex.describeIndexStats();
+  const nsStats = stats.namespaces && stats.namespaces[namespace];
+  const count = nsStats ? nsStats.recordCount : 0;
+  if (count === 0) {
+    console.log(`[VectorStore] ⚠️  Class namespace '${namespace}' is empty. Upload PDFs via /api/ingest/upload to populate it.`);
+  } else {
+    console.log(`[VectorStore] Class namespace '${namespace}' ready with ${count} vectors.`);
+  }
+
+  return storeInstance;
+}
+
 async function getVectorStore(namespace = '') {
   if (vectorStoreInstances[namespace]) return vectorStoreInstances[namespace];
 
@@ -131,5 +174,6 @@ async function getVectorStore(namespace = '') {
 
 module.exports = {
   getVectorStore,
+  getClassVectorStore,
   LocalEmbeddings
 };
