@@ -461,16 +461,15 @@ app.get("/classes/:code/metrics", async (req, res) => {
 app.get("/users/:id/engagement/class-distribution", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT cs.class_code, c.name as class_name, COUNT(*) as question_count
-       FROM chat_sessions cs
-       JOIN classes c ON c.class_code = cs.class_code
-       WHERE cs.user_id = $1
-       GROUP BY cs.class_code, c.name
+      `SELECT class_name, SUM(question_count) as question_count
+       FROM class_engagement
+       WHERE user_id = $1
+       GROUP BY class_name
        ORDER BY question_count DESC`,
       [req.params.id]
     )
     res.json(result.rows.map(row => ({
-      class_name: row.class_name || row.class_code,
+      class_name: row.class_name,
       question_count: parseInt(row.question_count)
     })))
   } catch (error) {
