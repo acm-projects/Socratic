@@ -48,8 +48,8 @@ router.post('/chat', async (req, res, next) => {
     const fullQuery = `${topic}: ${message}`;
     
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
-    // Detect if user is asking for a specific page number
-    const pageMatch = message.match(/page\s*(\d+)/i) || message.match(/p\.\s*(\d+)/i);
+    // Detect if user is asking for a specific page/slide number
+    const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     let targetedContext = [];
     
     if (pageMatch) {
