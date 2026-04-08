@@ -153,7 +153,16 @@ app.get("/users/:id/xp-history", async (req, res) => {
 
 app.get("/classes", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM classes")
+    const { user_id } = req.query;
+    let query = "SELECT * FROM classes";
+    let params = [];
+    
+    if (user_id) {
+      query += " WHERE user_id = $1";
+      params = [user_id];
+    }
+    
+    const result = await pool.query(query, params);
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -171,10 +180,10 @@ app.get("/classes/:code", async (req, res) => {
 
 app.post("/classes", async (req, res) => {
   try {
-    const { class_code, subject, name } = req.body
+    const { class_code, subject, name, user_id } = req.body
     const result = await pool.query(
-      "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) RETURNING *",
-      [class_code, subject, name]
+      "INSERT INTO classes (class_code, subject, name, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      [class_code, subject, name, user_id]
     )
     res.json(result.rows[0])
   } catch (error) {
@@ -200,14 +209,25 @@ app.put("/classes/:code", async (req, res) => {
 
 app.delete("/classes/:code", async (req, res) => {
   try {
-    const result = await pool.query(
-      "DELETE FROM classes WHERE class_code = $1 RETURNING *",
-      [req.params.code]
-    )
-    if (!result.rows[0]) {
-      return res.status(404).json({ error: "Class not found" })
+    const { user_id } = req.query;
+    if (!user_id) {
+      return res.status(400).json({ error: "user_id is required to delete a class" });
     }
-    res.json({ message: "Class deleted successfully", deletedClass: result.rows[0] })
+
+    // 1. Delete associated topics first
+    await pool.query("DELETE FROM topics WHERE class_code = $1", [req.params.code]);
+
+    // 2. Delete the class ONLY if it belongs to this user
+    const result = await pool.query(
+      "DELETE FROM classes WHERE class_code = $1 AND user_id = $2 RETURNING *",
+      [req.params.code, user_id]
+    )
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Class not found or you do not have permission to delete it" });
+    }
+
+    res.json({ message: "Class and topics deleted successfully", deletedClass: result.rows[0] })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

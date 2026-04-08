@@ -21,34 +21,70 @@ router.post('/chat', async (req, res, next) => {
       await createChat(chatId, title);
     }
 
-    // Search the shared class knowledge base (populated by PDF ingest)
-    const vectorStore = await getClassVectorStore(classCode);
-    const tutorChainWithHistory = getTutorChainWithHistory();
-
-    // 1. Evaluate User Input
-    const evalRes = await evalChain.invoke({
-      input: message,
-      class: classCode,
-      topic: topic,
-      format_instructions: parser.getFormatInstructions()
-    });
-
-    let score = parseInt(String(evalRes.score)) || 0;
-    let reason = evalRes.reason || "";
-
-    if (score > 0) {
-      await updateChatScore(chatId, score);
+    // 2. Evaluate Question Quality (SYNCHRONOUS for instant feedback)
+    console.log(`[Tutor] ⭐ Evaluating question quality...`);
+    let score = 0;
+    let reason = "Evaluation skipped.";
+    
+    try {
+      const evalResult = await evalChain.invoke({ 
+        input: message, 
+        class: classCode, 
+        topic: topic,
+        format_instructions: parser.getFormatInstructions()
+      });
+      score = evalResult.score;
+      reason = evalResult.reason;
+      console.log(`[Tutor] ⭐ Scored ${score}/5`);
+    } catch (err) {
+      console.error(`[Tutor] ❌ Scoring failed:`, err.message);
     }
 
-    // 2. Save User Message
+    // 2. Save User Message (immediately with default score)
     await addMessage(chatId, 'user', message, score, reason);
 
-    // 3. Vector Search
+    // 3. Vector Search (Simultaneous)
+    const vectorStore = await getClassVectorStore(classCode);
     const fullQuery = `${topic}: ${message}`;
-    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 2);
-    const context = resultsWithScores.map(([doc]) => doc.pageContent).join('\n---\n');
+    
+    // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
+    // Detect if user is asking for a specific page number
+    const pageMatch = message.match(/page\s*(\d+)/i) || message.match(/p\.\s*(\d+)/i);
+    let targetedContext = [];
+    
+    if (pageMatch) {
+      const targetPage = parseInt(pageMatch[1]);
+      console.log(`[Tutor] 🎯 Sniper Search active for Page ${targetPage}`);
+      
+      const targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
+        pageNumber: { "$eq": targetPage }
+      });
+      
+      targetedContext = targetedResults.map(doc => {
+        const page = doc.metadata.pageNumber || 'N/A';
+        const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
+        return `[[PRIORITY DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
+      });
+    }
+
+    // Set k to 10 for broad context
+    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 10);
+    
+    // Enrich context with Page Numbers and Filenames
+    const broadContext = resultsWithScores.map(([doc]) => {
+      const page = doc.metadata.pageNumber || 'N/A';
+      const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
+      return `[[DOCUMENT DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
+    });
+
+    // Combine targeted and broad context (Targeted first)
+    const context = [...targetedContext, ...broadContext].join('\n--- NEXT CHUNK ---\n');
 
     // 4. Run Socratic AI Tutor
+    console.log(`[Tutor] 🧠 Thinking... (Topic: ${topic})`);
+    const tutorStartTime = Date.now();
+    const tutorChainWithHistory = getTutorChainWithHistory();
+
     const tutorRes = await tutorChainWithHistory.invoke(
       {
         input: message,
@@ -58,15 +94,16 @@ router.post('/chat', async (req, res, next) => {
         reason,
         context,
       },
-      {
-        configurable: { sessionId: chatId }
-      }
+      { configurable: { sessionId: chatId } }
     );
 
-    const aiContent = tutorRes.content.toString();
+    const tutorDuration = ((Date.now() - tutorStartTime) / 1000).toFixed(1);
+    console.log(`[Tutor] ✅ Brainstormed response in ${tutorDuration}s`);
 
-    // 5. Save AI Message
-    await addMessage(chatId, 'assistant', aiContent, 0, '');
+    const aiContent = tutorRes.content || tutorRes;
+
+    // 5. Final Save and Response
+    await addMessage(chatId, 'assistant', aiContent, score, reason);
 
     res.json({
       chatId,

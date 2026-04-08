@@ -185,8 +185,8 @@
                   },
                   "classCode": {
                     "type": "string",
-                    "example": "CS 1436",
-                    "description": "The unique class identifier (e.g. 'CS 1436'). This organizes documents into a shared knowledge base for all students in that class."
+                    "example": "CS 3345",
+                    "description": "The unique class identifier (e.g. 'CS 3345'). This organizes documents into a shared knowledge base for all students in that class."
                   },
                   "docType": {
                     "type": "string",
@@ -198,14 +198,14 @@
                       "document"
                     ],
                     "default": "document",
-                    "example": "textbook",
-                    "description": "Categorizes the document. This help the Socratic AI understand the context (e.g. 'According to the slides...')."
+                    "example": "slides",
+                    "description": "Categorizes the document. This helps the Socratic AI understand the context (e.g. 'According to the slides...')."
                   }
                 }
               },
               "example": {
-                "classCode": "CS 1436",
-                "docType": "textbook",
+                "classCode": "CS 3345",
+                "docType": "slides",
                 "file": "(Binary PDF Content)"
               }
             }

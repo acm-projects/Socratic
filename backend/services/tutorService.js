@@ -8,18 +8,61 @@ require('dotenv').config({ path: __dirname + '/../.env' });
 
 const TARGET_MODEL = "gemini-2.5-flash";
 
+// --- Robust LLM Configuration ---
+function getRobustLLM(temperature = 0.2, maxRetries = 1) {
+  const primary = new ChatGoogleGenerativeAI({
+    model: TARGET_MODEL,
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature,
+    maxRetries,
+  });
+
+  const fallbackPro = new ChatGoogleGenerativeAI({
+    model: "gemini-2.5-pro",
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature,
+    maxRetries: 1,
+  });
+
+  const fallbackLite = new ChatGoogleGenerativeAI({
+    model: "gemini-3.1-flash-lite-preview",
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature,
+    maxRetries: 1,
+  });
+
+  const fallbackLatest = new ChatGoogleGenerativeAI({
+    model: "gemini-flash-latest",
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature,
+    maxRetries: 1,
+  });
+
+  return primary.withFallbacks({
+    fallbacks: [fallbackPro, fallbackLite, fallbackLatest]
+  });
+}
+
+/**
+ * Super-fast LLM specifically for background tasks like scoring.
+ * Uses the Lite model for <1s latency.
+ */
+function getFastLLM() {
+  return new ChatGoogleGenerativeAI({
+    model: "gemini-3.1-flash-lite-preview", // The newest and fastest lite model for your account
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature: 0.1,
+    maxRetries: 0,
+  });
+}
+
 // --- Score Engine Setup ---
 const parser = StructuredOutputParser.fromNamesAndDescriptions({
   score: "An integer from 0 to 5 reflecting the quality of the user input.",
   reason: "A short, 1-sentence reason explaining why you assigned that score."
 });
 
-const evaluatorLLM = new ChatGoogleGenerativeAI({
-  model: TARGET_MODEL,
-  temperature: 0.2,
-  apiKey: process.env.GEMINI_RESPONSE_API || process.env.GEMINI_API_KEY,
-  maxRetries: 0,
-});
+const evaluatorLLM = getFastLLM();
 
 const evaluatorPrompt = PromptTemplate.fromTemplate(`
   You are a scoring engine for {class} focusing on {topic}.
@@ -40,11 +83,7 @@ const evalChain = RunnableSequence.from([evaluatorPrompt, evaluatorLLM, parser])
 
 // --- Tutor Engine Setup ---
 function getTutorChainWithHistory() {
-  const tutorLLM = new ChatGoogleGenerativeAI({
-    model: TARGET_MODEL,
-    apiKey: process.env.GEMINI_API_KEY,
-    maxRetries: 0,
-  });
+  const tutorLLM = getRobustLLM(0.7, 1); // 1 retry then failover
 
   const tutorPrompt = ChatPromptTemplate.fromMessages([
     [
@@ -52,9 +91,14 @@ function getTutorChainWithHistory() {
       `You are a Socratic AI Tutor for {class}. The user is specifically studying: {topic}.
 
 INSTRUCTIONS:
-- You are allowed to casually chat, remember past questions, and answer meta-questions (e.g. "what was my last question").
-- Do not be overly strict about staying on topic if the user is just casually talking to you.
-- However, when they DO ask a learning question, do NOT just spoon-feed them the code or direct answer. Gently guide them using the Socratic method.
+- You are a helpful AI Tutor. Your primary goal is to help the user learn effectively.
+- WHILE you should use the Socratic method to guide students, you MUST NOT be a gatekeeper. 
+- If the user asks for a summary, a direct answer, or a step-by-step explanation, PROVIDE IT immediately.
+- Once you've provided the information, you can then ask follow-up Socratic questions to ensure they understand the "why" behind the answer.
+- Do not be overly strict. If they want the answer so they can ask follow-up questions based on the steps, give them the steps!
+- STRICT RULE: If the user mentions a specific Source or Page Number (e.g., "Page 17"), you MUST find the chunk with the matching '[[DOCUMENT DATA >> ... | PAGE: 17]]' label.
+- Ignore chunks from other pages or lectures if they conflict with the specific page requested by the user.
+- If you cannot find the exact page requested in the context, state that you don't have that specific page but provide info from the closest relevant section.
 
 === COURSE CONTEXT INCORPORATED FROM LECTURES/TEXTBOOK ===
 {context}

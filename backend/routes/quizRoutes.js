@@ -36,6 +36,9 @@ router.post('/generate', async (req, res, next) => {
     const chain = getQuizGeneratorChain();
 
     // 3. Generate the Quiz
+    console.log(`[QuizGen] 🎓 Generating ${count} questions for ${classCode}...`);
+    const quizStartTime = Date.now();
+    
     const result = await chain.invoke({
       class: classCode,
       topic: topic,
@@ -43,6 +46,9 @@ router.post('/generate', async (req, res, next) => {
       context: context,
       format_instructions: parser.getFormatInstructions()
     });
+
+    const quizDuration = ((Date.now() - quizStartTime) / 1000).toFixed(1);
+    console.log(`[QuizGen] ✅ Quiz generated successfully in ${quizDuration}s`);
 
     // 4. Return generated quiz data
     res.json({

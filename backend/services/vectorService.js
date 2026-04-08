@@ -1,6 +1,7 @@
 const { PineconeStore } = require('@langchain/pinecone');
 const { Pinecone } = require('@pinecone-database/pinecone');
-const { Embeddings } = require('@langchain/core/embeddings');
+const { GoogleGenerativeAIEmbeddings } = require('@langchain/google-genai');
+const { TaskType } = require('@google/generative-ai');
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 const courseData = [
@@ -38,35 +39,20 @@ const courseData = [
   "CS 3345: Prim's and Kruskal's algorithms are greedy approaches to find the Minimum Spanning Tree (MST)."
 ];
 
-class LocalEmbeddings extends Embeddings {
+class GeminiEmbeddings {
   constructor() {
-    super({});
-    this.pipe = null;
-  }
-
-  async getPipeline() {
-    if (!this.pipe) {
-      const transformers = await import('@xenova/transformers');
-      transformers.env.allowLocalModels = false;
-      this.pipe = await transformers.pipeline('feature-extraction', 'Xenova/bge-small-en-v1.5');
-    }
-    return this.pipe;
+    this.model = new GoogleGenerativeAIEmbeddings({
+      apiKey: process.env.GEMINI_API_KEY,
+      modelName: "gemini-embedding-001",
+    });
   }
 
   async embedDocuments(documents) {
-    const pipe = await this.getPipeline();
-    const results = [];
-    for (const text of documents) {
-      const output = await pipe(text, { pooling: 'mean', normalize: true });
-      results.push(Array.from(output.data));
-    }
-    return results;
+    return this.model.embedDocuments(documents);
   }
 
   async embedQuery(document) {
-    const pipe = await this.getPipeline();
-    const output = await pipe(document, { pooling: 'mean', normalize: true });
-    return Array.from(output.data);
+    return this.model.embedQuery(document);
   }
 }
 
@@ -94,7 +80,7 @@ async function getClassVectorStore(classCode) {
   if (!ready) throw new Error('Pinecone index not ready.');
 
   const pineconeIndex = pinecone.Index(indexName);
-  const embeddings = new LocalEmbeddings();
+  const embeddings = new GeminiEmbeddings();
 
   const storeInstance = await PineconeStore.fromExistingIndex(embeddings, {
     pineconeIndex,
@@ -133,7 +119,7 @@ async function getVectorStore(namespace = '') {
   if (!ready) throw new Error('Pinecone index not ready after 30 seconds.');
 
   const pineconeIndex = pinecone.Index(indexName);
-  const embeddings = new LocalEmbeddings();
+  const embeddings = new GeminiEmbeddings();
 
   // Create the store instance attached to the specific namespace
   const storeInstance = await PineconeStore.fromExistingIndex(embeddings, { 
@@ -175,5 +161,5 @@ async function getVectorStore(namespace = '') {
 module.exports = {
   getVectorStore,
   getClassVectorStore,
-  LocalEmbeddings
+  GeminiEmbeddings
 };

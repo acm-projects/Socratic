@@ -20,10 +20,30 @@ const quizOutputSchema = z.object({
 const parser = StructuredOutputParser.fromZodSchema(quizOutputSchema);
 
 function getQuizGeneratorChain() {
-  const llm = new ChatGoogleGenerativeAI({
+  // Primary
+  const primaryLLM = new ChatGoogleGenerativeAI({
     model: TARGET_MODEL,
     temperature: 0.2, // Low temperature for factual consistency
     apiKey: process.env.GEMINI_API_KEY || process.env.GEMINI_RESPONSE_API,
+    maxRetries: 1,
+  });
+
+  const fallbackPro = new ChatGoogleGenerativeAI({
+    model: "gemini-2.5-pro",
+    temperature: 0.2,
+    apiKey: process.env.GEMINI_API_KEY || process.env.GEMINI_RESPONSE_API,
+    maxRetries: 1,
+  });
+
+  const fallbackLite = new ChatGoogleGenerativeAI({
+    model: "gemini-3.1-flash-lite-preview",
+    temperature: 0.2,
+    apiKey: process.env.GEMINI_API_KEY || process.env.GEMINI_RESPONSE_API,
+    maxRetries: 1,
+  });
+
+  const llm = primaryLLM.withFallbacks({
+    fallbacks: [fallbackPro, fallbackLite]
   });
 
   const prompt = PromptTemplate.fromTemplate(`

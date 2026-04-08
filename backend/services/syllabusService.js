@@ -13,13 +13,13 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   let pdfText = "";
 
   if (fileBuffer) {
-  if (!PDFParse) {
-    throw new Error("PDF parsing is currently unavailable on this server. Use raw text fallback or fix pdf-parse compatibility.");
-  }
-  const parser = new PDFParse({ data: fileBuffer });
-  const pdfData = await parser.getText();
-  pdfText = pdfData.text;
-  await parser.destroy();
+    if (!PDFParse) {
+      throw new Error("PDF parsing is currently unavailable on this server. Use raw text fallback or fix pdf-parse compatibility.");
+    }
+    const parser = new PDFParse({ data: fileBuffer });
+    const pdfData = await parser.getText();
+    pdfText = pdfData.text;
+    await parser.destroy();
   } else if (rawTextFallback) {
     pdfText = rawTextFallback;
   } else {
@@ -31,7 +31,7 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   }
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  
+
   const prompt = `Extract the syllabus constraints and structure exactly from the following syllabus document text.
 Return ONLY valid JSON data that rigidly matches this exact schema:
 {
@@ -61,27 +61,40 @@ CRITICAL INSTRUCTIONS:
 Document Text to Extract From:
 ${pdfText}`;
 
-  const generateResponse = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      temperature: 0.1
+  // Retry loop for the syllabus extraction (handles 503 spikes)
+  let generateResponse;
+  let attempts = 0;
+  while (attempts < 3) {
+    try {
+      generateResponse = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          temperature: 0.1
+        }
+      });
+      break; // Success!
+    } catch (error) {
+      attempts++;
+      if (attempts === 3) throw error;
+      console.warn(`[Syllabus] Gemini API busy (503). Retry attempt ${attempts}/3...`);
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s before retry
     }
-  });
+  }
 
   const aiGeneratedJsonData = JSON.parse(generateResponse.text);
   const validatedData = syllabusSchema.parse(aiGeneratedJsonData);
-  
+
   return validatedData;
 };
 
 const saveSyllabusData = async (payload) => {
   const { courseName, courseCode, topics } = payload;
-  
+
   // Sanitize courseCode to be URL-safe (e.g. "STAT/CS/SE 3341.501" -> "STAT-CS-SE-3341-501")
   const safeCourseCode = courseCode.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
-  
+
   // Extract subject from courseCode (letters only), default to the first word of courseName if no letters found
   const subjectMatch = courseCode.match(/[a-zA-Z]+/);
   const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];

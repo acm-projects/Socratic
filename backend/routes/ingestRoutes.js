@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
-const { ingestDocuments, getNamespaceStats } = require('../services/ingestService');
+const { ingestDocuments, ingestDocumentsWithVision, getNamespaceStats } = require('../services/ingestService');
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 // Store uploaded files to a local temp dir before processing
@@ -32,10 +32,10 @@ const upload = multer({
 
 // --- S3 Client ---
 const s3 = new S3Client({
-  region: process.env.AWS_REGION,
+  region: process.env.AWS_REGION || 'us-east-1',
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'dummy',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'dummy',
   },
 });
 
@@ -100,13 +100,14 @@ router.post('/upload', upload.array('file', 10), async (req, res, next) => {
       }
     }
 
-    // Run the LangChain ingestion pipeline on all files
+    // Run the NEW Intelligent Vision Ingestion pipeline
     const filesToIngest = req.files.map((file, i) => ({
       filePath: file.path,
       s3Url: results[i].s3Url,
+      originalName: file.originalname, // Add original name for deduplication
     }));
 
-    const { totalIngested, namespace } = await ingestDocuments(filesToIngest, classCode, docType);
+    const { totalIngested, namespace } = await ingestDocumentsWithVision(filesToIngest, classCode, docType);
 
     // Clean up temp files
     for (const tmpPath of tempFiles) {

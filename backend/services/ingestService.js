@@ -1,7 +1,9 @@
 const { PDFLoader } = require('@langchain/community/document_loaders/fs/pdf');
 const { RecursiveCharacterTextSplitter } = require('@langchain/textsplitters');
 const { Pinecone } = require('@pinecone-database/pinecone');
-const { LocalEmbeddings } = require('./vectorService');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleAIFileManager } = require("@google/generative-ai/server");
+const { GeminiEmbeddings } = require('./vectorService');
 const path = require('path');
 const crypto = require('crypto');
 require('dotenv').config({ path: __dirname + '/../.env' });
@@ -46,8 +48,8 @@ async function loadAndChunkPDF(filePath, classCode, docType = 'document', s3Url 
   // 3. THE SPLITTER — RecursiveCharacterTextSplitter breaks pages into ~800-char chunks
   //    with 100-char overlap so context isn't lost at boundaries
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 800,
-    chunkOverlap: 100,
+    chunkSize: 400,
+    chunkOverlap: 50,
   });
   const chunks = await splitter.splitDocuments(taggedPages);
   console.log(`[Ingest] Split into ${chunks.length} chunks for Pinecone`);
@@ -82,7 +84,7 @@ async function ingestDocuments(files, classCode, docType = 'document') {
 
   const pineconeIndex = pinecone.Index(indexName);
   const targetIndex = pineconeIndex.namespace(namespace);
-  const embeddings = new LocalEmbeddings();
+  const embeddings = new GeminiEmbeddings();
 
   let totalIngested = 0;
 
@@ -147,4 +149,185 @@ async function getNamespaceStats(classCode) {
   };
 }
 
-module.exports = { ingestDocuments, getNamespaceStats, getClassNamespace };
+/**
+ * NEW: Ingest documents using Gemini's Native PDF Vision.
+ * This describes every page (including graphs/images) and stores descriptions in Pinecone.
+ */
+async function ingestDocumentsWithVision(files, classCode, docType = 'document') {
+  const namespace = getClassNamespace(classCode);
+  const embeddings = new GeminiEmbeddings();
+  const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+  const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
+  const targetIndex = pinecone.Index(indexName).namespace(namespace);
+  
+  // For Vision Fallback
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
+  
+  // Vision Fallback Models (Waterfall)
+  const VISION_MODELS = [
+    "gemini-2.5-flash", 
+    "gemini-2.5-pro", 
+    "gemini-3.1-flash-lite-preview"
+  ];
+
+  let totalIngested = 0;
+
+  for (const { filePath, originalName } of files) {
+    const fileName = path.basename(filePath);
+    const friendlyName = originalName || fileName;
+    console.log(`[Ingest] 🚀 Starting Hybrid Ingest for ${friendlyName}...`);
+
+    // 1. FUZZY DEDUPLICATION: Kill anything matching the original filename
+    try {
+      console.log(`[Ingest] 🧹 Cleaning up all vectors for ${friendlyName}...`);
+      await targetIndex.deleteMany({ filter: { originalName: { '$eq': friendlyName } } });
+    } catch (e) {
+      console.warn(`[Ingest] ⚠️ Cleanup skipped: ${e.message}`);
+    }
+
+    // 2. TEXT EXTRACTION (FAST)
+    const loader = new PDFLoader(filePath, { splitPages: true });
+    const rawPages = await loader.load();
+    console.log(`[Ingest] 📄 Extracted ${rawPages.length} pages via Text OCR.`);
+
+    // 3. VISION FALLBACK FOR EMPTY/IMAGE PAGES
+    let fileRef = null;
+    const taggedPages = [];
+
+    for (let i = 0; i < rawPages.length; i++) {
+        const page = rawPages[i];
+        const pageNum = i + 1;
+        let content = page.pageContent.trim();
+
+        // INCREASED THRESHOLD: If < 200 chars, it's probably a graph/title-only slide
+        if (content.length < 200) {
+            console.log(`[Ingest] 👁️  Page ${pageNum} looks thin (${content.length} chars). Triggering Vision...`);
+            
+            // Lazy-upload the file only if we need vision
+            if (!fileRef) {
+                const uploadResult = await fileManager.uploadFile(filePath, {
+                    mimeType: "application/pdf",
+                    displayName: fileName,
+                });
+                fileRef = uploadResult.file;
+                // Wait for processing
+                let f = await fileManager.getFile(fileRef.name);
+                while (f.state === "PROCESSING") {
+                    await new Promise(r => setTimeout(r, 2000));
+                    f = await fileManager.getFile(fileRef.name);
+                }
+            }
+
+            // VISION WATERFALL SCAN
+            let scanSuccess = false;
+            for (const modelId of VISION_MODELS) {
+                if (scanSuccess) break;
+                try {
+                    console.log(`[Ingest] 🔍 Scanning Page ${pageNum} with ${modelId}...`);
+                    const currentModel = genAI.getGenerativeModel({ model: modelId });
+                    
+                    const prompt = `Describe this slide (Page ${pageNum}). If there is a graph, diagram, or model, explain it in detail. Summarize the main point of the slide.`;
+                    const result = await currentModel.generateContent([
+                        { fileData: { mimeType: fileRef.mimeType, fileUri: fileRef.uri } },
+                        { text: prompt },
+                    ]);
+                    
+                    content = `[AI VISUAL DESCRIPTION OF SLIDE]: ${result.response.text()}`;
+                    console.log(`[Ingest] ✅ Vision captured Page ${pageNum} using ${modelId}`);
+                    scanSuccess = true;
+                } catch (vizErr) {
+                    const isRetryable = vizErr.message.includes('503') || vizErr.message.includes('429');
+                    console.warn(`[Ingest] ⚠️ ${modelId} failed for Page ${pageNum}: ${vizErr.message}`);
+                    
+                    if (isRetryable) {
+                        console.log(`[Ingest] ⏳ Retrying in 2s...`);
+                        await new Promise(r => setTimeout(r, 2000));
+                        // We'll give it one second try with the SAME model before moving to next in waterfall
+                        try {
+                            const currentModel = genAI.getGenerativeModel({ model: modelId });
+                            const promptRetry = `Describe this slide (Page ${pageNum}). If there is a graph, diagram, or model, explain it in detail. Summarize the main point of the slide.`;
+                            const result = await currentModel.generateContent([
+                                { fileData: { mimeType: fileRef.mimeType, fileUri: fileRef.uri } },
+                                { text: promptRetry },
+                            ]);
+                            content = `[AI VISUAL DESCRIPTION OF SLIDE]: ${result.response.text()}`;
+                            console.log(`[Ingest] ✅ Vision captured Page ${pageNum} on retry!`);
+                            scanSuccess = true;
+                        } catch (secondErr) {
+                            console.warn(`[Ingest] ❌ Retry failed, moving to next model in waterfall...`);
+                        }
+                    }
+                }
+            }
+
+            if (!scanSuccess) {
+                console.error(`[Ingest] 💀 ALL vision models failed for Page ${pageNum}.`);
+                content = "[Scanning failed for this slide]";
+            }
+        }
+
+        taggedPages.push({
+            pageContent: content,
+            metadata: {
+                ...page.metadata,
+                pageNumber: pageNum,
+                fileName: fileName,
+                source: fileName,
+                docType,
+                classCode
+            }
+        });
+    }
+
+    // 4. CHUNKING & EMBEDDINGS
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 600, // Slightly larger chunks for better context
+      chunkOverlap: 100,
+    });
+    
+    const chunks = await splitter.splitDocuments(taggedPages);
+    console.log(`[Ingest] 🧩 Created ${chunks.length} chunks.`);
+
+    const texts = chunks.map((c) => c.pageContent);
+    const vectors = await embeddings.embedDocuments(texts);
+
+    const records = chunks.map((chunk, j) => ({
+      id: `${classCode.replace(/\s/g, '')}-${crypto.randomUUID().slice(0, 8)}`,
+      values: vectors[j],
+      metadata: {
+        text: chunk.pageContent,
+        pageNumber: chunk.metadata.pageNumber,
+        fileName: chunk.metadata.fileName,
+        originalName: friendlyName, // Key for deduplication
+        source: friendlyName,
+        docType: chunk.metadata.docType,
+        classCode: chunk.metadata.classCode,
+        ingestedAt: new Date().toISOString(),
+      },
+    }));
+
+    // UPSERT
+    const batchSize = 100;
+    for (let k = 0; k < records.length; k += batchSize) {
+      await targetIndex.upsert({ records: records.slice(k, k + batchSize) });
+    }
+
+    console.log(`[Ingest] ✅ Ingested ${fileName}`);
+    totalIngested += records.length;
+
+    // Cleanup Google File
+    if (fileRef) {
+        await fileManager.deleteFile(fileRef.name).catch(() => {});
+    }
+  }
+
+  return { totalIngested, namespace, classCode };
+}
+
+// Keep both names for backward compatibility with routes
+async function ingestDocumentsWithVision(files, classCode, docType = 'document') {
+    return ingestDocuments(files, classCode, docType);
+}
+
+module.exports = { ingestDocuments, ingestDocumentsWithVision, getNamespaceStats, getClassNamespace };
