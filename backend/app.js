@@ -25,6 +25,7 @@ app.use('/api/friends', require('./routes/friendRoutes'));
 app.use('/api/calendar', require('./routes/calendarRoutes'));
 app.use('/api/syllabus', require('./routes/syllabusRoutes'));
 app.use('/api/history', require('./routes/historyRoutes'));
+app.use('/api/tutor', require('./routes/tutorRoutes'));
 
 app.use((req, res, next) => {
   next(createError.NotFound());
