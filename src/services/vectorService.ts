@@ -77,16 +77,16 @@ class LocalEmbeddings extends Embeddings { //embed the documents locally
   }
 }
 
-// Singleton — only initialize once per process run
-let vectorStoreInstance: PineconeStore | null = null;
+// Cache instances per namespace to avoid re-initializing
+const vectorStoreInstances: Record<string, PineconeStore> = {};
 
-export async function getVectorStore(): Promise<PineconeStore> {
-  if (vectorStoreInstance) return vectorStoreInstance;
+export async function getVectorStore(namespace: string = ''): Promise<PineconeStore> {
+  if (vectorStoreInstances[namespace]) return vectorStoreInstances[namespace];
 
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
   const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
 
-  // Wait for the Pinecone index to be ready (handles cold-start after creation)
+  // Wait for the Pinecone index to be ready
   let ready = false;
   for (let i = 0; i < 10; i++) {
     const desc = await pinecone.describeIndex(indexName);
@@ -99,32 +99,39 @@ export async function getVectorStore(): Promise<PineconeStore> {
   const pineconeIndex = pinecone.Index(indexName);
   const embeddings = new LocalEmbeddings();
 
-  // Create the store instance — this does NOT hit the network for embeddings
-  vectorStoreInstance = await PineconeStore.fromExistingIndex(embeddings, { pineconeIndex });
+  // Create the store instance attached to the specific namespace
+  const storeInstance = await PineconeStore.fromExistingIndex(embeddings, { 
+    pineconeIndex,
+    namespace: namespace || undefined // Langchain uses undefined for default namespace
+  });
+  
+  vectorStoreInstances[namespace] = storeInstance;
 
-  // Seed index if empty
+  // Seed index if this specific namespace is empty
   const stats = await pineconeIndex.describeIndexStats();
-  const totalVectors = stats.totalRecordCount ?? 0;
+  const namespaceStats = namespace ? stats.namespaces?.[namespace] : stats.namespaces?.[''];
+  const totalVectors = namespaceStats?.recordCount ?? 0;
 
-  if (totalVectors === 0) {
-    console.log('[VectorStore] Index is empty — embedding course data locally with ONNX...');
-    // @langchain/pinecone v1 calls upsert(array) but Pinecone SDK v7 requires upsert({ records: [] })
-    // so we bypass addDocuments and upsert directly via the raw SDK.
+  if (totalVectors === 0 && process.env.FORCE_RESEED !== 'true') {
+    console.log(`[VectorStore] Namespace '${namespace || 'default'}' is empty — seeding course data...`);
     const vectors = await embeddings.embedDocuments(courseData);
     const records = courseData.map((text, i) => ({
       id: `course-${i}`,
       values: vectors[i],
       metadata: { text, source: 'course-data', chunk: i },
     }));
-    // Upsert in batches of 100
+    
+    // Upsert directly into the given namespace
+    const targetIndex = namespace ? pineconeIndex.namespace(namespace) : pineconeIndex;
+    
     const batchSize = 100;
     for (let i = 0; i < records.length; i += batchSize) {
-      await pineconeIndex.upsert({ records: records.slice(i, i + batchSize) });
+      await targetIndex.upsert({ records: records.slice(i, i + batchSize) });
     }
-    console.log(`[VectorStore] Seeded ${courseData.length} vectors into Pinecone.`);
+    console.log(`[VectorStore] Seeded ${courseData.length} vectors into Pinecone namespace: '${namespace || 'default'}'.`);
   } else {
-    console.log(`[VectorStore] Found ${totalVectors} existing vectors in Pinecone — skipping seed.`);
+    console.log(`[VectorStore] Found ${totalVectors} existing vectors in Pinecone namespace: '${namespace || 'default'}' — skipping seed.`);
   }
 
-  return vectorStoreInstance;
+  return storeInstance;
 }

@@ -7,7 +7,7 @@ import { pool } from '../db';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const TARGET_MODEL = "gemini-2.0-flash";
+const TARGET_MODEL = "gemini-2.5-flash-lite";
 
 // --- Score Engine Setup ---
 export const parser = StructuredOutputParser.fromNamesAndDescriptions({
@@ -30,7 +30,7 @@ const evaluatorPrompt = PromptTemplate.fromTemplate(`
   Score 0: Irrelevant / Not a question / Off-topic ("what is the meaning of life?", "what is rizz?", "skibidi")
   Score 1: Basic definition question ("what is a variable?", "how does a for loop work?", "what is the syntax for a for loop?")
   Score 2: A do it for me request ("How do I solve problem 4?" or "My code doesn't work, please fix it", "walk me through step by step to solve this problem")
-  Score 3: User asks for help but provides context ("I'm trying to solve this problem, but I'm stuck, what am i missing?", "I know how to write a for loop, but I'm not sure how to use it to solve this problem")
+  Score 3: User asks for help but provides context. User asks why we use a certain concept or demonstrates critical thinking ("I'm trying to solve this problem, but I'm stuck, what am i missing?", "I know how to write a for loop, but I'm not sure how to use it to solve this problem, why do we use for loops how do they help our program?")
   Score 4: User connects the dots ("Why is a hash map faster than an array for this specific type of data retrieval?", "so we use a for loop to iterate through each element of the array then?")
   Score 5: What if hypthethical scenarios critical thinking ("So, is it accurate to think of a variable like a physical box? If so, what happens if I try to put a box inside another box?", "I understand how this physics formula works for positive velocity, but what if the object is thrown backward? Does the whole logic reverse, or does the math break?")
   User Input: "{input}"
@@ -54,11 +54,8 @@ export function getTutorChainWithHistory() {
       `You are a Socratic AI Tutor for {class}. The user is specifically studying: {topic}.
 
 UNIVERSAL INSTRUCTIONS:
-- Do NOT give them the exact code or direct answer. Make them think.
 - If the user's question is entirely unrelated to {class} or {topic}, politely redirect them back to studying {topic}. Do not answer off-topic questions.
-- If they scored low (0-2) but are on-topic, offer a small hint or ask a guiding question about fundamentals.
-- If they scored high (3-5), validate their deep thinking and dive deeper into optimization or context.
-- Keep them strictly on track.
+
 
 === COURSE CONTEXT INCORPORATED FROM LECTURES/TEXTBOOK ===
 {context}
@@ -76,10 +73,10 @@ Current question quality score: {score}/5 — {reason}.`
     getMessageHistory: (sessionId: string) =>
       new PostgresChatMessageHistory({
         sessionId,
-        pool, 
+        pool,
         tableName: 'langchain_chat_messages',
       }),
-    inputMessagesKey: 'input', 
+    inputMessagesKey: 'input',
     historyMessagesKey: 'history',
   });
 

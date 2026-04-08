@@ -29,13 +29,19 @@ async function run() {
     console.log("   Socratic AI Tutor (CLI Version)    ");
     console.log("======================================\n");
 
+    const userId = await askQuestion("Enter your User ID (e.g. user123): ");
     const studentClass = await askQuestion("What class are you studying for? (e.g. CS 1436): ");
     const studentTopic = await askQuestion("What specific topic are you focusing on today?: ");
     console.log(`\n[System] Great! We will stay intensely focused on ${studentTopic} for ${studentClass}.`);
     console.log("Type 'stop' or 'exit' to quit.\n");
 
-    console.log("[System] Initializing Vector Store...");
-    const vectorStore = await getVectorStore();
+    // Generate a namespace per user per class for strict vector isolation
+    const formattedClass = studentClass.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const formattedUser = userId.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const userClassNamespace = `${formattedUser}-${formattedClass}`;
+
+    console.log(`[System] Initializing Vector Store for namespace: '${userClassNamespace}'...`);
+    const vectorStore = await getVectorStore(userClassNamespace);
     const tutorChainWithHistory = getTutorChainWithHistory();
     console.log("[System] Ready! Ask your questions.\n");
 
