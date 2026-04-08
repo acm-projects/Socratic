@@ -476,6 +476,23 @@ app.get("/users/:id/engagement/class-distribution", async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 })
+app.post("/class-engagement", async (req, res) => {
+  try {
+    const { user_id, class_name, question_count, week_start } = req.body
+    const id = randomUUID()
+    const result = await pool.query(
+      `INSERT INTO class_engagement (id, user_id, class_name, question_count, week_start)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (user_id, class_name, week_start)
+       DO UPDATE SET question_count = class_engagement.question_count + EXCLUDED.question_count
+       RETURNING *`,
+      [id, user_id, class_name, question_count || 1, week_start || new Date()]
+    )
+    res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
 
 // -----------------------------------------------------
 // OAUTH ACCOUNTS
