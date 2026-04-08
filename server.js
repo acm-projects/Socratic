@@ -66,8 +66,31 @@ app.get("/users", async (req, res) => {
 
 app.get("/users/:id", async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM "User" WHERE id = $1', [req.params.id])
-    res.json(result.rows[0])
+    const userId = req.params.id
+
+    const userResult = await pool.query('SELECT * FROM "User" WHERE id = $1', [userId])
+    if (!userResult.rows[0]) {
+      return res.status(404).json({ error: "User not found" })
+    }
+    const user = userResult.rows[0]
+
+    // Get friend count
+    const friendCount = await pool.query(
+      "SELECT COUNT(*) FROM friends WHERE user_id = $1",
+      [userId]
+    )
+
+    // Get achievement count
+    const achievementCount = await pool.query(
+      "SELECT COUNT(*) FROM user_achievements WHERE user_id = $1",
+      [userId]
+    )
+
+    res.json({
+      ...user,
+      friend_count: parseInt(friendCount.rows[0].count),
+      achievement_count: parseInt(achievementCount.rows[0].count)
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -116,32 +139,50 @@ app.get("/users/:id/xp-history", async (req, res) => {
   try {
     const days = parseInt(req.query.days) || 30
     const userId = req.params.id
+    const groupBy = req.query.group_by || 'day' // 'day' or 'month'
 
-    // Get XP grouped by date from xp_system
-    const result = await pool.query(
-      `SELECT DATE(created_at) as date, SUM(amount) as xp_earned
-       FROM xp_system
-       WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '${days} days'
-       GROUP BY DATE(created_at)
-       ORDER BY date ASC`,
-      [userId]
-    )
+    if (groupBy === 'month') {
+      // Monthly grouping
+      const result = await pool.query(
+        `SELECT TO_CHAR(DATE_TRUNC('month', created_at), 'Mon') as month,
+                DATE_TRUNC('month', created_at) as month_date,
+                SUM(amount) as total_xp
+         FROM xp_system
+         WHERE user_id = $1
+         GROUP BY DATE_TRUNC('month', created_at)
+         ORDER BY month_date ASC`,
+        [userId]
+      )
+      res.json(result.rows.map(row => ({
+        month: row.month,
+        total_xp: parseInt(row.total_xp)
+      })))
+    } else {
+      // Daily grouping with zero-fill
+      const result = await pool.query(
+        `SELECT DATE(created_at) as date, SUM(amount) as xp_earned
+         FROM xp_system
+         WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '${days} days'
+         GROUP BY DATE(created_at)
+         ORDER BY date ASC`,
+        [userId]
+      )
 
-    // Zero-fill missing days
-    const xpMap = {}
-    result.rows.forEach(row => {
-      xpMap[row.date.toISOString().split('T')[0]] = parseInt(row.xp_earned)
-    })
+      const xpMap = {}
+      result.rows.forEach(row => {
+        xpMap[row.date.toISOString().split('T')[0]] = parseInt(row.xp_earned)
+      })
 
-    const filled = []
-    for (let i = days - 1; i >= 0; i--) {
-      const d = new Date()
-      d.setDate(d.getDate() - i)
-      const dateStr = d.toISOString().split('T')[0]
-      filled.push({ date: dateStr, xp_earned: xpMap[dateStr] || 0 })
+      const filled = []
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date()
+        d.setDate(d.getDate() - i)
+        const dateStr = d.toISOString().split('T')[0]
+        filled.push({ date: dateStr, xp_earned: xpMap[dateStr] || 0 })
+      }
+
+      res.json(filled)
     }
-
-    res.json(filled)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -153,16 +194,16 @@ app.get("/users/:id/xp-history", async (req, res) => {
 
 app.get("/classes", async (req, res) => {
   try {
-    const { user_id } = req.query;
-    let query = "SELECT * FROM classes";
-    let params = [];
-    
+    const { user_id } = req.query
+    let query = "SELECT * FROM classes"
+    let params = []
+
     if (user_id) {
-      query += " WHERE user_id = $1";
-      params = [user_id];
+      query += " WHERE user_id = $1"
+      params = [user_id]
     }
-    
-    const result = await pool.query(query, params);
+
+    const result = await pool.query(query, params)
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -209,22 +250,20 @@ app.put("/classes/:code", async (req, res) => {
 
 app.delete("/classes/:code", async (req, res) => {
   try {
-    const { user_id } = req.query;
+    const { user_id } = req.query
     if (!user_id) {
-      return res.status(400).json({ error: "user_id is required to delete a class" });
+      return res.status(400).json({ error: "user_id is required to delete a class" })
     }
 
-    // 1. Delete associated topics first
-    await pool.query("DELETE FROM topics WHERE class_code = $1", [req.params.code]);
+    await pool.query("DELETE FROM topics WHERE class_code = $1", [req.params.code])
 
-    // 2. Delete the class ONLY if it belongs to this user
     const result = await pool.query(
       "DELETE FROM classes WHERE class_code = $1 AND user_id = $2 RETURNING *",
       [req.params.code, user_id]
     )
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Class not found or you do not have permission to delete it" });
+      return res.status(404).json({ error: "Class not found or you do not have permission to delete it" })
     }
 
     res.json({ message: "Class and topics deleted successfully", deletedClass: result.rows[0] })
@@ -308,26 +347,26 @@ app.get("/sessions/:id", async (req, res) => {
 // -----------------------------------------------------
 
 const ACHIEVEMENT_LIST = [
-  { id: 1, name: "First Quiz Completed", description: "Completed your first quiz", slug: "first-quiz" },
-  { id: 2, name: "10 Quizzes Completed", description: "Completed 10 quizzes", slug: "ten-quizzes" },
-  { id: 3, name: "First Retake Completed", description: "Completed your first retake", slug: "first-retake" },
-  { id: 4, name: "20 Chat Messages Sent", description: "Sent 20 chat messages", slug: "twenty-messages" },
-  { id: 5, name: "Perfect Score on a Quiz", description: "Scored 100% on a quiz", slug: "perfect-score" },
-  { id: 6, name: "5 Day Study Streak", description: "Studied 5 days in a row", slug: "five-day-streak" },
-  { id: 7, name: "5 Perfect Quiz Scores", description: "Scored 100% on 5 quizzes", slug: "five-perfect" },
-  { id: 8, name: "10 Perfect Quiz Scores", description: "Scored 100% on 10 quizzes", slug: "ten-perfect" },
-  { id: 9, name: "5 Retakes Completed", description: "Completed 5 retakes", slug: "five-retakes" },
-  { id: 10, name: "10 Day Study Streak", description: "Studied 10 days in a row", slug: "ten-day-streak" },
-  { id: 11, name: "First Study Session Scheduled", description: "Scheduled your first study session", slug: "first-session-scheduled" },
-  { id: 12, name: "10 Perfect Score Questions", description: "Answered 10 questions perfectly", slug: "ten-perfect-questions" },
-  { id: 13, name: "20 Retakes Completed", description: "Completed 20 retakes", slug: "twenty-retakes" },
-  { id: 14, name: "10 Study Sessions Scheduled", description: "Scheduled 10 study sessions", slug: "ten-sessions-scheduled" },
-  { id: 15, name: "30 Day Study Streak", description: "Studied 30 days in a row", slug: "thirty-day-streak" },
-  { id: 16, name: "20 Perfect Score Questions", description: "Answered 20 questions perfectly", slug: "twenty-perfect-questions" },
-  { id: 17, name: "100 Chat Messages Sent", description: "Sent 100 chat messages", slug: "hundred-messages" },
-  { id: 18, name: "50 Perfect Score Questions", description: "Answered 50 questions perfectly", slug: "fifty-perfect-questions" },
-  { id: 19, name: "50 Day Study Streak", description: "Studied 50 days in a row", slug: "fifty-day-streak" },
-  { id: 20, name: "20 Study Sessions Scheduled", description: "Scheduled 20 study sessions", slug: "twenty-sessions-scheduled" },
+  { id: 1,  name: "First Quiz Completed",         description: "Completed your first quiz",             slug: "first-quiz" },
+  { id: 2,  name: "10 Quizzes Completed",          description: "Completed 10 quizzes",                  slug: "ten-quizzes" },
+  { id: 3,  name: "First Retake Completed",        description: "Completed your first retake",           slug: "first-retake" },
+  { id: 4,  name: "20 Chat Messages Sent",         description: "Sent 20 chat messages",                 slug: "twenty-messages" },
+  { id: 5,  name: "Perfect Score on a Quiz",       description: "Scored 100% on a quiz",                 slug: "perfect-score" },
+  { id: 6,  name: "5 Day Study Streak",            description: "Studied 5 days in a row",               slug: "five-day-streak" },
+  { id: 7,  name: "5 Perfect Quiz Scores",         description: "Scored 100% on 5 quizzes",              slug: "five-perfect" },
+  { id: 8,  name: "10 Perfect Quiz Scores",        description: "Scored 100% on 10 quizzes",             slug: "ten-perfect" },
+  { id: 9,  name: "5 Retakes Completed",           description: "Completed 5 retakes",                   slug: "five-retakes" },
+  { id: 10, name: "10 Day Study Streak",           description: "Studied 10 days in a row",              slug: "ten-day-streak" },
+  { id: 11, name: "First Study Session Scheduled", description: "Scheduled your first study session",    slug: "first-session-scheduled" },
+  { id: 12, name: "10 Perfect Score Questions",    description: "Answered 10 questions perfectly",       slug: "ten-perfect-questions" },
+  { id: 13, name: "20 Retakes Completed",          description: "Completed 20 retakes",                  slug: "twenty-retakes" },
+  { id: 14, name: "10 Study Sessions Scheduled",   description: "Scheduled 10 study sessions",           slug: "ten-sessions-scheduled" },
+  { id: 15, name: "30 Day Study Streak",           description: "Studied 30 days in a row",              slug: "thirty-day-streak" },
+  { id: 16, name: "20 Perfect Score Questions",    description: "Answered 20 questions perfectly",       slug: "twenty-perfect-questions" },
+  { id: 17, name: "100 Chat Messages Sent",        description: "Sent 100 chat messages",                slug: "hundred-messages" },
+  { id: 18, name: "50 Perfect Score Questions",    description: "Answered 50 questions perfectly",       slug: "fifty-perfect-questions" },
+  { id: 19, name: "50 Day Study Streak",           description: "Studied 50 days in a row",              slug: "fifty-day-streak" },
+  { id: 20, name: "20 Study Sessions Scheduled",   description: "Scheduled 20 study sessions",           slug: "twenty-sessions-scheduled" },
 ]
 
 app.get("/achievements", async (req, res) => {
@@ -398,7 +437,6 @@ app.get("/topics/:id/metrics", async (req, res) => {
 // HEATMAP METRICS
 // -----------------------------------------------------
 
-// Overall heatmap — all classes for a user
 app.get("/users/:id/metrics", async (req, res) => {
   try {
     const userId = req.params.id
@@ -413,7 +451,6 @@ app.get("/users/:id/metrics", async (req, res) => {
       [userId]
     )
 
-    // Zero-fill missing days
     const dataMap = {}
     result.rows.forEach(row => {
       dataMap[row.date.toISOString().split('T')[0]] = {
@@ -440,7 +477,6 @@ app.get("/users/:id/metrics", async (req, res) => {
   }
 })
 
-// Per class heatmap
 app.get("/classes/:code/metrics", async (req, res) => {
   try {
     const classCode = req.params.code
@@ -489,7 +525,7 @@ app.get("/classes/:code/metrics", async (req, res) => {
 app.get("/users/:id/engagement/class-distribution", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT class_name, SUM(question_count) as question_count
+      `SELECT class_name, SUM(question_count) as question_count, MAX(color) as color, MAX(light) as light
        FROM class_engagement
        WHERE user_id = $1
        GROUP BY class_name
@@ -498,23 +534,28 @@ app.get("/users/:id/engagement/class-distribution", async (req, res) => {
     )
     res.json(result.rows.map(row => ({
       class_name: row.class_name,
-      question_count: parseInt(row.question_count)
+      question_count: parseInt(row.question_count),
+      color: row.color || null,
+      light: row.light || null
     })))
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
+
 app.post("/class-engagement", async (req, res) => {
   try {
-    const { user_id, class_name, question_count, week_start } = req.body
+    const { user_id, class_name, question_count, week_start, color, light } = req.body
     const id = randomUUID()
     const result = await pool.query(
-      `INSERT INTO class_engagement (id, user_id, class_name, question_count, week_start)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO class_engagement (id, user_id, class_name, question_count, week_start, color, light)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (user_id, class_name, week_start)
-       DO UPDATE SET question_count = class_engagement.question_count + EXCLUDED.question_count
+       DO UPDATE SET question_count = class_engagement.question_count + EXCLUDED.question_count,
+                     color = EXCLUDED.color,
+                     light = EXCLUDED.light
        RETURNING *`,
-      [id, user_id, class_name, question_count || 1, week_start || new Date()]
+      [id, user_id, class_name, question_count || 1, week_start || new Date(), color || null, light || null]
     )
     res.json(result.rows[0])
   } catch (error) {
@@ -698,11 +739,11 @@ app.get("/quizzes/:id/questions", async (req, res) => {
 
 app.post("/quizzes", async (req, res) => {
   try {
-    const { id, user_id, topic_id, score, date, retake_count, questions } = req.body
+    const { id, user_id, topic_id, score, date, retake_count, color, questions } = req.body
 
     const quiz = await pool.query(
-      "INSERT INTO quizzes (id, user_id, topic_id, score, date, retake_count) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [id, user_id, topic_id, score, date || new Date(), retake_count || 0]
+      "INSERT INTO quizzes (id, user_id, topic_id, score, date, retake_count, color) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [id, user_id, topic_id, score, date || new Date(), retake_count || 0, color || null]
     )
 
     const savedQuestions = []
