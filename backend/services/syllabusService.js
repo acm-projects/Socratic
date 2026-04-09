@@ -29,7 +29,19 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
     if (!PDFParse) {
       throw new Error("PDF parsing is currently unavailable on this server.");
     }
-    const pdfData = await PDFParse(fileBuffer);
+    
+    let pdfData;
+    try {
+      // Try as a normal function call (standard for most versions)
+      pdfData = await PDFParse(fileBuffer);
+    } catch (err) {
+      // Handle the case where PDFParse is a class constructor (modern/forked versions)
+      if (err.message.includes("Class constructors cannot be invoked without 'new'")) {
+        pdfData = await new PDFParse(fileBuffer);
+      } else {
+        throw err;
+      }
+    }
     pdfText = pdfData.text;
   } else if (rawTextFallback) {
     pdfText = rawTextFallback;
