@@ -844,6 +844,36 @@ app.post("/quizzes", async (req, res) => {
 })
 
 // -----------------------------------------------------
+// COURSE MATERIALS API
+// -----------------------------------------------------
+
+app.get("/classes/:code/materials", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM course_materials WHERE class_code = $1 ORDER BY uploaded_at DESC",
+      [req.params.code]
+    )
+    res.json(result.rows)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.post("/course-materials", async (req, res) => {
+  try {
+    const { class_code, user_id, file_name, file_url, doc_type } = req.body
+    const id = randomUUID()
+    const result = await pool.query(
+      "INSERT INTO course_materials (id, class_code, user_id, file_name, file_url, doc_type) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [id, class_code, user_id, file_name, file_url || null, doc_type || 'document']
+    )
+    res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
 // SERVER START
 // -----------------------------------------------------
 
