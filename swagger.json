@@ -10,7 +10,30 @@
     { "url": "http://localhost:5000", "description": "Local development server" }
   ],
   "paths": {
-    "/": { "get": { "summary": "Health Check", "responses": { "200": { "description": "API is running" } } } },
+    "/": {
+      "get": {
+        "summary": "Health Check",
+        "responses": {
+          "200": {
+            "description": "API is running"
+          }
+        }
+      }
+    },
+    "/tables": {
+      "get": {
+        "summary": "List All Database Tables",
+        "description": "Returns a list of all tables in the public schema of the database.",
+        "responses": {
+          "200": {
+            "description": "List of tables"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/api/calendar/create-tokens": {
       "post": {
         "summary": "Exchange Google Auth Code for Tokens",
@@ -35,6 +58,30 @@
           { "name": "maxResults", "in": "query", "required": false, "schema": { "type": "integer", "default": 100 } }
         ],
         "responses": { "200": { "description": "A list of calendar events" }, "500": { "description": "Server error" } }
+      }
+    },
+    "/api/calendar/session-check": {
+      "get": {
+        "summary": "Check Session Status",
+        "description": "Verifies if the user session is active in the server memory.",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session is active"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     },
     "/api/ingest/upload": {
@@ -68,32 +115,73 @@
         "responses": { "200": { "description": "Tutor response generated successfully" } }
       }
     },
-    "/extract": {
+    "/api/syllabus/extract": {
       "post": {
         "summary": "Extract Syllabus Data",
         "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "properties": { "syllabusPdf": { "type": "string", "format": "binary" }, "pdfText": { "type": "string" } } } } } },
         "responses": { "200": { "description": "Syllabus extracted successfully" }, "400": { "description": "Validation error" }, "500": { "description": "Server error" } }
       }
     },
-    "/save": {
+    "/api/syllabus/save": {
       "post": {
         "summary": "Save Syllabus Data",
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SyllabusData" } } } },
         "responses": { "200": { "description": "Saved successfully" }, "400": { "description": "Missing fields" }, "409": { "description": "Already exists" }, "500": { "description": "Server error" } }
       }
     },
-    "/upload": {
+    "/api/syllabus/upload": {
       "post": {
         "summary": "Upload Syllabus PDF to S3",
         "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "required": ["syllabusPdf", "class_code"], "properties": { "syllabusPdf": { "type": "string", "format": "binary" }, "class_code": { "type": "string" } } } } } },
         "responses": { "200": { "description": "Uploaded successfully" }, "400": { "description": "Missing file or class_code" }, "500": { "description": "Server error" } }
       }
     },
-    "/syllabus/{class_code}": {
+    "/api/syllabus/syllabus/{class_code}": {
       "get": {
         "summary": "Get Syllabus URL for a Class",
         "parameters": [{ "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": { "200": { "description": "Syllabus URL returned" }, "404": { "description": "Not found" }, "500": { "description": "Server error" } }
+      }
+    },
+    "/api/syllabus/tasks/{class_code}": {
+      "get": {
+        "summary": "Get Extracted Tasks for a Class",
+        "description": "Retrieves all quizzes, tests, and assignments extracted from the syllabus for a given class code.",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CS101"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "class_code": { "type": "string" },
+                      "task_name": { "type": "string" },
+                      "due_date": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     },
     "/users": {
@@ -207,7 +295,296 @@
           { "name": "user_id", "in": "query", "required": true, "schema": { "type": "string" } },
           { "name": "days", "in": "query", "required": false, "schema": { "type": "integer", "default": 30 } }
         ],
-        "responses": { "200": { "description": "Array of daily heatmap data", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/HeatmapMetric" } } } } }, "500": { "description": "Server error" } }
+        "responses": {
+          "200": {
+            "description": "Array of daily heatmap data for this class",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HeatmapMetric"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/topics": {
+      "post": {
+        "summary": "Create a Topic",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Topic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Topic created"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/topics/{id}": {
+      "get": {
+        "summary": "Get Topic by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single topic"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/topics/{id}/metrics": {
+      "get": {
+        "summary": "Get Topic Metrics",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Topic metrics"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "summary": "Create a Chat Session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatSession"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/sessions/{id}": {
+      "get": {
+        "summary": "Get Session by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A single chat session"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/history": {
+      "get": {
+        "summary": "Retrieve all chat sessions from PostgreSQL",
+        "responses": {
+          "200": {
+            "description": "A list of chat sessions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new chat session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "title"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "title": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session created"
+          }
+        }
+      }
+    },
+    "/api/history/{chatId}": {
+      "get": {
+        "summary": "Retrieve all messages for a specific chat ID",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of messages.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/history/{chatId}/messages": {
+      "post": {
+        "summary": "Add a message to a chat session",
+        "parameters": [
+          {
+            "name": "chatId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["role", "content"],
+                "properties": {
+                  "role": { "type": "string", "enum": ["user", "assistant"] },
+                  "content": { "type": "string" },
+                  "score": { "type": "integer" },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message added"
+          }
+        }
+      }
+    },
+    "/achievements": {
+      "get": {
+        "summary": "Get All Achievements",
+        "description": "Returns the full list of 20 possible achievements",
+        "responses": {
+          "200": {
+            "description": "A list of achievements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Achievement"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/accounts": {
+      "post": {
+        "summary": "Link an OAuth Account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Account"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account linked"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
       }
     },
     "/topics": { "post": { "summary": "Create a Topic", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Topic" } } } }, "responses": { "200": { "description": "Topic created" }, "500": { "description": "Server error" } } } },
@@ -421,9 +798,46 @@
       "SyllabusData": {
         "type": "object",
         "properties": {
-          "courseName": { "type": "string" },
-          "courseCode": { "type": "string" },
-          "topics": { "type": "array", "items": { "type": "string" } }
+          "courseName": {
+            "type": "string"
+          },
+          "courseCode": {
+            "type": "string"
+          },
+          "instructor": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "email": { "type": "string", "format": "email" },
+              "officeHours": { "type": "string" }
+            }
+          },
+          "gradingPolicy": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": { "type": "string" },
+                "weightPercentage": { "type": "integer" }
+              }
+            }
+          },
+          "importantDates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "eventName": { "type": "string" },
+                "date": { "type": "string", "format": "date" }
+              }
+            }
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       },
       "CalendarEvent": {

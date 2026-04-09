@@ -11,9 +11,10 @@ const pool = new Pool({
 });
 
 // POST /extract — Upload PDF and extract syllabus data using Gemini AI
-router.post('/extract', upload.single("syllabusPdf"), async (req, res, next) => {
+router.post('/extract', upload.any(), async (req, res, next) => {
   try {
-    const fileBuffer = req.file ? req.file.buffer : null;
+    const file = req.files && req.files.length > 0 ? req.files[0] : null;
+    const fileBuffer = file ? file.buffer : null;
     const rawTextFallback = req.body ? req.body.pdfText : null;
 
     const validatedData = await syllabusService.extractSyllabusData(fileBuffer, rawTextFallback);
@@ -62,11 +63,13 @@ router.post('/save', async (req, res, next) => {
 });
 
 // POST /upload — Upload syllabus PDF to S3 and save URL to classes table
-router.post('/upload', upload.single("syllabusPdf"), async (req, res, next) => {
+router.post('/upload', upload.any(), async (req, res, next) => {
   try {
     const { class_code } = req.body;
 
-    if (!req.file) {
+    const file = req.files && req.files.length > 0 ? req.files[0] : null;
+
+    if (!file) {
       return res.status(400).json({ error: "No PDF file provided." });
     }
 
@@ -74,7 +77,7 @@ router.post('/upload', upload.single("syllabusPdf"), async (req, res, next) => {
       return res.status(400).json({ error: "class_code is required." });
     }
 
-    const syllabusUrl = await s3Service.uploadSyllabus(req.file.buffer, req.file.originalname);
+    const syllabusUrl = await s3Service.uploadSyllabus(file.buffer, file.originalname);
 
     await pool.query(
       "UPDATE classes SET syllabus_url = $1 WHERE class_code = $2",
@@ -92,8 +95,8 @@ router.post('/upload', upload.single("syllabusPdf"), async (req, res, next) => {
   }
 });
 
-// GET /syllabus/:class_code — Get syllabus URL for a class
-router.get('/syllabus/:class_code', async (req, res, next) => {
+// GET /:class_code — Get syllabus URL for a class
+router.get('/:class_code', async (req, res, next) => {
   try {
     const result = await pool.query(
       "SELECT syllabus_url FROM classes WHERE class_code = $1",
@@ -107,6 +110,21 @@ router.get('/syllabus/:class_code', async (req, res, next) => {
     res.json({ syllabus_url: result.rows[0].syllabus_url });
 
   } catch (error) {
+    next(error);
+  }
+});
+
+// GET /tasks/:class_code — Get all extracted tasks (quizzes, tests, etc.) for a class
+router.get('/tasks/:class_code', async (req, res, next) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM class_tasks WHERE class_code = $1 ORDER BY due_date ASC",
+      [req.params.class_code]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching class tasks:", error);
     next(error);
   }
 });
