@@ -74,13 +74,11 @@ app.get("/users/:id", async (req, res) => {
     }
     const user = userResult.rows[0]
 
-    // Get friend count
     const friendCount = await pool.query(
       "SELECT COUNT(*) FROM friends WHERE user_id = $1",
       [userId]
     )
 
-    // Get achievement count
     const achievementCount = await pool.query(
       "SELECT COUNT(*) FROM user_achievements WHERE user_id = $1",
       [userId]
@@ -139,10 +137,9 @@ app.get("/users/:id/xp-history", async (req, res) => {
   try {
     const days = parseInt(req.query.days) || 30
     const userId = req.params.id
-    const groupBy = req.query.group_by || 'day' // 'day' or 'month'
+    const groupBy = req.query.group_by || 'day'
 
     if (groupBy === 'month') {
-      // Monthly grouping
       const result = await pool.query(
         `SELECT TO_CHAR(DATE_TRUNC('month', created_at), 'Mon') as month,
                 DATE_TRUNC('month', created_at) as month_date,
@@ -158,7 +155,6 @@ app.get("/users/:id/xp-history", async (req, res) => {
         total_xp: parseInt(row.total_xp)
       })))
     } else {
-      // Daily grouping with zero-fill
       const result = await pool.query(
         `SELECT DATE(created_at) as date, SUM(amount) as xp_earned
          FROM xp_system
@@ -183,6 +179,90 @@ app.get("/users/:id/xp-history", async (req, res) => {
 
       res.json(filled)
     }
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// QUIZ OVERVIEW (grouped by class)
+// -----------------------------------------------------
+
+app.get("/users/:id/quiz-overview", async (req, res) => {
+  try {
+    const userId = req.params.id
+
+    const result = await pool.query(
+      `SELECT c.name as class_name, c.class_code,
+              COUNT(q.id) as quiz_count,
+              ROUND(AVG(q.score), 1) as average_score,
+              MAX(q.color) as color
+       FROM quizzes q
+       JOIN topics t ON t.id = q.topic_id
+       JOIN classes c ON c.class_code = t.class_code
+       WHERE q.user_id = $1
+       GROUP BY c.name, c.class_code
+       ORDER BY quiz_count DESC`,
+      [userId]
+    )
+
+    res.json(result.rows.map(row => ({
+      class_name: row.class_name,
+      class_code: row.class_code,
+      quiz_count: parseInt(row.quiz_count),
+      average_score: parseFloat(row.average_score),
+      color: row.color || null
+    })))
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// FRIENDS WITH SHARED CLASSES
+// -----------------------------------------------------
+
+app.get("/users/:id/friends/shared-classes", async (req, res) => {
+  try {
+    const userId = req.params.id
+
+    // Get user's classes
+    const userClasses = await pool.query(
+      "SELECT class_code FROM classes WHERE user_id = $1",
+      [userId]
+    )
+    const userClassCodes = userClasses.rows.map(r => r.class_code)
+
+    // Get friends
+    const friendsResult = await pool.query(
+      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      [userId]
+    )
+
+    const friendsWithSharedClasses = await Promise.all(
+      friendsResult.rows.map(async (friend) => {
+        // Get friend's classes that overlap with user's classes
+        const sharedResult = await pool.query(
+          `SELECT c.class_code, c.name
+           FROM classes c
+           WHERE c.user_id = $1
+           AND c.class_code = ANY($2::text[])`,
+          [friend.friend_id, userClassCodes]
+        )
+
+        return {
+          friend_id: friend.friend_id,
+          first_name: friend.first_name,
+          last_name: friend.last_name,
+          shared_classes: sharedResult.rows.map(r => ({
+            class_code: r.class_code,
+            name: r.name
+          }))
+        }
+      })
+    )
+
+    res.json(friendsWithSharedClasses)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
