@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { ingestDocuments, ingestDocumentsWithVision, getNamespaceStats } = require('../services/ingestService');
+const syllabusService = require('../services/syllabusService');
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 // Store uploaded files to a local temp dir before processing
@@ -109,7 +110,34 @@ router.post('/upload', upload.array('file', 10), async (req, res, next) => {
 
     const { totalIngested, namespace } = await ingestDocumentsWithVision(filesToIngest, classCode, docType);
 
-    // Clean up temp files
+    // 4. SYLLABUS-SPECIFIC: Extract tasks and schedule if docType is syllabus
+    let syllabusData = null;
+    if (docType === 'syllabus' && req.files.length > 0) {
+      try {
+        console.log(`[Ingest] 📑 Auto-Extracting syllabus data for ${classCode}...`);
+        // We use req.files[0] because it's still available (haven't unlinked yet)
+        const fileBuffer = fs.readFileSync(req.files[0].path); 
+        
+        // Extract via Multimodal AI
+        const rawJson = await syllabusService.extractSyllabusData(fileBuffer);
+        
+        // Save to Database (Tasks, Topics, etc.)
+        const saved = await syllabusService.saveSyllabusData(rawJson);
+        
+        syllabusData = {
+          extracted: true,
+          tasksCount: saved.savedTasks?.length || 0,
+          topicsCount: saved.savedTopics?.length || 0,
+          courseName: rawJson.courseName
+        };
+        console.log(`[Ingest] ✅ Syllabus tasks saved: ${syllabusData.tasksCount} tasks found.`);
+      } catch (extErr) {
+        console.error(`[Ingest] ❌ Syllabus auto-extraction failed:`, extErr.message);
+        syllabusData = { extracted: false, error: extErr.message };
+      }
+    }
+
+    // 5. Clean up temp files ONLY AFTER processing is fully done
     for (const tmpPath of tempFiles) {
       try { fs.unlinkSync(tmpPath); } catch (_) {}
     }
@@ -122,6 +150,7 @@ router.post('/upload', upload.array('file', 10), async (req, res, next) => {
       filesProcessed: req.files.length,
       vectorsIngested: totalIngested,
       files: results,
+      syllabusData
     });
 
   } catch (err) {
