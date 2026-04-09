@@ -80,6 +80,7 @@ Return ONLY valid JSON data that matches this schema:
   "gradingPolicy": [ 
     {{ "category": "e.g. Homework, Midterm, Final", "weightPercentage": 20 }} 
   ],
+  "//": "IMPORTANT: For weightPercentage, return ONLY the raw number. DO NOT include '%' signs (e.g. return 20, not '20%').",
   "importantDates": [ 
     {{ "eventName": "Name of quiz, exam, or assignment", "date": "YYYY-MM-DD" }} 
   ],

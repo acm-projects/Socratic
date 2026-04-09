@@ -1,17 +1,17 @@
 const { syllabusSchema } = require('../backend/utils/syllabusSchema');
 
-async function testSchemaFlexibility() {
+async function testUltraRobustSchema() {
   const messyData = {
-    courseName: "Flexible Course",
-    courseCode: "FLEX101",
+    courseName: "Ultra Robust Course",
+    courseCode: "ROBUST101",
     instructor: {
-      name: "Prof. Flex",
-      email: "Not an emailAddress!", // Should pass now because .email() is removed
-      officeHours: "By appointment only"
+      name: null, // Should pass because name is now nullable
+      email: "not-an-email",
+      officeHours: null
     },
     gradingPolicy: [
-      { category: "Participation", weightPercentage: "15" }, // Should pass because of .coerce.number()
-      { category: "Exams", weightPercentage: 85 }
+      { category: "Participation", weightPercentage: "15%" }, // Should pass because of preprocess stripping '%'
+      { category: "Exams", weightPercentage: "85 percent" }   // Should also pass!
     ],
     importantDates: [
       { eventName: "Midterm", date: "2026-04-15" }
@@ -20,12 +20,12 @@ async function testSchemaFlexibility() {
   };
 
   try {
-    console.log("Testing schema with messy data...");
+    console.log("Testing ultra-robust schema with very messy data...");
     const validated = syllabusSchema.parse(messyData);
     console.log("Validation Successful!", JSON.stringify(validated, null, 2));
   } catch (err) {
-    console.error("Validation Failed:", err.errors);
+    console.error("Validation Failed:", JSON.stringify(err.errors, null, 2));
   }
 }
 
-testSchemaFlexibility();
+testUltraRobustSchema();
