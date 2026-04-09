@@ -1,6 +1,8 @@
 let PDFParse;
 try {
-  PDFParse = require("pdf-parse");
+  const pdfModule = require("pdf-parse");
+  // Some environments require .default, others export the function directly
+  PDFParse = typeof pdfModule === 'function' ? pdfModule : (pdfModule.default || pdfModule.PDFParse);
 } catch (error) {
   console.warn("pdf-parse failed to load:", error.message);
 }

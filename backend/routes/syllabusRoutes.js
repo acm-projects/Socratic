@@ -93,9 +93,27 @@ router.post('/upload', upload.any(), async (req, res, next) => {
       [class_code, subject, placeholderName, syllabusUrl]
     );
 
+    // AUTOMATED EXTRACTION (New Unified Workflow)
+    console.log(`[Syllabus] 🤖 Starting automated extraction for ${class_code}...`);
+    let extractedData = null;
+    try {
+      extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
+      if (extractedData) {
+        // Override the courseCode from AI with the one provided by user to ensure consistency
+        extractedData.courseCode = class_code; 
+        await syllabusService.saveSyllabusData(extractedData);
+        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${class_code}`);
+      }
+    } catch (extractErr) {
+      console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${class_code}:`, extractErr.message);
+      // We don't fail the whole request since the upload was successful
+    }
+
     res.json({
       message: "Syllabus uploaded and saved successfully.",
-      syllabus_url: syllabusUrl
+      syllabus_url: syllabusUrl,
+      extracted: !!extractedData,
+      data: extractedData
     });
 
   } catch (error) {
