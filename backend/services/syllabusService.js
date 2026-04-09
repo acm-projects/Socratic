@@ -7,10 +7,7 @@ try {
   console.warn("pdf-parse failed to load:", error.message);
 }
 
-const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-const { ChatPromptTemplate } = require("@langchain/core/prompts");
-const { JsonOutputParser } = require("@langchain/core/output_parsers");
-
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { syllabusSchema } = require("../utils/syllabusSchema");
 const crypto = require("crypto");
 const classModel = require("../models/classModel");
@@ -23,106 +20,97 @@ const pool = new Pool({
 });
 
 const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
-  console.log(`[Syllabus] 🛠️  Processing extraction... (Buffer: ${!!fileBuffer}, Fallback: ${!!rawTextFallback})`);
-  let pdfText = "";
-
-  if (fileBuffer) {
-    console.log("[Syllabus] 📄 Extracting text from PDF buffer...");
-    if (!PDFParse) {
-      throw new Error("PDF parsing is currently unavailable on this server.");
-    }
-    
-    let pdfData;
-    try {
-      // Try as a normal function call (standard for most versions)
-      pdfData = await PDFParse(fileBuffer);
-    } catch (err) {
-      // Handle the case where PDFParse is a class constructor (modern/forked versions)
-      if (err.message.includes("Class constructors cannot be invoked without 'new'")) {
-        console.log("[Syllabus] 🔄 PDFParse used as class constructor.");
-        pdfData = await new PDFParse(fileBuffer);
-      } else {
-        throw err;
-      }
-    }
-    pdfText = pdfData.text;
-    console.log(`[Syllabus] ✅ Text extracted (${pdfText.length} chars)`);
-  } else if (rawTextFallback) {
-    console.log("[Syllabus] 📝 Using provided pdfText fallback.");
-    pdfText = rawTextFallback;
-  } else {
-    throw new Error("No PDF file or pdfText provided.");
-  }
-
+  console.log(`[Syllabus] 🛠️  Processing extraction... (Direct PDF: ${!!fileBuffer})`);
+  
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("Missing GEMINI_API_KEY in backend/.env file.");
   }
 
-  // 1. Initialize LangChain Google AI model
-  const model = new ChatGoogleGenerativeAI({
+  // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ 
     model: "gemini-2.5-flash",
-    apiKey: process.env.GEMINI_API_KEY,
-    temperature: 0.1,
-    maxRetries: 3,
+    generationConfig: { responseMimeType: "application/json" }
   });
 
-  // 2. Define the extraction prompt using ChatPromptTemplate
-  // SMART TRUNCATION: Prioritize the first 12k characters (usually contains Grading/Schedule)
-  const MAX_CHARS = 12000;
-  const streamlinedText = pdfText.length > MAX_CHARS 
-    ? pdfText.substring(0, MAX_CHARS) + "... [Truncated for efficiency]" 
-    : pdfText;
-
-  if (pdfText.length > MAX_CHARS) {
-    console.log(`[Syllabus] ✂️  Streamlining: Truncated text from ${pdfText.length} to ${MAX_CHARS} chars.`);
+  // PREPARE CONTENT (Direct PDF if available, otherwise text)
+  let contentParts = [];
+  
+  if (fileBuffer) {
+    console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
+    contentParts.push({
+      inlineData: {
+        data: Buffer.from(fileBuffer).toString("base64"),
+        mimeType: "application/pdf"
+      }
+    });
+  } else if (rawTextFallback) {
+    contentParts.push({ text: `Syllabus Text:\n${rawTextFallback}` });
+  } else {
+    throw new Error("No PDF file or pdfText provided.");
   }
 
-  const promptTemplate = ChatPromptTemplate.fromMessages([
-    ["system", `You are a concise academic assistant. Extract the bare essential syllabus details.
-CRITICAL: Identify course deadlines (Quizzes, Exams, Assignments).
-Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".`],
-    ["human", `Extract syllabus data. Return ONLY JSON matching this schema:
-{{
-  "courseName": "Full name",
-  "courseCode": "ID (e.g. CS101)",
-  "instructor": {{ "name": "Name", "email": "email", "officeHours": "hours" }},
-  "gradingPolicy": [ {{ "category": "category", "weightPercentage": 20 }} ],
-  "importantDates": [ {{ "eventName": "Name", "date": "YYYY-MM-DD" }} ],
-  "topics": ["Topic Name"]
-}}
+  const prompt = `You are a concise academic assistant. Extract the bare essential syllabus details from the attached PDF.
+CRITICAL: Identify course deadlines (Quizzes, Exams, Assignments) from the calendar.
+Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".
 IMPORTANT: For weightPercentage, return ONLY the raw number (no '%' signs).
 
-Syllabus Text:
-{text}`]
-  ]);
+Return ONLY JSON matching this schema:
+{
+  "courseName": "Full name",
+  "courseCode": "ID (e.g. CS101)",
+  "instructor": { "name": "Name", "email": "email", "officeHours": "hours" },
+  "gradingPolicy": [ { "category": "category", "weightPercentage": 20 } ],
+  "importantDates": [ { "eventName": "Name", "date": "YYYY-MM-DD" } ],
+  "topics": ["Topic Name"]
+}`;
 
-  // 3. Create the LangChain sequence (Chain)
-  const jsonParser = new JsonOutputParser();
-  const chain = promptTemplate.pipe(model).pipe(jsonParser);
+  contentParts.unshift({ text: prompt });
 
-  console.log("[Syllabus] 🤖 Invoking LangChain extraction chain...");
+  console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
   
-  try {
-    const aiGeneratedData = await chain.invoke({ text: streamlinedText });
-    console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
-    
-    // Validate with Zod
-    console.log("[Syllabus] 🔍 Validating against schema...");
+  let lastError;
+  const maxRetries = 5;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const validatedData = syllabusSchema.parse(aiGeneratedData);
-      console.log("[Syllabus] ✅ Validation successful.");
-      return validatedData;
-    } catch (zodErr) {
-      console.error("[Syllabus] ❌ Schema Validation FAILED.");
-      // Attach the raw data to the error so routes can return it
-      zodErr.rawData = aiGeneratedData;
-      throw zodErr;
+      const result = await model.generateContent(contentParts);
+      const response = await result.response;
+      const aiResponseText = response.text();
+      const aiGeneratedData = JSON.parse(aiResponseText);
+      
+      console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
+      
+      // Validate with Zod
+      console.log("[Syllabus] 🔍 Validating against schema...");
+      try {
+        const validatedData = syllabusSchema.parse(aiGeneratedData);
+        console.log("[Syllabus] ✅ Validation successful.");
+        return validatedData;
+      } catch (zodErr) {
+        console.error("[Syllabus] ❌ Schema Validation FAILED.");
+        zodErr.rawData = aiGeneratedData;
+        throw zodErr;
+      }
+    } catch (error) {
+      lastError = error;
+      // Handle 503 (Service Unavailable) with wait and retry
+      if (error.message && (error.message.includes("503") || error.message.includes("Service Unavailable"))) {
+        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s, 16s, 32s
+        console.warn(`[Syllabus] ⚠️  503 Error (Attempt ${attempt}/${maxRetries}). Retrying in ${waitTime/1000}s...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+      // If it's a Zod error, don't retry, just throw
+      if (error.name === "ZodError") throw error;
+      
+      // Otherwise, log and throw
+      console.error(`[Syllabus] ❌ Native Extraction failed (Attempt ${attempt}):`, error.message);
+      if (attempt === maxRetries) throw error;
+      
+      // Small delay for other non-503 errors
+      await new Promise(resolve => setTimeout(resolve, 2000));
     }
-  } catch (error) {
-    if (error.name !== "ZodError") {
-      console.error("[Syllabus] ❌ LangChain Extraction failed:", error.message);
-    }
-    throw error;
   }
 };
 
@@ -158,7 +146,7 @@ const saveSyllabusData = async (payload) => {
 
   // 3. Store Syllabus Tasks (New Logic)
   const savedTasks = [];
-  
+
   // Clear existing tasks for this class first to avoid duplicates
   try {
     const deleteResult = await pool.query("DELETE FROM class_tasks WHERE class_code = $1", [safeCourseCode.substring(0, 50)]);
