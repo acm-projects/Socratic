@@ -159,4 +159,35 @@ router.get('/tasks/:class_code', async (req, res, next) => {
   }
 });
 
+// GET /data/:class_code — Unified endpoint for Class Info, Tasks, and Topics
+router.get('/data/:class_code', async (req, res, next) => {
+  const { class_code } = req.params;
+  const normalizedCode = class_code.toUpperCase().trim();
+
+  try {
+    console.log(`[Syllabus] 🔍 Fetching unified data for ${normalizedCode}...`);
+    
+    // Perform queries in parallel for peak performance
+    const [classRes, tasksRes, topicsRes] = await Promise.all([
+      pool.query("SELECT * FROM classes WHERE class_code = $1", [normalizedCode]),
+      pool.query("SELECT * FROM class_tasks WHERE class_code = $1 ORDER BY due_date ASC", [normalizedCode]),
+      pool.query("SELECT * FROM topics WHERE class_code = $1", [normalizedCode])
+    ]);
+
+    if (classRes.rows.length === 0) {
+      return res.status(404).json({ error: `Class ${normalizedCode} not found.` });
+    }
+
+    res.json({
+      classInfo: classRes.rows[0],
+      tasks: tasksRes.rows,
+      topics: topicsRes.rows
+    });
+
+  } catch (error) {
+    console.error(`[Syllabus] ❌ Unified fetch failed for ${normalizedCode}:`, error.message);
+    next(error);
+  }
+});
+
 module.exports = router;

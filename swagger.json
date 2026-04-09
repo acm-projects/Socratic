@@ -48,9 +48,30 @@
     "/api/ingest/upload": {
       "post": {
         "summary": "Upload Document to S3 and Pinecone",
-        "description": "Upload PDF(s) to S3, chunk them using LangChain, and index into the shared Pinecone class namespace.",
-        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "required": ["file", "classCode"], "properties": { "file": { "type": "string", "format": "binary" }, "classCode": { "type": "string", "example": "CS 3345" }, "docType": { "type": "string", "enum": ["syllabus", "textbook", "slides", "notes", "document"], "default": "document" } } } } } },
-        "responses": { "200": { "description": "Documents successfully ingested" } }
+        "description": "Upload PDF(s) to S3, chunk them, and index into Pinecone. If docType='syllabus', it also extracts tasks and topics automatically.",
+        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "required": ["file", "classCode"], "properties": { "file": { "type": "string", "format": "binary" }, "classCode": { "type": "string", "example": "CS 3341" }, "docType": { "type": "string", "enum": ["syllabus", "textbook", "slides", "notes", "document"], "default": "document" } } } } } },
+        "responses": { 
+          "200": { 
+            "description": "Documents successfully ingested",
+            "content": {
+              "application/json": {
+                "example": {
+                    "success": true,
+                    "classCode": "CS 3341",
+                    "namespace": "class-cs3341",
+                    "docType": "syllabus",
+                    "syllabusData": {
+                        "extracted": true,
+                        "savedCourseCode": "STAT-CS-SE-3341-501",
+                        "tasksCount": 14,
+                        "topicsCount": 28,
+                        "courseName": "Probability and Statistics in CS"
+                    }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/ingest/status/{classCode}": {
@@ -107,8 +128,37 @@
     "/api/syllabus/tasks/{class_code}": {
       "get": {
         "summary": "Get Extracted Tasks for a Class",
-        "parameters": [{ "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
-        "responses": { "200": { "description": "Array of tasks" }, "500": { "description": "Server error" } }
+        "description": "Retrieves all quizzes, tests, and assignments extracted from the syllabus for a given class code.",
+        "parameters": [{ "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "STAT-CS-SE-3341-501" }],
+        "responses": {
+          "200": {
+            "description": "Array of tasks",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "class_code": { "type": "string" }, "task_name": { "type": "string" }, "due_date": { "type": "string", "format": "date" } } } } } }
+          },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/api/syllabus/data/{class_code}": {
+      "get": {
+        "summary": "Unified Syllabus Data Retrieval",
+        "description": "Returns class info, tasks, and topics in a single payload. Use the extracted code (e.g. STAT-CS-SE-3341-501).",
+        "parameters": [{ "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "STAT-CS-SE-3341-501" }],
+        "responses": {
+          "200": { 
+            "description": "Unified data returned successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "classInfo": { "class_code": "STAT-CS-SE-3341-501", "name": "Probability and Statistics", "syllabus_url": "https://..." },
+                  "tasks": [{ "task_name": "Quiz 1", "due_date": "2026-02-15" }],
+                  "topics": [{ "name": "Bayes Theorem" }]
+                }
+              }
+            }
+          },
+          "404": { "description": "Class not found" }
+        }
       }
     },
     "/users": {
