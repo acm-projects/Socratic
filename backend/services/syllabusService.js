@@ -65,7 +65,8 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   const promptTemplate = ChatPromptTemplate.fromMessages([
     ["system", `You are an expert academic assistant specialized in syllabus parsing. 
 Extract the syllabus constraints and structure exactly. 
-CRITICAL: You must identify all major course deadlines including Quizzes, Tests, Exams, and Assignments from the calendar/schedule section.`],
+CRITICAL: You must identify all major course deadlines including Quizzes, Tests, Exams, and Assignments from the calendar/schedule section.
+If any specific detail (like email or office hours) is not found, use null instead of guessing or providing placeholders like "TBA".`],
     ["human", `Extract syllabus data from the following text. 
 Return ONLY valid JSON data that matches this schema:
 {{
