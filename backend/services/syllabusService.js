@@ -67,32 +67,30 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   });
 
   // 2. Define the extraction prompt using ChatPromptTemplate
+  // SMART TRUNCATION: Prioritize the first 12k characters (usually contains Grading/Schedule)
+  const MAX_CHARS = 12000;
+  const streamlinedText = pdfText.length > MAX_CHARS 
+    ? pdfText.substring(0, MAX_CHARS) + "... [Truncated for efficiency]" 
+    : pdfText;
+
+  if (pdfText.length > MAX_CHARS) {
+    console.log(`[Syllabus] ✂️  Streamlining: Truncated text from ${pdfText.length} to ${MAX_CHARS} chars.`);
+  }
+
   const promptTemplate = ChatPromptTemplate.fromMessages([
-    ["system", `You are an expert academic assistant specialized in syllabus parsing. 
-Extract the syllabus constraints and structure exactly. 
-CRITICAL: You must identify all major course deadlines including Quizzes, Tests, Exams, and Assignments from the calendar/schedule section.
-If any specific detail (like email or office hours) is not found, use null instead of guessing or providing placeholders like "TBA".`],
-    ["human", `Extract syllabus data from the following text. 
-Return ONLY valid JSON data that matches this schema:
+    ["system", `You are a concise academic assistant. Extract the bare essential syllabus details.
+CRITICAL: Identify course deadlines (Quizzes, Exams, Assignments).
+Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".`],
+    ["human", `Extract syllabus data. Return ONLY JSON matching this schema:
 {{
-  "courseName": "The full name of the course",
-  "courseCode": "The course identifier (e.g. CS101)",
-  "instructor": {{ 
-    "name": "Full name", 
-    "email": "email address if found", 
-    "officeHours": "office hours if found" 
-  }},
-  "gradingPolicy": [ 
-    {{ "category": "e.g. Homework, Midterm, Final", "weightPercentage": 20 }} 
-  ],
-  "//": "IMPORTANT: For weightPercentage, return ONLY the raw number. DO NOT include '%' signs (e.g. return 20, not '20%').",
-  "importantDates": [ 
-    {{ "eventName": "Name of quiz, exam, or assignment", "date": "YYYY-MM-DD" }} 
-  ],
-  "topics": [
-    "Academic Topic (e.g. Intro to Arrays). EXCLUDE exams/holidays."
-  ]
+  "courseName": "Full name",
+  "courseCode": "ID (e.g. CS101)",
+  "instructor": {{ "name": "Name", "email": "email", "officeHours": "hours" }},
+  "gradingPolicy": [ {{ "category": "category", "weightPercentage": 20 }} ],
+  "importantDates": [ {{ "eventName": "Name", "date": "YYYY-MM-DD" }} ],
+  "topics": ["Topic Name"]
 }}
+IMPORTANT: For weightPercentage, return ONLY the raw number (no '%' signs).
 
 Syllabus Text:
 {text}`]
@@ -105,7 +103,7 @@ Syllabus Text:
   console.log("[Syllabus] 🤖 Invoking LangChain extraction chain...");
   
   try {
-    const aiGeneratedData = await chain.invoke({ text: pdfText });
+    const aiGeneratedData = await chain.invoke({ text: streamlinedText });
     console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
     
     // Validate with Zod
