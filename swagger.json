@@ -41,7 +41,6 @@
     "/api/calendar/session-check": {
       "get": {
         "summary": "Check Session Status",
-        "description": "Verifies if the user session is active in the server memory.",
         "parameters": [{ "name": "x-user-id", "in": "header", "required": false, "schema": { "type": "string" } }],
         "responses": { "200": { "description": "Session is active" }, "401": { "description": "Unauthorized" } }
       }
@@ -108,15 +107,8 @@
     "/api/syllabus/tasks/{class_code}": {
       "get": {
         "summary": "Get Extracted Tasks for a Class",
-        "description": "Retrieves all quizzes, tests, and assignments extracted from the syllabus for a given class code.",
         "parameters": [{ "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS101" }],
-        "responses": {
-          "200": {
-            "description": "Array of tasks",
-            "content": { "application/json": { "schema": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "class_code": { "type": "string" }, "task_name": { "type": "string" }, "due_date": { "type": "string", "format": "date" } } } } } }
-          },
-          "500": { "description": "Server error" }
-        }
+        "responses": { "200": { "description": "Array of tasks" }, "500": { "description": "Server error" } }
       }
     },
     "/users": {
@@ -153,12 +145,9 @@
     "/users/{id}/quiz-overview": {
       "get": {
         "summary": "Get Quiz Overview by Class",
-        "description": "Returns quiz count, average score, and color grouped by class name — used for the Quiz Overview bar chart",
+        "description": "Returns quiz count, average score, and color grouped by class name",
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": {
-          "200": { "description": "Array of quiz overview data grouped by class", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/QuizOverview" } } } } },
-          "500": { "description": "Server error" }
-        }
+        "responses": { "200": { "description": "Array of quiz overview data", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/QuizOverview" } } } } }, "500": { "description": "Server error" } }
       }
     },
     "/users/{id}/friends/shared-classes": {
@@ -166,10 +155,7 @@
         "summary": "Get Friends with Shared Classes",
         "description": "Returns a list of friends with the classes they share with the logged in user",
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": {
-          "200": { "description": "Array of friends with shared classes", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/FriendWithSharedClasses" } } } } },
-          "500": { "description": "Server error" }
-        }
+        "responses": { "200": { "description": "Array of friends with shared classes", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/FriendWithSharedClasses" } } } } }, "500": { "description": "Server error" } }
       }
     },
     "/users/{id}/metrics": {
@@ -185,7 +171,6 @@
     "/users/{id}/engagement/class-distribution": {
       "get": {
         "summary": "Get Class Distribution (Engagement Pie Chart)",
-        "description": "Returns total question count per class with color and light fields",
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
         "responses": { "200": { "description": "Array of class engagement data with colors", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/ClassDistribution" } } } } }, "500": { "description": "Server error" } }
       }
@@ -221,7 +206,29 @@
           { "name": "user_id", "in": "query", "required": true, "schema": { "type": "string" } },
           { "name": "days", "in": "query", "required": false, "schema": { "type": "integer", "default": 30 } }
         ],
-        "responses": { "200": { "description": "Array of daily heatmap data for this class", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/HeatmapMetric" } } } } }, "500": { "description": "Server error" } }
+        "responses": { "200": { "description": "Array of daily heatmap data", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/HeatmapMetric" } } } } }, "500": { "description": "Server error" } }
+      }
+    },
+    "/classes/{code}/materials": {
+      "get": {
+        "summary": "Get Course Materials for a Class",
+        "description": "Returns all uploaded course materials for a specific class",
+        "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS2305" }],
+        "responses": {
+          "200": { "description": "A list of course materials", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/CourseMaterial" } } } } },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/course-materials": {
+      "post": {
+        "summary": "Add Course Material",
+        "description": "Saves a course material record to the database",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CourseMaterial" } } }
+        },
+        "responses": { "200": { "description": "Material saved successfully" }, "500": { "description": "Server error" } }
       }
     },
     "/topics": { "post": { "summary": "Create a Topic", "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Topic" } } } }, "responses": { "200": { "description": "Topic created" }, "500": { "description": "Server error" } } } },
@@ -261,7 +268,7 @@
     "/class-engagement": {
       "post": {
         "summary": "Record Class Engagement",
-        "description": "Records or increments question count for a user in a specific class. Include color and light for pie chart styling.",
+        "description": "Records or increments question count for a user in a specific class.",
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ClassEngagement" } } } },
         "responses": { "200": { "description": "Engagement recorded successfully" }, "500": { "description": "Server error" } }
       }
@@ -331,6 +338,18 @@
               }
             }
           }
+        }
+      },
+      "CourseMaterial": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "class_code": { "type": "string", "example": "CS2305" },
+          "user_id": { "type": "string", "example": "u1" },
+          "file_name": { "type": "string", "example": "Syllabus.pdf" },
+          "file_url": { "type": "string", "example": "https://s3.amazonaws.com/..." },
+          "doc_type": { "type": "string", "example": "syllabus" },
+          "uploaded_at": { "type": "string", "format": "date-time" }
         }
       },
       "Class": {
