@@ -6,14 +6,17 @@ const syllabusSchema = z.object({
     courseName: z.string().describe("The full name of the course"),
     courseCode: z.string().describe("The course identifier, e.g., CS101"),
     instructor: z.object({
-        name: z.string(),
-        email: z.string().email().optional(),
-        officeHours: z.string().optional()
+        name: z.string().nullable().optional(),
+        email: z.string().nullable().optional(),
+        officeHours: z.string().nullable().optional()
     }),
     gradingPolicy: z.array(
         z.object({
             category: z.string().describe("e.g., Homework, Midterm, Final"),
-            weightPercentage: z.number().min(0).max(100)
+            weightPercentage: z.preprocess(
+                (val) => (typeof val === 'string' ? val.replace(/[^\d.-]/g, '') : val),
+                z.coerce.number().optional()
+            ).describe("0-100 (numeric only)")
         })
     ).describe("The breakdown of how the course is graded"),
     importantDates: z.array(
