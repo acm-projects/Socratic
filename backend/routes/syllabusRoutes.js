@@ -27,8 +27,11 @@ router.post('/extract', upload.any(), async (req, res, next) => {
 
   } catch (error) {
     if (error.name === "ZodError") {
+      console.error("[Syllabus] ❌ Validation Error:", JSON.stringify(error.errors, null, 2));
       return res.status(400).json({
         error: "AI failed to extract syllabus correctly matching the schema formats",
+        step: "Validation",
+        rawData: error.rawData,
         validationErrors: error.errors
       });
     }

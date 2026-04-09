@@ -23,9 +23,11 @@ const pool = new Pool({
 });
 
 const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
+  console.log(`[Syllabus] 🛠️  Processing extraction... (Buffer: ${!!fileBuffer}, Fallback: ${!!rawTextFallback})`);
   let pdfText = "";
 
   if (fileBuffer) {
+    console.log("[Syllabus] 📄 Extracting text from PDF buffer...");
     if (!PDFParse) {
       throw new Error("PDF parsing is currently unavailable on this server.");
     }
@@ -37,13 +39,16 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
     } catch (err) {
       // Handle the case where PDFParse is a class constructor (modern/forked versions)
       if (err.message.includes("Class constructors cannot be invoked without 'new'")) {
+        console.log("[Syllabus] 🔄 PDFParse used as class constructor.");
         pdfData = await new PDFParse(fileBuffer);
       } else {
         throw err;
       }
     }
     pdfText = pdfData.text;
+    console.log(`[Syllabus] ✅ Text extracted (${pdfText.length} chars)`);
   } else if (rawTextFallback) {
+    console.log("[Syllabus] 📝 Using provided pdfText fallback.");
     pdfText = rawTextFallback;
   } else {
     throw new Error("No PDF file or pdfText provided.");
@@ -101,12 +106,24 @@ Syllabus Text:
   
   try {
     const aiGeneratedData = await chain.invoke({ text: pdfText });
+    console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
     
     // Validate with Zod
-    const validatedData = syllabusSchema.parse(aiGeneratedData);
-    return validatedData;
+    console.log("[Syllabus] 🔍 Validating against schema...");
+    try {
+      const validatedData = syllabusSchema.parse(aiGeneratedData);
+      console.log("[Syllabus] ✅ Validation successful.");
+      return validatedData;
+    } catch (zodErr) {
+      console.error("[Syllabus] ❌ Schema Validation FAILED.");
+      // Attach the raw data to the error so routes can return it
+      zodErr.rawData = aiGeneratedData;
+      throw zodErr;
+    }
   } catch (error) {
-    console.error("[Syllabus] ❌ LangChain Extraction failed:", error.message);
+    if (error.name !== "ZodError") {
+      console.error("[Syllabus] ❌ LangChain Extraction failed:", error.message);
+    }
     throw error;
   }
 };
