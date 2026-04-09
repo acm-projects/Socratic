@@ -79,9 +79,18 @@ router.post('/upload', upload.any(), async (req, res, next) => {
 
     const syllabusUrl = await s3Service.uploadSyllabus(file.buffer, file.originalname);
 
+    // Extract a basic subject from class_code (e.g. CS-SE from CS-SE-3377)
+    const subjectMatch = class_code.match(/[a-zA-Z]+/);
+    const subject = subjectMatch ? subjectMatch[0].toUpperCase() : "GEN";
+    const placeholderName = `Course ${class_code}`;
+
+    // UPSERT: Create class if it doesn't exist, otherwise update the syllabus_url
     await pool.query(
-      "UPDATE classes SET syllabus_url = $1 WHERE class_code = $2",
-      [syllabusUrl, class_code]
+      `INSERT INTO classes (class_code, subject, name, syllabus_url) 
+       VALUES ($1, $2, $3, $4) 
+       ON CONFLICT (class_code) 
+       DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url`,
+      [class_code, subject, placeholderName, syllabusUrl]
     );
 
     res.json({

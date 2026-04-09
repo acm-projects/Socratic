@@ -8,7 +8,7 @@ const pool = new Pool({
 
 async function checkTasks() {
   try {
-    const classCode = 'CS-SE-3377-0W1';
+    const classCode = 'CS-SE-3341-0W1';
     
     console.log(`\n--- Checking Class: ${classCode} ---`);
     const resClass = await pool.query("SELECT * FROM classes WHERE class_code = $1", [classCode]);
