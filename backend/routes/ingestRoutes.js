@@ -126,6 +126,7 @@ router.post('/upload', upload.array('file', 10), async (req, res, next) => {
         
         syllabusData = {
           extracted: true,
+          savedCourseCode: saved.savedClass?.class_code || rawJson.courseCode,
           tasksCount: saved.savedTasks?.length || 0,
           topicsCount: saved.savedTopics?.length || 0,
           courseName: rawJson.courseName
