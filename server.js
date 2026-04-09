@@ -226,14 +226,12 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
   try {
     const userId = req.params.id
 
-    // Get user's classes
     const userClasses = await pool.query(
       "SELECT class_code FROM classes WHERE user_id = $1",
       [userId]
     )
     const userClassCodes = userClasses.rows.map(r => r.class_code)
 
-    // Get friends
     const friendsResult = await pool.query(
       "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
       [userId]
@@ -241,7 +239,6 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
 
     const friendsWithSharedClasses = await Promise.all(
       friendsResult.rows.map(async (friend) => {
-        // Get friend's classes that overlap with user's classes
         const sharedResult = await pool.query(
           `SELECT c.class_code, c.name
            FROM classes c
@@ -644,6 +641,36 @@ app.post("/class-engagement", async (req, res) => {
 })
 
 // -----------------------------------------------------
+// COURSE MATERIALS API
+// -----------------------------------------------------
+
+app.get("/classes/:code/materials", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM course_materials WHERE class_code = $1 ORDER BY uploaded_at DESC",
+      [req.params.code]
+    )
+    res.json(result.rows)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.post("/course-materials", async (req, res) => {
+  try {
+    const { class_code, user_id, file_name, file_url, doc_type } = req.body
+    const id = randomUUID()
+    const result = await pool.query(
+      "INSERT INTO course_materials (id, class_code, user_id, file_name, file_url, doc_type) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [id, class_code, user_id, file_name, file_url || null, doc_type || 'document']
+    )
+    res.json(result.rows[0])
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
 // OAUTH ACCOUNTS
 // -----------------------------------------------------
 
@@ -837,37 +864,42 @@ app.post("/quizzes", async (req, res) => {
       }
     }
 
+    // -----------------------------------------------------
+    // AUTO-UNLOCK ACHIEVEMENTS
+    // -----------------------------------------------------
+    try {
+      const allQuizzes = await pool.query(
+        "SELECT score, retake_count FROM quizzes WHERE user_id = $1",
+        [user_id]
+      )
+      const quizCount = allQuizzes.rows.length
+      const perfectScores = allQuizzes.rows.filter(q => parseInt(q.score) === 100).length
+      const totalRetakes = allQuizzes.rows.reduce((sum, q) => sum + (parseInt(q.retake_count) || 0), 0)
+      const hasRetake = totalRetakes > 0
+
+      const toUnlock = []
+      if (quizCount >= 1) toUnlock.push('1')
+      if (quizCount >= 10) toUnlock.push('2')
+      if (hasRetake) toUnlock.push('3')
+      if (perfectScores >= 1) toUnlock.push('5')
+      if (perfectScores >= 5) toUnlock.push('7')
+      if (perfectScores >= 10) toUnlock.push('8')
+      if (totalRetakes >= 5) toUnlock.push('9')
+      if (totalRetakes >= 20) toUnlock.push('13')
+
+      for (const achId of toUnlock) {
+        await pool.query(
+          `INSERT INTO user_achievements (user_id, achievement_id)
+           VALUES ($1, $2)
+           ON CONFLICT DO NOTHING`,
+          [user_id, achId]
+        )
+      }
+    } catch (achErr) {
+      console.error('[Achievements] Failed to auto-unlock:', achErr.message)
+    }
+
     res.json({ ...quiz.rows[0], questions: savedQuestions })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
-
-// -----------------------------------------------------
-// COURSE MATERIALS API
-// -----------------------------------------------------
-
-app.get("/classes/:code/materials", async (req, res) => {
-  try {
-    const result = await pool.query(
-      "SELECT * FROM course_materials WHERE class_code = $1 ORDER BY uploaded_at DESC",
-      [req.params.code]
-    )
-    res.json(result.rows)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
-
-app.post("/course-materials", async (req, res) => {
-  try {
-    const { class_code, user_id, file_name, file_url, doc_type } = req.body
-    const id = randomUUID()
-    const result = await pool.query(
-      "INSERT INTO course_materials (id, class_code, user_id, file_name, file_url, doc_type) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [id, class_code, user_id, file_name, file_url || null, doc_type || 'document']
-    )
-    res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
