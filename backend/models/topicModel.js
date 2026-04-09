@@ -18,7 +18,7 @@ const getTopicById = async (id) => {
 const createTopic = async (data) => {
   const { id, class_code, name } = data;
   const result = await db.query(
-    "INSERT INTO topics (id, class_code, name) VALUES ($1, $2, $3) RETURNING *",
+    "INSERT INTO topics (id, class_code, name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING RETURNING *",
     [id, class_code, name]
   );
   return result.rows[0];

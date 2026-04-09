@@ -13,7 +13,7 @@ const getClassByCode = async (code) => {
 const createClass = async (data) => {
   const { class_code, subject, name } = data;
   const result = await db.query(
-    "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) RETURNING *",
+    "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) ON CONFLICT (class_code) DO UPDATE SET subject = EXCLUDED.subject, name = EXCLUDED.name RETURNING *",
     [class_code, subject, name]
   );
   return result.rows[0];

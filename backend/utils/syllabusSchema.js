@@ -7,8 +7,8 @@ const syllabusSchema = z.object({
     courseCode: z.string().describe("The course identifier, e.g., CS101"),
     instructor: z.object({
         name: z.string(),
-        email: z.string().email().optional(),
-        officeHours: z.string().optional()
+        email: z.string().email().nullable().optional(),
+        officeHours: z.string().nullable().optional()
     }),
     gradingPolicy: z.array(
         z.object({

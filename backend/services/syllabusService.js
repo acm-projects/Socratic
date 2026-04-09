@@ -109,6 +109,7 @@ const saveSyllabusData = async (payload) => {
     name: courseName.substring(0, 30)
   };
   const newClass = await classModel.createClass(classData);
+  console.log(`[Syllabus] 🏫 Class verified/updated: ${classData.class_code}`);
 
   // 2. Store Topics
   const savedTopics = [];
@@ -126,6 +127,15 @@ const saveSyllabusData = async (payload) => {
 
   // 3. Store Syllabus Tasks (New Logic)
   const savedTasks = [];
+  
+  // Clear existing tasks for this class first to avoid duplicates
+  try {
+    const deleteResult = await pool.query("DELETE FROM class_tasks WHERE class_code = $1", [safeCourseCode.substring(0, 50)]);
+    console.log(`[Syllabus] 🧹 Cleared ${deleteResult.rowCount} existing tasks for ${safeCourseCode}`);
+  } catch (err) {
+    console.warn(`[Syllabus] ⚠️ Failed to clear existing tasks:`, err.message);
+  }
+
   if (Array.isArray(importantDates)) {
     console.log(`[Syllabus] 📅 Saving ${importantDates.length} extracted tasks...`);
     for (const dateObj of importantDates) {
