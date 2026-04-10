@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const { randomUUID } = require('crypto');
 const { getClassVectorStore } = require('../services/vectorService');
 const { getQuizGeneratorChain, parser } = require('../services/quizService');
+const topicModel = require('../models/topicModel');
+const quizModel = require('../models/quizModel');
 
 router.post('/generate', async (req, res, next) => {
   try {
@@ -61,16 +64,60 @@ router.post('/generate', async (req, res, next) => {
     const quizDuration = ((Date.now() - quizStartTime) / 1000).toFixed(1);
     console.log(`[QuizGen] ✅ Quiz generated successfully in ${quizDuration}s`);
 
-    // 4. Return generated quiz data
+    // 4. Resolve Topic ID
+    let topicEntity = await topicModel.getTopicByNameAndClass(topic, classCode);
+    if (!topicEntity) {
+      console.log(`[QuizGen] 🆕 Creating new topic: ${topic} for ${classCode}`);
+      topicEntity = await topicModel.createTopic({
+        id: randomUUID(),
+        class_code: classCode,
+        name: topic
+      });
+    }
+
+    // 5. Save Quiz Metadata to DB
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required to generate and save a quiz" });
+    }
+
+    const quizId = randomUUID();
+    await quizModel.createQuiz({
+      id: quizId,
+      user_id: userId,
+      topic_id: topicEntity.id,
+      score: 0 // Initial score
+    });
+
+    // 6. Save Generated Questions to DB
+    // The parser returns an array of questions. We need to handle that.
+    const questions = Array.isArray(result) ? result : (result.questions || []);
+    await quizModel.saveQuestions(quizId, questions);
+
+    // 7. Return generated quiz data with quizId
     res.json({
       success: true,
+      quizId: quizId,
       data: result,
-      sources: sources // Include sources so the user can verify it's not hardcoded
+      sources: sources
     });
   } catch (error) {
-    if (error.message && (error.message.includes('429') || error.message.toLowerCase().includes('quota'))) {
-      return res.status(429).json({ error: "API Quota Exceeded. Please try again later." });
+    next(error);
+  }
+});
+
+/**
+ * GET /api/quizzes/:id/questions
+ * Retrieves all questions for a specific quiz.
+ */
+router.get('/:id/questions', async (req, res, next) => {
+  try {
+    const questions = await quizModel.getQuestionsByQuizId(req.params.id);
+    if (!questions || questions.length === 0) {
+      return res.status(404).json({ error: "Quiz not found or has no questions" });
     }
+    res.json(questions);
+  } catch (error) {
     next(error);
   }
 });

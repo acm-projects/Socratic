@@ -46,6 +46,19 @@ model achievements {
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model quiz_questions {
+  id             String  @id @db.VarChar(100)
+  quiz_id        String  @db.VarChar(50)
+  question       String
+  correct_answer String
+  user_answer    String?
+  is_correct     Boolean?
+  depth_score    Int?
+  options        String[]
+  explanation    String?
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model chat_history {
   id            String        @id @db.VarChar(50)
   session_id    String        @db.VarChar(50)

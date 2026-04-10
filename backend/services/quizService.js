@@ -13,7 +13,8 @@ const quizOutputSchema = z.object({
     question: z.string().describe("The text of the question (e.g. 'What is the time complexity of Binary Search?')"),
     options: z.array(z.string()).describe("A list of 4 possible multiple choice options."),
     correct_answer: z.string().describe("The exact string text of the correct answer from the options array."),
-    depth_score: z.number().int().describe("An integer from 1 to 5 indicating the cognitive depth/difficulty of the question (1=Recall, 5=Analysis).")
+    depth_score: z.number().int().describe("An integer from 1 to 5 indicating the cognitive depth/difficulty of the question (1=Recall, 5=Analysis)."),
+    explanation: z.string().describe("A concise explanation of why the answer is correct, derived from the context.")
   }))
 });
 
@@ -67,7 +68,8 @@ function getQuizGeneratorChain() {
        - If Medium is requested: focus on application of concepts and relationships (depth_score 3).
        - If Hard is requested: focus on deep analysis, edge cases, and complex problem-solving (depth_score 4-5).
     4. Provide the exact text of the correct answer in the correct_answer field.
-    5. Do NOT include phrases like "According to the context". State questions as objective facts based on the provided material.
+    5. Provide a concise explanation for the correct answer based on the context.
+    6. Do NOT include phrases like "According to the context". State questions as objective facts based on the provided material.
   
     {format_instructions}
   `);
