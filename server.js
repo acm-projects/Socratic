@@ -467,9 +467,18 @@ app.get("/users/:id/achievements", async (req, res) => {
       [userId]
     )
 
+    const iconsResult = await pool.query(
+      "SELECT id, icon_colored, icon_greyed FROM achievements"
+    )
+
     const earnedMap = {}
     earnedResult.rows.forEach(row => {
       earnedMap[row.achievement_id] = row.earned_at
+    })
+
+    const iconsMap = {}
+    iconsResult.rows.forEach(row => {
+      iconsMap[row.id] = { icon_colored: row.icon_colored, icon_greyed: row.icon_greyed }
     })
 
     const achievements = ACHIEVEMENT_LIST.map(a => ({
@@ -477,6 +486,8 @@ app.get("/users/:id/achievements", async (req, res) => {
       name: a.name,
       description: a.description,
       slug: a.slug,
+      icon_colored: iconsMap[String(a.id)]?.icon_colored || null,
+      icon_greyed: iconsMap[String(a.id)]?.icon_greyed || null,
       unlocked: !!earnedMap[String(a.id)],
       unlocked_at: earnedMap[String(a.id)] || null,
       user_name: userName
@@ -494,8 +505,41 @@ app.get("/users/:id/achievements", async (req, res) => {
 
 app.get("/users/:id/stats", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM xp_system WHERE user_id = $1", [req.params.id])
-    res.json(result.rows)
+    const userId = req.params.id
+
+    const quizStats = await pool.query(
+      "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
+      [userId]
+    )
+
+    const userResult = await pool.query(
+      'SELECT weekly_xp, streak FROM "User" WHERE id = $1',
+      [userId]
+    )
+
+    // Try to get message count from messages table
+    let aiMessages = 0
+    try {
+      const messageCount = await pool.query(
+        "SELECT COUNT(*) as ai_messages FROM messages WHERE chat_id IN (SELECT id FROM chats WHERE user_id = $1)",
+        [userId]
+      )
+      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0
+    } catch (e) {
+      // messages table may have different structure
+      aiMessages = 0
+    }
+
+    const user = userResult.rows[0] || {}
+    const stats = quizStats.rows[0]
+
+    res.json({
+      quizzes_taken: parseInt(stats.quizzes_taken) || 0,
+      weekly_xp: parseInt(user.weekly_xp) || 0,
+      ai_messages: aiMessages,
+      retakes_taken: parseInt(stats.retakes_taken) || 0,
+      streak: parseInt(user.streak) || 0
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
