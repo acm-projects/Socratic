@@ -5,6 +5,7 @@ const { getClassVectorStore } = require('../services/vectorService');
 const { getQuizGeneratorChain, parser } = require('../services/quizService');
 const topicModel = require('../models/topicModel');
 const quizModel = require('../models/quizModel');
+const classModel = require('../models/classModel');
 
 router.post('/generate', async (req, res, next) => {
   try {
@@ -67,6 +68,8 @@ router.post('/generate', async (req, res, next) => {
     console.log(`[QuizGen] ✅ Quiz generated successfully in ${quizDuration}s`);
 
     // 4. Resolve Topic ID
+    await classModel.ensureClassExists(classCode, userId);
+    
     let topicEntity = await topicModel.getTopicByNameAndClass(topic, classCode);
     if (!topicEntity) {
       console.log(`[QuizGen] 🆕 Creating new topic: ${topic} for ${classCode}`);

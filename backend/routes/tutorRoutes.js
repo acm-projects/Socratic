@@ -8,6 +8,7 @@ const router = express.Router();
 const { randomUUID } = require('crypto');
 const { getClassVectorStore } = require('../services/vectorService');
 const { evalChain, parser, getTutorChainWithHistory } = require('../services/tutorService');
+const classModel = require('../models/classModel');
 // We no longer use chatModel; we use sessionModel and topicModel instead.
 
 router.post('/chat', async (req, res, next) => {
@@ -19,6 +20,7 @@ router.post('/chat', async (req, res, next) => {
     }
 
     // 1. Resolve Topic ID (Official Schema requirement)
+    await classModel.ensureClassExists(classCode, userId);
     let topic = await topicModel.getTopicByNameAndClass(topicName, classCode);
     if (!topic) {
       console.log(`[Tutor] 🆕 Creating new topic: ${topicName} for ${classCode}`);

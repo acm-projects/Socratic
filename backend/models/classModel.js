@@ -11,12 +11,33 @@ const getClassByCode = async (code) => {
 };
 
 const createClass = async (data) => {
-  const { class_code, subject, name } = data;
+  const { class_code, subject, name, user_id } = data;
   const result = await db.query(
-    "INSERT INTO classes (class_code, subject, name) VALUES ($1, $2, $3) ON CONFLICT (class_code) DO UPDATE SET subject = EXCLUDED.subject, name = EXCLUDED.name RETURNING *",
-    [class_code, subject, name]
+    `INSERT INTO classes (class_code, subject, name, user_id) 
+     VALUES ($1, $2, $3, $4) 
+     ON CONFLICT (class_code) 
+     DO UPDATE SET subject = EXCLUDED.subject, name = EXCLUDED.name, user_id = EXCLUDED.user_id 
+     RETURNING *`,
+    [class_code, subject, name || class_code, user_id || null]
   );
   return result.rows[0];
+};
+
+/**
+ * Ensures a class exists in the database.
+ * If it doesn't, creates a placeholder record.
+ */
+const ensureClassExists = async (classCode, userId = null) => {
+  const existing = await getClassByCode(classCode);
+  if (existing) return existing;
+
+  console.log(`[ClassModel] 🛠️ Auto-provisioning placeholder class: ${classCode}`);
+  return await createClass({
+    class_code: classCode,
+    subject: 'General Study',
+    name: classCode,
+    user_id: userId
+  });
 };
 
 const deleteAllClasses = async () => {
@@ -28,5 +49,6 @@ module.exports = {
   getAllClasses,
   getClassByCode,
   createClass,
+  ensureClassExists,
   deleteAllClasses
 };
