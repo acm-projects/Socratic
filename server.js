@@ -34,6 +34,11 @@ app.use('/api/tutor', tutorRoutes)
 app.use('/api/ingest', ingestRoutes)
 app.use('/api/quizzes', quizRoutes)
 
+// --- Auto-Migration ---
+// Ensure the DB schema is up-to-date on startup
+const { runMigrations } = require('./backend/models/migrationModel');
+runMigrations();
+
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })
 })
