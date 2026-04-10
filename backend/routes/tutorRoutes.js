@@ -9,6 +9,7 @@ const { randomUUID } = require('crypto');
 const { getClassVectorStore } = require('../services/vectorService');
 const { evalChain, parser, getTutorChainWithHistory } = require('../services/tutorService');
 const classModel = require('../models/classModel');
+const userStatsModel = require('../models/userStatsModel');
 // We no longer use chatModel; we use sessionModel and topicModel instead.
 
 router.post('/chat', async (req, res, next) => {
@@ -139,6 +140,11 @@ router.post('/chat', async (req, res, next) => {
       sender: 'ai',
       content: aiContent
     });
+
+    // 8. Track ai_messages count + streak (fire-and-forget, non-blocking)
+    userStatsModel.incrementAiMessages(userId).catch(err =>
+      console.warn('[Tutor] ⚠️ Failed to increment ai_messages:', err.message)
+    );
 
     res.json({
       chatId,

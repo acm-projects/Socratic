@@ -57,7 +57,6 @@ const updateClassStreak = async (class_code, user_id) => {
     const lastDate = last_activity_date ? new Date(last_activity_date).toISOString().split('T')[0] : null
 
     if (lastDate === today) {
-      // Already studied today, no change
       return
     }
 
@@ -67,10 +66,8 @@ const updateClassStreak = async (class_code, user_id) => {
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
       if (lastDate === yesterdayStr) {
-        // Studied yesterday, increment
         newStreak = (streak || 0) + 1
       }
-      // else missed a day, reset to 1
     }
 
     await pool.query(
@@ -462,7 +459,6 @@ app.post("/sessions", async (req, res) => {
       [session_id, class_code, user_id, topic_id]
     )
 
-    // Update class streak when a session is created
     if (class_code && user_id) {
       await updateClassStreak(class_code, user_id)
     }
@@ -568,41 +564,54 @@ app.get("/users/:id/achievements", async (req, res) => {
 
 app.get("/users/:id/stats", async (req, res) => {
   try {
-    const userId = req.params.id
+    const userId = req.params.id;
 
-    const quizStats = await pool.query(
-      "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
-      [userId]
-    )
+    try {
+      const result = await pool.query(
+        `SELECT ai_messages, quizzes_taken, retakes_taken, streak, total_xp, weekly_xp, last_active_date
+         FROM "User" WHERE id = $1`,
+        [userId]
+      );
+      if (!result.rows[0]) return res.status(404).json({ error: "User not found" });
+      return res.json(result.rows[0]);
+    } catch (_) {
+    }
 
-    const userResult = await pool.query(
-      'SELECT weekly_xp, streak FROM "User" WHERE id = $1',
-      [userId]
-    )
+    const [quizStats, userResult] = await Promise.all([
+      pool.query(
+        "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
+        [userId]
+      ),
+      pool.query('SELECT weekly_xp, streak, total_xp FROM "User" WHERE id = $1', [userId])
+    ]);
 
-    let aiMessages = 0
+    if (!userResult.rows[0]) return res.status(404).json({ error: "User not found" });
+
+    let aiMessages = 0;
     try {
       const messageCount = await pool.query(
         "SELECT COUNT(*) as ai_messages FROM messages WHERE chat_id IN (SELECT id FROM chats WHERE user_id = $1)",
         [userId]
-      )
-      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0
-    } catch (e) {
-      aiMessages = 0
+      );
+      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0;
+    } catch (_) {
+      aiMessages = 0;
     }
 
-    const user = userResult.rows[0] || {}
-    const stats = quizStats.rows[0]
+    const user = userResult.rows[0];
+    const stats = quizStats.rows[0];
 
     res.json({
-      quizzes_taken: parseInt(stats.quizzes_taken) || 0,
-      weekly_xp: parseInt(user.weekly_xp) || 0,
       ai_messages: aiMessages,
+      quizzes_taken: parseInt(stats.quizzes_taken) || 0,
       retakes_taken: parseInt(stats.retakes_taken) || 0,
-      streak: parseInt(user.streak) || 0
-    })
+      streak: parseInt(user.streak) || 0,
+      total_xp: parseInt(user.total_xp) || 0,
+      weekly_xp: parseInt(user.weekly_xp) || 0,
+      last_active_date: null
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ error: error.message });
   }
 })
 
@@ -969,7 +978,6 @@ app.post("/quizzes", async (req, res) => {
       }
     }
 
-    // Update class streak
     try {
       const topicResult = await pool.query("SELECT class_code FROM topics WHERE id = $1", [topic_id])
       if (topicResult.rows[0]) {
@@ -979,9 +987,6 @@ app.post("/quizzes", async (req, res) => {
       console.error('[ClassStreak] Failed to update from quiz:', streakErr.message)
     }
 
-    // -----------------------------------------------------
-    // AUTO-UNLOCK ACHIEVEMENTS
-    // -----------------------------------------------------
     try {
       const allQuizzes = await pool.query(
         "SELECT score, retake_count FROM quizzes WHERE user_id = $1",
