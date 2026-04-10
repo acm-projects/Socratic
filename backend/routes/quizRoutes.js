@@ -8,7 +8,7 @@ const quizModel = require('../models/quizModel');
 
 router.post('/generate', async (req, res, next) => {
   try {
-    const { classCode, topic, numQuestions = 5, easy = true, medium = true, hard = false } = req.body;
+    const { classCode, topic, numQuestions = 5, difficulty = ["easy", "medium"], userId } = req.body;
 
     if (!classCode || !topic) {
       return res.status(400).json({ error: "Missing required fields: classCode, topic" });
@@ -16,11 +16,13 @@ router.post('/generate', async (req, res, next) => {
     
     const count = parseInt(numQuestions) || 5;
 
-    // Construct difficulty requirements based on switches
+    // Construct difficulty requirements based on the difficulty array
     const selectedLevels = [];
-    if (easy) selectedLevels.push("Easy (Recall/Definitions)");
-    if (medium) selectedLevels.push("Medium (Application/Relationships)");
-    if (hard) selectedLevels.push("Hard (Deep Analysis/Problem-Solving)");
+    const levels = Array.isArray(difficulty) ? difficulty : [];
+    
+    if (levels.includes("easy")) selectedLevels.push("Easy (Recall/Definitions)");
+    if (levels.includes("medium")) selectedLevels.push("Medium (Application/Relationships)");
+    if (levels.includes("hard")) selectedLevels.push("Hard (Deep Analysis/Problem-Solving)");
 
     const difficultyRequirements = selectedLevels.length > 0
       ? `Provide a balanced mix of questions at these difficulty levels: ${selectedLevels.join(", ")}.`
@@ -76,7 +78,6 @@ router.post('/generate', async (req, res, next) => {
     }
 
     // 5. Save Quiz Metadata to DB
-    const { userId } = req.body;
     if (!userId) {
       return res.status(400).json({ error: "userId is required to generate and save a quiz" });
     }
