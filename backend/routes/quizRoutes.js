@@ -98,7 +98,17 @@ router.post('/generate', async (req, res, next) => {
     const questions = Array.isArray(result) ? result : (result.questions || []);
     await quizModel.saveQuestions(quizId, questions);
 
-    // 7. Return generated quiz data with quizId
+    // 7. Update daily heatmap metrics (questions asked + avg score for that topic)
+    const numQuestionsGenerated = questions.length;
+    await quizModel.updateTopicMetrics({
+      userId,
+      classCode,
+      topicId: topicEntity.id,
+      questionsAsked: numQuestionsGenerated,
+      score: 0 // Score starts at 0 until the user submits answers
+    });
+
+    // 8. Return generated quiz data with quizId
     res.json({
       success: true,
       quizId: quizId,
@@ -121,6 +131,19 @@ router.get('/:id/questions', async (req, res, next) => {
       return res.status(404).json({ error: "Quiz not found or has no questions" });
     }
     res.json(questions);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * GET /api/quizzes/users/:id
+ * Returns all quizzes for a user grouped by topic, with quiz_count and avg_score.
+ */
+router.get('/users/:id', async (req, res, next) => {
+  try {
+    const quizzes = await quizModel.getQuizzesByUser(req.params.id);
+    res.json(quizzes);
   } catch (error) {
     next(error);
   }

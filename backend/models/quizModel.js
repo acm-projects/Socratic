@@ -39,8 +39,59 @@ const getQuestionsByQuizId = async (quizId) => {
   return result.rows;
 };
 
+/**
+ * Gets all quizzes for a user, grouped by topic with count and avg score.
+ */
+const getQuizzesByUser = async (userId) => {
+  const result = await db.query(
+    `SELECT
+       t.id AS topic_id,
+       t.name AS topic_name,
+       t.class_code,
+       COUNT(q.id) AS quiz_count,
+       ROUND(AVG(q.score), 1) AS avg_score,
+       MAX(q.date) AS last_taken
+     FROM quizzes q
+     JOIN topics t ON t.id = q.topic_id
+     WHERE q.user_id = $1
+     GROUP BY t.id, t.name, t.class_code
+     ORDER BY last_taken DESC`,
+    [userId]
+  );
+  return result.rows.map(row => ({
+    topic_id: row.topic_id,
+    topic_name: row.topic_name,
+    class_code: row.class_code,
+    quiz_count: parseInt(row.quiz_count),
+    avg_score: parseFloat(row.avg_score) || 0,
+    last_taken: row.last_taken
+  }));
+};
+
+/**
+ * Updates daily_topic_metrics after a quiz is taken.
+ * Increments questions_asked and recomputes avg_score for that day.
+ */
+const updateTopicMetrics = async ({ userId, classCode, topicId, questionsAsked, score }) => {
+  const today = new Date().toISOString().split('T')[0];
+  await db.query(
+    `INSERT INTO daily_topic_metrics (user_id, class_code, topic_id, metric_date, questions_asked, avg_score)
+     VALUES ($1, $2, $3, $4, $5, $6)
+     ON CONFLICT (user_id, class_code, topic_id, metric_date)
+     DO UPDATE SET
+       questions_asked = daily_topic_metrics.questions_asked + EXCLUDED.questions_asked,
+       avg_score = ROUND(
+         (daily_topic_metrics.avg_score * daily_topic_metrics.questions_asked + EXCLUDED.avg_score * EXCLUDED.questions_asked)
+         / (daily_topic_metrics.questions_asked + EXCLUDED.questions_asked),
+       2)`,
+    [userId, classCode, topicId, today, questionsAsked, score]
+  );
+};
+
 module.exports = {
   createQuiz,
   saveQuestions,
-  getQuestionsByQuizId
+  getQuestionsByQuizId,
+  getQuizzesByUser,
+  updateTopicMetrics
 };
