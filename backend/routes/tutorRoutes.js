@@ -31,7 +31,9 @@ router.post('/chat', async (req, res, next) => {
 
     // 2. Ensure Session Exists in Official table
     let chatId = providedChatId || randomUUID();
-    const sessionTitle = `${classCode} - ${topicName}`;
+    
+    // Use the first message as the title (truncated for readability)
+    const sessionTitle = message.length > 50 ? message.substring(0, 47) + "..." : message;
     const session = await sessionModel.upsertTutorSession({
       session_id: chatId,
       class_code: classCode,
