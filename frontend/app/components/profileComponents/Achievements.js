@@ -1,31 +1,63 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useSession } from "next-auth/react"
 
-const achievements = [
-  { id: 1,  label: "First Quiz Completed",          unlocked: true,  colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
-  { id: 2,  label: "10 Quizzes Completed",           unlocked: true,  colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
-  { id: 3,  label: "First Retake Completed",         unlocked: true,  colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
-  { id: 4,  label: "20 Chat Messages Sent",          unlocked: true,  colored: "/icons/chat-purple.png",   greyed: "/icons/chat-greyed.png" },
-  { id: 5,  label: "Perfect Score on a Quiz",        unlocked: false,  colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
-  { id: 6,  label: "5 Day Study Streak",             unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
-  { id: 7,  label: "5 Perfect Quiz Scores",          unlocked: false, colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
-  { id: 8,  label: "10 Perfect Quiz Scores",         unlocked: false, colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
-  { id: 9,  label: "5 Retakes Completed",            unlocked: false, colored: "/icons/camera-purple.png", greyed: "/icons/cameria-greyed.png" },
-  { id: 10, label: "10 Day Study Streak",            unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
-  { id: 11, label: "First Study Session Scheduled",  unlocked: false, colored: "/icons/chat-green.png",    greyed: "/icons/chat-greyed.png" },
-  { id: 12, label: "10 Perfect Score Questions",     unlocked: false, colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
-  { id: 13, label: "20 Retakes Completed",           unlocked: false, colored: "/icons/camera-purple.png", greyed: "/icons/cameria-greyed.png" },
-  { id: 14, label: "10 Study Sessions Scheduled",    unlocked: false, colored: "/icons/chat-green.png",    greyed: "/icons/chat-greyed.png" },
-  { id: 15, label: "30 Day Study Streak",            unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
-  { id: 16, label: "20 Perfect Score Questions",     unlocked: false, colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
-  { id: 17, label: "100 Chat Messages Sent",         unlocked: false, colored: "/icons/chat-purple.png",   greyed: "/icons/chat-greyed.png" },
-  { id: 18, label: "50 Perfect Score Questions",     unlocked: false, colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
-  { id: 19, label: "50 Day Study Streak",            unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
-  { id: 20, label: "20 Study Sessions Scheduled",    unlocked: false, colored: "/icons/chat-green.png",    greyed: "/icons/chat-greyed.png" },
-]
+  const achievements = [
+    { id: 1,  label: "First Quiz Completed",          unlocked: true,  colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
+    { id: 2,  label: "10 Quizzes Completed",           unlocked: true,  colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
+    { id: 3,  label: "First Retake Completed",         unlocked: true,  colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
+    { id: 4,  label: "20 Chat Messages Sent",          unlocked: true,  colored: "/icons/chat-purple.png",   greyed: "/icons/chat-greyed.png" },
+    { id: 5,  label: "Perfect Score on a Quiz",        unlocked: false,  colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
+    { id: 6,  label: "5 Day Study Streak",             unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
+    { id: 7,  label: "5 Perfect Quiz Scores",          unlocked: false, colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
+    { id: 8,  label: "10 Perfect Quiz Scores",         unlocked: false, colored: "/icons/pen-blue.png",      greyed: "/icons/pen-greyed.png" },
+    { id: 9,  label: "5 Retakes Completed",            unlocked: false, colored: "/icons/camera-purple.png", greyed: "/icons/cameria-greyed.png" },
+    { id: 10, label: "10 Day Study Streak",            unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
+    { id: 11, label: "First Study Session Scheduled",  unlocked: false, colored: "/icons/chat-green.png",    greyed: "/icons/chat-greyed.png" },
+    { id: 12, label: "10 Perfect Score Questions",     unlocked: false, colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
+    { id: 13, label: "20 Retakes Completed",           unlocked: false, colored: "/icons/camera-purple.png", greyed: "/icons/cameria-greyed.png" },
+    { id: 14, label: "10 Study Sessions Scheduled",    unlocked: false, colored: "/icons/chat-green.png",    greyed: "/icons/chat-greyed.png" },
+    { id: 15, label: "30 Day Study Streak",            unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
+    { id: 16, label: "20 Perfect Score Questions",     unlocked: false, colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
+    { id: 17, label: "100 Chat Messages Sent",         unlocked: false, colored: "/icons/chat-purple.png",   greyed: "/icons/chat-greyed.png" },
+    { id: 18, label: "50 Perfect Score Questions",     unlocked: false, colored: "/icons/medal-green.png",   greyed: "/icons/medal-greyed.png" },
+    { id: 19, label: "50 Day Study Streak",            unlocked: false, colored: "/icons/streak-blue.png",   greyed: "/icons/streak-greyed.png" },
+    { id: 20, label: "20 Study Sessions Scheduled",    unlocked: false, colored: "/icons/chat-green.png",    greyed: "/icons/chat-greyed.png" },
+  ]
 
 export default function Achievements() {
+  const { data: session } = useSession()
+  const [achievements, setAchievements] = useState([])  
+
+
+
+  useEffect(() => { 
+    if (!session) return
+    fetch(`/backend/users/${session.user.id}/achievements`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("achievements:", data)
+        const formatted = data.map(a => ({
+        id: a.id,
+        label: a.name,
+        unlocked: a.unlocked,
+        colored: a.icon_colored,
+        greyed: a.icon_greyed
+      }))
+
+        setAchievements(formatted)
+      })
+      .catch(err => console.error(err));
+   }, [session])
+
+
+
+
+
+
+
+
   const [page, setPage] = useState(0)
   const perPage = 5
   const totalPages = Math.ceil(achievements.length / perPage)

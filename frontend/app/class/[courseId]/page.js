@@ -7,6 +7,11 @@ import UpcomingTasks from "../../components/classPageComponents/classUpcomingTas
 import CourseMaterial from "../../components/classPageComponents/CourseMaterial"
 import TopicsPanel from "../../components/classPageComponents/TopicsPanel.js"
 import QuizModal from "../../components/QuizModal"
+import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
+
+
+
 
 
 const courseColors = {
@@ -45,6 +50,8 @@ const topics = [
 ]
 
 export default function HomePage() {
+  const router = useRouter()
+  const { courseId } = useParams()
   const [showQuizModal, setShowQuizModal] = useState(false)
   
   return (
@@ -90,14 +97,14 @@ export default function HomePage() {
         {/* placeholders for ai chat and quiz cards */}
         <div className="flex gap-5 items-start">
             <div className="flex flex-col gap-4 w-100 h-full">
-            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1" />
-            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1" />
+            <div onClick={() => router.push(`/class/${courseId}/chat`)} className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1" />
+            <div onClick={() => setShowQuizModal(true)} className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1" />
         </div>
 
         {/* topics/past quizzes */}
 
         <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex-1">
-            <TopicsPanel topics={topics} onQuizClick={() => setShowQuizModal(true)} />
+        <TopicsPanel topics={topics} onQuizClick={() => setShowQuizModal(true)} />
         </div>
         </div>
 
@@ -120,7 +127,7 @@ export default function HomePage() {
             <CourseMaterial files={courseMaterials} />
         </div>
     </div>
-    {showQuizModal && <QuizModal onClose={() => setShowQuizModal(false)} />}
+    {showQuizModal && <QuizModal onClose={() => setShowQuizModal(false)} courseId={courseId} />}
     </div>
     
   )

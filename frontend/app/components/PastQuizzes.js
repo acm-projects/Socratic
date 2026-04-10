@@ -1,10 +1,16 @@
-const quizzes = [
-  { name: "Trees",      date: "Mar 1, 2025",  score: 92 },
-  { name: "Trees",      date: "Feb 28, 2025", score: 74 },
-  { name: "Graphs",     date: "Feb 21, 2025", score: 98 },
-  { name: "Set Theory", date: "Feb 14, 2025", score: 64 },
-  { name: "Set Theory", date: "Feb 14, 2025", score: 64 },
-]
+"use client"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+
+
+// const quizzes = [
+//   { name: "Trees",      date: "Mar 1, 2025",  score: 92 },
+//   { name: "Trees",      date: "Feb 28, 2025", score: 74 },
+//   { name: "Graphs",     date: "Feb 21, 2025", score: 98 },
+//   { name: "Set Theory", date: "Feb 14, 2025", score: 64 },
+//   { name: "Set Theory", date: "Feb 14, 2025", score: 64 },
+// ]
 
 import { Plus_Jakarta_Sans } from 'next/font/google'
 
@@ -26,7 +32,37 @@ function ScoreBadge({ score }) {
   )
 }
 
-export default function PastQuizzes() {
+export default function PastQuizzes({ topics, onRetake, onReview }) {
+
+  const router = useRouter()
+  const {data: session} = useSession()
+  const [quizzes, setQuizzes] = useState([])
+
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    fetch(`/backend/users/${session.user.id}/quizzes`)
+      .then(res => res.json())
+      .then(data => {
+        console.log("quizzes:", data)
+        const formatted = data.
+          filter(q => topics.some(t => t.id === q.topic_id))  // 👈 only quizzes from this class's topics
+          .map(q => ({
+          id: q.id,
+          topic_id: q.topic_id, 
+          name: topics.find(t => t.id === q.topic_id)?.name || "Unknown",  // lookup name
+          score: q.score,
+          date: new Date(q.date).toLocaleDateString(),
+          retake_count: q.retake_count,
+        }));
+        setQuizzes(formatted);
+      })
+      .catch(err => console.error(err))
+  }, [session])
+
+
+
+
+
   return (
     <div className="flex flex-col gap-2">
       {quizzes.map((quiz, i) => (
@@ -43,10 +79,14 @@ export default function PastQuizzes() {
 
           {/* Buttons */}
           <div className="flex gap-2">
-            <button className="text-xs font-medium text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50">
+            <button 
+            onClick={() => onRetake(quiz.topic_id)}  
+            className="text-xs font-medium text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50">
               Retake
             </button>
-            <button className="text-xs font-bold text-white bg-[#3a9e94] px-3 py-1 rounded-lg hover:bg-[#455bc8]">
+            <button 
+            onClick={() => onReview(quiz.topic_id, quiz.id)}
+            className="text-xs font-bold text-white bg-[#3a9e94] px-3 py-1 rounded-lg hover:bg-[#455bc8]">
               Review
             </button>
             {/* previous color was #3959e9 */}

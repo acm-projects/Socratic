@@ -2,15 +2,99 @@
 import { useState } from "react"
 import { X, Clock, ChevronDown, ChevronUp } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect } from "react"
 
-export default function QuizModal({ onClose }) {
+export default function QuizModal({ onClose, courseId }) {
   const router = useRouter()  
+  const { data: session } = useSession()
+
   const [topic, setTopic] = useState("")
+  const [topics, setTopics] = useState([]) 
+
   const [questions, setQuestions] = useState(10)
   const [timer, setTimer] = useState("0h 15m")
   const [easy, setEasy] = useState(true)
   const [medium, setMedium] = useState(true)
   const [hard, setHard] = useState(true)
+
+    // fetch topics
+    useEffect(() => {
+        if (!courseId) return
+        fetch(`/backend/classes/${courseId}/topics`)
+            .then(res => res.json())
+            .then(data => {
+                console.log("topics:", data)
+                setTopics(data)
+                if (data.length > 0) setTopic(data[0].name)
+            })
+            .catch(err => console.error(err))
+    }, [courseId])
+
+
+
+//   async function handleStartQuiz() {
+//       console.log("handleStartQuiz called", { session: session?.user?.id, topic, courseId })
+
+//     if (!session?.user?.id) return
+//     if (!topic) return
+
+//     const difficulty = []
+//     if (easy) difficulty.push("easy")
+//     if (medium) difficulty.push("medium")
+//     if (hard) difficulty.push("hard") 
+    
+//     const res = await fetch("/backend/api/quizzes/generate",
+//        {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({  
+//         classCode: courseId,
+//         topic: topic,
+//         numQuestions: questions,
+//         easy: easy,
+//         medium: medium,
+//         hard: hard, 
+//         userId : session.user.id
+
+//       })
+//     })
+
+//     const quizData = await res.json()
+//     console.log("quiz:", quizData)
+//     const quizId = quizData.quizId
+//     onClose()
+//     router.push(`/class/${courseId}/quiz/${quizId}`)
+// }
+
+async function handleStartQuiz() {
+try {
+    const res = await fetch("/backend/api/quizzes/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({  
+            classCode: courseId,
+            topic: topic,
+            numQuestions: questions,
+            easy: easy,
+            medium: medium,
+            hard: hard, 
+            userId: session.user.id
+        })
+    })
+    const quizData = await res.json()
+    console.log("quiz:", quizData)
+    const quizId = quizData.quizId
+    onClose()
+    router.push(`/class/${courseId}/quiz/${quizId}`)
+} catch (err) {
+    console.error("Quiz error:", err)
+}
+}
+
+
+
+
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -38,10 +122,9 @@ export default function QuizModal({ onClose }) {
                 onChange={(e) => setTopic(e.target.value)}
                 className="w-full border border-gray-100 rounded-xl px-4 py-3 text-sm bg-gray-50 text-gray-600 appearance-none cursor-pointer pr-10"
               >
-                <option value="" disabled>Trees</option>
-                <option>Trees</option>
-                <option>Counting</option>
-                <option>Graphs</option>
+                {topics.map((t) => (
+                <option key={t.id} value={t.name}>{t.name}</option>
+            ))}
               </select>
               <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
             </div>
@@ -109,10 +192,7 @@ export default function QuizModal({ onClose }) {
 
         {/* Start Button */}
         <button
-            onClick={() => {
-                onClose()
-                router.push("/quiz")
-            }}
+            onClick={handleStartQuiz}
             className="self-center bg-[#4a68eb] hover:bg-[#455bc8] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
             Start Quiz
         </button>

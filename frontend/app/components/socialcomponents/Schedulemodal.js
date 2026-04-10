@@ -58,7 +58,7 @@ export default function Schedulemodal({onClose}){
 
 
         try {
-        const res = await fetch("http://3.128.186.118:5000/api/calendar/create-event", {
+        const res = await fetch("/backend/api/calendar/create-event", {
                 method: "POST",
                 headers: {
                  "Content-Type": "application/json",

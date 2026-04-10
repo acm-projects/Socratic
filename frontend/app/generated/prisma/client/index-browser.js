@@ -125,7 +125,8 @@ exports.Prisma.AchievementsScalarFieldEnum = {
   name: 'name',
   description: 'description',
   xp_reward: 'xp_reward',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  slug: 'slug'
 };
 
 exports.Prisma.Chat_historyScalarFieldEnum = {
@@ -159,7 +160,8 @@ exports.Prisma.Daily_topic_metricsScalarFieldEnum = {
   class_code: 'class_code',
   topic_id: 'topic_id',
   metric_date: 'metric_date',
-  avg_score: 'avg_score'
+  avg_score: 'avg_score',
+  questions_asked: 'questions_asked'
 };
 
 exports.Prisma.Friend_requestsScalarFieldEnum = {
@@ -176,7 +178,9 @@ exports.Prisma.FriendsScalarFieldEnum = {
   friend_id: 'friend_id',
   created_at: 'created_at',
   streak: 'streak',
-  total_xp: 'total_xp'
+  total_xp: 'total_xp',
+  first_name: 'first_name',
+  last_name: 'last_name'
 };
 
 exports.Prisma.TopicsScalarFieldEnum = {
@@ -235,9 +239,63 @@ exports.Prisma.AccountScalarFieldEnum = {
   updatedat: 'updatedat'
 };
 
+exports.Prisma.ChatsScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  created_at: 'created_at',
+  accumulated_score: 'accumulated_score'
+};
+
+exports.Prisma.Langchain_chat_messagesScalarFieldEnum = {
+  id: 'id',
+  session_id: 'session_id',
+  message: 'message'
+};
+
+exports.Prisma.MessagesScalarFieldEnum = {
+  id: 'id',
+  chat_id: 'chat_id',
+  role: 'role',
+  content: 'content',
+  score: 'score',
+  reason: 'reason',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Quiz_questionsScalarFieldEnum = {
+  id: 'id',
+  quiz_id: 'quiz_id',
+  question: 'question',
+  user_answer: 'user_answer',
+  correct_answer: 'correct_answer',
+  is_correct: 'is_correct',
+  depth_score: 'depth_score'
+};
+
+exports.Prisma.QuizzesScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  topic_id: 'topic_id',
+  score: 'score',
+  date: 'date',
+  retake_count: 'retake_count'
+};
+
+exports.Prisma.Class_engagementScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  class_name: 'class_name',
+  question_count: 'question_count',
+  week_start: 'week_start'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -248,6 +306,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 
@@ -263,7 +327,13 @@ exports.Prisma.ModelName = {
   user_achievements: 'user_achievements',
   xp_system: 'xp_system',
   User: 'User',
-  Account: 'Account'
+  Account: 'Account',
+  chats: 'chats',
+  langchain_chat_messages: 'langchain_chat_messages',
+  messages: 'messages',
+  quiz_questions: 'quiz_questions',
+  quizzes: 'quizzes',
+  class_engagement: 'class_engagement'
 };
 
 /**

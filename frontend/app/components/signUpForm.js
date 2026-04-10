@@ -24,6 +24,7 @@ export default function Signup() {
 
 
   useEffect(() => {
+
     if (status === 'loading') return
     if (!session) return
     if (!session.isNewUser) router.replace('/home')  // existing user goes to profile page instead of signup

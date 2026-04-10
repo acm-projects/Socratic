@@ -1,26 +1,52 @@
 "use client"
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 
-const courseData = [
-  { name: "CS2305",   value: 34, color: "#9C52E3", light: "#B078EA" },
-  { name: "CS101",    value: 28, color: "#4E78FF", light: "#7A9BFF" },
-  { name: "MATH2414", value: 22, color: "#15B7E6", light: "#4DCBEE" },
-  { name: "PHY102",   value: 18, color: "#52DEAF", light: "#7EEABC" },
-]
+// const courseData = [
+//   { name: "CS2305",   value: 34, color: "#9C52E3", light: "#B078EA" },
+//   { name: "CS101",    value: 28, color: "#4E78FF", light: "#7A9BFF" },
+//   { name: "MATH2414", value: 22, color: "#15B7E6", light: "#4DCBEE" },
+//   { name: "PHY102",   value: 18, color: "#52DEAF", light: "#7EEABC" },
+// ]
 
 export default function EngagementChart() {
-  return (
+  // fetch data for pie chart
+  const [courseData, setCourseData] = useState([])
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (!session?.user?.id || !session?.accessToken) return;
+    fetch(`/backend/users/${session.user.id}/engagement/class-distribution`)
+      .then(res => res.json())
+      .then(data => {
+        const formatted = data.map(c => ({
+          name: c.class_name,
+          class_name: c.class_name,
+          value: c.question_count,
+          question_count: c.question_count,
+          color: c.color,
+          light: c.light
+        }));
+
+        setCourseData(formatted);
+      });
+      }, [session]);
+    
+
+
+    return (
     <div className="flex items-center w-full h-full gap-4">
 
       {/* gradient defs — hidden, just registers the gradients */}
       <svg width="0" height="0" style={{ position: "absolute" }}>
         <defs>
-          {courseData.map((c) => (
-            <linearGradient key={c.name} id={`grad-${c.name}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor={c.light} stopOpacity={1} />
-              <stop offset="100%" stopColor={c.color} stopOpacity={1} />
-            </linearGradient>
-          ))}
+        {courseData.map((c, i) => (
+          <linearGradient key={i} id={`grad-${i}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor={c.light} stopOpacity={1} />
+            <stop offset="100%" stopColor={c.color} stopOpacity={1} />
+          </linearGradient>
+        ))}
         </defs>
       </svg>
 
@@ -36,9 +62,9 @@ export default function EngagementChart() {
               stroke="none"
               paddingAngle={2}
             >
-              {courseData.map((c) => (
-                <Cell key={c.name} fill={`url(#grad-${c.name})`} />
-              ))}
+          {courseData.map((c, i) => (
+            <Cell key={i} fill={`url(#grad-${i})`} />
+            ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
@@ -52,12 +78,12 @@ export default function EngagementChart() {
         </div>
 
         {courseData.map((course) => (
-          <div key={course.name} className="flex items-center justify-between border-b border-gray-50 pb-1">
+          <div key={course.class_name} className="flex items-center justify-between border-b border-gray-50 pb-1">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: course.color }} />
-              <span className="text-xs font-medium text-gray-500">{course.name}</span>
+              <span className="text-xs font-medium text-gray-500">{course.class_name}</span>
             </div>
-            <span className="text-xs font-bold" style={{ color: course.color }}>{course.value}</span>
+            <span className="text-xs font-bold" style={{ color: course.color }}>{course.question_count}</span>
           </div>
         ))}
       </div>

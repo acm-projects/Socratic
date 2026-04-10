@@ -73,6 +73,36 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
+/**
+ * Model chats
+ * 
+ */
+export type chats = $Result.DefaultSelection<Prisma.$chatsPayload>
+/**
+ * Model langchain_chat_messages
+ * 
+ */
+export type langchain_chat_messages = $Result.DefaultSelection<Prisma.$langchain_chat_messagesPayload>
+/**
+ * Model messages
+ * 
+ */
+export type messages = $Result.DefaultSelection<Prisma.$messagesPayload>
+/**
+ * Model quiz_questions
+ * 
+ */
+export type quiz_questions = $Result.DefaultSelection<Prisma.$quiz_questionsPayload>
+/**
+ * Model quizzes
+ * 
+ */
+export type quizzes = $Result.DefaultSelection<Prisma.$quizzesPayload>
+/**
+ * Model class_engagement
+ * 
+ */
+export type class_engagement = $Result.DefaultSelection<Prisma.$class_engagementPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -314,6 +344,66 @@ export class PrismaClient<
     * ```
     */
   get account(): Prisma.AccountDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chats`: Exposes CRUD operations for the **chats** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Chats
+    * const chats = await prisma.chats.findMany()
+    * ```
+    */
+  get chats(): Prisma.chatsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.langchain_chat_messages`: Exposes CRUD operations for the **langchain_chat_messages** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Langchain_chat_messages
+    * const langchain_chat_messages = await prisma.langchain_chat_messages.findMany()
+    * ```
+    */
+  get langchain_chat_messages(): Prisma.langchain_chat_messagesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.messages`: Exposes CRUD operations for the **messages** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Messages
+    * const messages = await prisma.messages.findMany()
+    * ```
+    */
+  get messages(): Prisma.messagesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.quiz_questions`: Exposes CRUD operations for the **quiz_questions** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Quiz_questions
+    * const quiz_questions = await prisma.quiz_questions.findMany()
+    * ```
+    */
+  get quiz_questions(): Prisma.quiz_questionsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.quizzes`: Exposes CRUD operations for the **quizzes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Quizzes
+    * const quizzes = await prisma.quizzes.findMany()
+    * ```
+    */
+  get quizzes(): Prisma.quizzesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.class_engagement`: Exposes CRUD operations for the **class_engagement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Class_engagements
+    * const class_engagements = await prisma.class_engagement.findMany()
+    * ```
+    */
+  get class_engagement(): Prisma.class_engagementDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -759,7 +849,13 @@ export namespace Prisma {
     user_achievements: 'user_achievements',
     xp_system: 'xp_system',
     User: 'User',
-    Account: 'Account'
+    Account: 'Account',
+    chats: 'chats',
+    langchain_chat_messages: 'langchain_chat_messages',
+    messages: 'messages',
+    quiz_questions: 'quiz_questions',
+    quizzes: 'quizzes',
+    class_engagement: 'class_engagement'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -775,7 +871,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "achievements" | "chat_history" | "chat_sessions" | "classes" | "daily_topic_metrics" | "friend_requests" | "friends" | "topics" | "user_achievements" | "xp_system" | "user" | "account"
+      modelProps: "achievements" | "chat_history" | "chat_sessions" | "classes" | "daily_topic_metrics" | "friend_requests" | "friends" | "topics" | "user_achievements" | "xp_system" | "user" | "account" | "chats" | "langchain_chat_messages" | "messages" | "quiz_questions" | "quizzes" | "class_engagement"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1667,6 +1763,450 @@ export namespace Prisma {
           }
         }
       }
+      chats: {
+        payload: Prisma.$chatsPayload<ExtArgs>
+        fields: Prisma.chatsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.chatsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.chatsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>
+          }
+          findFirst: {
+            args: Prisma.chatsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.chatsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>
+          }
+          findMany: {
+            args: Prisma.chatsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>[]
+          }
+          create: {
+            args: Prisma.chatsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>
+          }
+          createMany: {
+            args: Prisma.chatsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.chatsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>[]
+          }
+          delete: {
+            args: Prisma.chatsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>
+          }
+          update: {
+            args: Prisma.chatsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>
+          }
+          deleteMany: {
+            args: Prisma.chatsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.chatsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.chatsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>[]
+          }
+          upsert: {
+            args: Prisma.chatsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$chatsPayload>
+          }
+          aggregate: {
+            args: Prisma.ChatsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChats>
+          }
+          groupBy: {
+            args: Prisma.chatsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.chatsCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatsCountAggregateOutputType> | number
+          }
+        }
+      }
+      langchain_chat_messages: {
+        payload: Prisma.$langchain_chat_messagesPayload<ExtArgs>
+        fields: Prisma.langchain_chat_messagesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.langchain_chat_messagesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.langchain_chat_messagesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>
+          }
+          findFirst: {
+            args: Prisma.langchain_chat_messagesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.langchain_chat_messagesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>
+          }
+          findMany: {
+            args: Prisma.langchain_chat_messagesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>[]
+          }
+          create: {
+            args: Prisma.langchain_chat_messagesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>
+          }
+          createMany: {
+            args: Prisma.langchain_chat_messagesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.langchain_chat_messagesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>[]
+          }
+          delete: {
+            args: Prisma.langchain_chat_messagesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>
+          }
+          update: {
+            args: Prisma.langchain_chat_messagesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>
+          }
+          deleteMany: {
+            args: Prisma.langchain_chat_messagesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.langchain_chat_messagesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.langchain_chat_messagesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>[]
+          }
+          upsert: {
+            args: Prisma.langchain_chat_messagesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$langchain_chat_messagesPayload>
+          }
+          aggregate: {
+            args: Prisma.Langchain_chat_messagesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLangchain_chat_messages>
+          }
+          groupBy: {
+            args: Prisma.langchain_chat_messagesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Langchain_chat_messagesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.langchain_chat_messagesCountArgs<ExtArgs>
+            result: $Utils.Optional<Langchain_chat_messagesCountAggregateOutputType> | number
+          }
+        }
+      }
+      messages: {
+        payload: Prisma.$messagesPayload<ExtArgs>
+        fields: Prisma.messagesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.messagesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.messagesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>
+          }
+          findFirst: {
+            args: Prisma.messagesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.messagesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>
+          }
+          findMany: {
+            args: Prisma.messagesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>[]
+          }
+          create: {
+            args: Prisma.messagesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>
+          }
+          createMany: {
+            args: Prisma.messagesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.messagesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>[]
+          }
+          delete: {
+            args: Prisma.messagesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>
+          }
+          update: {
+            args: Prisma.messagesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>
+          }
+          deleteMany: {
+            args: Prisma.messagesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.messagesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.messagesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>[]
+          }
+          upsert: {
+            args: Prisma.messagesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$messagesPayload>
+          }
+          aggregate: {
+            args: Prisma.MessagesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessages>
+          }
+          groupBy: {
+            args: Prisma.messagesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessagesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.messagesCountArgs<ExtArgs>
+            result: $Utils.Optional<MessagesCountAggregateOutputType> | number
+          }
+        }
+      }
+      quiz_questions: {
+        payload: Prisma.$quiz_questionsPayload<ExtArgs>
+        fields: Prisma.quiz_questionsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.quiz_questionsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.quiz_questionsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>
+          }
+          findFirst: {
+            args: Prisma.quiz_questionsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.quiz_questionsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>
+          }
+          findMany: {
+            args: Prisma.quiz_questionsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>[]
+          }
+          create: {
+            args: Prisma.quiz_questionsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>
+          }
+          createMany: {
+            args: Prisma.quiz_questionsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.quiz_questionsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>[]
+          }
+          delete: {
+            args: Prisma.quiz_questionsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>
+          }
+          update: {
+            args: Prisma.quiz_questionsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>
+          }
+          deleteMany: {
+            args: Prisma.quiz_questionsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.quiz_questionsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.quiz_questionsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>[]
+          }
+          upsert: {
+            args: Prisma.quiz_questionsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quiz_questionsPayload>
+          }
+          aggregate: {
+            args: Prisma.Quiz_questionsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuiz_questions>
+          }
+          groupBy: {
+            args: Prisma.quiz_questionsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Quiz_questionsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.quiz_questionsCountArgs<ExtArgs>
+            result: $Utils.Optional<Quiz_questionsCountAggregateOutputType> | number
+          }
+        }
+      }
+      quizzes: {
+        payload: Prisma.$quizzesPayload<ExtArgs>
+        fields: Prisma.quizzesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.quizzesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.quizzesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>
+          }
+          findFirst: {
+            args: Prisma.quizzesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.quizzesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>
+          }
+          findMany: {
+            args: Prisma.quizzesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>[]
+          }
+          create: {
+            args: Prisma.quizzesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>
+          }
+          createMany: {
+            args: Prisma.quizzesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.quizzesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>[]
+          }
+          delete: {
+            args: Prisma.quizzesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>
+          }
+          update: {
+            args: Prisma.quizzesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>
+          }
+          deleteMany: {
+            args: Prisma.quizzesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.quizzesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.quizzesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>[]
+          }
+          upsert: {
+            args: Prisma.quizzesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$quizzesPayload>
+          }
+          aggregate: {
+            args: Prisma.QuizzesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuizzes>
+          }
+          groupBy: {
+            args: Prisma.quizzesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuizzesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.quizzesCountArgs<ExtArgs>
+            result: $Utils.Optional<QuizzesCountAggregateOutputType> | number
+          }
+        }
+      }
+      class_engagement: {
+        payload: Prisma.$class_engagementPayload<ExtArgs>
+        fields: Prisma.class_engagementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.class_engagementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.class_engagementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>
+          }
+          findFirst: {
+            args: Prisma.class_engagementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.class_engagementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>
+          }
+          findMany: {
+            args: Prisma.class_engagementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>[]
+          }
+          create: {
+            args: Prisma.class_engagementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>
+          }
+          createMany: {
+            args: Prisma.class_engagementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.class_engagementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>[]
+          }
+          delete: {
+            args: Prisma.class_engagementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>
+          }
+          update: {
+            args: Prisma.class_engagementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>
+          }
+          deleteMany: {
+            args: Prisma.class_engagementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.class_engagementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.class_engagementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>[]
+          }
+          upsert: {
+            args: Prisma.class_engagementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_engagementPayload>
+          }
+          aggregate: {
+            args: Prisma.Class_engagementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateClass_engagement>
+          }
+          groupBy: {
+            args: Prisma.class_engagementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Class_engagementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.class_engagementCountArgs<ExtArgs>
+            result: $Utils.Optional<Class_engagementCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1787,6 +2327,12 @@ export namespace Prisma {
     xp_system?: xp_systemOmit
     user?: UserOmit
     account?: AccountOmit
+    chats?: chatsOmit
+    langchain_chat_messages?: langchain_chat_messagesOmit
+    messages?: messagesOmit
+    quiz_questions?: quiz_questionsOmit
+    quizzes?: quizzesOmit
+    class_engagement?: class_engagementOmit
   }
 
   /* Types for Logging */
@@ -2020,6 +2566,7 @@ export namespace Prisma {
   export type UserCountOutputType = {
     Account: number
     chat_sessions: number
+    class_engagement: number
     daily_topic_metrics: number
     friend_requests_friend_requests_receiver_idTousers: number
     friend_requests_friend_requests_sender_idTousers: number
@@ -2032,6 +2579,7 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Account?: boolean | UserCountOutputTypeCountAccountArgs
     chat_sessions?: boolean | UserCountOutputTypeCountChat_sessionsArgs
+    class_engagement?: boolean | UserCountOutputTypeCountClass_engagementArgs
     daily_topic_metrics?: boolean | UserCountOutputTypeCountDaily_topic_metricsArgs
     friend_requests_friend_requests_receiver_idTousers?: boolean | UserCountOutputTypeCountFriend_requests_friend_requests_receiver_idTousersArgs
     friend_requests_friend_requests_sender_idTousers?: boolean | UserCountOutputTypeCountFriend_requests_friend_requests_sender_idTousersArgs
@@ -2064,6 +2612,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountChat_sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: chat_sessionsWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountClass_engagementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: class_engagementWhereInput
   }
 
   /**
@@ -2117,6 +2672,68 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ChatsCountOutputType
+   */
+
+  export type ChatsCountOutputType = {
+    messages: number
+  }
+
+  export type ChatsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | ChatsCountOutputTypeCountMessagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ChatsCountOutputType without action
+   */
+  export type ChatsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatsCountOutputType
+     */
+    select?: ChatsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ChatsCountOutputType without action
+   */
+  export type ChatsCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: messagesWhereInput
+  }
+
+
+  /**
+   * Count Type QuizzesCountOutputType
+   */
+
+  export type QuizzesCountOutputType = {
+    quiz_questions: number
+  }
+
+  export type QuizzesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quiz_questions?: boolean | QuizzesCountOutputTypeCountQuiz_questionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * QuizzesCountOutputType without action
+   */
+  export type QuizzesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuizzesCountOutputType
+     */
+    select?: QuizzesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * QuizzesCountOutputType without action
+   */
+  export type QuizzesCountOutputTypeCountQuiz_questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: quiz_questionsWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -2146,6 +2763,7 @@ export namespace Prisma {
     description: string | null
     xp_reward: number | null
     created_at: Date | null
+    slug: string | null
   }
 
   export type AchievementsMaxAggregateOutputType = {
@@ -2154,6 +2772,7 @@ export namespace Prisma {
     description: string | null
     xp_reward: number | null
     created_at: Date | null
+    slug: string | null
   }
 
   export type AchievementsCountAggregateOutputType = {
@@ -2162,6 +2781,7 @@ export namespace Prisma {
     description: number
     xp_reward: number
     created_at: number
+    slug: number
     _all: number
   }
 
@@ -2180,6 +2800,7 @@ export namespace Prisma {
     description?: true
     xp_reward?: true
     created_at?: true
+    slug?: true
   }
 
   export type AchievementsMaxAggregateInputType = {
@@ -2188,6 +2809,7 @@ export namespace Prisma {
     description?: true
     xp_reward?: true
     created_at?: true
+    slug?: true
   }
 
   export type AchievementsCountAggregateInputType = {
@@ -2196,6 +2818,7 @@ export namespace Prisma {
     description?: true
     xp_reward?: true
     created_at?: true
+    slug?: true
     _all?: true
   }
 
@@ -2291,6 +2914,7 @@ export namespace Prisma {
     description: string | null
     xp_reward: number | null
     created_at: Date | null
+    slug: string | null
     _count: AchievementsCountAggregateOutputType | null
     _avg: AchievementsAvgAggregateOutputType | null
     _sum: AchievementsSumAggregateOutputType | null
@@ -2318,6 +2942,7 @@ export namespace Prisma {
     description?: boolean
     xp_reward?: boolean
     created_at?: boolean
+    slug?: boolean
     user_achievements?: boolean | achievements$user_achievementsArgs<ExtArgs>
     _count?: boolean | AchievementsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["achievements"]>
@@ -2328,6 +2953,7 @@ export namespace Prisma {
     description?: boolean
     xp_reward?: boolean
     created_at?: boolean
+    slug?: boolean
   }, ExtArgs["result"]["achievements"]>
 
   export type achievementsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2336,6 +2962,7 @@ export namespace Prisma {
     description?: boolean
     xp_reward?: boolean
     created_at?: boolean
+    slug?: boolean
   }, ExtArgs["result"]["achievements"]>
 
   export type achievementsSelectScalar = {
@@ -2344,9 +2971,10 @@ export namespace Prisma {
     description?: boolean
     xp_reward?: boolean
     created_at?: boolean
+    slug?: boolean
   }
 
-  export type achievementsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "xp_reward" | "created_at", ExtArgs["result"]["achievements"]>
+  export type achievementsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "xp_reward" | "created_at" | "slug", ExtArgs["result"]["achievements"]>
   export type achievementsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user_achievements?: boolean | achievements$user_achievementsArgs<ExtArgs>
     _count?: boolean | AchievementsCountOutputTypeDefaultArgs<ExtArgs>
@@ -2365,6 +2993,7 @@ export namespace Prisma {
       description: string | null
       xp_reward: number | null
       created_at: Date | null
+      slug: string | null
     }, ExtArgs["result"]["achievements"]>
     composites: {}
   }
@@ -2794,6 +3423,7 @@ export namespace Prisma {
     readonly description: FieldRef<"achievements", 'String'>
     readonly xp_reward: FieldRef<"achievements", 'Int'>
     readonly created_at: FieldRef<"achievements", 'DateTime'>
+    readonly slug: FieldRef<"achievements", 'String'>
   }
     
 
@@ -6572,10 +7202,12 @@ export namespace Prisma {
 
   export type Daily_topic_metricsAvgAggregateOutputType = {
     avg_score: Decimal | null
+    questions_asked: number | null
   }
 
   export type Daily_topic_metricsSumAggregateOutputType = {
     avg_score: Decimal | null
+    questions_asked: number | null
   }
 
   export type Daily_topic_metricsMinAggregateOutputType = {
@@ -6584,6 +7216,7 @@ export namespace Prisma {
     topic_id: string | null
     metric_date: Date | null
     avg_score: Decimal | null
+    questions_asked: number | null
   }
 
   export type Daily_topic_metricsMaxAggregateOutputType = {
@@ -6592,6 +7225,7 @@ export namespace Prisma {
     topic_id: string | null
     metric_date: Date | null
     avg_score: Decimal | null
+    questions_asked: number | null
   }
 
   export type Daily_topic_metricsCountAggregateOutputType = {
@@ -6600,16 +7234,19 @@ export namespace Prisma {
     topic_id: number
     metric_date: number
     avg_score: number
+    questions_asked: number
     _all: number
   }
 
 
   export type Daily_topic_metricsAvgAggregateInputType = {
     avg_score?: true
+    questions_asked?: true
   }
 
   export type Daily_topic_metricsSumAggregateInputType = {
     avg_score?: true
+    questions_asked?: true
   }
 
   export type Daily_topic_metricsMinAggregateInputType = {
@@ -6618,6 +7255,7 @@ export namespace Prisma {
     topic_id?: true
     metric_date?: true
     avg_score?: true
+    questions_asked?: true
   }
 
   export type Daily_topic_metricsMaxAggregateInputType = {
@@ -6626,6 +7264,7 @@ export namespace Prisma {
     topic_id?: true
     metric_date?: true
     avg_score?: true
+    questions_asked?: true
   }
 
   export type Daily_topic_metricsCountAggregateInputType = {
@@ -6634,6 +7273,7 @@ export namespace Prisma {
     topic_id?: true
     metric_date?: true
     avg_score?: true
+    questions_asked?: true
     _all?: true
   }
 
@@ -6729,6 +7369,7 @@ export namespace Prisma {
     topic_id: string
     metric_date: Date
     avg_score: Decimal | null
+    questions_asked: number | null
     _count: Daily_topic_metricsCountAggregateOutputType | null
     _avg: Daily_topic_metricsAvgAggregateOutputType | null
     _sum: Daily_topic_metricsSumAggregateOutputType | null
@@ -6756,6 +7397,7 @@ export namespace Prisma {
     topic_id?: boolean
     metric_date?: boolean
     avg_score?: boolean
+    questions_asked?: boolean
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
     users?: boolean | UserDefaultArgs<ExtArgs>
@@ -6767,6 +7409,7 @@ export namespace Prisma {
     topic_id?: boolean
     metric_date?: boolean
     avg_score?: boolean
+    questions_asked?: boolean
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
     users?: boolean | UserDefaultArgs<ExtArgs>
@@ -6778,6 +7421,7 @@ export namespace Prisma {
     topic_id?: boolean
     metric_date?: boolean
     avg_score?: boolean
+    questions_asked?: boolean
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
     users?: boolean | UserDefaultArgs<ExtArgs>
@@ -6789,9 +7433,10 @@ export namespace Prisma {
     topic_id?: boolean
     metric_date?: boolean
     avg_score?: boolean
+    questions_asked?: boolean
   }
 
-  export type daily_topic_metricsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "class_code" | "topic_id" | "metric_date" | "avg_score", ExtArgs["result"]["daily_topic_metrics"]>
+  export type daily_topic_metricsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "class_code" | "topic_id" | "metric_date" | "avg_score" | "questions_asked", ExtArgs["result"]["daily_topic_metrics"]>
   export type daily_topic_metricsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
@@ -6821,6 +7466,7 @@ export namespace Prisma {
       topic_id: string
       metric_date: Date
       avg_score: Prisma.Decimal | null
+      questions_asked: number | null
     }, ExtArgs["result"]["daily_topic_metrics"]>
     composites: {}
   }
@@ -7252,6 +7898,7 @@ export namespace Prisma {
     readonly topic_id: FieldRef<"daily_topic_metrics", 'String'>
     readonly metric_date: FieldRef<"daily_topic_metrics", 'DateTime'>
     readonly avg_score: FieldRef<"daily_topic_metrics", 'Decimal'>
+    readonly questions_asked: FieldRef<"daily_topic_metrics", 'Int'>
   }
     
 
@@ -8783,6 +9430,8 @@ export namespace Prisma {
     created_at: Date | null
     streak: number | null
     total_xp: number | null
+    first_name: string | null
+    last_name: string | null
   }
 
   export type FriendsMaxAggregateOutputType = {
@@ -8791,6 +9440,8 @@ export namespace Prisma {
     created_at: Date | null
     streak: number | null
     total_xp: number | null
+    first_name: string | null
+    last_name: string | null
   }
 
   export type FriendsCountAggregateOutputType = {
@@ -8799,6 +9450,8 @@ export namespace Prisma {
     created_at: number
     streak: number
     total_xp: number
+    first_name: number
+    last_name: number
     _all: number
   }
 
@@ -8819,6 +9472,8 @@ export namespace Prisma {
     created_at?: true
     streak?: true
     total_xp?: true
+    first_name?: true
+    last_name?: true
   }
 
   export type FriendsMaxAggregateInputType = {
@@ -8827,6 +9482,8 @@ export namespace Prisma {
     created_at?: true
     streak?: true
     total_xp?: true
+    first_name?: true
+    last_name?: true
   }
 
   export type FriendsCountAggregateInputType = {
@@ -8835,6 +9492,8 @@ export namespace Prisma {
     created_at?: true
     streak?: true
     total_xp?: true
+    first_name?: true
+    last_name?: true
     _all?: true
   }
 
@@ -8930,6 +9589,8 @@ export namespace Prisma {
     created_at: Date | null
     streak: number | null
     total_xp: number | null
+    first_name: string | null
+    last_name: string | null
     _count: FriendsCountAggregateOutputType | null
     _avg: FriendsAvgAggregateOutputType | null
     _sum: FriendsSumAggregateOutputType | null
@@ -8957,6 +9618,8 @@ export namespace Prisma {
     created_at?: boolean
     streak?: boolean
     total_xp?: boolean
+    first_name?: boolean
+    last_name?: boolean
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["friends"]>
@@ -8967,6 +9630,8 @@ export namespace Prisma {
     created_at?: boolean
     streak?: boolean
     total_xp?: boolean
+    first_name?: boolean
+    last_name?: boolean
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["friends"]>
@@ -8977,6 +9642,8 @@ export namespace Prisma {
     created_at?: boolean
     streak?: boolean
     total_xp?: boolean
+    first_name?: boolean
+    last_name?: boolean
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["friends"]>
@@ -8987,9 +9654,11 @@ export namespace Prisma {
     created_at?: boolean
     streak?: boolean
     total_xp?: boolean
+    first_name?: boolean
+    last_name?: boolean
   }
 
-  export type friendsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "friend_id" | "created_at" | "streak" | "total_xp", ExtArgs["result"]["friends"]>
+  export type friendsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "friend_id" | "created_at" | "streak" | "total_xp" | "first_name" | "last_name", ExtArgs["result"]["friends"]>
   export type friendsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users_friends_friend_idTousers?: boolean | UserDefaultArgs<ExtArgs>
     users_friends_user_idTousers?: boolean | UserDefaultArgs<ExtArgs>
@@ -9015,6 +9684,8 @@ export namespace Prisma {
       created_at: Date | null
       streak: number | null
       total_xp: number | null
+      first_name: string | null
+      last_name: string | null
     }, ExtArgs["result"]["friends"]>
     composites: {}
   }
@@ -9445,6 +10116,8 @@ export namespace Prisma {
     readonly created_at: FieldRef<"friends", 'DateTime'>
     readonly streak: FieldRef<"friends", 'Int'>
     readonly total_xp: FieldRef<"friends", 'Int'>
+    readonly first_name: FieldRef<"friends", 'String'>
+    readonly last_name: FieldRef<"friends", 'String'>
   }
     
 
@@ -13389,6 +14062,7 @@ export namespace Prisma {
     weekly_xp?: boolean
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
+    class_engagement?: boolean | User$class_engagementArgs<ExtArgs>
     daily_topic_metrics?: boolean | User$daily_topic_metricsArgs<ExtArgs>
     friend_requests_friend_requests_receiver_idTousers?: boolean | User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs>
     friend_requests_friend_requests_sender_idTousers?: boolean | User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs>
@@ -13457,6 +14131,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
+    class_engagement?: boolean | User$class_engagementArgs<ExtArgs>
     daily_topic_metrics?: boolean | User$daily_topic_metricsArgs<ExtArgs>
     friend_requests_friend_requests_receiver_idTousers?: boolean | User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs>
     friend_requests_friend_requests_sender_idTousers?: boolean | User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs>
@@ -13474,6 +14149,7 @@ export namespace Prisma {
     objects: {
       Account: Prisma.$AccountPayload<ExtArgs>[]
       chat_sessions: Prisma.$chat_sessionsPayload<ExtArgs>[]
+      class_engagement: Prisma.$class_engagementPayload<ExtArgs>[]
       daily_topic_metrics: Prisma.$daily_topic_metricsPayload<ExtArgs>[]
       friend_requests_friend_requests_receiver_idTousers: Prisma.$friend_requestsPayload<ExtArgs>[]
       friend_requests_friend_requests_sender_idTousers: Prisma.$friend_requestsPayload<ExtArgs>[]
@@ -13894,6 +14570,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Account<T extends User$AccountArgs<ExtArgs> = {}>(args?: Subset<T, User$AccountArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chat_sessions<T extends User$chat_sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chat_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_sessionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    class_engagement<T extends User$class_engagementArgs<ExtArgs> = {}>(args?: Subset<T, User$class_engagementArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     daily_topic_metrics<T extends User$daily_topic_metricsArgs<ExtArgs> = {}>(args?: Subset<T, User$daily_topic_metricsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friend_requests_friend_requests_receiver_idTousers<T extends User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friend_requestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friend_requests_friend_requests_sender_idTousers<T extends User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friend_requestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -14383,6 +15060,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Chat_sessionsScalarFieldEnum | Chat_sessionsScalarFieldEnum[]
+  }
+
+  /**
+   * User.class_engagement
+   */
+  export type User$class_engagementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    where?: class_engagementWhereInput
+    orderBy?: class_engagementOrderByWithRelationInput | class_engagementOrderByWithRelationInput[]
+    cursor?: class_engagementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Class_engagementScalarFieldEnum | Class_engagementScalarFieldEnum[]
   }
 
   /**
@@ -15804,6 +16505,6598 @@ export namespace Prisma {
 
 
   /**
+   * Model chats
+   */
+
+  export type AggregateChats = {
+    _count: ChatsCountAggregateOutputType | null
+    _avg: ChatsAvgAggregateOutputType | null
+    _sum: ChatsSumAggregateOutputType | null
+    _min: ChatsMinAggregateOutputType | null
+    _max: ChatsMaxAggregateOutputType | null
+  }
+
+  export type ChatsAvgAggregateOutputType = {
+    accumulated_score: number | null
+  }
+
+  export type ChatsSumAggregateOutputType = {
+    accumulated_score: number | null
+  }
+
+  export type ChatsMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    created_at: Date | null
+    accumulated_score: number | null
+  }
+
+  export type ChatsMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    created_at: Date | null
+    accumulated_score: number | null
+  }
+
+  export type ChatsCountAggregateOutputType = {
+    id: number
+    title: number
+    created_at: number
+    accumulated_score: number
+    _all: number
+  }
+
+
+  export type ChatsAvgAggregateInputType = {
+    accumulated_score?: true
+  }
+
+  export type ChatsSumAggregateInputType = {
+    accumulated_score?: true
+  }
+
+  export type ChatsMinAggregateInputType = {
+    id?: true
+    title?: true
+    created_at?: true
+    accumulated_score?: true
+  }
+
+  export type ChatsMaxAggregateInputType = {
+    id?: true
+    title?: true
+    created_at?: true
+    accumulated_score?: true
+  }
+
+  export type ChatsCountAggregateInputType = {
+    id?: true
+    title?: true
+    created_at?: true
+    accumulated_score?: true
+    _all?: true
+  }
+
+  export type ChatsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which chats to aggregate.
+     */
+    where?: chatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chats to fetch.
+     */
+    orderBy?: chatsOrderByWithRelationInput | chatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: chatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned chats
+    **/
+    _count?: true | ChatsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChatsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChatsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatsMaxAggregateInputType
+  }
+
+  export type GetChatsAggregateType<T extends ChatsAggregateArgs> = {
+        [P in keyof T & keyof AggregateChats]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChats[P]>
+      : GetScalarType<T[P], AggregateChats[P]>
+  }
+
+
+
+
+  export type chatsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: chatsWhereInput
+    orderBy?: chatsOrderByWithAggregationInput | chatsOrderByWithAggregationInput[]
+    by: ChatsScalarFieldEnum[] | ChatsScalarFieldEnum
+    having?: chatsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatsCountAggregateInputType | true
+    _avg?: ChatsAvgAggregateInputType
+    _sum?: ChatsSumAggregateInputType
+    _min?: ChatsMinAggregateInputType
+    _max?: ChatsMaxAggregateInputType
+  }
+
+  export type ChatsGroupByOutputType = {
+    id: string
+    title: string | null
+    created_at: Date | null
+    accumulated_score: number | null
+    _count: ChatsCountAggregateOutputType | null
+    _avg: ChatsAvgAggregateOutputType | null
+    _sum: ChatsSumAggregateOutputType | null
+    _min: ChatsMinAggregateOutputType | null
+    _max: ChatsMaxAggregateOutputType | null
+  }
+
+  type GetChatsGroupByPayload<T extends chatsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatsGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type chatsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    created_at?: boolean
+    accumulated_score?: boolean
+    messages?: boolean | chats$messagesArgs<ExtArgs>
+    _count?: boolean | ChatsCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chats"]>
+
+  export type chatsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    created_at?: boolean
+    accumulated_score?: boolean
+  }, ExtArgs["result"]["chats"]>
+
+  export type chatsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    created_at?: boolean
+    accumulated_score?: boolean
+  }, ExtArgs["result"]["chats"]>
+
+  export type chatsSelectScalar = {
+    id?: boolean
+    title?: boolean
+    created_at?: boolean
+    accumulated_score?: boolean
+  }
+
+  export type chatsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "created_at" | "accumulated_score", ExtArgs["result"]["chats"]>
+  export type chatsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | chats$messagesArgs<ExtArgs>
+    _count?: boolean | ChatsCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type chatsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type chatsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $chatsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "chats"
+    objects: {
+      messages: Prisma.$messagesPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string | null
+      created_at: Date | null
+      accumulated_score: number | null
+    }, ExtArgs["result"]["chats"]>
+    composites: {}
+  }
+
+  type chatsGetPayload<S extends boolean | null | undefined | chatsDefaultArgs> = $Result.GetResult<Prisma.$chatsPayload, S>
+
+  type chatsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<chatsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChatsCountAggregateInputType | true
+    }
+
+  export interface chatsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['chats'], meta: { name: 'chats' } }
+    /**
+     * Find zero or one Chats that matches the filter.
+     * @param {chatsFindUniqueArgs} args - Arguments to find a Chats
+     * @example
+     * // Get one Chats
+     * const chats = await prisma.chats.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends chatsFindUniqueArgs>(args: SelectSubset<T, chatsFindUniqueArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Chats that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {chatsFindUniqueOrThrowArgs} args - Arguments to find a Chats
+     * @example
+     * // Get one Chats
+     * const chats = await prisma.chats.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends chatsFindUniqueOrThrowArgs>(args: SelectSubset<T, chatsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Chats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chatsFindFirstArgs} args - Arguments to find a Chats
+     * @example
+     * // Get one Chats
+     * const chats = await prisma.chats.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends chatsFindFirstArgs>(args?: SelectSubset<T, chatsFindFirstArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Chats that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chatsFindFirstOrThrowArgs} args - Arguments to find a Chats
+     * @example
+     * // Get one Chats
+     * const chats = await prisma.chats.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends chatsFindFirstOrThrowArgs>(args?: SelectSubset<T, chatsFindFirstOrThrowArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Chats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chatsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Chats
+     * const chats = await prisma.chats.findMany()
+     * 
+     * // Get first 10 Chats
+     * const chats = await prisma.chats.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatsWithIdOnly = await prisma.chats.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends chatsFindManyArgs>(args?: SelectSubset<T, chatsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Chats.
+     * @param {chatsCreateArgs} args - Arguments to create a Chats.
+     * @example
+     * // Create one Chats
+     * const Chats = await prisma.chats.create({
+     *   data: {
+     *     // ... data to create a Chats
+     *   }
+     * })
+     * 
+     */
+    create<T extends chatsCreateArgs>(args: SelectSubset<T, chatsCreateArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Chats.
+     * @param {chatsCreateManyArgs} args - Arguments to create many Chats.
+     * @example
+     * // Create many Chats
+     * const chats = await prisma.chats.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends chatsCreateManyArgs>(args?: SelectSubset<T, chatsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Chats and returns the data saved in the database.
+     * @param {chatsCreateManyAndReturnArgs} args - Arguments to create many Chats.
+     * @example
+     * // Create many Chats
+     * const chats = await prisma.chats.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Chats and only return the `id`
+     * const chatsWithIdOnly = await prisma.chats.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends chatsCreateManyAndReturnArgs>(args?: SelectSubset<T, chatsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Chats.
+     * @param {chatsDeleteArgs} args - Arguments to delete one Chats.
+     * @example
+     * // Delete one Chats
+     * const Chats = await prisma.chats.delete({
+     *   where: {
+     *     // ... filter to delete one Chats
+     *   }
+     * })
+     * 
+     */
+    delete<T extends chatsDeleteArgs>(args: SelectSubset<T, chatsDeleteArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Chats.
+     * @param {chatsUpdateArgs} args - Arguments to update one Chats.
+     * @example
+     * // Update one Chats
+     * const chats = await prisma.chats.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends chatsUpdateArgs>(args: SelectSubset<T, chatsUpdateArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Chats.
+     * @param {chatsDeleteManyArgs} args - Arguments to filter Chats to delete.
+     * @example
+     * // Delete a few Chats
+     * const { count } = await prisma.chats.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends chatsDeleteManyArgs>(args?: SelectSubset<T, chatsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Chats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chatsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Chats
+     * const chats = await prisma.chats.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends chatsUpdateManyArgs>(args: SelectSubset<T, chatsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Chats and returns the data updated in the database.
+     * @param {chatsUpdateManyAndReturnArgs} args - Arguments to update many Chats.
+     * @example
+     * // Update many Chats
+     * const chats = await prisma.chats.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Chats and only return the `id`
+     * const chatsWithIdOnly = await prisma.chats.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends chatsUpdateManyAndReturnArgs>(args: SelectSubset<T, chatsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Chats.
+     * @param {chatsUpsertArgs} args - Arguments to update or create a Chats.
+     * @example
+     * // Update or create a Chats
+     * const chats = await prisma.chats.upsert({
+     *   create: {
+     *     // ... data to create a Chats
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Chats we want to update
+     *   }
+     * })
+     */
+    upsert<T extends chatsUpsertArgs>(args: SelectSubset<T, chatsUpsertArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Chats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chatsCountArgs} args - Arguments to filter Chats to count.
+     * @example
+     * // Count the number of Chats
+     * const count = await prisma.chats.count({
+     *   where: {
+     *     // ... the filter for the Chats we want to count
+     *   }
+     * })
+    **/
+    count<T extends chatsCountArgs>(
+      args?: Subset<T, chatsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Chats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatsAggregateArgs>(args: Subset<T, ChatsAggregateArgs>): Prisma.PrismaPromise<GetChatsAggregateType<T>>
+
+    /**
+     * Group by Chats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {chatsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends chatsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: chatsGroupByArgs['orderBy'] }
+        : { orderBy?: chatsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, chatsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the chats model
+   */
+  readonly fields: chatsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for chats.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__chatsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    messages<T extends chats$messagesArgs<ExtArgs> = {}>(args?: Subset<T, chats$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the chats model
+   */
+  interface chatsFieldRefs {
+    readonly id: FieldRef<"chats", 'String'>
+    readonly title: FieldRef<"chats", 'String'>
+    readonly created_at: FieldRef<"chats", 'DateTime'>
+    readonly accumulated_score: FieldRef<"chats", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * chats findUnique
+   */
+  export type chatsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * Filter, which chats to fetch.
+     */
+    where: chatsWhereUniqueInput
+  }
+
+  /**
+   * chats findUniqueOrThrow
+   */
+  export type chatsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * Filter, which chats to fetch.
+     */
+    where: chatsWhereUniqueInput
+  }
+
+  /**
+   * chats findFirst
+   */
+  export type chatsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * Filter, which chats to fetch.
+     */
+    where?: chatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chats to fetch.
+     */
+    orderBy?: chatsOrderByWithRelationInput | chatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for chats.
+     */
+    cursor?: chatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of chats.
+     */
+    distinct?: ChatsScalarFieldEnum | ChatsScalarFieldEnum[]
+  }
+
+  /**
+   * chats findFirstOrThrow
+   */
+  export type chatsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * Filter, which chats to fetch.
+     */
+    where?: chatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chats to fetch.
+     */
+    orderBy?: chatsOrderByWithRelationInput | chatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for chats.
+     */
+    cursor?: chatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of chats.
+     */
+    distinct?: ChatsScalarFieldEnum | ChatsScalarFieldEnum[]
+  }
+
+  /**
+   * chats findMany
+   */
+  export type chatsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * Filter, which chats to fetch.
+     */
+    where?: chatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of chats to fetch.
+     */
+    orderBy?: chatsOrderByWithRelationInput | chatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing chats.
+     */
+    cursor?: chatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` chats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` chats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of chats.
+     */
+    distinct?: ChatsScalarFieldEnum | ChatsScalarFieldEnum[]
+  }
+
+  /**
+   * chats create
+   */
+  export type chatsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a chats.
+     */
+    data: XOR<chatsCreateInput, chatsUncheckedCreateInput>
+  }
+
+  /**
+   * chats createMany
+   */
+  export type chatsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many chats.
+     */
+    data: chatsCreateManyInput | chatsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * chats createManyAndReturn
+   */
+  export type chatsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * The data used to create many chats.
+     */
+    data: chatsCreateManyInput | chatsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * chats update
+   */
+  export type chatsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a chats.
+     */
+    data: XOR<chatsUpdateInput, chatsUncheckedUpdateInput>
+    /**
+     * Choose, which chats to update.
+     */
+    where: chatsWhereUniqueInput
+  }
+
+  /**
+   * chats updateMany
+   */
+  export type chatsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update chats.
+     */
+    data: XOR<chatsUpdateManyMutationInput, chatsUncheckedUpdateManyInput>
+    /**
+     * Filter which chats to update
+     */
+    where?: chatsWhereInput
+    /**
+     * Limit how many chats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * chats updateManyAndReturn
+   */
+  export type chatsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * The data used to update chats.
+     */
+    data: XOR<chatsUpdateManyMutationInput, chatsUncheckedUpdateManyInput>
+    /**
+     * Filter which chats to update
+     */
+    where?: chatsWhereInput
+    /**
+     * Limit how many chats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * chats upsert
+   */
+  export type chatsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the chats to update in case it exists.
+     */
+    where: chatsWhereUniqueInput
+    /**
+     * In case the chats found by the `where` argument doesn't exist, create a new chats with this data.
+     */
+    create: XOR<chatsCreateInput, chatsUncheckedCreateInput>
+    /**
+     * In case the chats was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<chatsUpdateInput, chatsUncheckedUpdateInput>
+  }
+
+  /**
+   * chats delete
+   */
+  export type chatsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    /**
+     * Filter which chats to delete.
+     */
+    where: chatsWhereUniqueInput
+  }
+
+  /**
+   * chats deleteMany
+   */
+  export type chatsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which chats to delete
+     */
+    where?: chatsWhereInput
+    /**
+     * Limit how many chats to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * chats.messages
+   */
+  export type chats$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    where?: messagesWhereInput
+    orderBy?: messagesOrderByWithRelationInput | messagesOrderByWithRelationInput[]
+    cursor?: messagesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessagesScalarFieldEnum | MessagesScalarFieldEnum[]
+  }
+
+  /**
+   * chats without action
+   */
+  export type chatsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model langchain_chat_messages
+   */
+
+  export type AggregateLangchain_chat_messages = {
+    _count: Langchain_chat_messagesCountAggregateOutputType | null
+    _avg: Langchain_chat_messagesAvgAggregateOutputType | null
+    _sum: Langchain_chat_messagesSumAggregateOutputType | null
+    _min: Langchain_chat_messagesMinAggregateOutputType | null
+    _max: Langchain_chat_messagesMaxAggregateOutputType | null
+  }
+
+  export type Langchain_chat_messagesAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type Langchain_chat_messagesSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type Langchain_chat_messagesMinAggregateOutputType = {
+    id: number | null
+    session_id: string | null
+  }
+
+  export type Langchain_chat_messagesMaxAggregateOutputType = {
+    id: number | null
+    session_id: string | null
+  }
+
+  export type Langchain_chat_messagesCountAggregateOutputType = {
+    id: number
+    session_id: number
+    message: number
+    _all: number
+  }
+
+
+  export type Langchain_chat_messagesAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type Langchain_chat_messagesSumAggregateInputType = {
+    id?: true
+  }
+
+  export type Langchain_chat_messagesMinAggregateInputType = {
+    id?: true
+    session_id?: true
+  }
+
+  export type Langchain_chat_messagesMaxAggregateInputType = {
+    id?: true
+    session_id?: true
+  }
+
+  export type Langchain_chat_messagesCountAggregateInputType = {
+    id?: true
+    session_id?: true
+    message?: true
+    _all?: true
+  }
+
+  export type Langchain_chat_messagesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which langchain_chat_messages to aggregate.
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of langchain_chat_messages to fetch.
+     */
+    orderBy?: langchain_chat_messagesOrderByWithRelationInput | langchain_chat_messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: langchain_chat_messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` langchain_chat_messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` langchain_chat_messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned langchain_chat_messages
+    **/
+    _count?: true | Langchain_chat_messagesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Langchain_chat_messagesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Langchain_chat_messagesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Langchain_chat_messagesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Langchain_chat_messagesMaxAggregateInputType
+  }
+
+  export type GetLangchain_chat_messagesAggregateType<T extends Langchain_chat_messagesAggregateArgs> = {
+        [P in keyof T & keyof AggregateLangchain_chat_messages]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLangchain_chat_messages[P]>
+      : GetScalarType<T[P], AggregateLangchain_chat_messages[P]>
+  }
+
+
+
+
+  export type langchain_chat_messagesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: langchain_chat_messagesWhereInput
+    orderBy?: langchain_chat_messagesOrderByWithAggregationInput | langchain_chat_messagesOrderByWithAggregationInput[]
+    by: Langchain_chat_messagesScalarFieldEnum[] | Langchain_chat_messagesScalarFieldEnum
+    having?: langchain_chat_messagesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Langchain_chat_messagesCountAggregateInputType | true
+    _avg?: Langchain_chat_messagesAvgAggregateInputType
+    _sum?: Langchain_chat_messagesSumAggregateInputType
+    _min?: Langchain_chat_messagesMinAggregateInputType
+    _max?: Langchain_chat_messagesMaxAggregateInputType
+  }
+
+  export type Langchain_chat_messagesGroupByOutputType = {
+    id: number
+    session_id: string
+    message: JsonValue
+    _count: Langchain_chat_messagesCountAggregateOutputType | null
+    _avg: Langchain_chat_messagesAvgAggregateOutputType | null
+    _sum: Langchain_chat_messagesSumAggregateOutputType | null
+    _min: Langchain_chat_messagesMinAggregateOutputType | null
+    _max: Langchain_chat_messagesMaxAggregateOutputType | null
+  }
+
+  type GetLangchain_chat_messagesGroupByPayload<T extends langchain_chat_messagesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Langchain_chat_messagesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Langchain_chat_messagesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Langchain_chat_messagesGroupByOutputType[P]>
+            : GetScalarType<T[P], Langchain_chat_messagesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type langchain_chat_messagesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    session_id?: boolean
+    message?: boolean
+  }, ExtArgs["result"]["langchain_chat_messages"]>
+
+  export type langchain_chat_messagesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    session_id?: boolean
+    message?: boolean
+  }, ExtArgs["result"]["langchain_chat_messages"]>
+
+  export type langchain_chat_messagesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    session_id?: boolean
+    message?: boolean
+  }, ExtArgs["result"]["langchain_chat_messages"]>
+
+  export type langchain_chat_messagesSelectScalar = {
+    id?: boolean
+    session_id?: boolean
+    message?: boolean
+  }
+
+  export type langchain_chat_messagesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "session_id" | "message", ExtArgs["result"]["langchain_chat_messages"]>
+
+  export type $langchain_chat_messagesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "langchain_chat_messages"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      session_id: string
+      message: Prisma.JsonValue
+    }, ExtArgs["result"]["langchain_chat_messages"]>
+    composites: {}
+  }
+
+  type langchain_chat_messagesGetPayload<S extends boolean | null | undefined | langchain_chat_messagesDefaultArgs> = $Result.GetResult<Prisma.$langchain_chat_messagesPayload, S>
+
+  type langchain_chat_messagesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<langchain_chat_messagesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Langchain_chat_messagesCountAggregateInputType | true
+    }
+
+  export interface langchain_chat_messagesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['langchain_chat_messages'], meta: { name: 'langchain_chat_messages' } }
+    /**
+     * Find zero or one Langchain_chat_messages that matches the filter.
+     * @param {langchain_chat_messagesFindUniqueArgs} args - Arguments to find a Langchain_chat_messages
+     * @example
+     * // Get one Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends langchain_chat_messagesFindUniqueArgs>(args: SelectSubset<T, langchain_chat_messagesFindUniqueArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Langchain_chat_messages that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {langchain_chat_messagesFindUniqueOrThrowArgs} args - Arguments to find a Langchain_chat_messages
+     * @example
+     * // Get one Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends langchain_chat_messagesFindUniqueOrThrowArgs>(args: SelectSubset<T, langchain_chat_messagesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Langchain_chat_messages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {langchain_chat_messagesFindFirstArgs} args - Arguments to find a Langchain_chat_messages
+     * @example
+     * // Get one Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends langchain_chat_messagesFindFirstArgs>(args?: SelectSubset<T, langchain_chat_messagesFindFirstArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Langchain_chat_messages that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {langchain_chat_messagesFindFirstOrThrowArgs} args - Arguments to find a Langchain_chat_messages
+     * @example
+     * // Get one Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends langchain_chat_messagesFindFirstOrThrowArgs>(args?: SelectSubset<T, langchain_chat_messagesFindFirstOrThrowArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Langchain_chat_messages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {langchain_chat_messagesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.findMany()
+     * 
+     * // Get first 10 Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const langchain_chat_messagesWithIdOnly = await prisma.langchain_chat_messages.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends langchain_chat_messagesFindManyArgs>(args?: SelectSubset<T, langchain_chat_messagesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Langchain_chat_messages.
+     * @param {langchain_chat_messagesCreateArgs} args - Arguments to create a Langchain_chat_messages.
+     * @example
+     * // Create one Langchain_chat_messages
+     * const Langchain_chat_messages = await prisma.langchain_chat_messages.create({
+     *   data: {
+     *     // ... data to create a Langchain_chat_messages
+     *   }
+     * })
+     * 
+     */
+    create<T extends langchain_chat_messagesCreateArgs>(args: SelectSubset<T, langchain_chat_messagesCreateArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Langchain_chat_messages.
+     * @param {langchain_chat_messagesCreateManyArgs} args - Arguments to create many Langchain_chat_messages.
+     * @example
+     * // Create many Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends langchain_chat_messagesCreateManyArgs>(args?: SelectSubset<T, langchain_chat_messagesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Langchain_chat_messages and returns the data saved in the database.
+     * @param {langchain_chat_messagesCreateManyAndReturnArgs} args - Arguments to create many Langchain_chat_messages.
+     * @example
+     * // Create many Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Langchain_chat_messages and only return the `id`
+     * const langchain_chat_messagesWithIdOnly = await prisma.langchain_chat_messages.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends langchain_chat_messagesCreateManyAndReturnArgs>(args?: SelectSubset<T, langchain_chat_messagesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Langchain_chat_messages.
+     * @param {langchain_chat_messagesDeleteArgs} args - Arguments to delete one Langchain_chat_messages.
+     * @example
+     * // Delete one Langchain_chat_messages
+     * const Langchain_chat_messages = await prisma.langchain_chat_messages.delete({
+     *   where: {
+     *     // ... filter to delete one Langchain_chat_messages
+     *   }
+     * })
+     * 
+     */
+    delete<T extends langchain_chat_messagesDeleteArgs>(args: SelectSubset<T, langchain_chat_messagesDeleteArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Langchain_chat_messages.
+     * @param {langchain_chat_messagesUpdateArgs} args - Arguments to update one Langchain_chat_messages.
+     * @example
+     * // Update one Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends langchain_chat_messagesUpdateArgs>(args: SelectSubset<T, langchain_chat_messagesUpdateArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Langchain_chat_messages.
+     * @param {langchain_chat_messagesDeleteManyArgs} args - Arguments to filter Langchain_chat_messages to delete.
+     * @example
+     * // Delete a few Langchain_chat_messages
+     * const { count } = await prisma.langchain_chat_messages.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends langchain_chat_messagesDeleteManyArgs>(args?: SelectSubset<T, langchain_chat_messagesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Langchain_chat_messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {langchain_chat_messagesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends langchain_chat_messagesUpdateManyArgs>(args: SelectSubset<T, langchain_chat_messagesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Langchain_chat_messages and returns the data updated in the database.
+     * @param {langchain_chat_messagesUpdateManyAndReturnArgs} args - Arguments to update many Langchain_chat_messages.
+     * @example
+     * // Update many Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Langchain_chat_messages and only return the `id`
+     * const langchain_chat_messagesWithIdOnly = await prisma.langchain_chat_messages.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends langchain_chat_messagesUpdateManyAndReturnArgs>(args: SelectSubset<T, langchain_chat_messagesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Langchain_chat_messages.
+     * @param {langchain_chat_messagesUpsertArgs} args - Arguments to update or create a Langchain_chat_messages.
+     * @example
+     * // Update or create a Langchain_chat_messages
+     * const langchain_chat_messages = await prisma.langchain_chat_messages.upsert({
+     *   create: {
+     *     // ... data to create a Langchain_chat_messages
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Langchain_chat_messages we want to update
+     *   }
+     * })
+     */
+    upsert<T extends langchain_chat_messagesUpsertArgs>(args: SelectSubset<T, langchain_chat_messagesUpsertArgs<ExtArgs>>): Prisma__langchain_chat_messagesClient<$Result.GetResult<Prisma.$langchain_chat_messagesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Langchain_chat_messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {langchain_chat_messagesCountArgs} args - Arguments to filter Langchain_chat_messages to count.
+     * @example
+     * // Count the number of Langchain_chat_messages
+     * const count = await prisma.langchain_chat_messages.count({
+     *   where: {
+     *     // ... the filter for the Langchain_chat_messages we want to count
+     *   }
+     * })
+    **/
+    count<T extends langchain_chat_messagesCountArgs>(
+      args?: Subset<T, langchain_chat_messagesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Langchain_chat_messagesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Langchain_chat_messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Langchain_chat_messagesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Langchain_chat_messagesAggregateArgs>(args: Subset<T, Langchain_chat_messagesAggregateArgs>): Prisma.PrismaPromise<GetLangchain_chat_messagesAggregateType<T>>
+
+    /**
+     * Group by Langchain_chat_messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {langchain_chat_messagesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends langchain_chat_messagesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: langchain_chat_messagesGroupByArgs['orderBy'] }
+        : { orderBy?: langchain_chat_messagesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, langchain_chat_messagesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLangchain_chat_messagesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the langchain_chat_messages model
+   */
+  readonly fields: langchain_chat_messagesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for langchain_chat_messages.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__langchain_chat_messagesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the langchain_chat_messages model
+   */
+  interface langchain_chat_messagesFieldRefs {
+    readonly id: FieldRef<"langchain_chat_messages", 'Int'>
+    readonly session_id: FieldRef<"langchain_chat_messages", 'String'>
+    readonly message: FieldRef<"langchain_chat_messages", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * langchain_chat_messages findUnique
+   */
+  export type langchain_chat_messagesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * Filter, which langchain_chat_messages to fetch.
+     */
+    where: langchain_chat_messagesWhereUniqueInput
+  }
+
+  /**
+   * langchain_chat_messages findUniqueOrThrow
+   */
+  export type langchain_chat_messagesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * Filter, which langchain_chat_messages to fetch.
+     */
+    where: langchain_chat_messagesWhereUniqueInput
+  }
+
+  /**
+   * langchain_chat_messages findFirst
+   */
+  export type langchain_chat_messagesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * Filter, which langchain_chat_messages to fetch.
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of langchain_chat_messages to fetch.
+     */
+    orderBy?: langchain_chat_messagesOrderByWithRelationInput | langchain_chat_messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for langchain_chat_messages.
+     */
+    cursor?: langchain_chat_messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` langchain_chat_messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` langchain_chat_messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of langchain_chat_messages.
+     */
+    distinct?: Langchain_chat_messagesScalarFieldEnum | Langchain_chat_messagesScalarFieldEnum[]
+  }
+
+  /**
+   * langchain_chat_messages findFirstOrThrow
+   */
+  export type langchain_chat_messagesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * Filter, which langchain_chat_messages to fetch.
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of langchain_chat_messages to fetch.
+     */
+    orderBy?: langchain_chat_messagesOrderByWithRelationInput | langchain_chat_messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for langchain_chat_messages.
+     */
+    cursor?: langchain_chat_messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` langchain_chat_messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` langchain_chat_messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of langchain_chat_messages.
+     */
+    distinct?: Langchain_chat_messagesScalarFieldEnum | Langchain_chat_messagesScalarFieldEnum[]
+  }
+
+  /**
+   * langchain_chat_messages findMany
+   */
+  export type langchain_chat_messagesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * Filter, which langchain_chat_messages to fetch.
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of langchain_chat_messages to fetch.
+     */
+    orderBy?: langchain_chat_messagesOrderByWithRelationInput | langchain_chat_messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing langchain_chat_messages.
+     */
+    cursor?: langchain_chat_messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` langchain_chat_messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` langchain_chat_messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of langchain_chat_messages.
+     */
+    distinct?: Langchain_chat_messagesScalarFieldEnum | Langchain_chat_messagesScalarFieldEnum[]
+  }
+
+  /**
+   * langchain_chat_messages create
+   */
+  export type langchain_chat_messagesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a langchain_chat_messages.
+     */
+    data: XOR<langchain_chat_messagesCreateInput, langchain_chat_messagesUncheckedCreateInput>
+  }
+
+  /**
+   * langchain_chat_messages createMany
+   */
+  export type langchain_chat_messagesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many langchain_chat_messages.
+     */
+    data: langchain_chat_messagesCreateManyInput | langchain_chat_messagesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * langchain_chat_messages createManyAndReturn
+   */
+  export type langchain_chat_messagesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * The data used to create many langchain_chat_messages.
+     */
+    data: langchain_chat_messagesCreateManyInput | langchain_chat_messagesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * langchain_chat_messages update
+   */
+  export type langchain_chat_messagesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a langchain_chat_messages.
+     */
+    data: XOR<langchain_chat_messagesUpdateInput, langchain_chat_messagesUncheckedUpdateInput>
+    /**
+     * Choose, which langchain_chat_messages to update.
+     */
+    where: langchain_chat_messagesWhereUniqueInput
+  }
+
+  /**
+   * langchain_chat_messages updateMany
+   */
+  export type langchain_chat_messagesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update langchain_chat_messages.
+     */
+    data: XOR<langchain_chat_messagesUpdateManyMutationInput, langchain_chat_messagesUncheckedUpdateManyInput>
+    /**
+     * Filter which langchain_chat_messages to update
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * Limit how many langchain_chat_messages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * langchain_chat_messages updateManyAndReturn
+   */
+  export type langchain_chat_messagesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * The data used to update langchain_chat_messages.
+     */
+    data: XOR<langchain_chat_messagesUpdateManyMutationInput, langchain_chat_messagesUncheckedUpdateManyInput>
+    /**
+     * Filter which langchain_chat_messages to update
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * Limit how many langchain_chat_messages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * langchain_chat_messages upsert
+   */
+  export type langchain_chat_messagesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the langchain_chat_messages to update in case it exists.
+     */
+    where: langchain_chat_messagesWhereUniqueInput
+    /**
+     * In case the langchain_chat_messages found by the `where` argument doesn't exist, create a new langchain_chat_messages with this data.
+     */
+    create: XOR<langchain_chat_messagesCreateInput, langchain_chat_messagesUncheckedCreateInput>
+    /**
+     * In case the langchain_chat_messages was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<langchain_chat_messagesUpdateInput, langchain_chat_messagesUncheckedUpdateInput>
+  }
+
+  /**
+   * langchain_chat_messages delete
+   */
+  export type langchain_chat_messagesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+    /**
+     * Filter which langchain_chat_messages to delete.
+     */
+    where: langchain_chat_messagesWhereUniqueInput
+  }
+
+  /**
+   * langchain_chat_messages deleteMany
+   */
+  export type langchain_chat_messagesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which langchain_chat_messages to delete
+     */
+    where?: langchain_chat_messagesWhereInput
+    /**
+     * Limit how many langchain_chat_messages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * langchain_chat_messages without action
+   */
+  export type langchain_chat_messagesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the langchain_chat_messages
+     */
+    select?: langchain_chat_messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the langchain_chat_messages
+     */
+    omit?: langchain_chat_messagesOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model messages
+   */
+
+  export type AggregateMessages = {
+    _count: MessagesCountAggregateOutputType | null
+    _avg: MessagesAvgAggregateOutputType | null
+    _sum: MessagesSumAggregateOutputType | null
+    _min: MessagesMinAggregateOutputType | null
+    _max: MessagesMaxAggregateOutputType | null
+  }
+
+  export type MessagesAvgAggregateOutputType = {
+    id: number | null
+    score: number | null
+  }
+
+  export type MessagesSumAggregateOutputType = {
+    id: number | null
+    score: number | null
+  }
+
+  export type MessagesMinAggregateOutputType = {
+    id: number | null
+    chat_id: string | null
+    role: string | null
+    content: string | null
+    score: number | null
+    reason: string | null
+    created_at: Date | null
+  }
+
+  export type MessagesMaxAggregateOutputType = {
+    id: number | null
+    chat_id: string | null
+    role: string | null
+    content: string | null
+    score: number | null
+    reason: string | null
+    created_at: Date | null
+  }
+
+  export type MessagesCountAggregateOutputType = {
+    id: number
+    chat_id: number
+    role: number
+    content: number
+    score: number
+    reason: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type MessagesAvgAggregateInputType = {
+    id?: true
+    score?: true
+  }
+
+  export type MessagesSumAggregateInputType = {
+    id?: true
+    score?: true
+  }
+
+  export type MessagesMinAggregateInputType = {
+    id?: true
+    chat_id?: true
+    role?: true
+    content?: true
+    score?: true
+    reason?: true
+    created_at?: true
+  }
+
+  export type MessagesMaxAggregateInputType = {
+    id?: true
+    chat_id?: true
+    role?: true
+    content?: true
+    score?: true
+    reason?: true
+    created_at?: true
+  }
+
+  export type MessagesCountAggregateInputType = {
+    id?: true
+    chat_id?: true
+    role?: true
+    content?: true
+    score?: true
+    reason?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type MessagesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which messages to aggregate.
+     */
+    where?: messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of messages to fetch.
+     */
+    orderBy?: messagesOrderByWithRelationInput | messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned messages
+    **/
+    _count?: true | MessagesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MessagesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MessagesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MessagesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MessagesMaxAggregateInputType
+  }
+
+  export type GetMessagesAggregateType<T extends MessagesAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessages]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMessages[P]>
+      : GetScalarType<T[P], AggregateMessages[P]>
+  }
+
+
+
+
+  export type messagesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: messagesWhereInput
+    orderBy?: messagesOrderByWithAggregationInput | messagesOrderByWithAggregationInput[]
+    by: MessagesScalarFieldEnum[] | MessagesScalarFieldEnum
+    having?: messagesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MessagesCountAggregateInputType | true
+    _avg?: MessagesAvgAggregateInputType
+    _sum?: MessagesSumAggregateInputType
+    _min?: MessagesMinAggregateInputType
+    _max?: MessagesMaxAggregateInputType
+  }
+
+  export type MessagesGroupByOutputType = {
+    id: number
+    chat_id: string | null
+    role: string | null
+    content: string | null
+    score: number | null
+    reason: string | null
+    created_at: Date | null
+    _count: MessagesCountAggregateOutputType | null
+    _avg: MessagesAvgAggregateOutputType | null
+    _sum: MessagesSumAggregateOutputType | null
+    _min: MessagesMinAggregateOutputType | null
+    _max: MessagesMaxAggregateOutputType | null
+  }
+
+  type GetMessagesGroupByPayload<T extends messagesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MessagesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MessagesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MessagesGroupByOutputType[P]>
+            : GetScalarType<T[P], MessagesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type messagesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    chat_id?: boolean
+    role?: boolean
+    content?: boolean
+    score?: boolean
+    reason?: boolean
+    created_at?: boolean
+    chats?: boolean | messages$chatsArgs<ExtArgs>
+  }, ExtArgs["result"]["messages"]>
+
+  export type messagesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    chat_id?: boolean
+    role?: boolean
+    content?: boolean
+    score?: boolean
+    reason?: boolean
+    created_at?: boolean
+    chats?: boolean | messages$chatsArgs<ExtArgs>
+  }, ExtArgs["result"]["messages"]>
+
+  export type messagesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    chat_id?: boolean
+    role?: boolean
+    content?: boolean
+    score?: boolean
+    reason?: boolean
+    created_at?: boolean
+    chats?: boolean | messages$chatsArgs<ExtArgs>
+  }, ExtArgs["result"]["messages"]>
+
+  export type messagesSelectScalar = {
+    id?: boolean
+    chat_id?: boolean
+    role?: boolean
+    content?: boolean
+    score?: boolean
+    reason?: boolean
+    created_at?: boolean
+  }
+
+  export type messagesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chat_id" | "role" | "content" | "score" | "reason" | "created_at", ExtArgs["result"]["messages"]>
+  export type messagesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chats?: boolean | messages$chatsArgs<ExtArgs>
+  }
+  export type messagesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chats?: boolean | messages$chatsArgs<ExtArgs>
+  }
+  export type messagesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    chats?: boolean | messages$chatsArgs<ExtArgs>
+  }
+
+  export type $messagesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "messages"
+    objects: {
+      chats: Prisma.$chatsPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      chat_id: string | null
+      role: string | null
+      content: string | null
+      score: number | null
+      reason: string | null
+      created_at: Date | null
+    }, ExtArgs["result"]["messages"]>
+    composites: {}
+  }
+
+  type messagesGetPayload<S extends boolean | null | undefined | messagesDefaultArgs> = $Result.GetResult<Prisma.$messagesPayload, S>
+
+  type messagesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<messagesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessagesCountAggregateInputType | true
+    }
+
+  export interface messagesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['messages'], meta: { name: 'messages' } }
+    /**
+     * Find zero or one Messages that matches the filter.
+     * @param {messagesFindUniqueArgs} args - Arguments to find a Messages
+     * @example
+     * // Get one Messages
+     * const messages = await prisma.messages.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends messagesFindUniqueArgs>(args: SelectSubset<T, messagesFindUniqueArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Messages that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {messagesFindUniqueOrThrowArgs} args - Arguments to find a Messages
+     * @example
+     * // Get one Messages
+     * const messages = await prisma.messages.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends messagesFindUniqueOrThrowArgs>(args: SelectSubset<T, messagesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Messages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {messagesFindFirstArgs} args - Arguments to find a Messages
+     * @example
+     * // Get one Messages
+     * const messages = await prisma.messages.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends messagesFindFirstArgs>(args?: SelectSubset<T, messagesFindFirstArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Messages that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {messagesFindFirstOrThrowArgs} args - Arguments to find a Messages
+     * @example
+     * // Get one Messages
+     * const messages = await prisma.messages.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends messagesFindFirstOrThrowArgs>(args?: SelectSubset<T, messagesFindFirstOrThrowArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Messages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {messagesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Messages
+     * const messages = await prisma.messages.findMany()
+     * 
+     * // Get first 10 Messages
+     * const messages = await prisma.messages.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const messagesWithIdOnly = await prisma.messages.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends messagesFindManyArgs>(args?: SelectSubset<T, messagesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Messages.
+     * @param {messagesCreateArgs} args - Arguments to create a Messages.
+     * @example
+     * // Create one Messages
+     * const Messages = await prisma.messages.create({
+     *   data: {
+     *     // ... data to create a Messages
+     *   }
+     * })
+     * 
+     */
+    create<T extends messagesCreateArgs>(args: SelectSubset<T, messagesCreateArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Messages.
+     * @param {messagesCreateManyArgs} args - Arguments to create many Messages.
+     * @example
+     * // Create many Messages
+     * const messages = await prisma.messages.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends messagesCreateManyArgs>(args?: SelectSubset<T, messagesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Messages and returns the data saved in the database.
+     * @param {messagesCreateManyAndReturnArgs} args - Arguments to create many Messages.
+     * @example
+     * // Create many Messages
+     * const messages = await prisma.messages.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Messages and only return the `id`
+     * const messagesWithIdOnly = await prisma.messages.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends messagesCreateManyAndReturnArgs>(args?: SelectSubset<T, messagesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Messages.
+     * @param {messagesDeleteArgs} args - Arguments to delete one Messages.
+     * @example
+     * // Delete one Messages
+     * const Messages = await prisma.messages.delete({
+     *   where: {
+     *     // ... filter to delete one Messages
+     *   }
+     * })
+     * 
+     */
+    delete<T extends messagesDeleteArgs>(args: SelectSubset<T, messagesDeleteArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Messages.
+     * @param {messagesUpdateArgs} args - Arguments to update one Messages.
+     * @example
+     * // Update one Messages
+     * const messages = await prisma.messages.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends messagesUpdateArgs>(args: SelectSubset<T, messagesUpdateArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Messages.
+     * @param {messagesDeleteManyArgs} args - Arguments to filter Messages to delete.
+     * @example
+     * // Delete a few Messages
+     * const { count } = await prisma.messages.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends messagesDeleteManyArgs>(args?: SelectSubset<T, messagesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {messagesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Messages
+     * const messages = await prisma.messages.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends messagesUpdateManyArgs>(args: SelectSubset<T, messagesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Messages and returns the data updated in the database.
+     * @param {messagesUpdateManyAndReturnArgs} args - Arguments to update many Messages.
+     * @example
+     * // Update many Messages
+     * const messages = await prisma.messages.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Messages and only return the `id`
+     * const messagesWithIdOnly = await prisma.messages.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends messagesUpdateManyAndReturnArgs>(args: SelectSubset<T, messagesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Messages.
+     * @param {messagesUpsertArgs} args - Arguments to update or create a Messages.
+     * @example
+     * // Update or create a Messages
+     * const messages = await prisma.messages.upsert({
+     *   create: {
+     *     // ... data to create a Messages
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Messages we want to update
+     *   }
+     * })
+     */
+    upsert<T extends messagesUpsertArgs>(args: SelectSubset<T, messagesUpsertArgs<ExtArgs>>): Prisma__messagesClient<$Result.GetResult<Prisma.$messagesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {messagesCountArgs} args - Arguments to filter Messages to count.
+     * @example
+     * // Count the number of Messages
+     * const count = await prisma.messages.count({
+     *   where: {
+     *     // ... the filter for the Messages we want to count
+     *   }
+     * })
+    **/
+    count<T extends messagesCountArgs>(
+      args?: Subset<T, messagesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MessagesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessagesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MessagesAggregateArgs>(args: Subset<T, MessagesAggregateArgs>): Prisma.PrismaPromise<GetMessagesAggregateType<T>>
+
+    /**
+     * Group by Messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {messagesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends messagesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: messagesGroupByArgs['orderBy'] }
+        : { orderBy?: messagesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, messagesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessagesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the messages model
+   */
+  readonly fields: messagesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for messages.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__messagesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    chats<T extends messages$chatsArgs<ExtArgs> = {}>(args?: Subset<T, messages$chatsArgs<ExtArgs>>): Prisma__chatsClient<$Result.GetResult<Prisma.$chatsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the messages model
+   */
+  interface messagesFieldRefs {
+    readonly id: FieldRef<"messages", 'Int'>
+    readonly chat_id: FieldRef<"messages", 'String'>
+    readonly role: FieldRef<"messages", 'String'>
+    readonly content: FieldRef<"messages", 'String'>
+    readonly score: FieldRef<"messages", 'Int'>
+    readonly reason: FieldRef<"messages", 'String'>
+    readonly created_at: FieldRef<"messages", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * messages findUnique
+   */
+  export type messagesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * Filter, which messages to fetch.
+     */
+    where: messagesWhereUniqueInput
+  }
+
+  /**
+   * messages findUniqueOrThrow
+   */
+  export type messagesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * Filter, which messages to fetch.
+     */
+    where: messagesWhereUniqueInput
+  }
+
+  /**
+   * messages findFirst
+   */
+  export type messagesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * Filter, which messages to fetch.
+     */
+    where?: messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of messages to fetch.
+     */
+    orderBy?: messagesOrderByWithRelationInput | messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for messages.
+     */
+    cursor?: messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of messages.
+     */
+    distinct?: MessagesScalarFieldEnum | MessagesScalarFieldEnum[]
+  }
+
+  /**
+   * messages findFirstOrThrow
+   */
+  export type messagesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * Filter, which messages to fetch.
+     */
+    where?: messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of messages to fetch.
+     */
+    orderBy?: messagesOrderByWithRelationInput | messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for messages.
+     */
+    cursor?: messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of messages.
+     */
+    distinct?: MessagesScalarFieldEnum | MessagesScalarFieldEnum[]
+  }
+
+  /**
+   * messages findMany
+   */
+  export type messagesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * Filter, which messages to fetch.
+     */
+    where?: messagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of messages to fetch.
+     */
+    orderBy?: messagesOrderByWithRelationInput | messagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing messages.
+     */
+    cursor?: messagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of messages.
+     */
+    distinct?: MessagesScalarFieldEnum | MessagesScalarFieldEnum[]
+  }
+
+  /**
+   * messages create
+   */
+  export type messagesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a messages.
+     */
+    data?: XOR<messagesCreateInput, messagesUncheckedCreateInput>
+  }
+
+  /**
+   * messages createMany
+   */
+  export type messagesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many messages.
+     */
+    data: messagesCreateManyInput | messagesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * messages createManyAndReturn
+   */
+  export type messagesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * The data used to create many messages.
+     */
+    data: messagesCreateManyInput | messagesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * messages update
+   */
+  export type messagesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a messages.
+     */
+    data: XOR<messagesUpdateInput, messagesUncheckedUpdateInput>
+    /**
+     * Choose, which messages to update.
+     */
+    where: messagesWhereUniqueInput
+  }
+
+  /**
+   * messages updateMany
+   */
+  export type messagesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update messages.
+     */
+    data: XOR<messagesUpdateManyMutationInput, messagesUncheckedUpdateManyInput>
+    /**
+     * Filter which messages to update
+     */
+    where?: messagesWhereInput
+    /**
+     * Limit how many messages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * messages updateManyAndReturn
+   */
+  export type messagesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * The data used to update messages.
+     */
+    data: XOR<messagesUpdateManyMutationInput, messagesUncheckedUpdateManyInput>
+    /**
+     * Filter which messages to update
+     */
+    where?: messagesWhereInput
+    /**
+     * Limit how many messages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * messages upsert
+   */
+  export type messagesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the messages to update in case it exists.
+     */
+    where: messagesWhereUniqueInput
+    /**
+     * In case the messages found by the `where` argument doesn't exist, create a new messages with this data.
+     */
+    create: XOR<messagesCreateInput, messagesUncheckedCreateInput>
+    /**
+     * In case the messages was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<messagesUpdateInput, messagesUncheckedUpdateInput>
+  }
+
+  /**
+   * messages delete
+   */
+  export type messagesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+    /**
+     * Filter which messages to delete.
+     */
+    where: messagesWhereUniqueInput
+  }
+
+  /**
+   * messages deleteMany
+   */
+  export type messagesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which messages to delete
+     */
+    where?: messagesWhereInput
+    /**
+     * Limit how many messages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * messages.chats
+   */
+  export type messages$chatsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the chats
+     */
+    select?: chatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the chats
+     */
+    omit?: chatsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: chatsInclude<ExtArgs> | null
+    where?: chatsWhereInput
+  }
+
+  /**
+   * messages without action
+   */
+  export type messagesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the messages
+     */
+    select?: messagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the messages
+     */
+    omit?: messagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: messagesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model quiz_questions
+   */
+
+  export type AggregateQuiz_questions = {
+    _count: Quiz_questionsCountAggregateOutputType | null
+    _avg: Quiz_questionsAvgAggregateOutputType | null
+    _sum: Quiz_questionsSumAggregateOutputType | null
+    _min: Quiz_questionsMinAggregateOutputType | null
+    _max: Quiz_questionsMaxAggregateOutputType | null
+  }
+
+  export type Quiz_questionsAvgAggregateOutputType = {
+    depth_score: number | null
+  }
+
+  export type Quiz_questionsSumAggregateOutputType = {
+    depth_score: number | null
+  }
+
+  export type Quiz_questionsMinAggregateOutputType = {
+    id: string | null
+    quiz_id: string | null
+    question: string | null
+    user_answer: string | null
+    correct_answer: string | null
+    is_correct: boolean | null
+    depth_score: number | null
+  }
+
+  export type Quiz_questionsMaxAggregateOutputType = {
+    id: string | null
+    quiz_id: string | null
+    question: string | null
+    user_answer: string | null
+    correct_answer: string | null
+    is_correct: boolean | null
+    depth_score: number | null
+  }
+
+  export type Quiz_questionsCountAggregateOutputType = {
+    id: number
+    quiz_id: number
+    question: number
+    user_answer: number
+    correct_answer: number
+    is_correct: number
+    depth_score: number
+    _all: number
+  }
+
+
+  export type Quiz_questionsAvgAggregateInputType = {
+    depth_score?: true
+  }
+
+  export type Quiz_questionsSumAggregateInputType = {
+    depth_score?: true
+  }
+
+  export type Quiz_questionsMinAggregateInputType = {
+    id?: true
+    quiz_id?: true
+    question?: true
+    user_answer?: true
+    correct_answer?: true
+    is_correct?: true
+    depth_score?: true
+  }
+
+  export type Quiz_questionsMaxAggregateInputType = {
+    id?: true
+    quiz_id?: true
+    question?: true
+    user_answer?: true
+    correct_answer?: true
+    is_correct?: true
+    depth_score?: true
+  }
+
+  export type Quiz_questionsCountAggregateInputType = {
+    id?: true
+    quiz_id?: true
+    question?: true
+    user_answer?: true
+    correct_answer?: true
+    is_correct?: true
+    depth_score?: true
+    _all?: true
+  }
+
+  export type Quiz_questionsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which quiz_questions to aggregate.
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quiz_questions to fetch.
+     */
+    orderBy?: quiz_questionsOrderByWithRelationInput | quiz_questionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: quiz_questionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quiz_questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quiz_questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned quiz_questions
+    **/
+    _count?: true | Quiz_questionsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Quiz_questionsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Quiz_questionsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Quiz_questionsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Quiz_questionsMaxAggregateInputType
+  }
+
+  export type GetQuiz_questionsAggregateType<T extends Quiz_questionsAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuiz_questions]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuiz_questions[P]>
+      : GetScalarType<T[P], AggregateQuiz_questions[P]>
+  }
+
+
+
+
+  export type quiz_questionsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: quiz_questionsWhereInput
+    orderBy?: quiz_questionsOrderByWithAggregationInput | quiz_questionsOrderByWithAggregationInput[]
+    by: Quiz_questionsScalarFieldEnum[] | Quiz_questionsScalarFieldEnum
+    having?: quiz_questionsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Quiz_questionsCountAggregateInputType | true
+    _avg?: Quiz_questionsAvgAggregateInputType
+    _sum?: Quiz_questionsSumAggregateInputType
+    _min?: Quiz_questionsMinAggregateInputType
+    _max?: Quiz_questionsMaxAggregateInputType
+  }
+
+  export type Quiz_questionsGroupByOutputType = {
+    id: string
+    quiz_id: string
+    question: string
+    user_answer: string | null
+    correct_answer: string
+    is_correct: boolean | null
+    depth_score: number | null
+    _count: Quiz_questionsCountAggregateOutputType | null
+    _avg: Quiz_questionsAvgAggregateOutputType | null
+    _sum: Quiz_questionsSumAggregateOutputType | null
+    _min: Quiz_questionsMinAggregateOutputType | null
+    _max: Quiz_questionsMaxAggregateOutputType | null
+  }
+
+  type GetQuiz_questionsGroupByPayload<T extends quiz_questionsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Quiz_questionsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Quiz_questionsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Quiz_questionsGroupByOutputType[P]>
+            : GetScalarType<T[P], Quiz_questionsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type quiz_questionsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quiz_id?: boolean
+    question?: boolean
+    user_answer?: boolean
+    correct_answer?: boolean
+    is_correct?: boolean
+    depth_score?: boolean
+    quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["quiz_questions"]>
+
+  export type quiz_questionsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quiz_id?: boolean
+    question?: boolean
+    user_answer?: boolean
+    correct_answer?: boolean
+    is_correct?: boolean
+    depth_score?: boolean
+    quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["quiz_questions"]>
+
+  export type quiz_questionsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    quiz_id?: boolean
+    question?: boolean
+    user_answer?: boolean
+    correct_answer?: boolean
+    is_correct?: boolean
+    depth_score?: boolean
+    quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["quiz_questions"]>
+
+  export type quiz_questionsSelectScalar = {
+    id?: boolean
+    quiz_id?: boolean
+    question?: boolean
+    user_answer?: boolean
+    correct_answer?: boolean
+    is_correct?: boolean
+    depth_score?: boolean
+  }
+
+  export type quiz_questionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quiz_id" | "question" | "user_answer" | "correct_answer" | "is_correct" | "depth_score", ExtArgs["result"]["quiz_questions"]>
+  export type quiz_questionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
+  }
+  export type quiz_questionsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
+  }
+  export type quiz_questionsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
+  }
+
+  export type $quiz_questionsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "quiz_questions"
+    objects: {
+      quizzes: Prisma.$quizzesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      quiz_id: string
+      question: string
+      user_answer: string | null
+      correct_answer: string
+      is_correct: boolean | null
+      depth_score: number | null
+    }, ExtArgs["result"]["quiz_questions"]>
+    composites: {}
+  }
+
+  type quiz_questionsGetPayload<S extends boolean | null | undefined | quiz_questionsDefaultArgs> = $Result.GetResult<Prisma.$quiz_questionsPayload, S>
+
+  type quiz_questionsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<quiz_questionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Quiz_questionsCountAggregateInputType | true
+    }
+
+  export interface quiz_questionsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['quiz_questions'], meta: { name: 'quiz_questions' } }
+    /**
+     * Find zero or one Quiz_questions that matches the filter.
+     * @param {quiz_questionsFindUniqueArgs} args - Arguments to find a Quiz_questions
+     * @example
+     * // Get one Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends quiz_questionsFindUniqueArgs>(args: SelectSubset<T, quiz_questionsFindUniqueArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Quiz_questions that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {quiz_questionsFindUniqueOrThrowArgs} args - Arguments to find a Quiz_questions
+     * @example
+     * // Get one Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends quiz_questionsFindUniqueOrThrowArgs>(args: SelectSubset<T, quiz_questionsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Quiz_questions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quiz_questionsFindFirstArgs} args - Arguments to find a Quiz_questions
+     * @example
+     * // Get one Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends quiz_questionsFindFirstArgs>(args?: SelectSubset<T, quiz_questionsFindFirstArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Quiz_questions that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quiz_questionsFindFirstOrThrowArgs} args - Arguments to find a Quiz_questions
+     * @example
+     * // Get one Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends quiz_questionsFindFirstOrThrowArgs>(args?: SelectSubset<T, quiz_questionsFindFirstOrThrowArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Quiz_questions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quiz_questionsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.findMany()
+     * 
+     * // Get first 10 Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const quiz_questionsWithIdOnly = await prisma.quiz_questions.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends quiz_questionsFindManyArgs>(args?: SelectSubset<T, quiz_questionsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Quiz_questions.
+     * @param {quiz_questionsCreateArgs} args - Arguments to create a Quiz_questions.
+     * @example
+     * // Create one Quiz_questions
+     * const Quiz_questions = await prisma.quiz_questions.create({
+     *   data: {
+     *     // ... data to create a Quiz_questions
+     *   }
+     * })
+     * 
+     */
+    create<T extends quiz_questionsCreateArgs>(args: SelectSubset<T, quiz_questionsCreateArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Quiz_questions.
+     * @param {quiz_questionsCreateManyArgs} args - Arguments to create many Quiz_questions.
+     * @example
+     * // Create many Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends quiz_questionsCreateManyArgs>(args?: SelectSubset<T, quiz_questionsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Quiz_questions and returns the data saved in the database.
+     * @param {quiz_questionsCreateManyAndReturnArgs} args - Arguments to create many Quiz_questions.
+     * @example
+     * // Create many Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Quiz_questions and only return the `id`
+     * const quiz_questionsWithIdOnly = await prisma.quiz_questions.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends quiz_questionsCreateManyAndReturnArgs>(args?: SelectSubset<T, quiz_questionsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Quiz_questions.
+     * @param {quiz_questionsDeleteArgs} args - Arguments to delete one Quiz_questions.
+     * @example
+     * // Delete one Quiz_questions
+     * const Quiz_questions = await prisma.quiz_questions.delete({
+     *   where: {
+     *     // ... filter to delete one Quiz_questions
+     *   }
+     * })
+     * 
+     */
+    delete<T extends quiz_questionsDeleteArgs>(args: SelectSubset<T, quiz_questionsDeleteArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Quiz_questions.
+     * @param {quiz_questionsUpdateArgs} args - Arguments to update one Quiz_questions.
+     * @example
+     * // Update one Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends quiz_questionsUpdateArgs>(args: SelectSubset<T, quiz_questionsUpdateArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Quiz_questions.
+     * @param {quiz_questionsDeleteManyArgs} args - Arguments to filter Quiz_questions to delete.
+     * @example
+     * // Delete a few Quiz_questions
+     * const { count } = await prisma.quiz_questions.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends quiz_questionsDeleteManyArgs>(args?: SelectSubset<T, quiz_questionsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quiz_questions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quiz_questionsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends quiz_questionsUpdateManyArgs>(args: SelectSubset<T, quiz_questionsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quiz_questions and returns the data updated in the database.
+     * @param {quiz_questionsUpdateManyAndReturnArgs} args - Arguments to update many Quiz_questions.
+     * @example
+     * // Update many Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Quiz_questions and only return the `id`
+     * const quiz_questionsWithIdOnly = await prisma.quiz_questions.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends quiz_questionsUpdateManyAndReturnArgs>(args: SelectSubset<T, quiz_questionsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Quiz_questions.
+     * @param {quiz_questionsUpsertArgs} args - Arguments to update or create a Quiz_questions.
+     * @example
+     * // Update or create a Quiz_questions
+     * const quiz_questions = await prisma.quiz_questions.upsert({
+     *   create: {
+     *     // ... data to create a Quiz_questions
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Quiz_questions we want to update
+     *   }
+     * })
+     */
+    upsert<T extends quiz_questionsUpsertArgs>(args: SelectSubset<T, quiz_questionsUpsertArgs<ExtArgs>>): Prisma__quiz_questionsClient<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Quiz_questions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quiz_questionsCountArgs} args - Arguments to filter Quiz_questions to count.
+     * @example
+     * // Count the number of Quiz_questions
+     * const count = await prisma.quiz_questions.count({
+     *   where: {
+     *     // ... the filter for the Quiz_questions we want to count
+     *   }
+     * })
+    **/
+    count<T extends quiz_questionsCountArgs>(
+      args?: Subset<T, quiz_questionsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Quiz_questionsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Quiz_questions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Quiz_questionsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Quiz_questionsAggregateArgs>(args: Subset<T, Quiz_questionsAggregateArgs>): Prisma.PrismaPromise<GetQuiz_questionsAggregateType<T>>
+
+    /**
+     * Group by Quiz_questions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quiz_questionsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends quiz_questionsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: quiz_questionsGroupByArgs['orderBy'] }
+        : { orderBy?: quiz_questionsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, quiz_questionsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuiz_questionsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the quiz_questions model
+   */
+  readonly fields: quiz_questionsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for quiz_questions.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__quiz_questionsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    quizzes<T extends quizzesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, quizzesDefaultArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the quiz_questions model
+   */
+  interface quiz_questionsFieldRefs {
+    readonly id: FieldRef<"quiz_questions", 'String'>
+    readonly quiz_id: FieldRef<"quiz_questions", 'String'>
+    readonly question: FieldRef<"quiz_questions", 'String'>
+    readonly user_answer: FieldRef<"quiz_questions", 'String'>
+    readonly correct_answer: FieldRef<"quiz_questions", 'String'>
+    readonly is_correct: FieldRef<"quiz_questions", 'Boolean'>
+    readonly depth_score: FieldRef<"quiz_questions", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * quiz_questions findUnique
+   */
+  export type quiz_questionsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * Filter, which quiz_questions to fetch.
+     */
+    where: quiz_questionsWhereUniqueInput
+  }
+
+  /**
+   * quiz_questions findUniqueOrThrow
+   */
+  export type quiz_questionsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * Filter, which quiz_questions to fetch.
+     */
+    where: quiz_questionsWhereUniqueInput
+  }
+
+  /**
+   * quiz_questions findFirst
+   */
+  export type quiz_questionsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * Filter, which quiz_questions to fetch.
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quiz_questions to fetch.
+     */
+    orderBy?: quiz_questionsOrderByWithRelationInput | quiz_questionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for quiz_questions.
+     */
+    cursor?: quiz_questionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quiz_questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quiz_questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of quiz_questions.
+     */
+    distinct?: Quiz_questionsScalarFieldEnum | Quiz_questionsScalarFieldEnum[]
+  }
+
+  /**
+   * quiz_questions findFirstOrThrow
+   */
+  export type quiz_questionsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * Filter, which quiz_questions to fetch.
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quiz_questions to fetch.
+     */
+    orderBy?: quiz_questionsOrderByWithRelationInput | quiz_questionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for quiz_questions.
+     */
+    cursor?: quiz_questionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quiz_questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quiz_questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of quiz_questions.
+     */
+    distinct?: Quiz_questionsScalarFieldEnum | Quiz_questionsScalarFieldEnum[]
+  }
+
+  /**
+   * quiz_questions findMany
+   */
+  export type quiz_questionsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * Filter, which quiz_questions to fetch.
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quiz_questions to fetch.
+     */
+    orderBy?: quiz_questionsOrderByWithRelationInput | quiz_questionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing quiz_questions.
+     */
+    cursor?: quiz_questionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quiz_questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quiz_questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of quiz_questions.
+     */
+    distinct?: Quiz_questionsScalarFieldEnum | Quiz_questionsScalarFieldEnum[]
+  }
+
+  /**
+   * quiz_questions create
+   */
+  export type quiz_questionsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a quiz_questions.
+     */
+    data: XOR<quiz_questionsCreateInput, quiz_questionsUncheckedCreateInput>
+  }
+
+  /**
+   * quiz_questions createMany
+   */
+  export type quiz_questionsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many quiz_questions.
+     */
+    data: quiz_questionsCreateManyInput | quiz_questionsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * quiz_questions createManyAndReturn
+   */
+  export type quiz_questionsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * The data used to create many quiz_questions.
+     */
+    data: quiz_questionsCreateManyInput | quiz_questionsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * quiz_questions update
+   */
+  export type quiz_questionsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a quiz_questions.
+     */
+    data: XOR<quiz_questionsUpdateInput, quiz_questionsUncheckedUpdateInput>
+    /**
+     * Choose, which quiz_questions to update.
+     */
+    where: quiz_questionsWhereUniqueInput
+  }
+
+  /**
+   * quiz_questions updateMany
+   */
+  export type quiz_questionsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update quiz_questions.
+     */
+    data: XOR<quiz_questionsUpdateManyMutationInput, quiz_questionsUncheckedUpdateManyInput>
+    /**
+     * Filter which quiz_questions to update
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * Limit how many quiz_questions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * quiz_questions updateManyAndReturn
+   */
+  export type quiz_questionsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * The data used to update quiz_questions.
+     */
+    data: XOR<quiz_questionsUpdateManyMutationInput, quiz_questionsUncheckedUpdateManyInput>
+    /**
+     * Filter which quiz_questions to update
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * Limit how many quiz_questions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * quiz_questions upsert
+   */
+  export type quiz_questionsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the quiz_questions to update in case it exists.
+     */
+    where: quiz_questionsWhereUniqueInput
+    /**
+     * In case the quiz_questions found by the `where` argument doesn't exist, create a new quiz_questions with this data.
+     */
+    create: XOR<quiz_questionsCreateInput, quiz_questionsUncheckedCreateInput>
+    /**
+     * In case the quiz_questions was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<quiz_questionsUpdateInput, quiz_questionsUncheckedUpdateInput>
+  }
+
+  /**
+   * quiz_questions delete
+   */
+  export type quiz_questionsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    /**
+     * Filter which quiz_questions to delete.
+     */
+    where: quiz_questionsWhereUniqueInput
+  }
+
+  /**
+   * quiz_questions deleteMany
+   */
+  export type quiz_questionsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which quiz_questions to delete
+     */
+    where?: quiz_questionsWhereInput
+    /**
+     * Limit how many quiz_questions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * quiz_questions without action
+   */
+  export type quiz_questionsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model quizzes
+   */
+
+  export type AggregateQuizzes = {
+    _count: QuizzesCountAggregateOutputType | null
+    _avg: QuizzesAvgAggregateOutputType | null
+    _sum: QuizzesSumAggregateOutputType | null
+    _min: QuizzesMinAggregateOutputType | null
+    _max: QuizzesMaxAggregateOutputType | null
+  }
+
+  export type QuizzesAvgAggregateOutputType = {
+    score: number | null
+    retake_count: number | null
+  }
+
+  export type QuizzesSumAggregateOutputType = {
+    score: number | null
+    retake_count: number | null
+  }
+
+  export type QuizzesMinAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    topic_id: string | null
+    score: number | null
+    date: Date | null
+    retake_count: number | null
+  }
+
+  export type QuizzesMaxAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    topic_id: string | null
+    score: number | null
+    date: Date | null
+    retake_count: number | null
+  }
+
+  export type QuizzesCountAggregateOutputType = {
+    id: number
+    user_id: number
+    topic_id: number
+    score: number
+    date: number
+    retake_count: number
+    _all: number
+  }
+
+
+  export type QuizzesAvgAggregateInputType = {
+    score?: true
+    retake_count?: true
+  }
+
+  export type QuizzesSumAggregateInputType = {
+    score?: true
+    retake_count?: true
+  }
+
+  export type QuizzesMinAggregateInputType = {
+    id?: true
+    user_id?: true
+    topic_id?: true
+    score?: true
+    date?: true
+    retake_count?: true
+  }
+
+  export type QuizzesMaxAggregateInputType = {
+    id?: true
+    user_id?: true
+    topic_id?: true
+    score?: true
+    date?: true
+    retake_count?: true
+  }
+
+  export type QuizzesCountAggregateInputType = {
+    id?: true
+    user_id?: true
+    topic_id?: true
+    score?: true
+    date?: true
+    retake_count?: true
+    _all?: true
+  }
+
+  export type QuizzesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which quizzes to aggregate.
+     */
+    where?: quizzesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quizzes to fetch.
+     */
+    orderBy?: quizzesOrderByWithRelationInput | quizzesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: quizzesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned quizzes
+    **/
+    _count?: true | QuizzesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuizzesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuizzesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuizzesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuizzesMaxAggregateInputType
+  }
+
+  export type GetQuizzesAggregateType<T extends QuizzesAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuizzes]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuizzes[P]>
+      : GetScalarType<T[P], AggregateQuizzes[P]>
+  }
+
+
+
+
+  export type quizzesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: quizzesWhereInput
+    orderBy?: quizzesOrderByWithAggregationInput | quizzesOrderByWithAggregationInput[]
+    by: QuizzesScalarFieldEnum[] | QuizzesScalarFieldEnum
+    having?: quizzesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuizzesCountAggregateInputType | true
+    _avg?: QuizzesAvgAggregateInputType
+    _sum?: QuizzesSumAggregateInputType
+    _min?: QuizzesMinAggregateInputType
+    _max?: QuizzesMaxAggregateInputType
+  }
+
+  export type QuizzesGroupByOutputType = {
+    id: string
+    user_id: string
+    topic_id: string
+    score: number | null
+    date: Date | null
+    retake_count: number | null
+    _count: QuizzesCountAggregateOutputType | null
+    _avg: QuizzesAvgAggregateOutputType | null
+    _sum: QuizzesSumAggregateOutputType | null
+    _min: QuizzesMinAggregateOutputType | null
+    _max: QuizzesMaxAggregateOutputType | null
+  }
+
+  type GetQuizzesGroupByPayload<T extends quizzesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuizzesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuizzesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuizzesGroupByOutputType[P]>
+            : GetScalarType<T[P], QuizzesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type quizzesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    topic_id?: boolean
+    score?: boolean
+    date?: boolean
+    retake_count?: boolean
+    quiz_questions?: boolean | quizzes$quiz_questionsArgs<ExtArgs>
+    _count?: boolean | QuizzesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["quizzes"]>
+
+  export type quizzesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    topic_id?: boolean
+    score?: boolean
+    date?: boolean
+    retake_count?: boolean
+  }, ExtArgs["result"]["quizzes"]>
+
+  export type quizzesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    topic_id?: boolean
+    score?: boolean
+    date?: boolean
+    retake_count?: boolean
+  }, ExtArgs["result"]["quizzes"]>
+
+  export type quizzesSelectScalar = {
+    id?: boolean
+    user_id?: boolean
+    topic_id?: boolean
+    score?: boolean
+    date?: boolean
+    retake_count?: boolean
+  }
+
+  export type quizzesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "topic_id" | "score" | "date" | "retake_count", ExtArgs["result"]["quizzes"]>
+  export type quizzesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    quiz_questions?: boolean | quizzes$quiz_questionsArgs<ExtArgs>
+    _count?: boolean | QuizzesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type quizzesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type quizzesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $quizzesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "quizzes"
+    objects: {
+      quiz_questions: Prisma.$quiz_questionsPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      user_id: string
+      topic_id: string
+      score: number | null
+      date: Date | null
+      retake_count: number | null
+    }, ExtArgs["result"]["quizzes"]>
+    composites: {}
+  }
+
+  type quizzesGetPayload<S extends boolean | null | undefined | quizzesDefaultArgs> = $Result.GetResult<Prisma.$quizzesPayload, S>
+
+  type quizzesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<quizzesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QuizzesCountAggregateInputType | true
+    }
+
+  export interface quizzesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['quizzes'], meta: { name: 'quizzes' } }
+    /**
+     * Find zero or one Quizzes that matches the filter.
+     * @param {quizzesFindUniqueArgs} args - Arguments to find a Quizzes
+     * @example
+     * // Get one Quizzes
+     * const quizzes = await prisma.quizzes.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends quizzesFindUniqueArgs>(args: SelectSubset<T, quizzesFindUniqueArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Quizzes that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {quizzesFindUniqueOrThrowArgs} args - Arguments to find a Quizzes
+     * @example
+     * // Get one Quizzes
+     * const quizzes = await prisma.quizzes.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends quizzesFindUniqueOrThrowArgs>(args: SelectSubset<T, quizzesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Quizzes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quizzesFindFirstArgs} args - Arguments to find a Quizzes
+     * @example
+     * // Get one Quizzes
+     * const quizzes = await prisma.quizzes.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends quizzesFindFirstArgs>(args?: SelectSubset<T, quizzesFindFirstArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Quizzes that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quizzesFindFirstOrThrowArgs} args - Arguments to find a Quizzes
+     * @example
+     * // Get one Quizzes
+     * const quizzes = await prisma.quizzes.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends quizzesFindFirstOrThrowArgs>(args?: SelectSubset<T, quizzesFindFirstOrThrowArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Quizzes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quizzesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Quizzes
+     * const quizzes = await prisma.quizzes.findMany()
+     * 
+     * // Get first 10 Quizzes
+     * const quizzes = await prisma.quizzes.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const quizzesWithIdOnly = await prisma.quizzes.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends quizzesFindManyArgs>(args?: SelectSubset<T, quizzesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Quizzes.
+     * @param {quizzesCreateArgs} args - Arguments to create a Quizzes.
+     * @example
+     * // Create one Quizzes
+     * const Quizzes = await prisma.quizzes.create({
+     *   data: {
+     *     // ... data to create a Quizzes
+     *   }
+     * })
+     * 
+     */
+    create<T extends quizzesCreateArgs>(args: SelectSubset<T, quizzesCreateArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Quizzes.
+     * @param {quizzesCreateManyArgs} args - Arguments to create many Quizzes.
+     * @example
+     * // Create many Quizzes
+     * const quizzes = await prisma.quizzes.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends quizzesCreateManyArgs>(args?: SelectSubset<T, quizzesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Quizzes and returns the data saved in the database.
+     * @param {quizzesCreateManyAndReturnArgs} args - Arguments to create many Quizzes.
+     * @example
+     * // Create many Quizzes
+     * const quizzes = await prisma.quizzes.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Quizzes and only return the `id`
+     * const quizzesWithIdOnly = await prisma.quizzes.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends quizzesCreateManyAndReturnArgs>(args?: SelectSubset<T, quizzesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Quizzes.
+     * @param {quizzesDeleteArgs} args - Arguments to delete one Quizzes.
+     * @example
+     * // Delete one Quizzes
+     * const Quizzes = await prisma.quizzes.delete({
+     *   where: {
+     *     // ... filter to delete one Quizzes
+     *   }
+     * })
+     * 
+     */
+    delete<T extends quizzesDeleteArgs>(args: SelectSubset<T, quizzesDeleteArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Quizzes.
+     * @param {quizzesUpdateArgs} args - Arguments to update one Quizzes.
+     * @example
+     * // Update one Quizzes
+     * const quizzes = await prisma.quizzes.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends quizzesUpdateArgs>(args: SelectSubset<T, quizzesUpdateArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Quizzes.
+     * @param {quizzesDeleteManyArgs} args - Arguments to filter Quizzes to delete.
+     * @example
+     * // Delete a few Quizzes
+     * const { count } = await prisma.quizzes.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends quizzesDeleteManyArgs>(args?: SelectSubset<T, quizzesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quizzes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quizzesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Quizzes
+     * const quizzes = await prisma.quizzes.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends quizzesUpdateManyArgs>(args: SelectSubset<T, quizzesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quizzes and returns the data updated in the database.
+     * @param {quizzesUpdateManyAndReturnArgs} args - Arguments to update many Quizzes.
+     * @example
+     * // Update many Quizzes
+     * const quizzes = await prisma.quizzes.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Quizzes and only return the `id`
+     * const quizzesWithIdOnly = await prisma.quizzes.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends quizzesUpdateManyAndReturnArgs>(args: SelectSubset<T, quizzesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Quizzes.
+     * @param {quizzesUpsertArgs} args - Arguments to update or create a Quizzes.
+     * @example
+     * // Update or create a Quizzes
+     * const quizzes = await prisma.quizzes.upsert({
+     *   create: {
+     *     // ... data to create a Quizzes
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Quizzes we want to update
+     *   }
+     * })
+     */
+    upsert<T extends quizzesUpsertArgs>(args: SelectSubset<T, quizzesUpsertArgs<ExtArgs>>): Prisma__quizzesClient<$Result.GetResult<Prisma.$quizzesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Quizzes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quizzesCountArgs} args - Arguments to filter Quizzes to count.
+     * @example
+     * // Count the number of Quizzes
+     * const count = await prisma.quizzes.count({
+     *   where: {
+     *     // ... the filter for the Quizzes we want to count
+     *   }
+     * })
+    **/
+    count<T extends quizzesCountArgs>(
+      args?: Subset<T, quizzesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuizzesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Quizzes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizzesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuizzesAggregateArgs>(args: Subset<T, QuizzesAggregateArgs>): Prisma.PrismaPromise<GetQuizzesAggregateType<T>>
+
+    /**
+     * Group by Quizzes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {quizzesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends quizzesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: quizzesGroupByArgs['orderBy'] }
+        : { orderBy?: quizzesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, quizzesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuizzesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the quizzes model
+   */
+  readonly fields: quizzesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for quizzes.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__quizzesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    quiz_questions<T extends quizzes$quiz_questionsArgs<ExtArgs> = {}>(args?: Subset<T, quizzes$quiz_questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$quiz_questionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the quizzes model
+   */
+  interface quizzesFieldRefs {
+    readonly id: FieldRef<"quizzes", 'String'>
+    readonly user_id: FieldRef<"quizzes", 'String'>
+    readonly topic_id: FieldRef<"quizzes", 'String'>
+    readonly score: FieldRef<"quizzes", 'Int'>
+    readonly date: FieldRef<"quizzes", 'DateTime'>
+    readonly retake_count: FieldRef<"quizzes", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * quizzes findUnique
+   */
+  export type quizzesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * Filter, which quizzes to fetch.
+     */
+    where: quizzesWhereUniqueInput
+  }
+
+  /**
+   * quizzes findUniqueOrThrow
+   */
+  export type quizzesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * Filter, which quizzes to fetch.
+     */
+    where: quizzesWhereUniqueInput
+  }
+
+  /**
+   * quizzes findFirst
+   */
+  export type quizzesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * Filter, which quizzes to fetch.
+     */
+    where?: quizzesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quizzes to fetch.
+     */
+    orderBy?: quizzesOrderByWithRelationInput | quizzesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for quizzes.
+     */
+    cursor?: quizzesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of quizzes.
+     */
+    distinct?: QuizzesScalarFieldEnum | QuizzesScalarFieldEnum[]
+  }
+
+  /**
+   * quizzes findFirstOrThrow
+   */
+  export type quizzesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * Filter, which quizzes to fetch.
+     */
+    where?: quizzesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quizzes to fetch.
+     */
+    orderBy?: quizzesOrderByWithRelationInput | quizzesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for quizzes.
+     */
+    cursor?: quizzesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of quizzes.
+     */
+    distinct?: QuizzesScalarFieldEnum | QuizzesScalarFieldEnum[]
+  }
+
+  /**
+   * quizzes findMany
+   */
+  export type quizzesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * Filter, which quizzes to fetch.
+     */
+    where?: quizzesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of quizzes to fetch.
+     */
+    orderBy?: quizzesOrderByWithRelationInput | quizzesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing quizzes.
+     */
+    cursor?: quizzesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of quizzes.
+     */
+    distinct?: QuizzesScalarFieldEnum | QuizzesScalarFieldEnum[]
+  }
+
+  /**
+   * quizzes create
+   */
+  export type quizzesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a quizzes.
+     */
+    data: XOR<quizzesCreateInput, quizzesUncheckedCreateInput>
+  }
+
+  /**
+   * quizzes createMany
+   */
+  export type quizzesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many quizzes.
+     */
+    data: quizzesCreateManyInput | quizzesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * quizzes createManyAndReturn
+   */
+  export type quizzesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * The data used to create many quizzes.
+     */
+    data: quizzesCreateManyInput | quizzesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * quizzes update
+   */
+  export type quizzesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a quizzes.
+     */
+    data: XOR<quizzesUpdateInput, quizzesUncheckedUpdateInput>
+    /**
+     * Choose, which quizzes to update.
+     */
+    where: quizzesWhereUniqueInput
+  }
+
+  /**
+   * quizzes updateMany
+   */
+  export type quizzesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update quizzes.
+     */
+    data: XOR<quizzesUpdateManyMutationInput, quizzesUncheckedUpdateManyInput>
+    /**
+     * Filter which quizzes to update
+     */
+    where?: quizzesWhereInput
+    /**
+     * Limit how many quizzes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * quizzes updateManyAndReturn
+   */
+  export type quizzesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * The data used to update quizzes.
+     */
+    data: XOR<quizzesUpdateManyMutationInput, quizzesUncheckedUpdateManyInput>
+    /**
+     * Filter which quizzes to update
+     */
+    where?: quizzesWhereInput
+    /**
+     * Limit how many quizzes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * quizzes upsert
+   */
+  export type quizzesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the quizzes to update in case it exists.
+     */
+    where: quizzesWhereUniqueInput
+    /**
+     * In case the quizzes found by the `where` argument doesn't exist, create a new quizzes with this data.
+     */
+    create: XOR<quizzesCreateInput, quizzesUncheckedCreateInput>
+    /**
+     * In case the quizzes was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<quizzesUpdateInput, quizzesUncheckedUpdateInput>
+  }
+
+  /**
+   * quizzes delete
+   */
+  export type quizzesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+    /**
+     * Filter which quizzes to delete.
+     */
+    where: quizzesWhereUniqueInput
+  }
+
+  /**
+   * quizzes deleteMany
+   */
+  export type quizzesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which quizzes to delete
+     */
+    where?: quizzesWhereInput
+    /**
+     * Limit how many quizzes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * quizzes.quiz_questions
+   */
+  export type quizzes$quiz_questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quiz_questions
+     */
+    select?: quiz_questionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quiz_questions
+     */
+    omit?: quiz_questionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quiz_questionsInclude<ExtArgs> | null
+    where?: quiz_questionsWhereInput
+    orderBy?: quiz_questionsOrderByWithRelationInput | quiz_questionsOrderByWithRelationInput[]
+    cursor?: quiz_questionsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Quiz_questionsScalarFieldEnum | Quiz_questionsScalarFieldEnum[]
+  }
+
+  /**
+   * quizzes without action
+   */
+  export type quizzesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the quizzes
+     */
+    select?: quizzesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the quizzes
+     */
+    omit?: quizzesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: quizzesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model class_engagement
+   */
+
+  export type AggregateClass_engagement = {
+    _count: Class_engagementCountAggregateOutputType | null
+    _avg: Class_engagementAvgAggregateOutputType | null
+    _sum: Class_engagementSumAggregateOutputType | null
+    _min: Class_engagementMinAggregateOutputType | null
+    _max: Class_engagementMaxAggregateOutputType | null
+  }
+
+  export type Class_engagementAvgAggregateOutputType = {
+    question_count: number | null
+  }
+
+  export type Class_engagementSumAggregateOutputType = {
+    question_count: number | null
+  }
+
+  export type Class_engagementMinAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    class_name: string | null
+    question_count: number | null
+    week_start: Date | null
+  }
+
+  export type Class_engagementMaxAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    class_name: string | null
+    question_count: number | null
+    week_start: Date | null
+  }
+
+  export type Class_engagementCountAggregateOutputType = {
+    id: number
+    user_id: number
+    class_name: number
+    question_count: number
+    week_start: number
+    _all: number
+  }
+
+
+  export type Class_engagementAvgAggregateInputType = {
+    question_count?: true
+  }
+
+  export type Class_engagementSumAggregateInputType = {
+    question_count?: true
+  }
+
+  export type Class_engagementMinAggregateInputType = {
+    id?: true
+    user_id?: true
+    class_name?: true
+    question_count?: true
+    week_start?: true
+  }
+
+  export type Class_engagementMaxAggregateInputType = {
+    id?: true
+    user_id?: true
+    class_name?: true
+    question_count?: true
+    week_start?: true
+  }
+
+  export type Class_engagementCountAggregateInputType = {
+    id?: true
+    user_id?: true
+    class_name?: true
+    question_count?: true
+    week_start?: true
+    _all?: true
+  }
+
+  export type Class_engagementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which class_engagement to aggregate.
+     */
+    where?: class_engagementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_engagements to fetch.
+     */
+    orderBy?: class_engagementOrderByWithRelationInput | class_engagementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: class_engagementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_engagements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_engagements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned class_engagements
+    **/
+    _count?: true | Class_engagementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Class_engagementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Class_engagementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Class_engagementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Class_engagementMaxAggregateInputType
+  }
+
+  export type GetClass_engagementAggregateType<T extends Class_engagementAggregateArgs> = {
+        [P in keyof T & keyof AggregateClass_engagement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClass_engagement[P]>
+      : GetScalarType<T[P], AggregateClass_engagement[P]>
+  }
+
+
+
+
+  export type class_engagementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: class_engagementWhereInput
+    orderBy?: class_engagementOrderByWithAggregationInput | class_engagementOrderByWithAggregationInput[]
+    by: Class_engagementScalarFieldEnum[] | Class_engagementScalarFieldEnum
+    having?: class_engagementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Class_engagementCountAggregateInputType | true
+    _avg?: Class_engagementAvgAggregateInputType
+    _sum?: Class_engagementSumAggregateInputType
+    _min?: Class_engagementMinAggregateInputType
+    _max?: Class_engagementMaxAggregateInputType
+  }
+
+  export type Class_engagementGroupByOutputType = {
+    id: string
+    user_id: string
+    class_name: string
+    question_count: number | null
+    week_start: Date
+    _count: Class_engagementCountAggregateOutputType | null
+    _avg: Class_engagementAvgAggregateOutputType | null
+    _sum: Class_engagementSumAggregateOutputType | null
+    _min: Class_engagementMinAggregateOutputType | null
+    _max: Class_engagementMaxAggregateOutputType | null
+  }
+
+  type GetClass_engagementGroupByPayload<T extends class_engagementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Class_engagementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Class_engagementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Class_engagementGroupByOutputType[P]>
+            : GetScalarType<T[P], Class_engagementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type class_engagementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    class_name?: boolean
+    question_count?: boolean
+    week_start?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class_engagement"]>
+
+  export type class_engagementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    class_name?: boolean
+    question_count?: boolean
+    week_start?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class_engagement"]>
+
+  export type class_engagementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    class_name?: boolean
+    question_count?: boolean
+    week_start?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class_engagement"]>
+
+  export type class_engagementSelectScalar = {
+    id?: boolean
+    user_id?: boolean
+    class_name?: boolean
+    question_count?: boolean
+    week_start?: boolean
+  }
+
+  export type class_engagementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "class_name" | "question_count" | "week_start", ExtArgs["result"]["class_engagement"]>
+  export type class_engagementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type class_engagementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type class_engagementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $class_engagementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "class_engagement"
+    objects: {
+      User: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      user_id: string
+      class_name: string
+      question_count: number | null
+      week_start: Date
+    }, ExtArgs["result"]["class_engagement"]>
+    composites: {}
+  }
+
+  type class_engagementGetPayload<S extends boolean | null | undefined | class_engagementDefaultArgs> = $Result.GetResult<Prisma.$class_engagementPayload, S>
+
+  type class_engagementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<class_engagementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Class_engagementCountAggregateInputType | true
+    }
+
+  export interface class_engagementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['class_engagement'], meta: { name: 'class_engagement' } }
+    /**
+     * Find zero or one Class_engagement that matches the filter.
+     * @param {class_engagementFindUniqueArgs} args - Arguments to find a Class_engagement
+     * @example
+     * // Get one Class_engagement
+     * const class_engagement = await prisma.class_engagement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends class_engagementFindUniqueArgs>(args: SelectSubset<T, class_engagementFindUniqueArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Class_engagement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {class_engagementFindUniqueOrThrowArgs} args - Arguments to find a Class_engagement
+     * @example
+     * // Get one Class_engagement
+     * const class_engagement = await prisma.class_engagement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends class_engagementFindUniqueOrThrowArgs>(args: SelectSubset<T, class_engagementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Class_engagement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_engagementFindFirstArgs} args - Arguments to find a Class_engagement
+     * @example
+     * // Get one Class_engagement
+     * const class_engagement = await prisma.class_engagement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends class_engagementFindFirstArgs>(args?: SelectSubset<T, class_engagementFindFirstArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Class_engagement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_engagementFindFirstOrThrowArgs} args - Arguments to find a Class_engagement
+     * @example
+     * // Get one Class_engagement
+     * const class_engagement = await prisma.class_engagement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends class_engagementFindFirstOrThrowArgs>(args?: SelectSubset<T, class_engagementFindFirstOrThrowArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Class_engagements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_engagementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Class_engagements
+     * const class_engagements = await prisma.class_engagement.findMany()
+     * 
+     * // Get first 10 Class_engagements
+     * const class_engagements = await prisma.class_engagement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const class_engagementWithIdOnly = await prisma.class_engagement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends class_engagementFindManyArgs>(args?: SelectSubset<T, class_engagementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Class_engagement.
+     * @param {class_engagementCreateArgs} args - Arguments to create a Class_engagement.
+     * @example
+     * // Create one Class_engagement
+     * const Class_engagement = await prisma.class_engagement.create({
+     *   data: {
+     *     // ... data to create a Class_engagement
+     *   }
+     * })
+     * 
+     */
+    create<T extends class_engagementCreateArgs>(args: SelectSubset<T, class_engagementCreateArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Class_engagements.
+     * @param {class_engagementCreateManyArgs} args - Arguments to create many Class_engagements.
+     * @example
+     * // Create many Class_engagements
+     * const class_engagement = await prisma.class_engagement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends class_engagementCreateManyArgs>(args?: SelectSubset<T, class_engagementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Class_engagements and returns the data saved in the database.
+     * @param {class_engagementCreateManyAndReturnArgs} args - Arguments to create many Class_engagements.
+     * @example
+     * // Create many Class_engagements
+     * const class_engagement = await prisma.class_engagement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Class_engagements and only return the `id`
+     * const class_engagementWithIdOnly = await prisma.class_engagement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends class_engagementCreateManyAndReturnArgs>(args?: SelectSubset<T, class_engagementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Class_engagement.
+     * @param {class_engagementDeleteArgs} args - Arguments to delete one Class_engagement.
+     * @example
+     * // Delete one Class_engagement
+     * const Class_engagement = await prisma.class_engagement.delete({
+     *   where: {
+     *     // ... filter to delete one Class_engagement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends class_engagementDeleteArgs>(args: SelectSubset<T, class_engagementDeleteArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Class_engagement.
+     * @param {class_engagementUpdateArgs} args - Arguments to update one Class_engagement.
+     * @example
+     * // Update one Class_engagement
+     * const class_engagement = await prisma.class_engagement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends class_engagementUpdateArgs>(args: SelectSubset<T, class_engagementUpdateArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Class_engagements.
+     * @param {class_engagementDeleteManyArgs} args - Arguments to filter Class_engagements to delete.
+     * @example
+     * // Delete a few Class_engagements
+     * const { count } = await prisma.class_engagement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends class_engagementDeleteManyArgs>(args?: SelectSubset<T, class_engagementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Class_engagements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_engagementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Class_engagements
+     * const class_engagement = await prisma.class_engagement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends class_engagementUpdateManyArgs>(args: SelectSubset<T, class_engagementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Class_engagements and returns the data updated in the database.
+     * @param {class_engagementUpdateManyAndReturnArgs} args - Arguments to update many Class_engagements.
+     * @example
+     * // Update many Class_engagements
+     * const class_engagement = await prisma.class_engagement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Class_engagements and only return the `id`
+     * const class_engagementWithIdOnly = await prisma.class_engagement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends class_engagementUpdateManyAndReturnArgs>(args: SelectSubset<T, class_engagementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Class_engagement.
+     * @param {class_engagementUpsertArgs} args - Arguments to update or create a Class_engagement.
+     * @example
+     * // Update or create a Class_engagement
+     * const class_engagement = await prisma.class_engagement.upsert({
+     *   create: {
+     *     // ... data to create a Class_engagement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Class_engagement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends class_engagementUpsertArgs>(args: SelectSubset<T, class_engagementUpsertArgs<ExtArgs>>): Prisma__class_engagementClient<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Class_engagements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_engagementCountArgs} args - Arguments to filter Class_engagements to count.
+     * @example
+     * // Count the number of Class_engagements
+     * const count = await prisma.class_engagement.count({
+     *   where: {
+     *     // ... the filter for the Class_engagements we want to count
+     *   }
+     * })
+    **/
+    count<T extends class_engagementCountArgs>(
+      args?: Subset<T, class_engagementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Class_engagementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Class_engagement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Class_engagementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Class_engagementAggregateArgs>(args: Subset<T, Class_engagementAggregateArgs>): Prisma.PrismaPromise<GetClass_engagementAggregateType<T>>
+
+    /**
+     * Group by Class_engagement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_engagementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends class_engagementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: class_engagementGroupByArgs['orderBy'] }
+        : { orderBy?: class_engagementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, class_engagementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClass_engagementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the class_engagement model
+   */
+  readonly fields: class_engagementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for class_engagement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__class_engagementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the class_engagement model
+   */
+  interface class_engagementFieldRefs {
+    readonly id: FieldRef<"class_engagement", 'String'>
+    readonly user_id: FieldRef<"class_engagement", 'String'>
+    readonly class_name: FieldRef<"class_engagement", 'String'>
+    readonly question_count: FieldRef<"class_engagement", 'Int'>
+    readonly week_start: FieldRef<"class_engagement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * class_engagement findUnique
+   */
+  export type class_engagementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * Filter, which class_engagement to fetch.
+     */
+    where: class_engagementWhereUniqueInput
+  }
+
+  /**
+   * class_engagement findUniqueOrThrow
+   */
+  export type class_engagementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * Filter, which class_engagement to fetch.
+     */
+    where: class_engagementWhereUniqueInput
+  }
+
+  /**
+   * class_engagement findFirst
+   */
+  export type class_engagementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * Filter, which class_engagement to fetch.
+     */
+    where?: class_engagementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_engagements to fetch.
+     */
+    orderBy?: class_engagementOrderByWithRelationInput | class_engagementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for class_engagements.
+     */
+    cursor?: class_engagementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_engagements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_engagements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of class_engagements.
+     */
+    distinct?: Class_engagementScalarFieldEnum | Class_engagementScalarFieldEnum[]
+  }
+
+  /**
+   * class_engagement findFirstOrThrow
+   */
+  export type class_engagementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * Filter, which class_engagement to fetch.
+     */
+    where?: class_engagementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_engagements to fetch.
+     */
+    orderBy?: class_engagementOrderByWithRelationInput | class_engagementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for class_engagements.
+     */
+    cursor?: class_engagementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_engagements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_engagements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of class_engagements.
+     */
+    distinct?: Class_engagementScalarFieldEnum | Class_engagementScalarFieldEnum[]
+  }
+
+  /**
+   * class_engagement findMany
+   */
+  export type class_engagementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * Filter, which class_engagements to fetch.
+     */
+    where?: class_engagementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_engagements to fetch.
+     */
+    orderBy?: class_engagementOrderByWithRelationInput | class_engagementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing class_engagements.
+     */
+    cursor?: class_engagementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_engagements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_engagements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of class_engagements.
+     */
+    distinct?: Class_engagementScalarFieldEnum | Class_engagementScalarFieldEnum[]
+  }
+
+  /**
+   * class_engagement create
+   */
+  export type class_engagementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a class_engagement.
+     */
+    data: XOR<class_engagementCreateInput, class_engagementUncheckedCreateInput>
+  }
+
+  /**
+   * class_engagement createMany
+   */
+  export type class_engagementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many class_engagements.
+     */
+    data: class_engagementCreateManyInput | class_engagementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * class_engagement createManyAndReturn
+   */
+  export type class_engagementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * The data used to create many class_engagements.
+     */
+    data: class_engagementCreateManyInput | class_engagementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * class_engagement update
+   */
+  export type class_engagementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a class_engagement.
+     */
+    data: XOR<class_engagementUpdateInput, class_engagementUncheckedUpdateInput>
+    /**
+     * Choose, which class_engagement to update.
+     */
+    where: class_engagementWhereUniqueInput
+  }
+
+  /**
+   * class_engagement updateMany
+   */
+  export type class_engagementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update class_engagements.
+     */
+    data: XOR<class_engagementUpdateManyMutationInput, class_engagementUncheckedUpdateManyInput>
+    /**
+     * Filter which class_engagements to update
+     */
+    where?: class_engagementWhereInput
+    /**
+     * Limit how many class_engagements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * class_engagement updateManyAndReturn
+   */
+  export type class_engagementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * The data used to update class_engagements.
+     */
+    data: XOR<class_engagementUpdateManyMutationInput, class_engagementUncheckedUpdateManyInput>
+    /**
+     * Filter which class_engagements to update
+     */
+    where?: class_engagementWhereInput
+    /**
+     * Limit how many class_engagements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * class_engagement upsert
+   */
+  export type class_engagementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the class_engagement to update in case it exists.
+     */
+    where: class_engagementWhereUniqueInput
+    /**
+     * In case the class_engagement found by the `where` argument doesn't exist, create a new class_engagement with this data.
+     */
+    create: XOR<class_engagementCreateInput, class_engagementUncheckedCreateInput>
+    /**
+     * In case the class_engagement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<class_engagementUpdateInput, class_engagementUncheckedUpdateInput>
+  }
+
+  /**
+   * class_engagement delete
+   */
+  export type class_engagementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+    /**
+     * Filter which class_engagement to delete.
+     */
+    where: class_engagementWhereUniqueInput
+  }
+
+  /**
+   * class_engagement deleteMany
+   */
+  export type class_engagementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which class_engagements to delete
+     */
+    where?: class_engagementWhereInput
+    /**
+     * Limit how many class_engagements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * class_engagement without action
+   */
+  export type class_engagementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_engagement
+     */
+    select?: class_engagementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_engagement
+     */
+    omit?: class_engagementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_engagementInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15822,7 +23115,8 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     xp_reward: 'xp_reward',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    slug: 'slug'
   };
 
   export type AchievementsScalarFieldEnum = (typeof AchievementsScalarFieldEnum)[keyof typeof AchievementsScalarFieldEnum]
@@ -15868,7 +23162,8 @@ export namespace Prisma {
     class_code: 'class_code',
     topic_id: 'topic_id',
     metric_date: 'metric_date',
-    avg_score: 'avg_score'
+    avg_score: 'avg_score',
+    questions_asked: 'questions_asked'
   };
 
   export type Daily_topic_metricsScalarFieldEnum = (typeof Daily_topic_metricsScalarFieldEnum)[keyof typeof Daily_topic_metricsScalarFieldEnum]
@@ -15891,7 +23186,9 @@ export namespace Prisma {
     friend_id: 'friend_id',
     created_at: 'created_at',
     streak: 'streak',
-    total_xp: 'total_xp'
+    total_xp: 'total_xp',
+    first_name: 'first_name',
+    last_name: 'last_name'
   };
 
   export type FriendsScalarFieldEnum = (typeof FriendsScalarFieldEnum)[keyof typeof FriendsScalarFieldEnum]
@@ -15968,12 +23265,87 @@ export namespace Prisma {
   export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
 
 
+  export const ChatsScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    created_at: 'created_at',
+    accumulated_score: 'accumulated_score'
+  };
+
+  export type ChatsScalarFieldEnum = (typeof ChatsScalarFieldEnum)[keyof typeof ChatsScalarFieldEnum]
+
+
+  export const Langchain_chat_messagesScalarFieldEnum: {
+    id: 'id',
+    session_id: 'session_id',
+    message: 'message'
+  };
+
+  export type Langchain_chat_messagesScalarFieldEnum = (typeof Langchain_chat_messagesScalarFieldEnum)[keyof typeof Langchain_chat_messagesScalarFieldEnum]
+
+
+  export const MessagesScalarFieldEnum: {
+    id: 'id',
+    chat_id: 'chat_id',
+    role: 'role',
+    content: 'content',
+    score: 'score',
+    reason: 'reason',
+    created_at: 'created_at'
+  };
+
+  export type MessagesScalarFieldEnum = (typeof MessagesScalarFieldEnum)[keyof typeof MessagesScalarFieldEnum]
+
+
+  export const Quiz_questionsScalarFieldEnum: {
+    id: 'id',
+    quiz_id: 'quiz_id',
+    question: 'question',
+    user_answer: 'user_answer',
+    correct_answer: 'correct_answer',
+    is_correct: 'is_correct',
+    depth_score: 'depth_score'
+  };
+
+  export type Quiz_questionsScalarFieldEnum = (typeof Quiz_questionsScalarFieldEnum)[keyof typeof Quiz_questionsScalarFieldEnum]
+
+
+  export const QuizzesScalarFieldEnum: {
+    id: 'id',
+    user_id: 'user_id',
+    topic_id: 'topic_id',
+    score: 'score',
+    date: 'date',
+    retake_count: 'retake_count'
+  };
+
+  export type QuizzesScalarFieldEnum = (typeof QuizzesScalarFieldEnum)[keyof typeof QuizzesScalarFieldEnum]
+
+
+  export const Class_engagementScalarFieldEnum: {
+    id: 'id',
+    user_id: 'user_id',
+    class_name: 'class_name',
+    question_count: 'question_count',
+    week_start: 'week_start'
+  };
+
+  export type Class_engagementScalarFieldEnum = (typeof Class_engagementScalarFieldEnum)[keyof typeof Class_engagementScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -15990,6 +23362,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -16068,6 +23449,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -16093,6 +23495,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"achievements"> | string | null
     xp_reward?: IntNullableFilter<"achievements"> | number | null
     created_at?: DateTimeNullableFilter<"achievements"> | Date | string | null
+    slug?: StringNullableFilter<"achievements"> | string | null
     user_achievements?: User_achievementsListRelationFilter
   }
 
@@ -16102,6 +23505,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     xp_reward?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    slug?: SortOrderInput | SortOrder
     user_achievements?: user_achievementsOrderByRelationAggregateInput
   }
 
@@ -16114,6 +23518,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"achievements"> | string | null
     xp_reward?: IntNullableFilter<"achievements"> | number | null
     created_at?: DateTimeNullableFilter<"achievements"> | Date | string | null
+    slug?: StringNullableFilter<"achievements"> | string | null
     user_achievements?: User_achievementsListRelationFilter
   }, "id">
 
@@ -16123,6 +23528,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     xp_reward?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    slug?: SortOrderInput | SortOrder
     _count?: achievementsCountOrderByAggregateInput
     _avg?: achievementsAvgOrderByAggregateInput
     _max?: achievementsMaxOrderByAggregateInput
@@ -16139,6 +23545,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"achievements"> | string | null
     xp_reward?: IntNullableWithAggregatesFilter<"achievements"> | number | null
     created_at?: DateTimeNullableWithAggregatesFilter<"achievements"> | Date | string | null
+    slug?: StringNullableWithAggregatesFilter<"achievements"> | string | null
   }
 
   export type chat_historyWhereInput = {
@@ -16340,6 +23747,7 @@ export namespace Prisma {
     topic_id?: StringFilter<"daily_topic_metrics"> | string
     metric_date?: DateTimeFilter<"daily_topic_metrics"> | Date | string
     avg_score?: DecimalNullableFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableFilter<"daily_topic_metrics"> | number | null
     classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
     topics?: XOR<TopicsScalarRelationFilter, topicsWhereInput>
     users?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -16351,6 +23759,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     metric_date?: SortOrder
     avg_score?: SortOrderInput | SortOrder
+    questions_asked?: SortOrderInput | SortOrder
     classes?: classesOrderByWithRelationInput
     topics?: topicsOrderByWithRelationInput
     users?: UserOrderByWithRelationInput
@@ -16366,6 +23775,7 @@ export namespace Prisma {
     topic_id?: StringFilter<"daily_topic_metrics"> | string
     metric_date?: DateTimeFilter<"daily_topic_metrics"> | Date | string
     avg_score?: DecimalNullableFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableFilter<"daily_topic_metrics"> | number | null
     classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
     topics?: XOR<TopicsScalarRelationFilter, topicsWhereInput>
     users?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -16377,6 +23787,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     metric_date?: SortOrder
     avg_score?: SortOrderInput | SortOrder
+    questions_asked?: SortOrderInput | SortOrder
     _count?: daily_topic_metricsCountOrderByAggregateInput
     _avg?: daily_topic_metricsAvgOrderByAggregateInput
     _max?: daily_topic_metricsMaxOrderByAggregateInput
@@ -16393,6 +23804,7 @@ export namespace Prisma {
     topic_id?: StringWithAggregatesFilter<"daily_topic_metrics"> | string
     metric_date?: DateTimeWithAggregatesFilter<"daily_topic_metrics"> | Date | string
     avg_score?: DecimalNullableWithAggregatesFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableWithAggregatesFilter<"daily_topic_metrics"> | number | null
   }
 
   export type friend_requestsWhereInput = {
@@ -16467,6 +23879,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"friends"> | Date | string | null
     streak?: IntNullableFilter<"friends"> | number | null
     total_xp?: IntNullableFilter<"friends"> | number | null
+    first_name?: StringNullableFilter<"friends"> | string | null
+    last_name?: StringNullableFilter<"friends"> | string | null
     users_friends_friend_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
     users_friends_user_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -16477,6 +23891,8 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     streak?: SortOrderInput | SortOrder
     total_xp?: SortOrderInput | SortOrder
+    first_name?: SortOrderInput | SortOrder
+    last_name?: SortOrderInput | SortOrder
     users_friends_friend_idTousers?: UserOrderByWithRelationInput
     users_friends_user_idTousers?: UserOrderByWithRelationInput
   }
@@ -16491,6 +23907,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"friends"> | Date | string | null
     streak?: IntNullableFilter<"friends"> | number | null
     total_xp?: IntNullableFilter<"friends"> | number | null
+    first_name?: StringNullableFilter<"friends"> | string | null
+    last_name?: StringNullableFilter<"friends"> | string | null
     users_friends_friend_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
     users_friends_user_idTousers?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "user_id_friend_id">
@@ -16501,6 +23919,8 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     streak?: SortOrderInput | SortOrder
     total_xp?: SortOrderInput | SortOrder
+    first_name?: SortOrderInput | SortOrder
+    last_name?: SortOrderInput | SortOrder
     _count?: friendsCountOrderByAggregateInput
     _avg?: friendsAvgOrderByAggregateInput
     _max?: friendsMaxOrderByAggregateInput
@@ -16517,6 +23937,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableWithAggregatesFilter<"friends"> | Date | string | null
     streak?: IntNullableWithAggregatesFilter<"friends"> | number | null
     total_xp?: IntNullableWithAggregatesFilter<"friends"> | number | null
+    first_name?: StringNullableWithAggregatesFilter<"friends"> | string | null
+    last_name?: StringNullableWithAggregatesFilter<"friends"> | string | null
   }
 
   export type topicsWhereInput = {
@@ -16697,6 +24119,7 @@ export namespace Prisma {
     weekly_xp?: IntNullableFilter<"User"> | number | null
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
+    class_engagement?: Class_engagementListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     friend_requests_friend_requests_receiver_idTousers?: Friend_requestsListRelationFilter
     friend_requests_friend_requests_sender_idTousers?: Friend_requestsListRelationFilter
@@ -16724,6 +24147,7 @@ export namespace Prisma {
     weekly_xp?: SortOrderInput | SortOrder
     Account?: AccountOrderByRelationAggregateInput
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
+    class_engagement?: class_engagementOrderByRelationAggregateInput
     daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsOrderByRelationAggregateInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsOrderByRelationAggregateInput
@@ -16754,6 +24178,7 @@ export namespace Prisma {
     weekly_xp?: IntNullableFilter<"User"> | number | null
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
+    class_engagement?: Class_engagementListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     friend_requests_friend_requests_receiver_idTousers?: Friend_requestsListRelationFilter
     friend_requests_friend_requests_sender_idTousers?: Friend_requestsListRelationFilter
@@ -16915,12 +24340,363 @@ export namespace Prisma {
     updatedat?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
   }
 
+  export type chatsWhereInput = {
+    AND?: chatsWhereInput | chatsWhereInput[]
+    OR?: chatsWhereInput[]
+    NOT?: chatsWhereInput | chatsWhereInput[]
+    id?: StringFilter<"chats"> | string
+    title?: StringNullableFilter<"chats"> | string | null
+    created_at?: DateTimeNullableFilter<"chats"> | Date | string | null
+    accumulated_score?: IntNullableFilter<"chats"> | number | null
+    messages?: MessagesListRelationFilter
+  }
+
+  export type chatsOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    accumulated_score?: SortOrderInput | SortOrder
+    messages?: messagesOrderByRelationAggregateInput
+  }
+
+  export type chatsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: chatsWhereInput | chatsWhereInput[]
+    OR?: chatsWhereInput[]
+    NOT?: chatsWhereInput | chatsWhereInput[]
+    title?: StringNullableFilter<"chats"> | string | null
+    created_at?: DateTimeNullableFilter<"chats"> | Date | string | null
+    accumulated_score?: IntNullableFilter<"chats"> | number | null
+    messages?: MessagesListRelationFilter
+  }, "id">
+
+  export type chatsOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    accumulated_score?: SortOrderInput | SortOrder
+    _count?: chatsCountOrderByAggregateInput
+    _avg?: chatsAvgOrderByAggregateInput
+    _max?: chatsMaxOrderByAggregateInput
+    _min?: chatsMinOrderByAggregateInput
+    _sum?: chatsSumOrderByAggregateInput
+  }
+
+  export type chatsScalarWhereWithAggregatesInput = {
+    AND?: chatsScalarWhereWithAggregatesInput | chatsScalarWhereWithAggregatesInput[]
+    OR?: chatsScalarWhereWithAggregatesInput[]
+    NOT?: chatsScalarWhereWithAggregatesInput | chatsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"chats"> | string
+    title?: StringNullableWithAggregatesFilter<"chats"> | string | null
+    created_at?: DateTimeNullableWithAggregatesFilter<"chats"> | Date | string | null
+    accumulated_score?: IntNullableWithAggregatesFilter<"chats"> | number | null
+  }
+
+  export type langchain_chat_messagesWhereInput = {
+    AND?: langchain_chat_messagesWhereInput | langchain_chat_messagesWhereInput[]
+    OR?: langchain_chat_messagesWhereInput[]
+    NOT?: langchain_chat_messagesWhereInput | langchain_chat_messagesWhereInput[]
+    id?: IntFilter<"langchain_chat_messages"> | number
+    session_id?: StringFilter<"langchain_chat_messages"> | string
+    message?: JsonFilter<"langchain_chat_messages">
+  }
+
+  export type langchain_chat_messagesOrderByWithRelationInput = {
+    id?: SortOrder
+    session_id?: SortOrder
+    message?: SortOrder
+  }
+
+  export type langchain_chat_messagesWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: langchain_chat_messagesWhereInput | langchain_chat_messagesWhereInput[]
+    OR?: langchain_chat_messagesWhereInput[]
+    NOT?: langchain_chat_messagesWhereInput | langchain_chat_messagesWhereInput[]
+    session_id?: StringFilter<"langchain_chat_messages"> | string
+    message?: JsonFilter<"langchain_chat_messages">
+  }, "id">
+
+  export type langchain_chat_messagesOrderByWithAggregationInput = {
+    id?: SortOrder
+    session_id?: SortOrder
+    message?: SortOrder
+    _count?: langchain_chat_messagesCountOrderByAggregateInput
+    _avg?: langchain_chat_messagesAvgOrderByAggregateInput
+    _max?: langchain_chat_messagesMaxOrderByAggregateInput
+    _min?: langchain_chat_messagesMinOrderByAggregateInput
+    _sum?: langchain_chat_messagesSumOrderByAggregateInput
+  }
+
+  export type langchain_chat_messagesScalarWhereWithAggregatesInput = {
+    AND?: langchain_chat_messagesScalarWhereWithAggregatesInput | langchain_chat_messagesScalarWhereWithAggregatesInput[]
+    OR?: langchain_chat_messagesScalarWhereWithAggregatesInput[]
+    NOT?: langchain_chat_messagesScalarWhereWithAggregatesInput | langchain_chat_messagesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"langchain_chat_messages"> | number
+    session_id?: StringWithAggregatesFilter<"langchain_chat_messages"> | string
+    message?: JsonWithAggregatesFilter<"langchain_chat_messages">
+  }
+
+  export type messagesWhereInput = {
+    AND?: messagesWhereInput | messagesWhereInput[]
+    OR?: messagesWhereInput[]
+    NOT?: messagesWhereInput | messagesWhereInput[]
+    id?: IntFilter<"messages"> | number
+    chat_id?: StringNullableFilter<"messages"> | string | null
+    role?: StringNullableFilter<"messages"> | string | null
+    content?: StringNullableFilter<"messages"> | string | null
+    score?: IntNullableFilter<"messages"> | number | null
+    reason?: StringNullableFilter<"messages"> | string | null
+    created_at?: DateTimeNullableFilter<"messages"> | Date | string | null
+    chats?: XOR<ChatsNullableScalarRelationFilter, chatsWhereInput> | null
+  }
+
+  export type messagesOrderByWithRelationInput = {
+    id?: SortOrder
+    chat_id?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    content?: SortOrderInput | SortOrder
+    score?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    chats?: chatsOrderByWithRelationInput
+  }
+
+  export type messagesWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: messagesWhereInput | messagesWhereInput[]
+    OR?: messagesWhereInput[]
+    NOT?: messagesWhereInput | messagesWhereInput[]
+    chat_id?: StringNullableFilter<"messages"> | string | null
+    role?: StringNullableFilter<"messages"> | string | null
+    content?: StringNullableFilter<"messages"> | string | null
+    score?: IntNullableFilter<"messages"> | number | null
+    reason?: StringNullableFilter<"messages"> | string | null
+    created_at?: DateTimeNullableFilter<"messages"> | Date | string | null
+    chats?: XOR<ChatsNullableScalarRelationFilter, chatsWhereInput> | null
+  }, "id">
+
+  export type messagesOrderByWithAggregationInput = {
+    id?: SortOrder
+    chat_id?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    content?: SortOrderInput | SortOrder
+    score?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    _count?: messagesCountOrderByAggregateInput
+    _avg?: messagesAvgOrderByAggregateInput
+    _max?: messagesMaxOrderByAggregateInput
+    _min?: messagesMinOrderByAggregateInput
+    _sum?: messagesSumOrderByAggregateInput
+  }
+
+  export type messagesScalarWhereWithAggregatesInput = {
+    AND?: messagesScalarWhereWithAggregatesInput | messagesScalarWhereWithAggregatesInput[]
+    OR?: messagesScalarWhereWithAggregatesInput[]
+    NOT?: messagesScalarWhereWithAggregatesInput | messagesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"messages"> | number
+    chat_id?: StringNullableWithAggregatesFilter<"messages"> | string | null
+    role?: StringNullableWithAggregatesFilter<"messages"> | string | null
+    content?: StringNullableWithAggregatesFilter<"messages"> | string | null
+    score?: IntNullableWithAggregatesFilter<"messages"> | number | null
+    reason?: StringNullableWithAggregatesFilter<"messages"> | string | null
+    created_at?: DateTimeNullableWithAggregatesFilter<"messages"> | Date | string | null
+  }
+
+  export type quiz_questionsWhereInput = {
+    AND?: quiz_questionsWhereInput | quiz_questionsWhereInput[]
+    OR?: quiz_questionsWhereInput[]
+    NOT?: quiz_questionsWhereInput | quiz_questionsWhereInput[]
+    id?: StringFilter<"quiz_questions"> | string
+    quiz_id?: StringFilter<"quiz_questions"> | string
+    question?: StringFilter<"quiz_questions"> | string
+    user_answer?: StringNullableFilter<"quiz_questions"> | string | null
+    correct_answer?: StringFilter<"quiz_questions"> | string
+    is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
+    depth_score?: IntNullableFilter<"quiz_questions"> | number | null
+    quizzes?: XOR<QuizzesScalarRelationFilter, quizzesWhereInput>
+  }
+
+  export type quiz_questionsOrderByWithRelationInput = {
+    id?: SortOrder
+    quiz_id?: SortOrder
+    question?: SortOrder
+    user_answer?: SortOrderInput | SortOrder
+    correct_answer?: SortOrder
+    is_correct?: SortOrderInput | SortOrder
+    depth_score?: SortOrderInput | SortOrder
+    quizzes?: quizzesOrderByWithRelationInput
+  }
+
+  export type quiz_questionsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: quiz_questionsWhereInput | quiz_questionsWhereInput[]
+    OR?: quiz_questionsWhereInput[]
+    NOT?: quiz_questionsWhereInput | quiz_questionsWhereInput[]
+    quiz_id?: StringFilter<"quiz_questions"> | string
+    question?: StringFilter<"quiz_questions"> | string
+    user_answer?: StringNullableFilter<"quiz_questions"> | string | null
+    correct_answer?: StringFilter<"quiz_questions"> | string
+    is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
+    depth_score?: IntNullableFilter<"quiz_questions"> | number | null
+    quizzes?: XOR<QuizzesScalarRelationFilter, quizzesWhereInput>
+  }, "id">
+
+  export type quiz_questionsOrderByWithAggregationInput = {
+    id?: SortOrder
+    quiz_id?: SortOrder
+    question?: SortOrder
+    user_answer?: SortOrderInput | SortOrder
+    correct_answer?: SortOrder
+    is_correct?: SortOrderInput | SortOrder
+    depth_score?: SortOrderInput | SortOrder
+    _count?: quiz_questionsCountOrderByAggregateInput
+    _avg?: quiz_questionsAvgOrderByAggregateInput
+    _max?: quiz_questionsMaxOrderByAggregateInput
+    _min?: quiz_questionsMinOrderByAggregateInput
+    _sum?: quiz_questionsSumOrderByAggregateInput
+  }
+
+  export type quiz_questionsScalarWhereWithAggregatesInput = {
+    AND?: quiz_questionsScalarWhereWithAggregatesInput | quiz_questionsScalarWhereWithAggregatesInput[]
+    OR?: quiz_questionsScalarWhereWithAggregatesInput[]
+    NOT?: quiz_questionsScalarWhereWithAggregatesInput | quiz_questionsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"quiz_questions"> | string
+    quiz_id?: StringWithAggregatesFilter<"quiz_questions"> | string
+    question?: StringWithAggregatesFilter<"quiz_questions"> | string
+    user_answer?: StringNullableWithAggregatesFilter<"quiz_questions"> | string | null
+    correct_answer?: StringWithAggregatesFilter<"quiz_questions"> | string
+    is_correct?: BoolNullableWithAggregatesFilter<"quiz_questions"> | boolean | null
+    depth_score?: IntNullableWithAggregatesFilter<"quiz_questions"> | number | null
+  }
+
+  export type quizzesWhereInput = {
+    AND?: quizzesWhereInput | quizzesWhereInput[]
+    OR?: quizzesWhereInput[]
+    NOT?: quizzesWhereInput | quizzesWhereInput[]
+    id?: StringFilter<"quizzes"> | string
+    user_id?: StringFilter<"quizzes"> | string
+    topic_id?: StringFilter<"quizzes"> | string
+    score?: IntNullableFilter<"quizzes"> | number | null
+    date?: DateTimeNullableFilter<"quizzes"> | Date | string | null
+    retake_count?: IntNullableFilter<"quizzes"> | number | null
+    quiz_questions?: Quiz_questionsListRelationFilter
+  }
+
+  export type quizzesOrderByWithRelationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    topic_id?: SortOrder
+    score?: SortOrderInput | SortOrder
+    date?: SortOrderInput | SortOrder
+    retake_count?: SortOrderInput | SortOrder
+    quiz_questions?: quiz_questionsOrderByRelationAggregateInput
+  }
+
+  export type quizzesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: quizzesWhereInput | quizzesWhereInput[]
+    OR?: quizzesWhereInput[]
+    NOT?: quizzesWhereInput | quizzesWhereInput[]
+    user_id?: StringFilter<"quizzes"> | string
+    topic_id?: StringFilter<"quizzes"> | string
+    score?: IntNullableFilter<"quizzes"> | number | null
+    date?: DateTimeNullableFilter<"quizzes"> | Date | string | null
+    retake_count?: IntNullableFilter<"quizzes"> | number | null
+    quiz_questions?: Quiz_questionsListRelationFilter
+  }, "id">
+
+  export type quizzesOrderByWithAggregationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    topic_id?: SortOrder
+    score?: SortOrderInput | SortOrder
+    date?: SortOrderInput | SortOrder
+    retake_count?: SortOrderInput | SortOrder
+    _count?: quizzesCountOrderByAggregateInput
+    _avg?: quizzesAvgOrderByAggregateInput
+    _max?: quizzesMaxOrderByAggregateInput
+    _min?: quizzesMinOrderByAggregateInput
+    _sum?: quizzesSumOrderByAggregateInput
+  }
+
+  export type quizzesScalarWhereWithAggregatesInput = {
+    AND?: quizzesScalarWhereWithAggregatesInput | quizzesScalarWhereWithAggregatesInput[]
+    OR?: quizzesScalarWhereWithAggregatesInput[]
+    NOT?: quizzesScalarWhereWithAggregatesInput | quizzesScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"quizzes"> | string
+    user_id?: StringWithAggregatesFilter<"quizzes"> | string
+    topic_id?: StringWithAggregatesFilter<"quizzes"> | string
+    score?: IntNullableWithAggregatesFilter<"quizzes"> | number | null
+    date?: DateTimeNullableWithAggregatesFilter<"quizzes"> | Date | string | null
+    retake_count?: IntNullableWithAggregatesFilter<"quizzes"> | number | null
+  }
+
+  export type class_engagementWhereInput = {
+    AND?: class_engagementWhereInput | class_engagementWhereInput[]
+    OR?: class_engagementWhereInput[]
+    NOT?: class_engagementWhereInput | class_engagementWhereInput[]
+    id?: StringFilter<"class_engagement"> | string
+    user_id?: StringFilter<"class_engagement"> | string
+    class_name?: StringFilter<"class_engagement"> | string
+    question_count?: IntNullableFilter<"class_engagement"> | number | null
+    week_start?: DateTimeFilter<"class_engagement"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type class_engagementOrderByWithRelationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_name?: SortOrder
+    question_count?: SortOrderInput | SortOrder
+    week_start?: SortOrder
+    User?: UserOrderByWithRelationInput
+  }
+
+  export type class_engagementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    user_id_class_name_week_start?: class_engagementUser_idClass_nameWeek_startCompoundUniqueInput
+    AND?: class_engagementWhereInput | class_engagementWhereInput[]
+    OR?: class_engagementWhereInput[]
+    NOT?: class_engagementWhereInput | class_engagementWhereInput[]
+    user_id?: StringFilter<"class_engagement"> | string
+    class_name?: StringFilter<"class_engagement"> | string
+    question_count?: IntNullableFilter<"class_engagement"> | number | null
+    week_start?: DateTimeFilter<"class_engagement"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "user_id_class_name_week_start">
+
+  export type class_engagementOrderByWithAggregationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_name?: SortOrder
+    question_count?: SortOrderInput | SortOrder
+    week_start?: SortOrder
+    _count?: class_engagementCountOrderByAggregateInput
+    _avg?: class_engagementAvgOrderByAggregateInput
+    _max?: class_engagementMaxOrderByAggregateInput
+    _min?: class_engagementMinOrderByAggregateInput
+    _sum?: class_engagementSumOrderByAggregateInput
+  }
+
+  export type class_engagementScalarWhereWithAggregatesInput = {
+    AND?: class_engagementScalarWhereWithAggregatesInput | class_engagementScalarWhereWithAggregatesInput[]
+    OR?: class_engagementScalarWhereWithAggregatesInput[]
+    NOT?: class_engagementScalarWhereWithAggregatesInput | class_engagementScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"class_engagement"> | string
+    user_id?: StringWithAggregatesFilter<"class_engagement"> | string
+    class_name?: StringWithAggregatesFilter<"class_engagement"> | string
+    question_count?: IntNullableWithAggregatesFilter<"class_engagement"> | number | null
+    week_start?: DateTimeWithAggregatesFilter<"class_engagement"> | Date | string
+  }
+
   export type achievementsCreateInput = {
     id: string
     name: string
     description?: string | null
     xp_reward?: number | null
     created_at?: Date | string | null
+    slug?: string | null
     user_achievements?: user_achievementsCreateNestedManyWithoutAchievementsInput
   }
 
@@ -16930,6 +24706,7 @@ export namespace Prisma {
     description?: string | null
     xp_reward?: number | null
     created_at?: Date | string | null
+    slug?: string | null
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutAchievementsInput
   }
 
@@ -16939,6 +24716,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     user_achievements?: user_achievementsUpdateManyWithoutAchievementsNestedInput
   }
 
@@ -16948,6 +24726,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutAchievementsNestedInput
   }
 
@@ -16957,6 +24736,7 @@ export namespace Prisma {
     description?: string | null
     xp_reward?: number | null
     created_at?: Date | string | null
+    slug?: string | null
   }
 
   export type achievementsUpdateManyMutationInput = {
@@ -16965,6 +24745,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type achievementsUncheckedUpdateManyInput = {
@@ -16973,6 +24754,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyCreateInput = {
@@ -17172,6 +24954,7 @@ export namespace Prisma {
   export type daily_topic_metricsCreateInput = {
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
     classes: classesCreateNestedOneWithoutDaily_topic_metricsInput
     topics: topicsCreateNestedOneWithoutDaily_topic_metricsInput
     users: UserCreateNestedOneWithoutDaily_topic_metricsInput
@@ -17183,11 +24966,13 @@ export namespace Prisma {
     topic_id: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type daily_topic_metricsUpdateInput = {
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
     classes?: classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
     topics?: topicsUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
     users?: UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
@@ -17199,6 +24984,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type daily_topic_metricsCreateManyInput = {
@@ -17207,11 +24993,13 @@ export namespace Prisma {
     topic_id: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type daily_topic_metricsUpdateManyMutationInput = {
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type daily_topic_metricsUncheckedUpdateManyInput = {
@@ -17220,6 +25008,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friend_requestsCreateInput = {
@@ -17287,6 +25076,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
     users_friends_friend_idTousers: UserCreateNestedOneWithoutFriends_friends_friend_idTousersInput
     users_friends_user_idTousers: UserCreateNestedOneWithoutFriends_friends_user_idTousersInput
   }
@@ -17297,12 +25088,16 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
   }
 
   export type friendsUpdateInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
     users_friends_friend_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_friend_idTousersNestedInput
     users_friends_user_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_user_idTousersNestedInput
   }
@@ -17313,6 +25108,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type friendsCreateManyInput = {
@@ -17321,12 +25118,16 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
   }
 
   export type friendsUpdateManyMutationInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type friendsUncheckedUpdateManyInput = {
@@ -17335,6 +25136,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type topicsCreateInput = {
@@ -17499,6 +25302,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -17526,6 +25330,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -17553,6 +25358,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -17580,6 +25386,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -17768,6 +25575,355 @@ export namespace Prisma {
     updatedat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type chatsCreateInput = {
+    id: string
+    title?: string | null
+    created_at?: Date | string | null
+    accumulated_score?: number | null
+    messages?: messagesCreateNestedManyWithoutChatsInput
+  }
+
+  export type chatsUncheckedCreateInput = {
+    id: string
+    title?: string | null
+    created_at?: Date | string | null
+    accumulated_score?: number | null
+    messages?: messagesUncheckedCreateNestedManyWithoutChatsInput
+  }
+
+  export type chatsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulated_score?: NullableIntFieldUpdateOperationsInput | number | null
+    messages?: messagesUpdateManyWithoutChatsNestedInput
+  }
+
+  export type chatsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulated_score?: NullableIntFieldUpdateOperationsInput | number | null
+    messages?: messagesUncheckedUpdateManyWithoutChatsNestedInput
+  }
+
+  export type chatsCreateManyInput = {
+    id: string
+    title?: string | null
+    created_at?: Date | string | null
+    accumulated_score?: number | null
+  }
+
+  export type chatsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulated_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type chatsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulated_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type langchain_chat_messagesCreateInput = {
+    session_id: string
+    message: JsonNullValueInput | InputJsonValue
+  }
+
+  export type langchain_chat_messagesUncheckedCreateInput = {
+    id?: number
+    session_id: string
+    message: JsonNullValueInput | InputJsonValue
+  }
+
+  export type langchain_chat_messagesUpdateInput = {
+    session_id?: StringFieldUpdateOperationsInput | string
+    message?: JsonNullValueInput | InputJsonValue
+  }
+
+  export type langchain_chat_messagesUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    session_id?: StringFieldUpdateOperationsInput | string
+    message?: JsonNullValueInput | InputJsonValue
+  }
+
+  export type langchain_chat_messagesCreateManyInput = {
+    id?: number
+    session_id: string
+    message: JsonNullValueInput | InputJsonValue
+  }
+
+  export type langchain_chat_messagesUpdateManyMutationInput = {
+    session_id?: StringFieldUpdateOperationsInput | string
+    message?: JsonNullValueInput | InputJsonValue
+  }
+
+  export type langchain_chat_messagesUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    session_id?: StringFieldUpdateOperationsInput | string
+    message?: JsonNullValueInput | InputJsonValue
+  }
+
+  export type messagesCreateInput = {
+    role?: string | null
+    content?: string | null
+    score?: number | null
+    reason?: string | null
+    created_at?: Date | string | null
+    chats?: chatsCreateNestedOneWithoutMessagesInput
+  }
+
+  export type messagesUncheckedCreateInput = {
+    id?: number
+    chat_id?: string | null
+    role?: string | null
+    content?: string | null
+    score?: number | null
+    reason?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type messagesUpdateInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chats?: chatsUpdateOneWithoutMessagesNestedInput
+  }
+
+  export type messagesUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chat_id?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type messagesCreateManyInput = {
+    id?: number
+    chat_id?: string | null
+    role?: string | null
+    content?: string | null
+    score?: number | null
+    reason?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type messagesUpdateManyMutationInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type messagesUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chat_id?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type quiz_questionsCreateInput = {
+    id: string
+    question: string
+    user_answer?: string | null
+    correct_answer: string
+    is_correct?: boolean | null
+    depth_score?: number | null
+    quizzes: quizzesCreateNestedOneWithoutQuiz_questionsInput
+  }
+
+  export type quiz_questionsUncheckedCreateInput = {
+    id: string
+    quiz_id: string
+    question: string
+    user_answer?: string | null
+    correct_answer: string
+    is_correct?: boolean | null
+    depth_score?: number | null
+  }
+
+  export type quiz_questionsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    quizzes?: quizzesUpdateOneRequiredWithoutQuiz_questionsNestedInput
+  }
+
+  export type quiz_questionsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quiz_id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quiz_questionsCreateManyInput = {
+    id: string
+    quiz_id: string
+    question: string
+    user_answer?: string | null
+    correct_answer: string
+    is_correct?: boolean | null
+    depth_score?: number | null
+  }
+
+  export type quiz_questionsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quiz_questionsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quiz_id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quizzesCreateInput = {
+    id: string
+    user_id: string
+    topic_id: string
+    score?: number | null
+    date?: Date | string | null
+    retake_count?: number | null
+    quiz_questions?: quiz_questionsCreateNestedManyWithoutQuizzesInput
+  }
+
+  export type quizzesUncheckedCreateInput = {
+    id: string
+    user_id: string
+    topic_id: string
+    score?: number | null
+    date?: Date | string | null
+    retake_count?: number | null
+    quiz_questions?: quiz_questionsUncheckedCreateNestedManyWithoutQuizzesInput
+  }
+
+  export type quizzesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    quiz_questions?: quiz_questionsUpdateManyWithoutQuizzesNestedInput
+  }
+
+  export type quizzesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    quiz_questions?: quiz_questionsUncheckedUpdateManyWithoutQuizzesNestedInput
+  }
+
+  export type quizzesCreateManyInput = {
+    id: string
+    user_id: string
+    topic_id: string
+    score?: number | null
+    date?: Date | string | null
+    retake_count?: number | null
+  }
+
+  export type quizzesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quizzesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type class_engagementCreateInput = {
+    id: string
+    class_name: string
+    question_count?: number | null
+    week_start: Date | string
+    User: UserCreateNestedOneWithoutClass_engagementInput
+  }
+
+  export type class_engagementUncheckedCreateInput = {
+    id: string
+    user_id: string
+    class_name: string
+    question_count?: number | null
+    week_start: Date | string
+  }
+
+  export type class_engagementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutClass_engagementNestedInput
+  }
+
+  export type class_engagementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type class_engagementCreateManyInput = {
+    id: string
+    user_id: string
+    class_name: string
+    question_count?: number | null
+    week_start: Date | string
+  }
+
+  export type class_engagementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type class_engagementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17841,6 +25997,7 @@ export namespace Prisma {
     description?: SortOrder
     xp_reward?: SortOrder
     created_at?: SortOrder
+    slug?: SortOrder
   }
 
   export type achievementsAvgOrderByAggregateInput = {
@@ -17853,6 +26010,7 @@ export namespace Prisma {
     description?: SortOrder
     xp_reward?: SortOrder
     created_at?: SortOrder
+    slug?: SortOrder
   }
 
   export type achievementsMinOrderByAggregateInput = {
@@ -17861,6 +26019,7 @@ export namespace Prisma {
     description?: SortOrder
     xp_reward?: SortOrder
     created_at?: SortOrder
+    slug?: SortOrder
   }
 
   export type achievementsSumOrderByAggregateInput = {
@@ -18106,10 +26265,12 @@ export namespace Prisma {
     topic_id?: SortOrder
     metric_date?: SortOrder
     avg_score?: SortOrder
+    questions_asked?: SortOrder
   }
 
   export type daily_topic_metricsAvgOrderByAggregateInput = {
     avg_score?: SortOrder
+    questions_asked?: SortOrder
   }
 
   export type daily_topic_metricsMaxOrderByAggregateInput = {
@@ -18118,6 +26279,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     metric_date?: SortOrder
     avg_score?: SortOrder
+    questions_asked?: SortOrder
   }
 
   export type daily_topic_metricsMinOrderByAggregateInput = {
@@ -18126,10 +26288,12 @@ export namespace Prisma {
     topic_id?: SortOrder
     metric_date?: SortOrder
     avg_score?: SortOrder
+    questions_asked?: SortOrder
   }
 
   export type daily_topic_metricsSumOrderByAggregateInput = {
     avg_score?: SortOrder
+    questions_asked?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -18200,6 +26364,8 @@ export namespace Prisma {
     created_at?: SortOrder
     streak?: SortOrder
     total_xp?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
   }
 
   export type friendsAvgOrderByAggregateInput = {
@@ -18213,6 +26379,8 @@ export namespace Prisma {
     created_at?: SortOrder
     streak?: SortOrder
     total_xp?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
   }
 
   export type friendsMinOrderByAggregateInput = {
@@ -18221,6 +26389,8 @@ export namespace Prisma {
     created_at?: SortOrder
     streak?: SortOrder
     total_xp?: SortOrder
+    first_name?: SortOrder
+    last_name?: SortOrder
   }
 
   export type friendsSumOrderByAggregateInput = {
@@ -18339,6 +26509,12 @@ export namespace Prisma {
     none?: AccountWhereInput
   }
 
+  export type Class_engagementListRelationFilter = {
+    every?: class_engagementWhereInput
+    some?: class_engagementWhereInput
+    none?: class_engagementWhereInput
+  }
+
   export type Friend_requestsListRelationFilter = {
     every?: friend_requestsWhereInput
     some?: friend_requestsWhereInput
@@ -18358,6 +26534,10 @@ export namespace Prisma {
   }
 
   export type AccountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type class_engagementOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18533,6 +26713,304 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type MessagesListRelationFilter = {
+    every?: messagesWhereInput
+    some?: messagesWhereInput
+    none?: messagesWhereInput
+  }
+
+  export type messagesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type chatsCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    created_at?: SortOrder
+    accumulated_score?: SortOrder
+  }
+
+  export type chatsAvgOrderByAggregateInput = {
+    accumulated_score?: SortOrder
+  }
+
+  export type chatsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    created_at?: SortOrder
+    accumulated_score?: SortOrder
+  }
+
+  export type chatsMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    created_at?: SortOrder
+    accumulated_score?: SortOrder
+  }
+
+  export type chatsSumOrderByAggregateInput = {
+    accumulated_score?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type langchain_chat_messagesCountOrderByAggregateInput = {
+    id?: SortOrder
+    session_id?: SortOrder
+    message?: SortOrder
+  }
+
+  export type langchain_chat_messagesAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type langchain_chat_messagesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    session_id?: SortOrder
+  }
+
+  export type langchain_chat_messagesMinOrderByAggregateInput = {
+    id?: SortOrder
+    session_id?: SortOrder
+  }
+
+  export type langchain_chat_messagesSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type ChatsNullableScalarRelationFilter = {
+    is?: chatsWhereInput | null
+    isNot?: chatsWhereInput | null
+  }
+
+  export type messagesCountOrderByAggregateInput = {
+    id?: SortOrder
+    chat_id?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    score?: SortOrder
+    reason?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type messagesAvgOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+  }
+
+  export type messagesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    chat_id?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    score?: SortOrder
+    reason?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type messagesMinOrderByAggregateInput = {
+    id?: SortOrder
+    chat_id?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    score?: SortOrder
+    reason?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type messagesSumOrderByAggregateInput = {
+    id?: SortOrder
+    score?: SortOrder
+  }
+
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type QuizzesScalarRelationFilter = {
+    is?: quizzesWhereInput
+    isNot?: quizzesWhereInput
+  }
+
+  export type quiz_questionsCountOrderByAggregateInput = {
+    id?: SortOrder
+    quiz_id?: SortOrder
+    question?: SortOrder
+    user_answer?: SortOrder
+    correct_answer?: SortOrder
+    is_correct?: SortOrder
+    depth_score?: SortOrder
+  }
+
+  export type quiz_questionsAvgOrderByAggregateInput = {
+    depth_score?: SortOrder
+  }
+
+  export type quiz_questionsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    quiz_id?: SortOrder
+    question?: SortOrder
+    user_answer?: SortOrder
+    correct_answer?: SortOrder
+    is_correct?: SortOrder
+    depth_score?: SortOrder
+  }
+
+  export type quiz_questionsMinOrderByAggregateInput = {
+    id?: SortOrder
+    quiz_id?: SortOrder
+    question?: SortOrder
+    user_answer?: SortOrder
+    correct_answer?: SortOrder
+    is_correct?: SortOrder
+    depth_score?: SortOrder
+  }
+
+  export type quiz_questionsSumOrderByAggregateInput = {
+    depth_score?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type Quiz_questionsListRelationFilter = {
+    every?: quiz_questionsWhereInput
+    some?: quiz_questionsWhereInput
+    none?: quiz_questionsWhereInput
+  }
+
+  export type quiz_questionsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type quizzesCountOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    topic_id?: SortOrder
+    score?: SortOrder
+    date?: SortOrder
+    retake_count?: SortOrder
+  }
+
+  export type quizzesAvgOrderByAggregateInput = {
+    score?: SortOrder
+    retake_count?: SortOrder
+  }
+
+  export type quizzesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    topic_id?: SortOrder
+    score?: SortOrder
+    date?: SortOrder
+    retake_count?: SortOrder
+  }
+
+  export type quizzesMinOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    topic_id?: SortOrder
+    score?: SortOrder
+    date?: SortOrder
+    retake_count?: SortOrder
+  }
+
+  export type quizzesSumOrderByAggregateInput = {
+    score?: SortOrder
+    retake_count?: SortOrder
+  }
+
+  export type class_engagementUser_idClass_nameWeek_startCompoundUniqueInput = {
+    user_id: string
+    class_name: string
+    week_start: Date | string
+  }
+
+  export type class_engagementCountOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_name?: SortOrder
+    question_count?: SortOrder
+    week_start?: SortOrder
+  }
+
+  export type class_engagementAvgOrderByAggregateInput = {
+    question_count?: SortOrder
+  }
+
+  export type class_engagementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_name?: SortOrder
+    question_count?: SortOrder
+    week_start?: SortOrder
+  }
+
+  export type class_engagementMinOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_name?: SortOrder
+    question_count?: SortOrder
+    week_start?: SortOrder
+  }
+
+  export type class_engagementSumOrderByAggregateInput = {
+    question_count?: SortOrder
   }
 
   export type user_achievementsCreateNestedManyWithoutAchievementsInput = {
@@ -19093,6 +27571,13 @@ export namespace Prisma {
     connect?: chat_sessionsWhereUniqueInput | chat_sessionsWhereUniqueInput[]
   }
 
+  export type class_engagementCreateNestedManyWithoutUserInput = {
+    create?: XOR<class_engagementCreateWithoutUserInput, class_engagementUncheckedCreateWithoutUserInput> | class_engagementCreateWithoutUserInput[] | class_engagementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: class_engagementCreateOrConnectWithoutUserInput | class_engagementCreateOrConnectWithoutUserInput[]
+    createMany?: class_engagementCreateManyUserInputEnvelope
+    connect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+  }
+
   export type daily_topic_metricsCreateNestedManyWithoutUsersInput = {
     create?: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput> | daily_topic_metricsCreateWithoutUsersInput[] | daily_topic_metricsUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutUsersInput | daily_topic_metricsCreateOrConnectWithoutUsersInput[]
@@ -19154,6 +27639,13 @@ export namespace Prisma {
     connectOrCreate?: chat_sessionsCreateOrConnectWithoutUsersInput | chat_sessionsCreateOrConnectWithoutUsersInput[]
     createMany?: chat_sessionsCreateManyUsersInputEnvelope
     connect?: chat_sessionsWhereUniqueInput | chat_sessionsWhereUniqueInput[]
+  }
+
+  export type class_engagementUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<class_engagementCreateWithoutUserInput, class_engagementUncheckedCreateWithoutUserInput> | class_engagementCreateWithoutUserInput[] | class_engagementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: class_engagementCreateOrConnectWithoutUserInput | class_engagementCreateOrConnectWithoutUserInput[]
+    createMany?: class_engagementCreateManyUserInputEnvelope
+    connect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
   }
 
   export type daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput = {
@@ -19231,6 +27723,20 @@ export namespace Prisma {
     update?: chat_sessionsUpdateWithWhereUniqueWithoutUsersInput | chat_sessionsUpdateWithWhereUniqueWithoutUsersInput[]
     updateMany?: chat_sessionsUpdateManyWithWhereWithoutUsersInput | chat_sessionsUpdateManyWithWhereWithoutUsersInput[]
     deleteMany?: chat_sessionsScalarWhereInput | chat_sessionsScalarWhereInput[]
+  }
+
+  export type class_engagementUpdateManyWithoutUserNestedInput = {
+    create?: XOR<class_engagementCreateWithoutUserInput, class_engagementUncheckedCreateWithoutUserInput> | class_engagementCreateWithoutUserInput[] | class_engagementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: class_engagementCreateOrConnectWithoutUserInput | class_engagementCreateOrConnectWithoutUserInput[]
+    upsert?: class_engagementUpsertWithWhereUniqueWithoutUserInput | class_engagementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: class_engagementCreateManyUserInputEnvelope
+    set?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    disconnect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    delete?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    connect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    update?: class_engagementUpdateWithWhereUniqueWithoutUserInput | class_engagementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: class_engagementUpdateManyWithWhereWithoutUserInput | class_engagementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: class_engagementScalarWhereInput | class_engagementScalarWhereInput[]
   }
 
   export type daily_topic_metricsUpdateManyWithoutUsersNestedInput = {
@@ -19359,6 +27865,20 @@ export namespace Prisma {
     deleteMany?: chat_sessionsScalarWhereInput | chat_sessionsScalarWhereInput[]
   }
 
+  export type class_engagementUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<class_engagementCreateWithoutUserInput, class_engagementUncheckedCreateWithoutUserInput> | class_engagementCreateWithoutUserInput[] | class_engagementUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: class_engagementCreateOrConnectWithoutUserInput | class_engagementCreateOrConnectWithoutUserInput[]
+    upsert?: class_engagementUpsertWithWhereUniqueWithoutUserInput | class_engagementUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: class_engagementCreateManyUserInputEnvelope
+    set?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    disconnect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    delete?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    connect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+    update?: class_engagementUpdateWithWhereUniqueWithoutUserInput | class_engagementUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: class_engagementUpdateManyWithWhereWithoutUserInput | class_engagementUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: class_engagementScalarWhereInput | class_engagementScalarWhereInput[]
+  }
+
   export type daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput = {
     create?: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput> | daily_topic_metricsCreateWithoutUsersInput[] | daily_topic_metricsUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutUsersInput | daily_topic_metricsCreateOrConnectWithoutUsersInput[]
@@ -19477,6 +27997,138 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAccountInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountInput, UserUpdateWithoutAccountInput>, UserUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type messagesCreateNestedManyWithoutChatsInput = {
+    create?: XOR<messagesCreateWithoutChatsInput, messagesUncheckedCreateWithoutChatsInput> | messagesCreateWithoutChatsInput[] | messagesUncheckedCreateWithoutChatsInput[]
+    connectOrCreate?: messagesCreateOrConnectWithoutChatsInput | messagesCreateOrConnectWithoutChatsInput[]
+    createMany?: messagesCreateManyChatsInputEnvelope
+    connect?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+  }
+
+  export type messagesUncheckedCreateNestedManyWithoutChatsInput = {
+    create?: XOR<messagesCreateWithoutChatsInput, messagesUncheckedCreateWithoutChatsInput> | messagesCreateWithoutChatsInput[] | messagesUncheckedCreateWithoutChatsInput[]
+    connectOrCreate?: messagesCreateOrConnectWithoutChatsInput | messagesCreateOrConnectWithoutChatsInput[]
+    createMany?: messagesCreateManyChatsInputEnvelope
+    connect?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+  }
+
+  export type messagesUpdateManyWithoutChatsNestedInput = {
+    create?: XOR<messagesCreateWithoutChatsInput, messagesUncheckedCreateWithoutChatsInput> | messagesCreateWithoutChatsInput[] | messagesUncheckedCreateWithoutChatsInput[]
+    connectOrCreate?: messagesCreateOrConnectWithoutChatsInput | messagesCreateOrConnectWithoutChatsInput[]
+    upsert?: messagesUpsertWithWhereUniqueWithoutChatsInput | messagesUpsertWithWhereUniqueWithoutChatsInput[]
+    createMany?: messagesCreateManyChatsInputEnvelope
+    set?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    disconnect?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    delete?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    connect?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    update?: messagesUpdateWithWhereUniqueWithoutChatsInput | messagesUpdateWithWhereUniqueWithoutChatsInput[]
+    updateMany?: messagesUpdateManyWithWhereWithoutChatsInput | messagesUpdateManyWithWhereWithoutChatsInput[]
+    deleteMany?: messagesScalarWhereInput | messagesScalarWhereInput[]
+  }
+
+  export type messagesUncheckedUpdateManyWithoutChatsNestedInput = {
+    create?: XOR<messagesCreateWithoutChatsInput, messagesUncheckedCreateWithoutChatsInput> | messagesCreateWithoutChatsInput[] | messagesUncheckedCreateWithoutChatsInput[]
+    connectOrCreate?: messagesCreateOrConnectWithoutChatsInput | messagesCreateOrConnectWithoutChatsInput[]
+    upsert?: messagesUpsertWithWhereUniqueWithoutChatsInput | messagesUpsertWithWhereUniqueWithoutChatsInput[]
+    createMany?: messagesCreateManyChatsInputEnvelope
+    set?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    disconnect?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    delete?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    connect?: messagesWhereUniqueInput | messagesWhereUniqueInput[]
+    update?: messagesUpdateWithWhereUniqueWithoutChatsInput | messagesUpdateWithWhereUniqueWithoutChatsInput[]
+    updateMany?: messagesUpdateManyWithWhereWithoutChatsInput | messagesUpdateManyWithWhereWithoutChatsInput[]
+    deleteMany?: messagesScalarWhereInput | messagesScalarWhereInput[]
+  }
+
+  export type chatsCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<chatsCreateWithoutMessagesInput, chatsUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: chatsCreateOrConnectWithoutMessagesInput
+    connect?: chatsWhereUniqueInput
+  }
+
+  export type chatsUpdateOneWithoutMessagesNestedInput = {
+    create?: XOR<chatsCreateWithoutMessagesInput, chatsUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: chatsCreateOrConnectWithoutMessagesInput
+    upsert?: chatsUpsertWithoutMessagesInput
+    disconnect?: chatsWhereInput | boolean
+    delete?: chatsWhereInput | boolean
+    connect?: chatsWhereUniqueInput
+    update?: XOR<XOR<chatsUpdateToOneWithWhereWithoutMessagesInput, chatsUpdateWithoutMessagesInput>, chatsUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type quizzesCreateNestedOneWithoutQuiz_questionsInput = {
+    create?: XOR<quizzesCreateWithoutQuiz_questionsInput, quizzesUncheckedCreateWithoutQuiz_questionsInput>
+    connectOrCreate?: quizzesCreateOrConnectWithoutQuiz_questionsInput
+    connect?: quizzesWhereUniqueInput
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type quizzesUpdateOneRequiredWithoutQuiz_questionsNestedInput = {
+    create?: XOR<quizzesCreateWithoutQuiz_questionsInput, quizzesUncheckedCreateWithoutQuiz_questionsInput>
+    connectOrCreate?: quizzesCreateOrConnectWithoutQuiz_questionsInput
+    upsert?: quizzesUpsertWithoutQuiz_questionsInput
+    connect?: quizzesWhereUniqueInput
+    update?: XOR<XOR<quizzesUpdateToOneWithWhereWithoutQuiz_questionsInput, quizzesUpdateWithoutQuiz_questionsInput>, quizzesUncheckedUpdateWithoutQuiz_questionsInput>
+  }
+
+  export type quiz_questionsCreateNestedManyWithoutQuizzesInput = {
+    create?: XOR<quiz_questionsCreateWithoutQuizzesInput, quiz_questionsUncheckedCreateWithoutQuizzesInput> | quiz_questionsCreateWithoutQuizzesInput[] | quiz_questionsUncheckedCreateWithoutQuizzesInput[]
+    connectOrCreate?: quiz_questionsCreateOrConnectWithoutQuizzesInput | quiz_questionsCreateOrConnectWithoutQuizzesInput[]
+    createMany?: quiz_questionsCreateManyQuizzesInputEnvelope
+    connect?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+  }
+
+  export type quiz_questionsUncheckedCreateNestedManyWithoutQuizzesInput = {
+    create?: XOR<quiz_questionsCreateWithoutQuizzesInput, quiz_questionsUncheckedCreateWithoutQuizzesInput> | quiz_questionsCreateWithoutQuizzesInput[] | quiz_questionsUncheckedCreateWithoutQuizzesInput[]
+    connectOrCreate?: quiz_questionsCreateOrConnectWithoutQuizzesInput | quiz_questionsCreateOrConnectWithoutQuizzesInput[]
+    createMany?: quiz_questionsCreateManyQuizzesInputEnvelope
+    connect?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+  }
+
+  export type quiz_questionsUpdateManyWithoutQuizzesNestedInput = {
+    create?: XOR<quiz_questionsCreateWithoutQuizzesInput, quiz_questionsUncheckedCreateWithoutQuizzesInput> | quiz_questionsCreateWithoutQuizzesInput[] | quiz_questionsUncheckedCreateWithoutQuizzesInput[]
+    connectOrCreate?: quiz_questionsCreateOrConnectWithoutQuizzesInput | quiz_questionsCreateOrConnectWithoutQuizzesInput[]
+    upsert?: quiz_questionsUpsertWithWhereUniqueWithoutQuizzesInput | quiz_questionsUpsertWithWhereUniqueWithoutQuizzesInput[]
+    createMany?: quiz_questionsCreateManyQuizzesInputEnvelope
+    set?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    disconnect?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    delete?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    connect?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    update?: quiz_questionsUpdateWithWhereUniqueWithoutQuizzesInput | quiz_questionsUpdateWithWhereUniqueWithoutQuizzesInput[]
+    updateMany?: quiz_questionsUpdateManyWithWhereWithoutQuizzesInput | quiz_questionsUpdateManyWithWhereWithoutQuizzesInput[]
+    deleteMany?: quiz_questionsScalarWhereInput | quiz_questionsScalarWhereInput[]
+  }
+
+  export type quiz_questionsUncheckedUpdateManyWithoutQuizzesNestedInput = {
+    create?: XOR<quiz_questionsCreateWithoutQuizzesInput, quiz_questionsUncheckedCreateWithoutQuizzesInput> | quiz_questionsCreateWithoutQuizzesInput[] | quiz_questionsUncheckedCreateWithoutQuizzesInput[]
+    connectOrCreate?: quiz_questionsCreateOrConnectWithoutQuizzesInput | quiz_questionsCreateOrConnectWithoutQuizzesInput[]
+    upsert?: quiz_questionsUpsertWithWhereUniqueWithoutQuizzesInput | quiz_questionsUpsertWithWhereUniqueWithoutQuizzesInput[]
+    createMany?: quiz_questionsCreateManyQuizzesInputEnvelope
+    set?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    disconnect?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    delete?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    connect?: quiz_questionsWhereUniqueInput | quiz_questionsWhereUniqueInput[]
+    update?: quiz_questionsUpdateWithWhereUniqueWithoutQuizzesInput | quiz_questionsUpdateWithWhereUniqueWithoutQuizzesInput[]
+    updateMany?: quiz_questionsUpdateManyWithWhereWithoutQuizzesInput | quiz_questionsUpdateManyWithWhereWithoutQuizzesInput[]
+    deleteMany?: quiz_questionsScalarWhereInput | quiz_questionsScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutClass_engagementInput = {
+    create?: XOR<UserCreateWithoutClass_engagementInput, UserUncheckedCreateWithoutClass_engagementInput>
+    connectOrCreate?: UserCreateOrConnectWithoutClass_engagementInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutClass_engagementNestedInput = {
+    create?: XOR<UserCreateWithoutClass_engagementInput, UserUncheckedCreateWithoutClass_engagementInput>
+    connectOrCreate?: UserCreateOrConnectWithoutClass_engagementInput
+    upsert?: UserUpsertWithoutClass_engagementInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutClass_engagementInput, UserUpdateWithoutClass_engagementInput>, UserUncheckedUpdateWithoutClass_engagementInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -19720,6 +28372,42 @@ export namespace Prisma {
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
 
   export type user_achievementsCreateWithoutAchievementsInput = {
     earned_at?: Date | string | null
@@ -19905,6 +28593,7 @@ export namespace Prisma {
     streak?: number | null
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -19931,6 +28620,7 @@ export namespace Prisma {
     streak?: number | null
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -20058,6 +28748,7 @@ export namespace Prisma {
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -20084,6 +28775,7 @@ export namespace Prisma {
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -20124,6 +28816,7 @@ export namespace Prisma {
   export type daily_topic_metricsCreateWithoutClassesInput = {
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
     topics: topicsCreateNestedOneWithoutDaily_topic_metricsInput
     users: UserCreateNestedOneWithoutDaily_topic_metricsInput
   }
@@ -20133,6 +28826,7 @@ export namespace Prisma {
     topic_id: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type daily_topic_metricsCreateOrConnectWithoutClassesInput = {
@@ -20222,6 +28916,7 @@ export namespace Prisma {
     topic_id?: StringFilter<"daily_topic_metrics"> | string
     metric_date?: DateTimeFilter<"daily_topic_metrics"> | Date | string
     avg_score?: DecimalNullableFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableFilter<"daily_topic_metrics"> | number | null
   }
 
   export type topicsUpsertWithWhereUniqueWithoutClassesInput = {
@@ -20313,6 +29008,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -20339,6 +29035,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -20439,6 +29136,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -20465,6 +29163,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -20491,6 +29190,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -20517,6 +29217,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -20548,6 +29249,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -20574,6 +29276,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -20616,6 +29319,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -20642,6 +29346,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -20679,6 +29384,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -20705,6 +29411,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -20731,6 +29438,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -20757,6 +29465,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -20788,6 +29497,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -20814,6 +29524,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -20856,6 +29567,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -20882,6 +29594,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -20919,6 +29632,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -20945,6 +29659,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -20984,6 +29699,7 @@ export namespace Prisma {
   export type daily_topic_metricsCreateWithoutTopicsInput = {
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
     classes: classesCreateNestedOneWithoutDaily_topic_metricsInput
     users: UserCreateNestedOneWithoutDaily_topic_metricsInput
   }
@@ -20993,6 +29709,7 @@ export namespace Prisma {
     class_code: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type daily_topic_metricsCreateOrConnectWithoutTopicsInput = {
@@ -21103,6 +29820,7 @@ export namespace Prisma {
     description?: string | null
     xp_reward?: number | null
     created_at?: Date | string | null
+    slug?: string | null
   }
 
   export type achievementsUncheckedCreateWithoutUser_achievementsInput = {
@@ -21111,6 +29829,7 @@ export namespace Prisma {
     description?: string | null
     xp_reward?: number | null
     created_at?: Date | string | null
+    slug?: string | null
   }
 
   export type achievementsCreateOrConnectWithoutUser_achievementsInput = {
@@ -21136,6 +29855,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -21162,6 +29882,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -21192,6 +29913,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type achievementsUncheckedUpdateWithoutUser_achievementsInput = {
@@ -21200,6 +29922,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUpsertWithoutUser_achievementsInput = {
@@ -21231,6 +29954,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -21257,6 +29981,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -21283,6 +30008,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -21309,6 +30035,7 @@ export namespace Prisma {
     weekly_xp?: number | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -21351,6 +30078,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -21377,6 +30105,7 @@ export namespace Prisma {
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -21457,9 +30186,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type class_engagementCreateWithoutUserInput = {
+    id: string
+    class_name: string
+    question_count?: number | null
+    week_start: Date | string
+  }
+
+  export type class_engagementUncheckedCreateWithoutUserInput = {
+    id: string
+    class_name: string
+    question_count?: number | null
+    week_start: Date | string
+  }
+
+  export type class_engagementCreateOrConnectWithoutUserInput = {
+    where: class_engagementWhereUniqueInput
+    create: XOR<class_engagementCreateWithoutUserInput, class_engagementUncheckedCreateWithoutUserInput>
+  }
+
+  export type class_engagementCreateManyUserInputEnvelope = {
+    data: class_engagementCreateManyUserInput | class_engagementCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type daily_topic_metricsCreateWithoutUsersInput = {
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
     classes: classesCreateNestedOneWithoutDaily_topic_metricsInput
     topics: topicsCreateNestedOneWithoutDaily_topic_metricsInput
   }
@@ -21469,6 +30223,7 @@ export namespace Prisma {
     topic_id: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type daily_topic_metricsCreateOrConnectWithoutUsersInput = {
@@ -21537,6 +30292,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
     users_friends_user_idTousers: UserCreateNestedOneWithoutFriends_friends_user_idTousersInput
   }
 
@@ -21545,6 +30302,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
   }
 
   export type friendsCreateOrConnectWithoutUsers_friends_friend_idTousersInput = {
@@ -21561,6 +30320,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
     users_friends_friend_idTousers: UserCreateNestedOneWithoutFriends_friends_friend_idTousersInput
   }
 
@@ -21569,6 +30330,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
   }
 
   export type friendsCreateOrConnectWithoutUsers_friends_user_idTousersInput = {
@@ -21678,6 +30441,33 @@ export namespace Prisma {
     data: XOR<chat_sessionsUpdateManyMutationInput, chat_sessionsUncheckedUpdateManyWithoutUsersInput>
   }
 
+  export type class_engagementUpsertWithWhereUniqueWithoutUserInput = {
+    where: class_engagementWhereUniqueInput
+    update: XOR<class_engagementUpdateWithoutUserInput, class_engagementUncheckedUpdateWithoutUserInput>
+    create: XOR<class_engagementCreateWithoutUserInput, class_engagementUncheckedCreateWithoutUserInput>
+  }
+
+  export type class_engagementUpdateWithWhereUniqueWithoutUserInput = {
+    where: class_engagementWhereUniqueInput
+    data: XOR<class_engagementUpdateWithoutUserInput, class_engagementUncheckedUpdateWithoutUserInput>
+  }
+
+  export type class_engagementUpdateManyWithWhereWithoutUserInput = {
+    where: class_engagementScalarWhereInput
+    data: XOR<class_engagementUpdateManyMutationInput, class_engagementUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type class_engagementScalarWhereInput = {
+    AND?: class_engagementScalarWhereInput | class_engagementScalarWhereInput[]
+    OR?: class_engagementScalarWhereInput[]
+    NOT?: class_engagementScalarWhereInput | class_engagementScalarWhereInput[]
+    id?: StringFilter<"class_engagement"> | string
+    user_id?: StringFilter<"class_engagement"> | string
+    class_name?: StringFilter<"class_engagement"> | string
+    question_count?: IntNullableFilter<"class_engagement"> | number | null
+    week_start?: DateTimeFilter<"class_engagement"> | Date | string
+  }
+
   export type daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput = {
     where: daily_topic_metricsWhereUniqueInput
     update: XOR<daily_topic_metricsUpdateWithoutUsersInput, daily_topic_metricsUncheckedUpdateWithoutUsersInput>
@@ -21763,6 +30553,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"friends"> | Date | string | null
     streak?: IntNullableFilter<"friends"> | number | null
     total_xp?: IntNullableFilter<"friends"> | number | null
+    first_name?: StringNullableFilter<"friends"> | string | null
+    last_name?: StringNullableFilter<"friends"> | string | null
   }
 
   export type friendsUpsertWithWhereUniqueWithoutUsers_friends_user_idTousersInput = {
@@ -21841,6 +30633,7 @@ export namespace Prisma {
     streak?: number | null
     weekly_xp?: number | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -21867,6 +30660,7 @@ export namespace Prisma {
     streak?: number | null
     weekly_xp?: number | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
@@ -21909,6 +30703,7 @@ export namespace Prisma {
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -21934,6 +30729,340 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
+    friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
+    friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
+  export type messagesCreateWithoutChatsInput = {
+    role?: string | null
+    content?: string | null
+    score?: number | null
+    reason?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type messagesUncheckedCreateWithoutChatsInput = {
+    id?: number
+    role?: string | null
+    content?: string | null
+    score?: number | null
+    reason?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type messagesCreateOrConnectWithoutChatsInput = {
+    where: messagesWhereUniqueInput
+    create: XOR<messagesCreateWithoutChatsInput, messagesUncheckedCreateWithoutChatsInput>
+  }
+
+  export type messagesCreateManyChatsInputEnvelope = {
+    data: messagesCreateManyChatsInput | messagesCreateManyChatsInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type messagesUpsertWithWhereUniqueWithoutChatsInput = {
+    where: messagesWhereUniqueInput
+    update: XOR<messagesUpdateWithoutChatsInput, messagesUncheckedUpdateWithoutChatsInput>
+    create: XOR<messagesCreateWithoutChatsInput, messagesUncheckedCreateWithoutChatsInput>
+  }
+
+  export type messagesUpdateWithWhereUniqueWithoutChatsInput = {
+    where: messagesWhereUniqueInput
+    data: XOR<messagesUpdateWithoutChatsInput, messagesUncheckedUpdateWithoutChatsInput>
+  }
+
+  export type messagesUpdateManyWithWhereWithoutChatsInput = {
+    where: messagesScalarWhereInput
+    data: XOR<messagesUpdateManyMutationInput, messagesUncheckedUpdateManyWithoutChatsInput>
+  }
+
+  export type messagesScalarWhereInput = {
+    AND?: messagesScalarWhereInput | messagesScalarWhereInput[]
+    OR?: messagesScalarWhereInput[]
+    NOT?: messagesScalarWhereInput | messagesScalarWhereInput[]
+    id?: IntFilter<"messages"> | number
+    chat_id?: StringNullableFilter<"messages"> | string | null
+    role?: StringNullableFilter<"messages"> | string | null
+    content?: StringNullableFilter<"messages"> | string | null
+    score?: IntNullableFilter<"messages"> | number | null
+    reason?: StringNullableFilter<"messages"> | string | null
+    created_at?: DateTimeNullableFilter<"messages"> | Date | string | null
+  }
+
+  export type chatsCreateWithoutMessagesInput = {
+    id: string
+    title?: string | null
+    created_at?: Date | string | null
+    accumulated_score?: number | null
+  }
+
+  export type chatsUncheckedCreateWithoutMessagesInput = {
+    id: string
+    title?: string | null
+    created_at?: Date | string | null
+    accumulated_score?: number | null
+  }
+
+  export type chatsCreateOrConnectWithoutMessagesInput = {
+    where: chatsWhereUniqueInput
+    create: XOR<chatsCreateWithoutMessagesInput, chatsUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type chatsUpsertWithoutMessagesInput = {
+    update: XOR<chatsUpdateWithoutMessagesInput, chatsUncheckedUpdateWithoutMessagesInput>
+    create: XOR<chatsCreateWithoutMessagesInput, chatsUncheckedCreateWithoutMessagesInput>
+    where?: chatsWhereInput
+  }
+
+  export type chatsUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: chatsWhereInput
+    data: XOR<chatsUpdateWithoutMessagesInput, chatsUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type chatsUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulated_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type chatsUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    accumulated_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quizzesCreateWithoutQuiz_questionsInput = {
+    id: string
+    user_id: string
+    topic_id: string
+    score?: number | null
+    date?: Date | string | null
+    retake_count?: number | null
+  }
+
+  export type quizzesUncheckedCreateWithoutQuiz_questionsInput = {
+    id: string
+    user_id: string
+    topic_id: string
+    score?: number | null
+    date?: Date | string | null
+    retake_count?: number | null
+  }
+
+  export type quizzesCreateOrConnectWithoutQuiz_questionsInput = {
+    where: quizzesWhereUniqueInput
+    create: XOR<quizzesCreateWithoutQuiz_questionsInput, quizzesUncheckedCreateWithoutQuiz_questionsInput>
+  }
+
+  export type quizzesUpsertWithoutQuiz_questionsInput = {
+    update: XOR<quizzesUpdateWithoutQuiz_questionsInput, quizzesUncheckedUpdateWithoutQuiz_questionsInput>
+    create: XOR<quizzesCreateWithoutQuiz_questionsInput, quizzesUncheckedCreateWithoutQuiz_questionsInput>
+    where?: quizzesWhereInput
+  }
+
+  export type quizzesUpdateToOneWithWhereWithoutQuiz_questionsInput = {
+    where?: quizzesWhereInput
+    data: XOR<quizzesUpdateWithoutQuiz_questionsInput, quizzesUncheckedUpdateWithoutQuiz_questionsInput>
+  }
+
+  export type quizzesUpdateWithoutQuiz_questionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quizzesUncheckedUpdateWithoutQuiz_questionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: StringFieldUpdateOperationsInput | string
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quiz_questionsCreateWithoutQuizzesInput = {
+    id: string
+    question: string
+    user_answer?: string | null
+    correct_answer: string
+    is_correct?: boolean | null
+    depth_score?: number | null
+  }
+
+  export type quiz_questionsUncheckedCreateWithoutQuizzesInput = {
+    id: string
+    question: string
+    user_answer?: string | null
+    correct_answer: string
+    is_correct?: boolean | null
+    depth_score?: number | null
+  }
+
+  export type quiz_questionsCreateOrConnectWithoutQuizzesInput = {
+    where: quiz_questionsWhereUniqueInput
+    create: XOR<quiz_questionsCreateWithoutQuizzesInput, quiz_questionsUncheckedCreateWithoutQuizzesInput>
+  }
+
+  export type quiz_questionsCreateManyQuizzesInputEnvelope = {
+    data: quiz_questionsCreateManyQuizzesInput | quiz_questionsCreateManyQuizzesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type quiz_questionsUpsertWithWhereUniqueWithoutQuizzesInput = {
+    where: quiz_questionsWhereUniqueInput
+    update: XOR<quiz_questionsUpdateWithoutQuizzesInput, quiz_questionsUncheckedUpdateWithoutQuizzesInput>
+    create: XOR<quiz_questionsCreateWithoutQuizzesInput, quiz_questionsUncheckedCreateWithoutQuizzesInput>
+  }
+
+  export type quiz_questionsUpdateWithWhereUniqueWithoutQuizzesInput = {
+    where: quiz_questionsWhereUniqueInput
+    data: XOR<quiz_questionsUpdateWithoutQuizzesInput, quiz_questionsUncheckedUpdateWithoutQuizzesInput>
+  }
+
+  export type quiz_questionsUpdateManyWithWhereWithoutQuizzesInput = {
+    where: quiz_questionsScalarWhereInput
+    data: XOR<quiz_questionsUpdateManyMutationInput, quiz_questionsUncheckedUpdateManyWithoutQuizzesInput>
+  }
+
+  export type quiz_questionsScalarWhereInput = {
+    AND?: quiz_questionsScalarWhereInput | quiz_questionsScalarWhereInput[]
+    OR?: quiz_questionsScalarWhereInput[]
+    NOT?: quiz_questionsScalarWhereInput | quiz_questionsScalarWhereInput[]
+    id?: StringFilter<"quiz_questions"> | string
+    quiz_id?: StringFilter<"quiz_questions"> | string
+    question?: StringFilter<"quiz_questions"> | string
+    user_answer?: StringNullableFilter<"quiz_questions"> | string | null
+    correct_answer?: StringFilter<"quiz_questions"> | string
+    is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
+    depth_score?: IntNullableFilter<"quiz_questions"> | number | null
+  }
+
+  export type UserCreateWithoutClass_engagementInput = {
+    id?: string
+    email: string
+    total_xp?: number | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
+    Account?: AccountCreateNestedManyWithoutUserInput
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
+    friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
+    friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    xp_system?: xp_systemCreateNestedManyWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutClass_engagementInput = {
+    id?: string
+    email: string
+    total_xp?: number | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
+    Account?: AccountUncheckedCreateNestedManyWithoutUserInput
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
+    friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
+    friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type UserCreateOrConnectWithoutClass_engagementInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutClass_engagementInput, UserUncheckedCreateWithoutClass_engagementInput>
+  }
+
+  export type UserUpsertWithoutClass_engagementInput = {
+    update: XOR<UserUpdateWithoutClass_engagementInput, UserUncheckedUpdateWithoutClass_engagementInput>
+    create: XOR<UserCreateWithoutClass_engagementInput, UserUncheckedCreateWithoutClass_engagementInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutClass_engagementInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutClass_engagementInput, UserUncheckedUpdateWithoutClass_engagementInput>
+  }
+
+  export type UserUpdateWithoutClass_engagementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    Account?: AccountUpdateManyWithoutUserNestedInput
+    chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
+    friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
+    friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutClass_engagementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
@@ -22005,6 +31134,7 @@ export namespace Prisma {
     topic_id: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type topicsCreateManyClassesInput = {
@@ -22041,6 +31171,7 @@ export namespace Prisma {
   export type daily_topic_metricsUpdateWithoutClassesInput = {
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
     topics?: topicsUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
     users?: UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
   }
@@ -22050,6 +31181,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type daily_topic_metricsUncheckedUpdateManyWithoutClassesInput = {
@@ -22057,6 +31189,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type topicsUpdateWithoutClassesInput = {
@@ -22091,6 +31224,7 @@ export namespace Prisma {
     class_code: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type chat_sessionsUpdateWithoutTopicsInput = {
@@ -22122,6 +31256,7 @@ export namespace Prisma {
   export type daily_topic_metricsUpdateWithoutTopicsInput = {
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
     classes?: classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
     users?: UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
   }
@@ -22131,6 +31266,7 @@ export namespace Prisma {
     class_code?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type daily_topic_metricsUncheckedUpdateManyWithoutTopicsInput = {
@@ -22138,6 +31274,7 @@ export namespace Prisma {
     class_code?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountCreateManyUserInput = {
@@ -22165,11 +31302,19 @@ export namespace Prisma {
     created_at?: Date | string | null
   }
 
+  export type class_engagementCreateManyUserInput = {
+    id: string
+    class_name: string
+    question_count?: number | null
+    week_start: Date | string
+  }
+
   export type daily_topic_metricsCreateManyUsersInput = {
     class_code: string
     topic_id: string
     metric_date: Date | string
     avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type friend_requestsCreateManyUsers_friend_requests_receiver_idTousersInput = {
@@ -22193,6 +31338,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
   }
 
   export type friendsCreateManyUsers_friends_user_idTousersInput = {
@@ -22200,6 +31347,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     streak?: number | null
     total_xp?: number | null
+    first_name?: string | null
+    last_name?: string | null
   }
 
   export type user_achievementsCreateManyUsersInput = {
@@ -22291,9 +31440,31 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type class_engagementUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type class_engagementUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type class_engagementUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    question_count?: NullableIntFieldUpdateOperationsInput | number | null
+    week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type daily_topic_metricsUpdateWithoutUsersInput = {
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
     classes?: classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
     topics?: topicsUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
   }
@@ -22303,6 +31474,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type daily_topic_metricsUncheckedUpdateManyWithoutUsersInput = {
@@ -22310,6 +31482,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
     avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friend_requestsUpdateWithoutUsers_friend_requests_receiver_idTousersInput = {
@@ -22364,6 +31537,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
     users_friends_user_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_user_idTousersNestedInput
   }
 
@@ -22372,6 +31547,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersInput = {
@@ -22379,12 +31556,16 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type friendsUpdateWithoutUsers_friends_user_idTousersInput = {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
     users_friends_friend_idTousers?: UserUpdateOneRequiredWithoutFriends_friends_friend_idTousersNestedInput
   }
 
@@ -22393,6 +31574,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersInput = {
@@ -22400,6 +31583,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type user_achievementsUpdateWithoutUsersInput = {
@@ -22436,6 +31621,77 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     amount?: IntFieldUpdateOperationsInput | number
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type messagesCreateManyChatsInput = {
+    id?: number
+    role?: string | null
+    content?: string | null
+    score?: number | null
+    reason?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type messagesUpdateWithoutChatsInput = {
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type messagesUncheckedUpdateWithoutChatsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type messagesUncheckedUpdateManyWithoutChatsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type quiz_questionsCreateManyQuizzesInput = {
+    id: string
+    question: string
+    user_answer?: string | null
+    correct_answer: string
+    is_correct?: boolean | null
+    depth_score?: number | null
+  }
+
+  export type quiz_questionsUpdateWithoutQuizzesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quiz_questionsUncheckedUpdateWithoutQuizzesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type quiz_questionsUncheckedUpdateManyWithoutQuizzesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    question?: StringFieldUpdateOperationsInput | string
+    user_answer?: NullableStringFieldUpdateOperationsInput | string | null
+    correct_answer?: StringFieldUpdateOperationsInput | string
+    is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    depth_score?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
 

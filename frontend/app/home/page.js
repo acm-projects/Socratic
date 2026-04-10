@@ -1,3 +1,4 @@
+"use client"
 import StudyHeatmap from "../components/StudyHeatmap"
 import { User, Users, Flame, Trophy, ArrowUpRight } from 'lucide-react'
 import UpcomingTasks from "../components/homeComponents/UpcomingTasks"
@@ -5,15 +6,18 @@ import UpcomingMeetings from "../components/homeComponents/UpcomingMeetings"
 import ProfileCard from "../components/homeComponents/ProfileCard"
 import ClassesGrid from "../components/homeComponents/ClassesGrid"
 import Link from "next/link"
+import { use, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { useState } from "react"
 
-const courses = [
-  { name: "Discrete Math",      code: "CS2305"   },
-  { name: "Computer Science I", code: "CS3345"   },
-  { name: "Calculus II",        code: "MATH2414" },
-  { name: "Physics I",          code: "PHYS2325" },
-  { name: "Linear Algebra",     code: "MATH2418" },
-  { name: "Chemistry I",        code: "CHEM1311" },
-]
+// const courses = [
+//   { name: "Discrete Math",      code: "CS2305"   },
+//   { name: "Computer Science I", code: "CS3345"   },
+//   { name: "Calculus II",        code: "MATH2414" },
+//   { name: "Physics I",          code: "PHYS2325" },
+//   { name: "Linear Algebra",     code: "MATH2418" },
+//   { name: "Chemistry I",        code: "CHEM1311" },
+// ]
 
 const upcomingTasks = [
   { title: "Problem Set 4", course: "Discrete Math",  due: "Apr 3"  },
@@ -23,14 +27,42 @@ const upcomingTasks = [
   { title: "HW 8",          course: "Calculus II",    due: "Apr 15" },
 ]
 
-const upcomingMeetings = [
-  { title: "Study Group",    course: "Computer Science I", date: "Tue, Apr 8",  time: "4:00 PM" },
-  { title: "Exam 3 Review",  course: "Discrete Math",      date: "Wed, Apr 9",  time: "2:00 PM" },
-  { title: "Review Session", course: "Physics I",          date: "Fri, Apr 11", time: "5:00 PM" },
-  { title: "Exam Review",    course: "Physics I",          date: "Sat, Apr 12", time: "5:00 PM" },
-]
+// const upcomingMeetings = [
+//   { title: "Study Group",    course: "Computer Science I", date: "Tue, Apr 8",  time: "4:00 PM" },
+//   { title: "Exam 3 Review",  course: "Discrete Math",      date: "Wed, Apr 9",  time: "2:00 PM" },
+//   { title: "Review Session", course: "Physics I",          date: "Fri, Apr 11", time: "5:00 PM" },
+//   { title: "Exam Review",    course: "Physics I",          date: "Sat, Apr 12", time: "5:00 PM" },
+// ]
 
 export default function HomePage() {
+
+  // fetch data for classes grid
+    const [courses, setCourses] = useState([]);
+    const { data: session } = useSession();
+
+  useEffect(() => { 
+    if (!session) return;
+    fetch(`/backend/classes?user_id=${session.user.id}`)
+    .then(res => res.json())
+    .then(data => {
+      setCourses(data)
+      console.log("courses:", data)
+    })
+    .catch(err => console.error(err));
+   }, [session]);
+
+  //  fetch data for profile card
+const [profile, setProfile] = useState(null);
+
+useEffect(() => {
+  if (!session) return;
+  fetch(`/backend/users/${session.user.id}`)
+    .then(res => res.json())
+    .then(data => setProfile(data))
+    .catch(err => console.error(err));
+}, [session]);
+
+
   return (
    <div
       className={`min-h-screen flex`}
@@ -54,9 +86,11 @@ export default function HomePage() {
 
             <div>
             <h1 className="text-xl font-medium text-[#141f1d] tracking-tight leading-tight">
-                Welcome, Mariam
+                Welcome, {profile?.first_name || ""}
             </h1>
-            <p className="text-sm text-[#90aba7] mt-0.5 font-medium">Thursday, April 3</p>
+            <p className="text-sm text-[#90aba7] mt-0.5 font-medium">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+              </p>
             </div>
 
         </div>
@@ -78,14 +112,14 @@ export default function HomePage() {
         <div className="flex gap-5 items-start">
        {/* Profile Card */}
         <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex flex-col items-center justify-center w-80 h-100">
-            <ProfileCard
-                name="Mariam Syed"
-                school="UT Dallas"
-                major="Computer Science"
-                streak={12}
-                friends={8}
-                achievements={5}
-            />
+        <ProfileCard
+          name={profile ? `${profile.first_name} ${profile.last_name}` : ""}
+          school={profile?.school || ""}
+          major={profile?.major || ""}
+          streak={profile?.streak || 0}
+          friends={profile?.friends || 0}
+          achievements={profile?.achievements || 0}
+        />
         </div>
         {/* Classes Grid — 3 cols, 2 rows */}
         <ClassesGrid courses={courses} />
@@ -108,7 +142,8 @@ export default function HomePage() {
 
         {/* Upcoming Meetings */}
         <div>
-            <UpcomingMeetings meetings={upcomingMeetings} />
+            {/* <UpcomingMeetings meetings={upcomingMeetings} /> */}
+            <UpcomingMeetings />
         </div>
 
         </div>

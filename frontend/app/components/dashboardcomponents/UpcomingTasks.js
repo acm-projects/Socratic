@@ -1,16 +1,25 @@
 "use client";
-
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";           
 import {useState} from "react";
 import {EllipsisVertical, Folder} from "lucide-react";
 
 
 export default function UpcomingTasks() {
     //array of tasks
-    const tasks = [
-  { id: 1, title: "Midterm", course: "Calculus II", date: "Feb 15" },
-  { id: 2, title: "Biology Meeting", course: "Biology", date: "Feb 17" },
-];
+   const [showModal, setShowModal] = useState(false);
+   const [meetings, setMeetings] = useState([]);
+   const [tasks, setTasks] = useState([]);
+   const { data: session } = useSession();
+   console.log(session);
 
+
+   useEffect(() => {
+       fetch('http://3.128.186.118:5000/api/calendar/upcoming-events')
+           .then(res => res.json())
+           .then(data => setMeetings(data))
+           .catch(err => console.error(err));
+   }, []);
 
 
     return (
