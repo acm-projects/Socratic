@@ -39,6 +39,50 @@ app.get('/', (req, res) => {
 })
 
 // -----------------------------------------------------
+// CLASS STREAK HELPER
+// -----------------------------------------------------
+
+const updateClassStreak = async (class_code, user_id) => {
+  try {
+    const today = new Date().toISOString().split('T')[0]
+
+    const classResult = await pool.query(
+      "SELECT streak, last_activity_date FROM classes WHERE class_code = $1 AND user_id = $2",
+      [class_code, user_id]
+    )
+
+    if (!classResult.rows[0]) return
+
+    const { streak, last_activity_date } = classResult.rows[0]
+    const lastDate = last_activity_date ? new Date(last_activity_date).toISOString().split('T')[0] : null
+
+    if (lastDate === today) {
+      // Already studied today, no change
+      return
+    }
+
+    let newStreak = 1
+    if (lastDate) {
+      const yesterday = new Date()
+      yesterday.setDate(yesterday.getDate() - 1)
+      const yesterdayStr = yesterday.toISOString().split('T')[0]
+      if (lastDate === yesterdayStr) {
+        // Studied yesterday, increment
+        newStreak = (streak || 0) + 1
+      }
+      // else missed a day, reset to 1
+    }
+
+    await pool.query(
+      "UPDATE classes SET streak = $1, last_activity_date = $2 WHERE class_code = $3 AND user_id = $4",
+      [newStreak, today, class_code, user_id]
+    )
+  } catch (err) {
+    console.error('[ClassStreak] Failed to update:', err.message)
+  }
+}
+
+// -----------------------------------------------------
 // TABLE DISCOVERY
 // -----------------------------------------------------
 
@@ -355,8 +399,21 @@ app.delete("/classes/:code", async (req, res) => {
 
 app.get("/classes/:code/topics", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM topics WHERE class_code = $1", [req.params.code])
-    res.json(result.rows)
+    const code = req.params.code
+
+    const [topicsResult, classResult] = await Promise.all([
+      pool.query("SELECT * FROM topics WHERE class_code = $1", [code]),
+      pool.query("SELECT streak, last_activity_date FROM classes WHERE class_code = $1", [code])
+    ])
+
+    const classInfo = classResult.rows[0] || {}
+
+    res.json({
+      class_code: code,
+      streak: classInfo.streak || 0,
+      last_activity_date: classInfo.last_activity_date || null,
+      topics: topicsResult.rows
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -404,6 +461,12 @@ app.post("/sessions", async (req, res) => {
       "INSERT INTO chat_sessions (session_id, class_code, user_id, topic_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [session_id, class_code, user_id, topic_id]
     )
+
+    // Update class streak when a session is created
+    if (class_code && user_id) {
+      await updateClassStreak(class_code, user_id)
+    }
+
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -517,7 +580,6 @@ app.get("/users/:id/stats", async (req, res) => {
       [userId]
     )
 
-    // Try to get message count from messages table
     let aiMessages = 0
     try {
       const messageCount = await pool.query(
@@ -526,7 +588,6 @@ app.get("/users/:id/stats", async (req, res) => {
       )
       aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0
     } catch (e) {
-      // messages table may have different structure
       aiMessages = 0
     }
 
@@ -906,6 +967,16 @@ app.post("/quizzes", async (req, res) => {
         )
         savedQuestions.push(savedQ.rows[0])
       }
+    }
+
+    // Update class streak
+    try {
+      const topicResult = await pool.query("SELECT class_code FROM topics WHERE id = $1", [topic_id])
+      if (topicResult.rows[0]) {
+        await updateClassStreak(topicResult.rows[0].class_code, user_id)
+      }
+    } catch (streakErr) {
+      console.error('[ClassStreak] Failed to update from quiz:', streakErr.message)
     }
 
     // -----------------------------------------------------
