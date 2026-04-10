@@ -31,11 +31,13 @@ router.post('/chat', async (req, res, next) => {
 
     // 2. Ensure Session Exists in Official table
     let chatId = providedChatId || randomUUID();
+    const sessionTitle = `${classCode} - ${topicName}`;
     const session = await sessionModel.upsertTutorSession({
       session_id: chatId,
       class_code: classCode,
       user_id: userId,
-      topic_id: topic.id
+      topic_id: topic.id,
+      title: sessionTitle
     });
 
     // 3. Evaluate Question Quality

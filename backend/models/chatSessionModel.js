@@ -11,10 +11,10 @@ const getSessionById = async (sessionId) => {
 };
 
 const createSession = async (data) => {
-  const { session_id, class_code, user_id, topic_id } = data;
+  const { session_id, class_code, user_id, topic_id, title } = data;
   const result = await db.query(
-    "INSERT INTO chat_sessions (session_id, class_code, user_id, topic_id) VALUES ($1, $2, $3, $4) RETURNING *",
-    [session_id, class_code, user_id, topic_id]
+    "INSERT INTO chat_sessions (session_id, class_code, user_id, topic_id, title) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+    [session_id, class_code, user_id, topic_id, title]
   );
   return result.rows[0];
 };
@@ -24,7 +24,7 @@ const createSession = async (data) => {
  * If one already exists, it returns it. Otherwise creates a new one.
  */
 const upsertTutorSession = async (data) => {
-  const { session_id, class_code, user_id, topic_id } = data;
+  const { session_id, class_code, user_id, topic_id, title } = data;
   
   // Try to find existing
   const existing = await db.query(
