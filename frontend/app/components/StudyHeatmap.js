@@ -2,7 +2,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-export default function ClassHeatmap({ data }) {
+export default function StudyHeatmap({ data }) {
   // 1. Start with an empty array 
   const [heatmapData, setHeatmapData] = useState([]);
 

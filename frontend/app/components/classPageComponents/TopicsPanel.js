@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import PastQuizzes from "../PastQuizzes"
+import PastQuizzes from "./PastQuizzes"
 // import QuizModal from "../QuizModal"
 
 export default function TopicsPanel({ topics, onQuizClick }) {
@@ -8,6 +8,7 @@ export default function TopicsPanel({ topics, onQuizClick }) {
 
   return (
     <>
+      <div className="flex flex-col h-full">
       {/* underline tabs */}
       <div className="flex gap-6 border-b border-[#EAEEED] mb-4">
         <button
@@ -30,23 +31,33 @@ export default function TopicsPanel({ topics, onQuizClick }) {
         </button>
       </div>
 
-      {/* fixed height - change */}
-      <div className="min-h-72">
+      {/* scrollable area */}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hid pb-2">
         {view === "topics" && (
           <div className="flex flex-col gap-2">
             {topics.map((t, i) => (
-              <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2">
+              <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 shrink=0">
                 <div className="flex flex-col flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#14153A]">{t.name}</p>
                   <p className="text-xs text-gray-400 mt-0.5">{t.quizzes} quizzes</p>
+                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mt-1.5">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${t.pct}%`,
+                      background: `linear-gradient(to right, #10b98199, #10b981)`,
+                    }}
+                  />
                 </div>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-xl ${
-                  t.pct >= 70 ? "bg-green-100 text-green-700" :
-                  t.pct > 0   ? "bg-yellow-100 text-yellow-600" :
-                                "bg-gray-100 text-gray-400"
-                }`}>
-                  {t.pct > 0 ? `${t.pct}%` : "—"}
-                </span>
+                </div>
+                 
+                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-xl ${
+                    t.pct >= 70 ? "bg-green-100 text-green-700" :
+                    t.pct > 0   ? "bg-yellow-100 text-yellow-600" :
+                    "bg-gray-100 text-gray-400"
+                    }`}>
+                    {t.pct > 0 ? `${t.pct}%` : "—"}
+                  </span>
                 <div className="flex gap-2">
                   <button 
                     onClick={onQuizClick} 
@@ -60,6 +71,7 @@ export default function TopicsPanel({ topics, onQuizClick }) {
         )}
 
         {view === "quizzes" && <PastQuizzes />}
+      </div>
       </div>
 
       

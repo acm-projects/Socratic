@@ -165,7 +165,7 @@ export default function Home() {
             </div>
           </div>
           
-          <Link href="/createcourses" onClick={addNewCourse} className="bg-white text-black border border-gray-500 px-8 py-2 rounded-xl font-medium flex items-center justify-center mt-4">
+          <Link href="/createcourses" onClick={addNewCourse} className="bg-white text-[black] border border-gray-500 px-8 py-2 rounded-xl font-medium flex items-center justify-center mt-4">
             Add another class
          </Link> 
           <Link href="/confirmcourses" onClick={saveCourse} className="bg-[#2C2C2C] text-white border px-8 py-2 rounded-xl font-medium flex items-center justify-center mt-2">

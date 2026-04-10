@@ -8,7 +8,7 @@ const stats = [
 
 export default function ProfileStats() {
   return (
-    <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4">
+    <div>
       <div className="flex gap-4">
         {stats.map((stat) => (
           <div key={stat.label} className="flex flex-col items-center flex-1 rounded-xl py-2 px-4">
