@@ -85,7 +85,7 @@
       "post": {
         "summary": "Generate AI Quiz",
         "description": "Generates a dynamic 4-option multiple-choice quiz using Gemini AI over the class Pinecone Vector Knowledge Base.",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["classCode", "topic", "numQuestions"], "properties": { "classCode": { "type": "string", "example": "CS 1436" }, "topic": { "type": "string", "example": "Binary Search Trees" }, "numQuestions": { "type": "integer", "example": 5, "default": 5 } } } } } },
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["classCode", "topic", "numQuestions"], "properties": { "classCode": { "type": "string", "example": "CS 1436" }, "topic": { "type": "string", "example": "Binary Search Trees" }, "numQuestions": { "type": "integer", "example": 5, "default": 5 }, "easy": { "type": "boolean", "default": true }, "medium": { "type": "boolean", "default": true }, "hard": { "type": "boolean", "default": false } } } } } },
         "responses": { "200": { "description": "Generated Quiz successfully" } }
       }
     },

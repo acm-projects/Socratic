@@ -47,8 +47,11 @@ function getQuizGeneratorChain() {
   });
 
   const prompt = PromptTemplate.fromTemplate(`
-    You are an expert Professor creating a challenging, multiple-choice quiz for the class {class} on the topic of: {topic}.
+    You are an expert Professor creating a multiple-choice quiz for the class {class} on the topic of: {topic}.
     
+    Difficulty Requirements:
+    {difficultyRequirements}
+
     You must generate exactly {numQuestions} questions.
     Ensure all questions are directly derived from the following course material context.
     
@@ -59,7 +62,10 @@ function getQuizGeneratorChain() {
     Guidelines:
     1. Provide 4 plausible options for each question.
     2. Ensure only 1 option is clearly correct.
-    3. Make sure the difficulty is appropriate (include some basic recall, some application, and some analysis).
+    3. Difficulty Tiers: 
+       - If Easy is requested: focus on basic recall and definitions (depth_score 1-2).
+       - If Medium is requested: focus on application of concepts and relationships (depth_score 3).
+       - If Hard is requested: focus on deep analysis, edge cases, and complex problem-solving (depth_score 4-5).
     4. Provide the exact text of the correct answer in the correct_answer field.
     5. Do NOT include phrases like "According to the context". State questions as objective facts based on the provided material.
   
