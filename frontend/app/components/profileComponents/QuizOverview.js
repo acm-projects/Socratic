@@ -8,7 +8,12 @@ export default function QuizOverview() {
   //   { id: 2, name: "Linear Algebra", color: "#6366f1", average: 78, quizCount: 9 },
   //   { id: 3, name: "Calculus II",    color: "#3b82f6", average: 71, quizCount: 8 },
   //   { id: 4, name: "Physics I",      color: "#8b5cf6", average: 68, quizCount: 7 },
+  //     { id: 5, name: "Physics I",      color: "#8b5cf6", average: 68, quizCount: 7 },
+  //       { id: 6, name: "Physics I",      color: "#8b5cf6", average: 68, quizCount: 7 },
+  //        { id: 7, name: "Physics I",      color: "#8b5cf6", average: 68, quizCount: 7 },
+    
   // ]
+
 
     const [courses, setCourses]  = useState([])
     const {data:session} = useSession();
@@ -34,15 +39,13 @@ export default function QuizOverview() {
 
 
   return (
-
-
-
-
-    <div className="flex flex-col gap-6 p-2">
-      {courses.map((course, i) => (
-        <CourseRow key={i} course={course} />
-      ))}    
+    <div className="flex flex-col h-full">
+      <p className="text-md font-semibold text-[#14153A] pb-1 shrink-0 px-2">Quiz Overview</p>
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide flex flex-col gap-6 p-2 ">
+        {courses.map((course) => (
+        <CourseRow key={course.class_code} course={course} />        ))}
       </div>
+    </div>
   )
 }
 
@@ -67,6 +70,7 @@ const { class_name, color, average_score, quiz_count } = course
           >
             {quiz_count} quizzes
           </span>
+
         </div>
       </div>
 

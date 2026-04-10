@@ -5,11 +5,11 @@ import Calendar from "../components/dashboardcomponents/Calendar";
 import ClassCard from "../components/dashboardcomponents/ClassCard";
 import Navbar from "../components/Navbar";
 import Header from "../components/Header";
-import Addcoursemodal from "../components/dashboardcomponents/Addcoursemodal";
+import Addcoursemodal from "../components/homeComponents/Addcoursemodal";
 import UpcomingMeetings from "../components/dashboardcomponents/UpcomingMeetings";
 import {Plus} from "lucide-react";
 import WeeklyRecap from "../components/dashboardcomponents/WeeklyRecap";
-import DeleteCourseModal from "../components/dashboardcomponents/DeleteCourseModal";
+import DeleteCourseModal from "../components/homeComponents/DeleteCourseModal";
 import { useSession } from "next-auth/react";
 
 export default function Home() {

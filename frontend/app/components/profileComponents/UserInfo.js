@@ -1,12 +1,13 @@
-
 "use client"
 import { useState } from "react"
+import { signOut } from 'next-auth/react'
+import { Pen, LogOut } from 'lucide-react'
 
 export default function UserInfoCard({ name, email, school, major, classStatus }) {
   const [isEditing, setIsEditing] = useState(false)
 
   return (
-    <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col">
 
       {/* pfp, Name, Edit */}
       <div className="flex items-center justify-between gap-2">
@@ -17,11 +18,23 @@ export default function UserInfoCard({ name, email, school, major, classStatus }
             <p className="text-sm text-[#90aba7] truncate">{email}</p>
           </div>
         </div>
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="bg-gray-200 hover:bg-gray-300 transition-colors text-[#141f1d] px-4 py-1.5 rounded-lg text-xs font-semibold shrink-0">
-          {isEditing ? "Save" : "Edit"}
-        </button>
+        <div className="flex gap-1 shrink-0">
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+              isEditing
+                ? "bg-gray-300 text-[#141f1d]"
+                : "text-gray-400 hover:bg-gray-100 hover:text-[#141f1d]"
+            }`}>
+            <Pen size={14} />
+          </button>
+          <button
+            onClick={() => signOut({ callbackUrl: '/' })}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-[#141f1d] transition-all"
+          >
+            <LogOut size={14} />
+          </button>
+        </div>
       </div>
 
       {/* divider */}
@@ -42,7 +55,7 @@ export default function UserInfoCard({ name, email, school, major, classStatus }
           <div key={label} className="flex flex-col gap-0.5">
             <span className="text-xs text-[#90aba7] font-semibold uppercase tracking-wide">{label}</span>
             {isEditing
-              ? <input defaultValue={value} className="text-sm text-[#141f1d] bg-gray-100 border border-[#D0E8E4] rounded-lg px-3 py-1.5 outline-none focus:border-[#3a9e94] transition-colors" />
+              ? <input defaultValue={value} className="w-full text-sm text-[#141f1d] bg-gray-100/70 rounded-lg px-3 py-1.5 outline-none border border-gray-200 focus:border-gray-300 transition-colors" />
               : <div className="text-sm text-[#141f1d] bg-gray-100/70 rounded-lg px-3 py-1.5 border border-gray-100/70">{value}</div>}
           </div>
         ))}

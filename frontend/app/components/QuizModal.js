@@ -24,9 +24,9 @@ export default function QuizModal({ onClose, courseId }) {
         fetch(`/backend/classes/${courseId}/topics`)
             .then(res => res.json())
             .then(data => {
-                console.log("topics:", data)
-                setTopics(data)
-                if (data.length > 0) setTopic(data[0].name)
+              const topicsArray = Array.isArray(data) ? data : data.topics ?? []
+              setTopics(topicsArray)
+              if (topicsArray.length > 0) setTopic(topicsArray[0].name)
             })
             .catch(err => console.error(err))
     }, [courseId])
@@ -153,7 +153,7 @@ try {
           </div>
 
           {/* Timer */}
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <label className="text-sm font-semibold text-gray-800">Timer (Optional)</label>
             <div className="flex items-center border border-gray-100 rounded-xl bg-gray-50 w-52 px-4 py-3 gap-2">
               <input
@@ -164,7 +164,7 @@ try {
               />
               <Clock size={15} className="text-gray-400 shrink-0" />
             </div>
-          </div>
+          </div> */}
 
         </div>
 
@@ -182,7 +182,7 @@ try {
 
               <div
                 onClick={() => set(s => !s)}
-                className={`w-10 h-[22px] rounded-full cursor-pointer flex items-center px-0.5 transition-colors duration-200 ${state ? "bg-[#4a68eb]" : "bg-gray-300"}`}
+                className={`w-10 h-[22px] rounded-full cursor-pointer flex items-center px-0.5 transition-colors duration-200 ${state ? "bg-[#347A73]" : "bg-gray-300"}`}
               >
                 <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${state ? "translate-x-[18px]" : "translate-x-0"}`} />
               </div>
@@ -193,7 +193,7 @@ try {
         {/* Start Button */}
         <button
             onClick={handleStartQuiz}
-            className="self-center bg-[#4a68eb] hover:bg-[#455bc8] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
+            className="self-center bg-[#347A73] hover:bg-[#1F5C57] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
             Start Quiz
         </button>
 

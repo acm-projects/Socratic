@@ -96,7 +96,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-export default function ClassHeatmap({ data }) {
+export default function StudyHeatmap({ data }) {
   // 1. Start with an empty array 
   const [heatmapData, setHeatmapData] = useState({});
   const {data :session} = useSession()

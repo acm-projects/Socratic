@@ -7,9 +7,6 @@ export default function Addcoursemodal({onClose, onAdd}) {
   const [courseCode, setCourseCode] = useState("")
   const [file, setFile] = useState(null);
 
-
- 
-
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
       <div className="bg-white px-10 py-10 rounded-[20px] w-1/3 border border-gray-100 flex flex-col items-center">
@@ -19,8 +16,6 @@ export default function Addcoursemodal({onClose, onAdd}) {
         <X size={18} className="text-gray-400 ml-auto cursor-pointer justify-end" onClick={onClose} />
 
         </div>
-
-
         
         <div className="flex flex-col gap-3 w-full">
 
@@ -74,7 +69,7 @@ export default function Addcoursemodal({onClose, onAdd}) {
 
             </div>
           </div>
-            <button onClick={() => { onAdd(subject); onClose(); }} className="bg-[#2C2C2C] text-white border px-8 py-2 rounded-xl font-medium flex items-center justify-center mt-2">
+            <button onClick={() => { onAdd(subject); onClose(); }} className="bg-[#2C2C2C] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2">
             Add Course
             </button>
 

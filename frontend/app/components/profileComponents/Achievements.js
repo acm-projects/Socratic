@@ -64,40 +64,40 @@ export default function Achievements() {
   const visible = achievements.slice(page * perPage, page * perPage + perPage)
 
   return (
-    <div className="flex flex-col h-full gap-3">
+    <div className="flex flex-col gap-3">
 
       {/* cards */}
       <div className="flex gap-3 flex-1">
         {visible.map((a) => (
-  <div key={a.id} className="bg-white/65 backdrop-blur-sm rounded-2xl flex-1 flex flex-col items-center justify-center px-5 gap-7">
-    <img
-      src={a.unlocked ? a.colored : a.greyed}
-      alt={a.label}
-      width={90}
-      height={90}
-    />
-    <div className="flex flex-col items-center gap-1" style={{ minHeight: "52px", justifyContent: "flex-start" }}>
-      <span
-        className="text-center leading-snug"
-        style={{
-          fontSize: "14px",
-          fontWeight: 600,
-          color: "#1a2e2b",
-          opacity: a.unlocked ? 1 : 0.4,
-        }}
-      >
-        {a.label}
-      </span>
-      <span style={{ fontSize: "11px", fontWeight: 400, color: "#90aba7" }}>
-        {a.unlocked ? "Completed" : "Locked"}
-      </span>
-    </div>
-  </div>
-))}
+        <div key={a.id} className="bg-white/65 backdrop-blur-sm rounded-2xl flex-1 flex flex-col items-center justify-center px-5 pt-12 pb-12 gap-7">
+            <img
+            src={a.unlocked ? a.colored : a.greyed}
+            alt={a.label}
+            width={90}
+            height={90}
+            />
+            <div className="flex flex-col items-center gap-1" style={{ minHeight: "52px", justifyContent: "flex-start" }}>
+            <span
+                className="text-center leading-snug"
+                style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "#1a2e2b",
+                opacity: a.unlocked ? 1 : 0.4,
+                }}
+            >
+                {a.label}
+            </span>
+            <span style={{ fontSize: "11px", fontWeight: 400, color: "#90aba7" }}>
+                {a.unlocked ? "Completed" : "Locked"}
+            </span>
+            </div>
+        </div>
+        ))}
       </div>
 
       {/* nav — bottom right */}
-      <div className="flex items-center justify-end gap-2 pt-10">
+      <div className="flex items-center justify-end gap-2 mt-auto">
         <button
           onClick={() => setPage(p => Math.max(0, p - 1))}
           disabled={page === 0}

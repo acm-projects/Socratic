@@ -106,8 +106,7 @@ export default function Page() {
  
         return (
             <main className="min-h-screen bg-[#F5F6FA] flex">
-            <Navbar />
-            <div className="flex flex-col flex-1 pl-16">
+            <div className="flex flex-col flex-1">
                 {/* header */}
                <div className="px-8 py-6 bg-[#F5F6FA]">
                 <h1 className="text-2xl font-bold text-[#14153A]">
@@ -210,8 +209,7 @@ export default function Page() {
   return (
 
     <main className="min-h-screen bg-[#F5F6FA] flex">
-      <Navbar />
-      <div className="flex flex-col flex-1 pl-16">
+      <div className="flex flex-col flex-1">
 
         {/* header */}
         <div className="px-8 py-6 bg-[#F5F6FA]">

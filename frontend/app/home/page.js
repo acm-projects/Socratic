@@ -6,7 +6,7 @@ import UpcomingMeetings from "../components/homeComponents/UpcomingMeetings"
 import ProfileCard from "../components/homeComponents/ProfileCard"
 import ClassesGrid from "../components/homeComponents/ClassesGrid"
 import Link from "next/link"
-import { use, useEffect } from "react"
+import { useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
 
@@ -20,11 +20,16 @@ import { useState } from "react"
 // ]
 
 const upcomingTasks = [
-  { title: "Problem Set 4", course: "Discrete Math",  due: "Apr 3"  },
-  { title: "Lab Report",    course: "Physics I",      due: "Apr 5"  },
-  { title: "HW 7",          course: "Calculus II",    due: "Apr 8"  },
-  { title: "Problem Set 5", course: "Discrete Math",  due: "Apr 10" },
-  { title: "HW 8",          course: "Calculus II",    due: "Apr 15" },
+  { title: "Problem Set 4",  course: "Discrete Math",      due: "Apr 3"  },
+  { title: "Lab Report",     course: "Physics I",          due: "Apr 5"  },
+  { title: "HW 7",           course: "Calculus II",        due: "Apr 8"  },
+  { title: "Problem Set 5",  course: "Discrete Math",      due: "Apr 10" },
+  { title: "HW 8",           course: "Calculus II",        due: "Apr 15" },
+  { title: "Exam 2 Review",  course: "Physics I",          due: "Apr 17" },
+  { title: "Problem Set 6",  course: "Linear Algebra",     due: "Apr 19" },
+  { title: "Lab Report 2",   course: "Chemistry I",        due: "Apr 21" },
+  { title: "HW 9",           course: "Calculus II",        due: "Apr 24" },
+  { title: "Final Project",  course: "Computer Science I", due: "Apr 30" },
 ]
 
 // const upcomingMeetings = [
@@ -65,9 +70,10 @@ useEffect(() => {
 
   return (
    <div
-      className={`min-h-screen flex`}
+      className={`h-screen flex`}
       style={{
-        backgroundImage: "linear-gradient(135deg, rgba(234,244,242,0.7) 0%, rgba(245,248,247,0.7) 60%, rgba(247,245,251,0.7) 100%), url('/gridbackground.svg')",
+        backgroundImage: "linear-gradient(135deg, rgba(240,245,244,0.7) 0%, rgba(245,248,247,0.7) 60%, rgba(247,245,251,0.7) 100%), url('/gridbackground.svg')",
+        // backgroundImage: "linear-gradient(to right, rgba(234,244,242,0.85) 0%, rgba(245,248,247,0.45) 100%), url('/gridbackground.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
@@ -75,7 +81,7 @@ useEffect(() => {
     >
 
       {/* Left column */}
-      <div className="p-9 flex flex-col flex-1 gap-7">
+      <div className="p-9 flex flex-col flex-1 gap-3">
         
        {/* Header */}
         <div className="flex items-start justify-between">
@@ -109,9 +115,9 @@ useEffect(() => {
         </div>
 
 
-        <div className="flex gap-5 items-start">
+        <div className="flex gap-5 items-stretch">
        {/* Profile Card */}
-        <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex flex-col items-center justify-center w-80 h-100">
+        <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 flex flex-col items-center justify-center w-1/3 mt-8">
         <ProfileCard
           name={profile ? `${profile.first_name} ${profile.last_name}` : ""}
           school={profile?.school || ""}
@@ -125,7 +131,7 @@ useEffect(() => {
         <ClassesGrid courses={courses} />
         </div>
 
-        <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-12 py-6 h-fit">
+        <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-12 pb-5 pt-3  mt-2 h-fit">
         <StudyHeatmap />
         </div>
 
@@ -133,21 +139,17 @@ useEffect(() => {
 
       {/* Right panel */}
 
-    <div className="p-9 border-l border-[#E0E5E4] w-1/4 flex flex-col gap-8">
+        <div className="w-px self-stretch my-4" style={{
+        background: "linear-gradient(to bottom, transparent, #E0E5E4 20%, #E0E5E4 80%, transparent)"
+        }} />
 
-        {/* Upcoming Tasks */}
-        <div>
+        <div className="p-9 w-1/4 flex flex-col gap-8 overflow-hidden h-screen sticky top-0">
         <UpcomingTasks tasks={upcomingTasks} />
+        <UpcomingMeetings />
         </div>
 
-        {/* Upcoming Meetings */}
-        <div>
-            {/* <UpcomingMeetings meetings={upcomingMeetings} /> */}
-            <UpcomingMeetings />
-        </div>
+       
 
         </div>
-
-    </div>
   )
 }
