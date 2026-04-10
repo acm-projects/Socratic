@@ -505,43 +505,55 @@ app.get("/users/:id/achievements", async (req, res) => {
 
 app.get("/users/:id/stats", async (req, res) => {
   try {
-    const userId = req.params.id
+    const userId = req.params.id;
 
-    const quizStats = await pool.query(
-      "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
-      [userId]
-    )
+    // First: try reading from the new dedicated stat columns (post-migration)
+    try {
+      const result = await pool.query(
+        `SELECT ai_messages, quizzes_taken, retakes_taken, streak, total_xp, weekly_xp, last_active_date
+         FROM "User" WHERE id = $1`,
+        [userId]
+      );
+      if (!result.rows[0]) return res.status(404).json({ error: "User not found" });
+      return res.json(result.rows[0]);
+    } catch (_) {
+      // Stat columns don't exist yet on this DB — fall through to query-based fallback
+    }
 
-    const userResult = await pool.query(
-      'SELECT weekly_xp, streak FROM "User" WHERE id = $1',
-      [userId]
-    )
+    // Fallback: compute stats dynamically from existing tables (pre-migration)
+    const [quizStats, userResult] = await Promise.all([
+      pool.query(
+        "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
+        [userId]
+      ),
+      pool.query('SELECT weekly_xp, streak, total_xp FROM "User" WHERE id = $1', [userId])
+    ]);
 
-    // Try to get message count from messages table
-    let aiMessages = 0
+    if (!userResult.rows[0]) return res.status(404).json({ error: "User not found" });
+
+    let aiMessages = 0;
     try {
       const messageCount = await pool.query(
         "SELECT COUNT(*) as ai_messages FROM messages WHERE chat_id IN (SELECT id FROM chats WHERE user_id = $1)",
         [userId]
-      )
-      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0
-    } catch (e) {
-      // messages table may have different structure
-      aiMessages = 0
-    }
+      );
+      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0;
+    } catch (_) { /* messages table may differ */ }
 
-    const user = userResult.rows[0] || {}
-    const stats = quizStats.rows[0]
+    const user = userResult.rows[0];
+    const stats = quizStats.rows[0];
 
     res.json({
-      quizzes_taken: parseInt(stats.quizzes_taken) || 0,
-      weekly_xp: parseInt(user.weekly_xp) || 0,
       ai_messages: aiMessages,
+      quizzes_taken: parseInt(stats.quizzes_taken) || 0,
       retakes_taken: parseInt(stats.retakes_taken) || 0,
-      streak: parseInt(user.streak) || 0
-    })
+      streak: parseInt(user.streak) || 0,
+      total_xp: parseInt(user.total_xp) || 0,
+      weekly_xp: parseInt(user.weekly_xp) || 0,
+      last_active_date: null
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ error: error.message });
   }
 })
 

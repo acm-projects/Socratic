@@ -6,6 +6,7 @@ const { getQuizGeneratorChain, parser } = require('../services/quizService');
 const topicModel = require('../models/topicModel');
 const quizModel = require('../models/quizModel');
 const classModel = require('../models/classModel');
+const userStatsModel = require('../models/userStatsModel');
 
 router.post('/generate', async (req, res, next) => {
   try {
@@ -108,7 +109,12 @@ router.post('/generate', async (req, res, next) => {
       score: 0 // Score starts at 0 until the user submits answers
     });
 
-    // 8. Return generated quiz data with quizId
+    // 8. Track quizzes_taken stat (fire-and-forget, non-blocking)
+    userStatsModel.incrementQuizzesTaken(userId).catch(err =>
+      console.warn('[QuizGen] ⚠️ Failed to increment quizzes_taken:', err.message)
+    );
+
+    // 9. Return generated quiz data with quizId
     res.json({
       success: true,
       quizId: quizId,
@@ -144,6 +150,23 @@ router.get('/users/:id', async (req, res, next) => {
   try {
     const quizzes = await quizModel.getQuizzesByUser(req.params.id);
     res.json(quizzes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /api/quizzes/:id/retake
+ * Signals a quiz retake — increments retakes_taken for the user.
+ * Body: { userId }
+ */
+router.post('/:id/retake', async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: 'userId is required' });
+
+    await userStatsModel.incrementRetakesTaken(userId);
+    res.json({ success: true, message: 'Retake tracked.' });
   } catch (error) {
     next(error);
   }
