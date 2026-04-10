@@ -10,6 +10,14 @@ const getTopicsByClassCode = async (classCode) => {
   return result.rows;
 };
 
+const getTopicByNameAndClass = async (name, classCode) => {
+  const result = await db.query(
+    "SELECT * FROM topics WHERE LOWER(name) = LOWER($1) AND class_code = $2 LIMIT 1",
+    [name, classCode]
+  );
+  return result.rows[0];
+};
+
 const getTopicById = async (id) => {
   const result = await db.query("SELECT * FROM topics WHERE id = $1", [id]);
   return result.rows[0];
@@ -27,6 +35,7 @@ const createTopic = async (data) => {
 module.exports = {
   getAllTopics,
   getTopicsByClassCode,
+  getTopicByNameAndClass,
   getTopicById,
   createTopic
 };

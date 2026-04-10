@@ -2,7 +2,8 @@ const { ChatGoogleGenerativeAI } = require('@langchain/google-genai');
 const { ChatPromptTemplate, MessagesPlaceholder, PromptTemplate } = require('@langchain/core/prompts');
 const { RunnableSequence, RunnableWithMessageHistory } = require('@langchain/core/runnables');
 const { StructuredOutputParser } = require('@langchain/core/output_parsers');
-const { PostgresChatMessageHistory } = require('@langchain/community/stores/message/postgres');
+const { HumanMessage, AIMessage } = require('@langchain/core/messages');
+const { BaseChatMessageHistory } = require('@langchain/core/chat_history');
 const pool = require('../db');
 require('dotenv').config({ path: __dirname + '/../.env' });
 
@@ -81,6 +82,53 @@ const evaluatorPrompt = PromptTemplate.fromTemplate(`
 
 const evalChain = RunnableSequence.from([evaluatorPrompt, evaluatorLLM, parser]);
 
+/**
+ * Custom LangChain history adapter for the Socratic chat_history table.
+ * Maps 'human' -> 'user' and 'ai' -> 'assistant' for database consistency.
+ */
+class PostgresSocraticHistory extends BaseChatMessageHistory {
+  constructor(fields) {
+    super();
+    this.sessionId = fields.sessionId;
+    this.pool = fields.pool;
+  }
+
+  async getMessages() {
+    const res = await this.pool.query(
+      "SELECT sender, content FROM chat_history WHERE session_id = $1 ORDER BY created_at ASC",
+      [this.sessionId]
+    );
+    return res.rows.map(row => {
+      if (row.sender === 'human' || row.sender === 'user') {
+        return new HumanMessage(row.content);
+      } else {
+        return new AIMessage(row.content);
+      }
+    });
+  }
+
+  /**
+   * NO-OP: We handle manual message saving in tutorRoutes.js
+   * to ensure we can save custom fields like 'score' and 'reason'.
+   */
+  async addMessage(message) {
+    // Already saved in the route logic
+    return;
+  }
+
+  async addUserMessage(message) {
+    await this.addMessage(new HumanMessage(message));
+  }
+
+  async addAIChatMessage(message) {
+    await this.addMessage(new AIMessage(message));
+  }
+
+  async clear() {
+    await this.pool.query("DELETE FROM chat_history WHERE session_id = $1", [this.sessionId]);
+  }
+}
+
 // --- Tutor Engine Setup ---
 function getTutorChainWithHistory() {
   const tutorLLM = getRobustLLM(0.7, 1); // 1 retry then failover
@@ -113,12 +161,7 @@ Current question quality score: {score}/5 — {reason}.`
 
   const tutorChainWithHistory = new RunnableWithMessageHistory({
     runnable: tutorChain,
-    getMessageHistory: (sessionId) =>
-      new PostgresChatMessageHistory({
-        sessionId,
-        pool,
-        tableName: 'langchain_chat_messages',
-      }),
+    getMessageHistory: (sessionId) => new PostgresSocraticHistory({ sessionId, pool }),
     inputMessagesKey: 'input',
     historyMessagesKey: 'history',
   });

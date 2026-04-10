@@ -19,8 +19,42 @@ const createSession = async (data) => {
   return result.rows[0];
 };
 
+/**
+ * Ensures a tutor session exists for this user/class/topic.
+ * If one already exists, it returns it. Otherwise creates a new one.
+ */
+const upsertTutorSession = async (data) => {
+  const { session_id, class_code, user_id, topic_id } = data;
+  
+  // Try to find existing
+  const existing = await db.query(
+    "SELECT * FROM chat_sessions WHERE session_id = $1",
+    [session_id]
+  );
+  if (existing.rows[0]) return existing.rows[0];
+
+  // Otherwise create
+  return await createSession(data);
+};
+
+/**
+ * Saves a message specifically to the chat_history table.
+ */
+const saveChatMessage = async (data) => {
+  const { id, session_id, sender, content, score = 0, reason = "" } = data;
+  const result = await db.query(
+    `INSERT INTO chat_history (id, session_id, sender, content, score, reason) 
+     VALUES ($1, $2, $3, $4, $5, $6) 
+     RETURNING *`,
+    [id, session_id, sender, content, score, reason]
+  );
+  return result.rows[0];
+};
+
 module.exports = {
   getSessionsByUserId,
   getSessionById,
-  createSession
+  createSession,
+  upsertTutorSession,
+  saveChatMessage
 };

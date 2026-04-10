@@ -1,27 +1,44 @@
+const syllabusService = require('../services/syllabusService');
+const topicModel = require('../models/topicModel');
+const sessionModel = require('../models/chatSessionModel');
+require('dotenv').config({ path: __dirname + '/../.env' });
+
 const express = require('express');
 const router = express.Router();
 const { randomUUID } = require('crypto');
 const { getClassVectorStore } = require('../services/vectorService');
 const { evalChain, parser, getTutorChainWithHistory } = require('../services/tutorService');
-const { addMessage, createChat, updateChatScore } = require('../models/chatModel');
+// We no longer use chatModel; we use sessionModel and topicModel instead.
 
 router.post('/chat', async (req, res, next) => {
   try {
-    const { userId, classCode, topic, message, chatId: providedChatId } = req.body;
+    const { userId, classCode, topic: topicName, message, chatId: providedChatId } = req.body;
 
-    if (!userId || !classCode || !topic || !message) {
+    if (!userId || !classCode || !topicName || !message) {
       return res.status(400).json({ error: "Missing required fields: userId, classCode, topic, message" });
     }
 
-    // Determine Chat ID
-    let chatId = providedChatId;
-    if (!chatId) {
-      chatId = randomUUID();
-      const title = `${classCode} - ${topic}`;
-      await createChat(chatId, title);
+    // 1. Resolve Topic ID (Official Schema requirement)
+    let topic = await topicModel.getTopicByNameAndClass(topicName, classCode);
+    if (!topic) {
+      console.log(`[Tutor] 🆕 Creating new topic: ${topicName} for ${classCode}`);
+      topic = await topicModel.createTopic({
+        id: randomUUID(),
+        class_code: classCode,
+        name: topicName
+      });
     }
 
-    // 2. Evaluate Question Quality (SYNCHRONOUS for instant feedback)
+    // 2. Ensure Session Exists in Official table
+    let chatId = providedChatId || randomUUID();
+    const session = await sessionModel.upsertTutorSession({
+      session_id: chatId,
+      class_code: classCode,
+      user_id: userId,
+      topic_id: topic.id
+    });
+
+    // 3. Evaluate Question Quality
     console.log(`[Tutor] ⭐ Evaluating question quality...`);
     let score = 0;
     let reason = "Evaluation skipped.";
@@ -30,7 +47,7 @@ router.post('/chat', async (req, res, next) => {
       const evalResult = await evalChain.invoke({ 
         input: message, 
         class: classCode, 
-        topic: topic,
+        topic: topicName,
         format_instructions: parser.getFormatInstructions()
       });
       score = evalResult.score;
@@ -40,8 +57,15 @@ router.post('/chat', async (req, res, next) => {
       console.error(`[Tutor] ❌ Scoring failed:`, err.message);
     }
 
-    // 2. Save User Message (immediately with default score)
-    await addMessage(chatId, 'user', message, score, reason);
+    // 4. Save User Message to Official chat_history
+    await sessionModel.saveChatMessage({
+      id: randomUUID(),
+      session_id: chatId,
+      sender: 'user',
+      content: message,
+      score,
+      reason
+    });
 
     // 3. Vector Search (Simultaneous)
     const vectorStore = await getClassVectorStore(classCode);
@@ -102,8 +126,13 @@ router.post('/chat', async (req, res, next) => {
 
     const aiContent = tutorRes.content || tutorRes;
 
-    // 5. Final Save and Response
-    await addMessage(chatId, 'assistant', aiContent, score, reason);
+    // 7. Final Save and Response
+    await sessionModel.saveChatMessage({
+      id: randomUUID(),
+      session_id: chatId,
+      sender: 'ai',
+      content: aiContent
+    });
 
     res.json({
       chatId,
