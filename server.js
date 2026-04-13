@@ -34,11 +34,6 @@ app.use('/api/tutor', tutorRoutes)
 app.use('/api/ingest', ingestRoutes)
 app.use('/api/quizzes', quizRoutes)
 
-// --- Auto-Migration ---
-// Ensure the DB schema is up-to-date on startup
-const { runMigrations } = require('./backend/models/migrationModel');
-runMigrations();
-
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })
 })
@@ -62,6 +57,7 @@ const updateClassStreak = async (class_code, user_id) => {
     const lastDate = last_activity_date ? new Date(last_activity_date).toISOString().split('T')[0] : null
 
     if (lastDate === today) {
+      // Already studied today, no change
       return
     }
 
@@ -71,8 +67,10 @@ const updateClassStreak = async (class_code, user_id) => {
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
       if (lastDate === yesterdayStr) {
+        // Studied yesterday, increment
         newStreak = (streak || 0) + 1
       }
+      // else missed a day, reset to 1
     }
 
     await pool.query(
@@ -311,6 +309,55 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
   }
 })
 
+
+// -----------------------------------------------------
+// GET /users/:id/friends/achievements
+// Returns recent achievements from all of the user's friends
+// -----------------------------------------------------
+
+app.get("/users/:id/friends/achievements", async (req, res) => {
+  try {
+    const userId = req.params.id
+
+    const friendsResult = await pool.query(
+      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      [userId]
+    )
+
+    if (!friendsResult.rows.length) return res.json([])
+
+    const friendIds = friendsResult.rows.map(f => f.friend_id)
+    const friendMap = {}
+    friendsResult.rows.forEach(f => {
+      friendMap[f.friend_id] = { first_name: f.first_name, last_name: f.last_name }
+    })
+
+    const achievementsResult = await pool.query(
+      `SELECT ua.user_id, ua.achievement_id, ua.earned_at,
+              a.name as achievement_name
+       FROM user_achievements ua
+       JOIN achievements a ON a.id = ua.achievement_id
+       WHERE ua.user_id = ANY($1::text[])
+       ORDER BY ua.earned_at DESC
+       LIMIT 50`,
+      [friendIds]
+    )
+
+    const results = achievementsResult.rows.map(row => ({
+      friend_id: row.user_id,
+      first_name: friendMap[row.user_id]?.first_name || null,
+      last_name: friendMap[row.user_id]?.last_name || null,
+      achievement_id: row.achievement_id,
+      achievement_title: row.achievement_name,
+      earned_at: row.earned_at
+    }))
+
+    res.json(results)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 // -----------------------------------------------------
 // CLASSES API
 // -----------------------------------------------------
@@ -464,6 +511,7 @@ app.post("/sessions", async (req, res) => {
       [session_id, class_code, user_id, topic_id]
     )
 
+    // Update class streak when a session is created
     if (class_code && user_id) {
       await updateClassStreak(class_code, user_id)
     }
@@ -569,54 +617,41 @@ app.get("/users/:id/achievements", async (req, res) => {
 
 app.get("/users/:id/stats", async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.params.id
 
-    try {
-      const result = await pool.query(
-        `SELECT ai_messages, quizzes_taken, retakes_taken, streak, total_xp, weekly_xp, last_active_date
-         FROM "User" WHERE id = $1`,
-        [userId]
-      );
-      if (!result.rows[0]) return res.status(404).json({ error: "User not found" });
-      return res.json(result.rows[0]);
-    } catch (_) {
-    }
+    const quizStats = await pool.query(
+      "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
+      [userId]
+    )
 
-    const [quizStats, userResult] = await Promise.all([
-      pool.query(
-        "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
-        [userId]
-      ),
-      pool.query('SELECT weekly_xp, streak, total_xp FROM "User" WHERE id = $1', [userId])
-    ]);
+    const userResult = await pool.query(
+      'SELECT weekly_xp, streak FROM "User" WHERE id = $1',
+      [userId]
+    )
 
-    if (!userResult.rows[0]) return res.status(404).json({ error: "User not found" });
-
-    let aiMessages = 0;
+    let aiMessages = 0
     try {
       const messageCount = await pool.query(
         "SELECT COUNT(*) as ai_messages FROM messages WHERE chat_id IN (SELECT id FROM chats WHERE user_id = $1)",
         [userId]
-      );
-      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0;
-    } catch (_) {
-      aiMessages = 0;
+      )
+      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0
+    } catch (e) {
+      aiMessages = 0
     }
 
-    const user = userResult.rows[0];
-    const stats = quizStats.rows[0];
+    const user = userResult.rows[0] || {}
+    const stats = quizStats.rows[0]
 
     res.json({
-      ai_messages: aiMessages,
       quizzes_taken: parseInt(stats.quizzes_taken) || 0,
-      retakes_taken: parseInt(stats.retakes_taken) || 0,
-      streak: parseInt(user.streak) || 0,
-      total_xp: parseInt(user.total_xp) || 0,
       weekly_xp: parseInt(user.weekly_xp) || 0,
-      last_active_date: null
-    });
+      ai_messages: aiMessages,
+      retakes_taken: parseInt(stats.retakes_taken) || 0,
+      streak: parseInt(user.streak) || 0
+    })
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message })
   }
 })
 
@@ -934,6 +969,76 @@ app.put("/friend-requests/:id", async (req, res) => {
   }
 })
 
+
+// -----------------------------------------------------
+// POST /friend-requests/:id/accept
+// Accepts request and auto-creates friendship in both directions
+// -----------------------------------------------------
+
+app.post("/friend-requests/:id/accept", async (req, res) => {
+  try {
+    const requestId = req.params.id
+
+    const reqResult = await pool.query(
+      "SELECT * FROM friend_requests WHERE id = $1",
+      [requestId]
+    )
+    if (!reqResult.rows[0]) return res.status(404).json({ error: "Friend request not found" })
+
+    const { sender_id, receiver_id } = reqResult.rows[0]
+
+    // Update request status
+    await pool.query(
+      "UPDATE friend_requests SET status = 'accepted' WHERE id = $1",
+      [requestId]
+    )
+
+    // Fetch both users for name/xp/streak
+    const [senderRes, receiverRes] = await Promise.all([
+      pool.query('SELECT first_name, last_name, streak, total_xp FROM "User" WHERE id = $1', [sender_id]),
+      pool.query('SELECT first_name, last_name, streak, total_xp FROM "User" WHERE id = $1', [receiver_id])
+    ])
+    const sender = senderRes.rows[0] || {}
+    const receiver = receiverRes.rows[0] || {}
+
+    // Create friendship in both directions
+    await pool.query(
+      `INSERT INTO friends (user_id, friend_id, first_name, last_name, streak, total_xp)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT DO NOTHING`,
+      [receiver_id, sender_id, sender.first_name, sender.last_name, sender.streak || 0, sender.total_xp || 0]
+    )
+    await pool.query(
+      `INSERT INTO friends (user_id, friend_id, first_name, last_name, streak, total_xp)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT DO NOTHING`,
+      [sender_id, receiver_id, receiver.first_name, receiver.last_name, receiver.streak || 0, receiver.total_xp || 0]
+    )
+
+    res.json({ message: "Friend request accepted", sender_id, receiver_id })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// POST /friend-requests/:id/decline
+// Declines and deletes the friend request
+// -----------------------------------------------------
+
+app.post("/friend-requests/:id/decline", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "DELETE FROM friend_requests WHERE id = $1 RETURNING *",
+      [req.params.id]
+    )
+    if (!result.rows[0]) return res.status(404).json({ error: "Friend request not found" })
+    res.json({ message: "Friend request declined" })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 // -----------------------------------------------------
 // QUIZZES API
 // -----------------------------------------------------
@@ -983,6 +1088,7 @@ app.post("/quizzes", async (req, res) => {
       }
     }
 
+    // Update class streak
     try {
       const topicResult = await pool.query("SELECT class_code FROM topics WHERE id = $1", [topic_id])
       if (topicResult.rows[0]) {
@@ -992,6 +1098,9 @@ app.post("/quizzes", async (req, res) => {
       console.error('[ClassStreak] Failed to update from quiz:', streakErr.message)
     }
 
+    // -----------------------------------------------------
+    // AUTO-UNLOCK ACHIEVEMENTS
+    // -----------------------------------------------------
     try {
       const allQuizzes = await pool.query(
         "SELECT score, retake_count FROM quizzes WHERE user_id = $1",
