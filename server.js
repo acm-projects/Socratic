@@ -1128,6 +1128,101 @@ app.post("/quizzes", async (req, res) => {
 })
 
 // -----------------------------------------------------
+// PUT /quizzes/:id — Update score and question answers (e.g. after a retake)
+// -----------------------------------------------------
+
+app.put("/quizzes/:id", async (req, res) => {
+  try {
+    const quizId = req.params.id
+    const { score, retake_count, questions } = req.body
+
+    // Verify quiz exists
+    const existing = await pool.query("SELECT * FROM quizzes WHERE id = $1", [quizId])
+    if (!existing.rows[0]) {
+      return res.status(404).json({ error: "Quiz not found" })
+    }
+
+    // Build dynamic SET clause — only update fields that were provided
+    const updates = []
+    const values = []
+    let idx = 1
+
+    if (score !== undefined) {
+      updates.push(`score = $${idx++}`)
+      values.push(score)
+    }
+    if (retake_count !== undefined) {
+      updates.push(`retake_count = $${idx++}`)
+      values.push(retake_count)
+    }
+
+    let updatedQuiz = existing.rows[0]
+    if (updates.length > 0) {
+      values.push(quizId)
+      const quizResult = await pool.query(
+        `UPDATE quizzes SET ${updates.join(', ')} WHERE id = $${idx} RETURNING *`,
+        values
+      )
+      updatedQuiz = quizResult.rows[0]
+    }
+
+    // Update user_answer and is_correct on each question (matched by question id)
+    const updatedQuestions = []
+    if (Array.isArray(questions)) {
+      for (const q of questions) {
+        if (!q.id) continue
+        const updatedQ = await pool.query(
+          `UPDATE quiz_questions
+           SET user_answer = $1, is_correct = $2
+           WHERE id = $3 AND quiz_id = $4
+           RETURNING *`,
+          [q.user_answer, q.is_correct, q.id, quizId]
+        )
+        if (updatedQ.rows[0]) updatedQuestions.push(updatedQ.rows[0])
+      }
+    }
+
+    // Re-run achievement checks in case a retake pushed the user over a threshold
+    const user_id = updatedQuiz.user_id
+    try {
+      const allQuizzes = await pool.query(
+        "SELECT score, retake_count FROM quizzes WHERE user_id = $1",
+        [user_id]
+      )
+      const quizCount = allQuizzes.rows.length
+      const perfectScores = allQuizzes.rows.filter(q => parseInt(q.score) === 100).length
+      const totalRetakes = allQuizzes.rows.reduce((sum, q) => sum + (parseInt(q.retake_count) || 0), 0)
+      const hasRetake = totalRetakes > 0
+
+      const toUnlock = []
+      if (quizCount >= 1) toUnlock.push('1')
+      if (quizCount >= 10) toUnlock.push('2')
+      if (hasRetake) toUnlock.push('3')
+      if (perfectScores >= 1) toUnlock.push('5')
+      if (perfectScores >= 5) toUnlock.push('7')
+      if (perfectScores >= 10) toUnlock.push('8')
+      if (totalRetakes >= 5) toUnlock.push('9')
+      if (totalRetakes >= 20) toUnlock.push('13')
+
+      for (const achId of toUnlock) {
+        await pool.query(
+          `INSERT INTO user_achievements (user_id, achievement_id)
+           VALUES ($1, $2)
+           ON CONFLICT DO NOTHING`,
+          [user_id, achId]
+        )
+      }
+    } catch (achErr) {
+      console.error('[Achievements] Failed to auto-unlock on update:', achErr.message)
+    }
+
+    res.json({ ...updatedQuiz, questions: updatedQuestions })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
 // SERVER START
 // -----------------------------------------------------
 
