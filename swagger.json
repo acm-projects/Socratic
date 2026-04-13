@@ -307,6 +307,65 @@
         }
       }
     },
+    "/api/quizzes/users/{id}": {
+      "get": {
+        "summary": "Get All Quizzes for User",
+        "description": "Returns all quizzes for a user grouped by topic, with quiz count and average score.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "user_123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of quizzes grouped by topic"
+          },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/api/quizzes/{id}/retake": {
+      "post": {
+        "summary": "Record a Quiz Retake",
+        "description": "Increments the retakes_taken stat counter for the given user. Call after a user starts a retake quiz.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Quiz ID being retaken",
+            "example": "quiz_001"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId"],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "user_123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Retake tracked successfully" },
+          "400": { "description": "userId is required" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
     "/api/tutor/chat": {
       "post": {
         "summary": "Chat with Socratic AI Tutor",
@@ -355,6 +414,7 @@
     "/api/syllabus/extract": {
       "post": {
         "summary": "Extract Syllabus Data",
+        "description": "Extracts structured syllabus data from a PDF or plain text using Gemini AI. Accepts optional user_id and class_code — when class_code is provided it overrides the AI-extracted courseCode for consistency.",
         "requestBody": {
           "required": true,
           "content": {
@@ -364,10 +424,22 @@
                 "properties": {
                   "syllabusPdf": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "The syllabus PDF file (alternative to pdfText)"
                   },
                   "pdfText": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Raw syllabus text (alternative to syllabusPdf)"
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "description": "ID of the user uploading the syllabus",
+                    "example": "user_123"
+                  },
+                  "class_code": {
+                    "type": "string",
+                    "description": "Class code to override the AI-extracted courseCode",
+                    "example": "CS-SE-3377"
                   }
                 }
               }
@@ -376,14 +448,23 @@
         },
         "responses": {
           "200": {
-            "description": "Syllabus extracted successfully"
+            "description": "Syllabus extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "user_id": { "type": "string", "nullable": true },
+                    "class_code": { "type": "string" },
+                    "data": { "$ref": "#/components/schemas/SyllabusData" }
+                  }
+                }
+              }
+            }
           },
-          "400": {
-            "description": "Validation error"
-          },
-          "500": {
-            "description": "Server error"
-          }
+          "400": { "description": "Validation error or missing input" },
+          "500": { "description": "Server error" }
         }
       }
     },
@@ -502,6 +583,40 @@
           "500": {
             "description": "Server error"
           }
+        }
+      }
+    },
+    "/api/syllabus/data/{class_code}": {
+      "get": {
+        "summary": "Get Unified Syllabus Data",
+        "description": "Returns class info, all extracted tasks (deadlines), and topics for a given class in a single request.",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "CS101"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Unified class data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "classInfo": { "type": "object" },
+                    "tasks": { "type": "array", "items": { "type": "object" } },
+                    "topics": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Class not found" },
+          "500": { "description": "Server error" }
         }
       }
     },
@@ -1910,6 +2025,81 @@
           "500": {
             "description": "Server error"
           }
+        }
+      }
+    },
+    "/quizzes/{id}": {
+      "put": {
+        "summary": "Update Quiz Score and Answers",
+        "description": "Updates an existing quiz record with a new score and per-question user answers and correctness. Intended for use after a retake or quiz submission. Also re-runs achievement unlock checks.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "quiz_001"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "score": {
+                    "type": "integer",
+                    "description": "New score (0–100)",
+                    "example": 95
+                  },
+                  "retake_count": {
+                    "type": "integer",
+                    "description": "Incremented retake counter",
+                    "example": 1
+                  },
+                  "questions": {
+                    "type": "array",
+                    "description": "Questions with updated user_answer and is_correct. Must include each question's id.",
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "user_answer", "is_correct"],
+                      "properties": {
+                        "id": { "type": "string" },
+                        "user_answer": { "type": "string" },
+                        "is_correct": { "type": "boolean" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Quiz updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "#/components/schemas/Quiz" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "questions": {
+                          "type": "array",
+                          "items": { "$ref": "#/components/schemas/QuizQuestion" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": { "description": "Quiz not found" },
+          "500": { "description": "Server error" }
         }
       }
     },

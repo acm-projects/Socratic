@@ -11,17 +11,34 @@ const pool = new Pool({
 });
 
 // POST /extract — Upload PDF and extract syllabus data using Gemini AI
+// Accepts optional user_id and class_code in the multipart body.
+// When class_code is provided it overrides the AI-extracted courseCode for consistency.
 router.post('/extract', upload.any(), async (req, res, next) => {
   try {
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
     const fileBuffer = file ? file.buffer : null;
     const rawTextFallback = req.body ? req.body.pdfText : null;
 
+    // Optional metadata from the caller
+    const user_id   = req.body?.user_id   || null;
+    const class_code = req.body?.class_code || null;
+
+    if (!fileBuffer && !rawTextFallback) {
+      return res.status(400).json({ error: "No PDF file or pdfText provided." });
+    }
+
     const validatedData = await syllabusService.extractSyllabusData(fileBuffer, rawTextFallback);
 
-    console.log("Successfully extracted and validated syllabus!");
+    // If the caller supplied a class_code, override the AI-extracted one to guarantee consistency
+    if (class_code) {
+      validatedData.courseCode = class_code;
+    }
+
+    console.log(`[Syllabus] ✅ Extracted syllabus${class_code ? ` for ${class_code}` : ''}${user_id ? ` (user: ${user_id})` : ''}`);
     res.json({
       message: "Syllabus extracted and verified successfully.",
+      user_id,
+      class_code: class_code || validatedData.courseCode,
       data: validatedData
     });
 
