@@ -42,18 +42,18 @@
     "/api/calendar/create-tokens": {
       "post": {
         "summary": "Exchange Google Auth Code for Tokens",
+        "description": "Exchanges a Google OAuth authorization code for access and refresh tokens. Upserts the user and account records in the database and registers the user session. Returns the userId and tokens.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "code"
-                ],
+                "required": ["code"],
                 "properties": {
                   "code": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The one-time Google OAuth authorization code from the frontend OAuth flow"
                   }
                 }
               }
@@ -62,52 +62,70 @@
         },
         "responses": {
           "200": {
-            "description": "Tokens successfully created"
-          }
+            "description": "Tokens created and user registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": { "type": "string" },
+                    "email":  { "type": "string" },
+                    "tokens": { "type": "object" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Google API or server error" }
         }
       }
     },
     "/api/calendar/create-event": {
       "post": {
         "summary": "Create a Google Calendar Event",
+        "description": "Creates an event on the authenticated user's Google Calendar using their stored OAuth tokens. **userId is required** — pass it in the request body or via the `x-user-id` header. Returns 401 if userId is missing or not found.",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "description": "The user's ID (alternative to passing userId in the body)",
+            "schema": { "type": "string" }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "summary",
-                  "startDateTime",
-                  "endDateTime"
-                ],
+                "required": ["userId", "summary", "startDateTime", "endDateTime"],
                 "properties": {
-                  "summary": {
-                    "type": "string"
+                  "userId": {
+                    "type": "string",
+                    "description": "The authenticated user's ID (can also be passed via x-user-id header)",
+                    "example": "cmn9fnpv60000gox6sumckr25"
                   },
-                  "description": {
-                    "type": "string"
-                  },
-                  "location": {
-                    "type": "string"
-                  },
+                  "summary": { "type": "string", "example": "CS3345 Exam" },
+                  "description": { "type": "string" },
+                  "location":    { "type": "string" },
                   "startDateTime": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "example": "2026-05-01T09:00:00-05:00"
                   },
                   "endDateTime": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "example": "2026-05-01T11:00:00-05:00"
                   },
                   "createMeet": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Set to true to auto-generate a Google Meet link"
                   },
                   "attendeeEmails": {
                     "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "email"
-                    }
+                    "items": { "type": "string", "format": "email" }
                   }
                 }
               }
@@ -115,87 +133,110 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Event created successfully"
-          }
+          "200": { "description": "Event created successfully on the user's Google Calendar" },
+          "401": { "description": "userId is missing or no matching user/Google account found" },
+          "500": { "description": "Server error" }
         }
       }
     },
     "/api/calendar/upcoming-events": {
       "get": {
         "summary": "Get Upcoming Events",
-        "responses": {
-          "200": {
-            "description": "A list of upcoming calendar events"
+        "description": "Returns the next 10 upcoming events created by Socratic on the authenticated user's Google Calendar. **Requires userId** via `x-user-id` header or `userId` query param.",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "description": "User ID (preferred method)",
+            "schema": { "type": "string" }
           },
-          "500": {
-            "description": "Server error"
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "description": "User ID (alternative to x-user-id header)",
+            "schema": { "type": "string", "example": "cmn9fnpv60000gox6sumckr25" }
           }
+        ],
+        "responses": {
+          "200": { "description": "A list of upcoming calendar events" },
+          "401": { "description": "userId is missing or not found" },
+          "500": { "description": "Server error" }
         }
       }
     },
     "/api/calendar/events": {
       "get": {
         "summary": "Get All Events",
-        "parameters": [
-          {
-            "name": "timeMin",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "timeMax",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "maxResults",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 100
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A list of calendar events"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/api/calendar/session-check": {
-      "get": {
-        "summary": "Check Session Status",
+        "description": "Returns Socratic-created events on the authenticated user's Google Calendar within an optional time range. **Requires userId** via `x-user-id` header or `userId` query param.",
         "parameters": [
           {
             "name": "x-user-id",
             "in": "header",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "description": "User ID (preferred method)",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "description": "User ID (alternative to x-user-id header)",
+            "schema": { "type": "string", "example": "cmn9fnpv60000gox6sumckr25" }
+          },
+          {
+            "name": "timeMin",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "format": "date-time" },
+            "example": "2026-04-01T00:00:00Z"
+          },
+          {
+            "name": "timeMax",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "format": "date-time" },
+            "example": "2026-06-30T23:59:59Z"
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 100 }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Session is active"
+          "200": { "description": "A list of calendar events" },
+          "401": { "description": "userId is missing or not found" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/api/calendar/session-check": {
+      "get": {
+        "summary": "Check Session / Validate User",
+        "description": "Verifies that the provided userId exists in the database and registers the session in memory. Pass userId via `x-user-id` header or `userId` query param.",
+        "parameters": [
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "description": "User ID (preferred method)",
+            "schema": { "type": "string" }
           },
-          "401": {
-            "description": "Unauthorized"
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "description": "User ID (alternative to header)",
+            "schema": { "type": "string", "example": "cmn9fnpv60000gox6sumckr25" }
           }
+        ],
+        "responses": {
+          "200": { "description": "Session is active" },
+          "401": { "description": "userId missing or user not found" },
+          "500": { "description": "Internal server error" }
         }
       }
     },
