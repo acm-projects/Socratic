@@ -67,6 +67,7 @@ const deleteAllClasses = async () => {
   await db.query("DELETE FROM classes");
 };
 
+module.exports = {
   getAllClasses,
   getClassByCode,
   createClass,
