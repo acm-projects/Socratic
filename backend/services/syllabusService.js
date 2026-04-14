@@ -21,21 +21,21 @@ const pool = new Pool({
 
 const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   console.log(`[Syllabus] 🛠️  Processing extraction... (Direct PDF: ${!!fileBuffer})`);
-  
+
   if (!process.env.GEMINI_API_KEY) {
     throw new Error("Missing GEMINI_API_KEY in backend/.env file.");
   }
 
   // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash",
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
     generationConfig: { responseMimeType: "application/json" }
   });
 
   // PREPARE CONTENT (Direct PDF if available, otherwise text)
   let contentParts = [];
-  
+
   if (fileBuffer) {
     console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
     contentParts.push({
@@ -69,19 +69,19 @@ Return ONLY JSON matching this schema:
   contentParts.unshift({ text: prompt });
 
   console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
-  
+
   let lastError;
   const maxRetries = 5;
-  
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const result = await model.generateContent(contentParts);
       const response = await result.response;
       const aiResponseText = response.text();
       const aiGeneratedData = JSON.parse(aiResponseText);
-      
+
       console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
-      
+
       // Validate with Zod
       console.log("[Syllabus] 🔍 Validating against schema...");
       try {
@@ -98,17 +98,17 @@ Return ONLY JSON matching this schema:
       // Handle 503 (Service Unavailable) with wait and retry
       if (error.message && (error.message.includes("503") || error.message.includes("Service Unavailable"))) {
         const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s, 16s, 32s
-        console.warn(`[Syllabus] ⚠️  503 Error (Attempt ${attempt}/${maxRetries}). Retrying in ${waitTime/1000}s...`);
+        console.warn(`[Syllabus] ⚠️  503 Error (Attempt ${attempt}/${maxRetries}). Retrying in ${waitTime / 1000}s...`);
         await new Promise(resolve => setTimeout(resolve, waitTime));
         continue;
       }
       // If it's a Zod error, don't retry, just throw
       if (error.name === "ZodError") throw error;
-      
+
       // Otherwise, log and throw
       console.error(`[Syllabus] ❌ Native Extraction failed (Attempt ${attempt}):`, error.message);
       if (attempt === maxRetries) throw error;
-      
+
       // Small delay for other non-503 errors
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
@@ -152,12 +152,12 @@ const saveSyllabusData = async (payload) => {
          updated_at        = NOW()`,
       [
         safeCourseCode.substring(0, 50),
-        instructor?.name   || null,
-        instructor?.email  || null,
-        instructor?.officeHours    || null,
+        instructor?.name || null,
+        instructor?.email || null,
+        instructor?.officeHours || null,
         instructor?.officeLocation || null,
-        ta?.name       || null,
-        ta?.email      || null,
+        ta?.name || null,
+        ta?.email || null,
         ta?.officeHours || null,
         gradingPolicy ? JSON.stringify(gradingPolicy) : null
       ]
