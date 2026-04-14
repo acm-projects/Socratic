@@ -8,37 +8,33 @@ const accountModel = require('../models/accountModel');
 // In-memory session tracking for "Volatile Sessions" (restarts clear this)
 const activeSessions = new Set();
 
-// Middleware to check if the user has an active session in local server memory
+// Middleware: resolve and validate the requesting user's ID
+// userId must be supplied via x-user-id header, request body, or query param.
 const checkSession = async (req, res, next) => {
-  let userId = req.headers['x-user-id'] || (req.body && req.body.userId) || req.query.userId;
-  
-  // Developer Fallback: Automatically use the known user ID if none is supplied
-  const DEV_FALLBACK_USER_ID = "cmndnfpv4000ekbuaopj8a773";
+  const userId = req.headers['x-user-id'] || (req.body && req.body.userId) || req.query.userId;
+
   if (!userId) {
-    userId = DEV_FALLBACK_USER_ID;
+    return res.status(401).json({ error: "userId is required. Pass it via the x-user-id header, body, or query param." });
   }
 
-  // 1. Check in-memory session (fastest)
-  if (activeSessions.has(userId) || userId === DEV_FALLBACK_USER_ID) {
+  // 1. Check in-memory session (fastest path)
+  if (activeSessions.has(userId)) {
     req.resolvedUserId = userId;
     return next();
   }
 
-  // 2. Check Database for user (allows test users to persist server restarts)
+  // 2. Fall through to DB to handle server restarts
   try {
     const user = await userModel.getUserById(userId);
     if (!user) {
-      console.warn(`Unauthorized access attempt for user: ${userId}`);
-      return res.status(401).send({ error: "No user found with this ID. Please register or log in." });
+      return res.status(401).json({ error: "No user found with this ID." });
     }
-
-    // 3. Register in volatile memory for future requests
     activeSessions.add(userId);
     req.resolvedUserId = userId;
     next();
   } catch (error) {
     console.error("Session verification error:", error.message);
-    res.status(500).send({ error: "Internal server error during session verification." });
+    res.status(500).json({ error: "Internal server error during session verification." });
   }
 };
 

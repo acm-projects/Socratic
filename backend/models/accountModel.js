@@ -2,7 +2,7 @@ const db = require('../db');
 
 const getAccountsByUserId = async (userId) => {
   const result = await db.query(
-    'SELECT * FROM "Account" WHERE "userId" = $1 OR "providerAccountId" = $1',
+    'SELECT * FROM "Account" WHERE "userId" = $1',
     [userId]
   );
   return result.rows;
