@@ -22,4 +22,5 @@ jobs:
             cd ~/backend
             git pull origin backend
             npm install
+            cd backend && npm install && cd ..
             pm2 restart server
