@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({ path: './backend/.env' });
 
 const { randomUUID } = require("crypto")
 
