@@ -101,7 +101,14 @@ router.post('/upload', upload.any(), async (req, res, next) => {
       return res.status(400).json({ error: "class_code is required." });
     }
 
-    const syllabusUrl = await s3Service.uploadSyllabus(file.buffer, file.originalname);
+    let syllabusUrl = null;
+    try {
+      syllabusUrl = await s3Service.uploadSyllabus(file.buffer, file.originalname);
+    } catch (s3Err) {
+      console.warn(`[Syllabus] ⚠️ S3 Upload failed (proceeding without URL):`, s3Err.message);
+      // Use a local placeholder if S3 is down/misconfigured
+      syllabusUrl = `local-fallback://${file.originalname}`;
+    }
 
     // Extract a basic subject from class_code (e.g. CS-SE from CS-SE-3377)
     const subjectMatch = class_code.match(/[a-zA-Z]+/);
