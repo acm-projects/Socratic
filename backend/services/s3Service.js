@@ -12,9 +12,10 @@ const s3 = new S3Client({
 
 const uploadSyllabus = async (fileBuffer, originalName) => {
   const fileKey = `syllabi/${crypto.randomUUID()}-${originalName}`;
+  const bucket = process.env.S3_BUCKET_NAME || "socratic-syllabi";
 
   const command = new PutObjectCommand({
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: bucket,
     Key: fileKey,
     Body: fileBuffer,
     ContentType: "application/pdf",
@@ -23,13 +24,14 @@ const uploadSyllabus = async (fileBuffer, originalName) => {
   await s3.send(command);
 
   // Return the public URL
-  const url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+  const region = process.env.AWS_REGION || "us-east-1";
+  const url = `https://${bucket}.s3.${region}.amazonaws.com/${fileKey}`;
   return url;
 };
 
 const getSyllabusSignedUrl = async (fileKey) => {
   const command = new GetObjectCommand({
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: process.env.S3_BUCKET_NAME || "socratic-syllabi",
     Key: fileKey,
   });
 
