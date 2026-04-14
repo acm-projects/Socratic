@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from "react";
-import { CircleArrowUp, Bookmark, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
+import { CircleArrowUp, Bookmark, PanelLeftOpen, PanelLeftClose, SquarePen, ChevronLeft } from 'lucide-react';
 import ChatModal from "./ChatModal";
 import { useSession } from "next-auth/react";
 
@@ -105,33 +105,37 @@ async function handleSend() {
             <div
                 className={`
                     transition-all duration-300 flex-shrink-0 flex flex-col
-                    border-r border-gray-300 overflow-hidden
-                    ${sidebarOpen ? "w-64" : "w-14"}
+                    border-r border-gray-200 overflow-hidden bg-[#F3F7F6]/50
+                    ${sidebarOpen ? "w-1/5" : "w-14"}
                 `}
                 style={{ height: '100%' }}
             >
                 {/* Sidebar header */}
-                <div className="flex items-center justify-between p-3 border-b border-gray-300 flex-shrink-0">
+                <div className="flex items-center justify-between p-3 pt-4 border-b border-gray-200 flex-shrink-0">
                     {sidebarOpen && (
-                        <span className="text-base font-medium text-gray-700 truncate">Chats</span>
+                         <a href={`/class/${classCode}`} className="flex items-center gap-1.5 text-md text-gray-500 hover:text-gray-800 transition-colors">
+                            <ChevronLeft size={16} />
+                            Exit chat
+                        </a>
                     )}
                     <div className="flex items-center ml-auto">
                         <button
                             onClick={() => setSidebarOpen(!sidebarOpen)}
                             className="text-gray-400 hover:text-gray-600 p-1"
                         >
-                            {sidebarOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
+                            {sidebarOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
                         </button>
                     </div>
                 </div>
 
                 {/* New chat button */}
                 {sidebarOpen && (
-                    <div className="p-3 flex-shrink-0">
+                    <div className="p-3 flex-shrink-0 my-1">
                         <button
                             onClick={handleNewChat}
-                            className="w-full cursor-pointer text-sm bg-[#4DB5AC] text-white rounded-lg py-2 px-3 text-left"
+                            className="w-full cursor-pointer text-sm bg-[#4DB5AC] text-white rounded-lg py-2 px-4 text-left flex items-center gap-3"
                         >
+                            <SquarePen size={16} />
                             New Chat
                         </button>
                     </div>
@@ -140,7 +144,7 @@ async function handleSend() {
                 {/* Chat history — scrollable */}
                 {sidebarOpen && (
                     <div className="flex-1 overflow-y-auto flex flex-col gap-1 px-3 min-h-0">
-                        <p className="text-xs text-gray-400 mb-1 flex-shrink-0">Recent</p>
+                        <p className="text-xs text-gray-400 mb-1 flex-shrink-0">Recents</p>
                         {chats.map(chat => (
                             <button
                                 key={chat.id}
@@ -161,7 +165,7 @@ async function handleSend() {
             </div>
 
             {/* ── Main chat area ── */}
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white/10 rounded-xl p-4 sm:p-6">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white/10 rounded-xl py-4 sm:p-6 w-full">
 
                 {messages.length === 0 ? (
                     /* ── Welcome screen ── */
@@ -193,13 +197,13 @@ async function handleSend() {
                     <>
                         {/* Messages — scrollable, takes remaining space */}
                         <div className="flex-1 overflow-y-auto min-h-0">
-                            <div className="flex flex-col gap-8 p-4 sm:p-10 max-w-4xl w-full mx-auto">
+                            <div className="flex flex-col gap-8 p-4 sm:p-10 max-w-5xl w-full mx-auto">
                                 {messages.map
                                 ((message, i) => (
                                     <div key={i} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
                                         {message.role === "user" ? (
                                             <div className="flex flex-col items-end gap-1 max-w-lg w-full">
-                                                <div className="bg-[#ddeaed] rounded-xl px-4 py-4 text-base text-black w-full break-words">
+                                                <div className="bg-[#ddeaed] rounded-xl px-4 py-4 text-base text-black break-words">
                                                     <div className="flex flex-col gap-3">
                                                         <span>{message.content}</span>
                                                         <div className="flex gap-1">
@@ -214,21 +218,33 @@ async function handleSend() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
-                                                <div className={"text-base text-black"}>
-                                                    {message.content}
-                                                </div>
-                                                <button
-                                                    onClick={() => { handleSave(message.content); setShowModal(true); }}
-                                                    className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50"
-                                                >
-                                                    <Bookmark
-                                                        size={14}
-                                                        className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"}
-                                                    />
-                                                    SAVE FOR REVIEW
-                                                </button>
-                                            </div>
+                                               <div className="flex items-end gap-3">
+        {/* Mascot circle */}
+        <div className="flex-shrink-0 w-18 h-18 flex items-center justify-center overflow-hidden">
+            <img 
+                src="/icons/mascot-chat.svg" 
+                alt="Mascot" 
+                className="w-18 h-18 object-contain"
+            />
+        </div>
+        
+        {/* Message content */}
+        <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
+            <div className={"text-base text-black"}>
+                {message.content}
+            </div>
+            <button
+                onClick={() => { handleSave(message.content); setShowModal(true); }}
+                className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50"
+            >
+                <Bookmark
+                    size={14}
+                    className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"}
+                />
+                SAVE FOR REVIEW
+            </button>
+        </div>
+    </div>
                                         )}
                                     </div>
                                 ))}

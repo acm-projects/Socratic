@@ -30,7 +30,7 @@ export default function ProfileStats() {
        { label: "Weekly XP", value: stats.weekly_xp },
        { label: "AI messages", value: stats.ai_messages },
        { label: "Retakes taken", value: stats.retakes_taken },
-       { label: "Study Streak)", value: stats.streak },
+       { label:  "Streak (days)", value: stats.streak },
       ]
 
 

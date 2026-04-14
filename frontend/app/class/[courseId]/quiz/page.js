@@ -1,6 +1,4 @@
 "use client"
-import Navbar from "../components/Navbar"
-import AnchoredHeader from "../components/AnchoredHeader"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 

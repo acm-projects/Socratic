@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
 import ProfileStats from "../components/profileComponents/ProfileStats"
 import UserInfoCard from "../components/profileComponents/UserInfo"
-import { signOut } from 'next-auth/react'
+
 
 export default function ProfilePage() {
       //store session and user data

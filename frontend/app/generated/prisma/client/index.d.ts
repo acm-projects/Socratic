@@ -103,6 +103,26 @@ export type quizzes = $Result.DefaultSelection<Prisma.$quizzesPayload>
  * 
  */
 export type class_engagement = $Result.DefaultSelection<Prisma.$class_engagementPayload>
+/**
+ * Model class_tasks
+ * 
+ */
+export type class_tasks = $Result.DefaultSelection<Prisma.$class_tasksPayload>
+/**
+ * Model course_materials
+ * 
+ */
+export type course_materials = $Result.DefaultSelection<Prisma.$course_materialsPayload>
+/**
+ * Model shared_classes
+ * 
+ */
+export type shared_classes = $Result.DefaultSelection<Prisma.$shared_classesPayload>
+/**
+ * Model user_classes
+ * 
+ */
+export type user_classes = $Result.DefaultSelection<Prisma.$user_classesPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -404,6 +424,46 @@ export class PrismaClient<
     * ```
     */
   get class_engagement(): Prisma.class_engagementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.class_tasks`: Exposes CRUD operations for the **class_tasks** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Class_tasks
+    * const class_tasks = await prisma.class_tasks.findMany()
+    * ```
+    */
+  get class_tasks(): Prisma.class_tasksDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.course_materials`: Exposes CRUD operations for the **course_materials** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Course_materials
+    * const course_materials = await prisma.course_materials.findMany()
+    * ```
+    */
+  get course_materials(): Prisma.course_materialsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.shared_classes`: Exposes CRUD operations for the **shared_classes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Shared_classes
+    * const shared_classes = await prisma.shared_classes.findMany()
+    * ```
+    */
+  get shared_classes(): Prisma.shared_classesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.user_classes`: Exposes CRUD operations for the **user_classes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more User_classes
+    * const user_classes = await prisma.user_classes.findMany()
+    * ```
+    */
+  get user_classes(): Prisma.user_classesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -855,7 +915,11 @@ export namespace Prisma {
     messages: 'messages',
     quiz_questions: 'quiz_questions',
     quizzes: 'quizzes',
-    class_engagement: 'class_engagement'
+    class_engagement: 'class_engagement',
+    class_tasks: 'class_tasks',
+    course_materials: 'course_materials',
+    shared_classes: 'shared_classes',
+    user_classes: 'user_classes'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -871,7 +935,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "achievements" | "chat_history" | "chat_sessions" | "classes" | "daily_topic_metrics" | "friend_requests" | "friends" | "topics" | "user_achievements" | "xp_system" | "user" | "account" | "chats" | "langchain_chat_messages" | "messages" | "quiz_questions" | "quizzes" | "class_engagement"
+      modelProps: "achievements" | "chat_history" | "chat_sessions" | "classes" | "daily_topic_metrics" | "friend_requests" | "friends" | "topics" | "user_achievements" | "xp_system" | "user" | "account" | "chats" | "langchain_chat_messages" | "messages" | "quiz_questions" | "quizzes" | "class_engagement" | "class_tasks" | "course_materials" | "shared_classes" | "user_classes"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2207,6 +2271,302 @@ export namespace Prisma {
           }
         }
       }
+      class_tasks: {
+        payload: Prisma.$class_tasksPayload<ExtArgs>
+        fields: Prisma.class_tasksFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.class_tasksFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.class_tasksFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>
+          }
+          findFirst: {
+            args: Prisma.class_tasksFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.class_tasksFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>
+          }
+          findMany: {
+            args: Prisma.class_tasksFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>[]
+          }
+          create: {
+            args: Prisma.class_tasksCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>
+          }
+          createMany: {
+            args: Prisma.class_tasksCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.class_tasksCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>[]
+          }
+          delete: {
+            args: Prisma.class_tasksDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>
+          }
+          update: {
+            args: Prisma.class_tasksUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>
+          }
+          deleteMany: {
+            args: Prisma.class_tasksDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.class_tasksUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.class_tasksUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>[]
+          }
+          upsert: {
+            args: Prisma.class_tasksUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$class_tasksPayload>
+          }
+          aggregate: {
+            args: Prisma.Class_tasksAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateClass_tasks>
+          }
+          groupBy: {
+            args: Prisma.class_tasksGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Class_tasksGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.class_tasksCountArgs<ExtArgs>
+            result: $Utils.Optional<Class_tasksCountAggregateOutputType> | number
+          }
+        }
+      }
+      course_materials: {
+        payload: Prisma.$course_materialsPayload<ExtArgs>
+        fields: Prisma.course_materialsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.course_materialsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.course_materialsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>
+          }
+          findFirst: {
+            args: Prisma.course_materialsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.course_materialsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>
+          }
+          findMany: {
+            args: Prisma.course_materialsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>[]
+          }
+          create: {
+            args: Prisma.course_materialsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>
+          }
+          createMany: {
+            args: Prisma.course_materialsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.course_materialsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>[]
+          }
+          delete: {
+            args: Prisma.course_materialsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>
+          }
+          update: {
+            args: Prisma.course_materialsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>
+          }
+          deleteMany: {
+            args: Prisma.course_materialsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.course_materialsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.course_materialsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>[]
+          }
+          upsert: {
+            args: Prisma.course_materialsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_materialsPayload>
+          }
+          aggregate: {
+            args: Prisma.Course_materialsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCourse_materials>
+          }
+          groupBy: {
+            args: Prisma.course_materialsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Course_materialsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.course_materialsCountArgs<ExtArgs>
+            result: $Utils.Optional<Course_materialsCountAggregateOutputType> | number
+          }
+        }
+      }
+      shared_classes: {
+        payload: Prisma.$shared_classesPayload<ExtArgs>
+        fields: Prisma.shared_classesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.shared_classesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.shared_classesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>
+          }
+          findFirst: {
+            args: Prisma.shared_classesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.shared_classesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>
+          }
+          findMany: {
+            args: Prisma.shared_classesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>[]
+          }
+          create: {
+            args: Prisma.shared_classesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>
+          }
+          createMany: {
+            args: Prisma.shared_classesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.shared_classesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>[]
+          }
+          delete: {
+            args: Prisma.shared_classesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>
+          }
+          update: {
+            args: Prisma.shared_classesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>
+          }
+          deleteMany: {
+            args: Prisma.shared_classesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.shared_classesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.shared_classesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>[]
+          }
+          upsert: {
+            args: Prisma.shared_classesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$shared_classesPayload>
+          }
+          aggregate: {
+            args: Prisma.Shared_classesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateShared_classes>
+          }
+          groupBy: {
+            args: Prisma.shared_classesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Shared_classesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.shared_classesCountArgs<ExtArgs>
+            result: $Utils.Optional<Shared_classesCountAggregateOutputType> | number
+          }
+        }
+      }
+      user_classes: {
+        payload: Prisma.$user_classesPayload<ExtArgs>
+        fields: Prisma.user_classesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.user_classesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.user_classesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>
+          }
+          findFirst: {
+            args: Prisma.user_classesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.user_classesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>
+          }
+          findMany: {
+            args: Prisma.user_classesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>[]
+          }
+          create: {
+            args: Prisma.user_classesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>
+          }
+          createMany: {
+            args: Prisma.user_classesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.user_classesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>[]
+          }
+          delete: {
+            args: Prisma.user_classesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>
+          }
+          update: {
+            args: Prisma.user_classesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>
+          }
+          deleteMany: {
+            args: Prisma.user_classesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.user_classesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.user_classesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>[]
+          }
+          upsert: {
+            args: Prisma.user_classesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$user_classesPayload>
+          }
+          aggregate: {
+            args: Prisma.User_classesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUser_classes>
+          }
+          groupBy: {
+            args: Prisma.user_classesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<User_classesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.user_classesCountArgs<ExtArgs>
+            result: $Utils.Optional<User_classesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2333,6 +2693,10 @@ export namespace Prisma {
     quiz_questions?: quiz_questionsOmit
     quizzes?: quizzesOmit
     class_engagement?: class_engagementOmit
+    class_tasks?: class_tasksOmit
+    course_materials?: course_materialsOmit
+    shared_classes?: shared_classesOmit
+    user_classes?: user_classesOmit
   }
 
   /* Types for Logging */
@@ -2476,14 +2840,20 @@ export namespace Prisma {
 
   export type ClassesCountOutputType = {
     chat_sessions: number
+    class_tasks: number
+    course_materials: number
     daily_topic_metrics: number
     topics: number
+    user_classes: number
   }
 
   export type ClassesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_sessions?: boolean | ClassesCountOutputTypeCountChat_sessionsArgs
+    class_tasks?: boolean | ClassesCountOutputTypeCountClass_tasksArgs
+    course_materials?: boolean | ClassesCountOutputTypeCountCourse_materialsArgs
     daily_topic_metrics?: boolean | ClassesCountOutputTypeCountDaily_topic_metricsArgs
     topics?: boolean | ClassesCountOutputTypeCountTopicsArgs
+    user_classes?: boolean | ClassesCountOutputTypeCountUser_classesArgs
   }
 
   // Custom InputTypes
@@ -2507,6 +2877,20 @@ export namespace Prisma {
   /**
    * ClassesCountOutputType without action
    */
+  export type ClassesCountOutputTypeCountClass_tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: class_tasksWhereInput
+  }
+
+  /**
+   * ClassesCountOutputType without action
+   */
+  export type ClassesCountOutputTypeCountCourse_materialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: course_materialsWhereInput
+  }
+
+  /**
+   * ClassesCountOutputType without action
+   */
   export type ClassesCountOutputTypeCountDaily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: daily_topic_metricsWhereInput
   }
@@ -2516,6 +2900,13 @@ export namespace Prisma {
    */
   export type ClassesCountOutputTypeCountTopicsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: topicsWhereInput
+  }
+
+  /**
+   * ClassesCountOutputType without action
+   */
+  export type ClassesCountOutputTypeCountUser_classesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_classesWhereInput
   }
 
 
@@ -2573,6 +2964,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers: number
     friends_friends_user_idTousers: number
     user_achievements: number
+    user_classes: number
     xp_system: number
   }
 
@@ -2586,6 +2978,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: boolean | UserCountOutputTypeCountFriends_friends_friend_idTousersArgs
     friends_friends_user_idTousers?: boolean | UserCountOutputTypeCountFriends_friends_user_idTousersArgs
     user_achievements?: boolean | UserCountOutputTypeCountUser_achievementsArgs
+    user_classes?: boolean | UserCountOutputTypeCountUser_classesArgs
     xp_system?: boolean | UserCountOutputTypeCountXp_systemArgs
   }
 
@@ -2661,6 +3054,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUser_achievementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: user_achievementsWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUser_classesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_classesWhereInput
   }
 
   /**
@@ -2764,6 +3164,8 @@ export namespace Prisma {
     xp_reward: number | null
     created_at: Date | null
     slug: string | null
+    icon_colored: string | null
+    icon_greyed: string | null
   }
 
   export type AchievementsMaxAggregateOutputType = {
@@ -2773,6 +3175,8 @@ export namespace Prisma {
     xp_reward: number | null
     created_at: Date | null
     slug: string | null
+    icon_colored: string | null
+    icon_greyed: string | null
   }
 
   export type AchievementsCountAggregateOutputType = {
@@ -2782,6 +3186,8 @@ export namespace Prisma {
     xp_reward: number
     created_at: number
     slug: number
+    icon_colored: number
+    icon_greyed: number
     _all: number
   }
 
@@ -2801,6 +3207,8 @@ export namespace Prisma {
     xp_reward?: true
     created_at?: true
     slug?: true
+    icon_colored?: true
+    icon_greyed?: true
   }
 
   export type AchievementsMaxAggregateInputType = {
@@ -2810,6 +3218,8 @@ export namespace Prisma {
     xp_reward?: true
     created_at?: true
     slug?: true
+    icon_colored?: true
+    icon_greyed?: true
   }
 
   export type AchievementsCountAggregateInputType = {
@@ -2819,6 +3229,8 @@ export namespace Prisma {
     xp_reward?: true
     created_at?: true
     slug?: true
+    icon_colored?: true
+    icon_greyed?: true
     _all?: true
   }
 
@@ -2915,6 +3327,8 @@ export namespace Prisma {
     xp_reward: number | null
     created_at: Date | null
     slug: string | null
+    icon_colored: string | null
+    icon_greyed: string | null
     _count: AchievementsCountAggregateOutputType | null
     _avg: AchievementsAvgAggregateOutputType | null
     _sum: AchievementsSumAggregateOutputType | null
@@ -2943,6 +3357,8 @@ export namespace Prisma {
     xp_reward?: boolean
     created_at?: boolean
     slug?: boolean
+    icon_colored?: boolean
+    icon_greyed?: boolean
     user_achievements?: boolean | achievements$user_achievementsArgs<ExtArgs>
     _count?: boolean | AchievementsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["achievements"]>
@@ -2954,6 +3370,8 @@ export namespace Prisma {
     xp_reward?: boolean
     created_at?: boolean
     slug?: boolean
+    icon_colored?: boolean
+    icon_greyed?: boolean
   }, ExtArgs["result"]["achievements"]>
 
   export type achievementsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2963,6 +3381,8 @@ export namespace Prisma {
     xp_reward?: boolean
     created_at?: boolean
     slug?: boolean
+    icon_colored?: boolean
+    icon_greyed?: boolean
   }, ExtArgs["result"]["achievements"]>
 
   export type achievementsSelectScalar = {
@@ -2972,9 +3392,11 @@ export namespace Prisma {
     xp_reward?: boolean
     created_at?: boolean
     slug?: boolean
+    icon_colored?: boolean
+    icon_greyed?: boolean
   }
 
-  export type achievementsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "xp_reward" | "created_at" | "slug", ExtArgs["result"]["achievements"]>
+  export type achievementsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "xp_reward" | "created_at" | "slug" | "icon_colored" | "icon_greyed", ExtArgs["result"]["achievements"]>
   export type achievementsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user_achievements?: boolean | achievements$user_achievementsArgs<ExtArgs>
     _count?: boolean | AchievementsCountOutputTypeDefaultArgs<ExtArgs>
@@ -2994,6 +3416,8 @@ export namespace Prisma {
       xp_reward: number | null
       created_at: Date | null
       slug: string | null
+      icon_colored: string | null
+      icon_greyed: string | null
     }, ExtArgs["result"]["achievements"]>
     composites: {}
   }
@@ -3424,6 +3848,8 @@ export namespace Prisma {
     readonly xp_reward: FieldRef<"achievements", 'Int'>
     readonly created_at: FieldRef<"achievements", 'DateTime'>
     readonly slug: FieldRef<"achievements", 'String'>
+    readonly icon_colored: FieldRef<"achievements", 'String'>
+    readonly icon_greyed: FieldRef<"achievements", 'String'>
   }
     
 
@@ -3865,8 +4291,18 @@ export namespace Prisma {
 
   export type AggregateChat_history = {
     _count: Chat_historyCountAggregateOutputType | null
+    _avg: Chat_historyAvgAggregateOutputType | null
+    _sum: Chat_historySumAggregateOutputType | null
     _min: Chat_historyMinAggregateOutputType | null
     _max: Chat_historyMaxAggregateOutputType | null
+  }
+
+  export type Chat_historyAvgAggregateOutputType = {
+    score: number | null
+  }
+
+  export type Chat_historySumAggregateOutputType = {
+    score: number | null
   }
 
   export type Chat_historyMinAggregateOutputType = {
@@ -3875,6 +4311,8 @@ export namespace Prisma {
     sender: string | null
     content: string | null
     created_at: Date | null
+    score: number | null
+    reason: string | null
   }
 
   export type Chat_historyMaxAggregateOutputType = {
@@ -3883,6 +4321,8 @@ export namespace Prisma {
     sender: string | null
     content: string | null
     created_at: Date | null
+    score: number | null
+    reason: string | null
   }
 
   export type Chat_historyCountAggregateOutputType = {
@@ -3891,9 +4331,19 @@ export namespace Prisma {
     sender: number
     content: number
     created_at: number
+    score: number
+    reason: number
     _all: number
   }
 
+
+  export type Chat_historyAvgAggregateInputType = {
+    score?: true
+  }
+
+  export type Chat_historySumAggregateInputType = {
+    score?: true
+  }
 
   export type Chat_historyMinAggregateInputType = {
     id?: true
@@ -3901,6 +4351,8 @@ export namespace Prisma {
     sender?: true
     content?: true
     created_at?: true
+    score?: true
+    reason?: true
   }
 
   export type Chat_historyMaxAggregateInputType = {
@@ -3909,6 +4361,8 @@ export namespace Prisma {
     sender?: true
     content?: true
     created_at?: true
+    score?: true
+    reason?: true
   }
 
   export type Chat_historyCountAggregateInputType = {
@@ -3917,6 +4371,8 @@ export namespace Prisma {
     sender?: true
     content?: true
     created_at?: true
+    score?: true
+    reason?: true
     _all?: true
   }
 
@@ -3958,6 +4414,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: Chat_historyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Chat_historySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: Chat_historyMinAggregateInputType
@@ -3988,6 +4456,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: Chat_historyCountAggregateInputType | true
+    _avg?: Chat_historyAvgAggregateInputType
+    _sum?: Chat_historySumAggregateInputType
     _min?: Chat_historyMinAggregateInputType
     _max?: Chat_historyMaxAggregateInputType
   }
@@ -3998,7 +4468,11 @@ export namespace Prisma {
     sender: string
     content: string
     created_at: Date | null
+    score: number | null
+    reason: string | null
     _count: Chat_historyCountAggregateOutputType | null
+    _avg: Chat_historyAvgAggregateOutputType | null
+    _sum: Chat_historySumAggregateOutputType | null
     _min: Chat_historyMinAggregateOutputType | null
     _max: Chat_historyMaxAggregateOutputType | null
   }
@@ -4023,6 +4497,8 @@ export namespace Prisma {
     sender?: boolean
     content?: boolean
     created_at?: boolean
+    score?: boolean
+    reason?: boolean
     chat_sessions?: boolean | chat_sessionsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat_history"]>
 
@@ -4032,6 +4508,8 @@ export namespace Prisma {
     sender?: boolean
     content?: boolean
     created_at?: boolean
+    score?: boolean
+    reason?: boolean
     chat_sessions?: boolean | chat_sessionsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat_history"]>
 
@@ -4041,6 +4519,8 @@ export namespace Prisma {
     sender?: boolean
     content?: boolean
     created_at?: boolean
+    score?: boolean
+    reason?: boolean
     chat_sessions?: boolean | chat_sessionsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat_history"]>
 
@@ -4050,9 +4530,11 @@ export namespace Prisma {
     sender?: boolean
     content?: boolean
     created_at?: boolean
+    score?: boolean
+    reason?: boolean
   }
 
-  export type chat_historyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "session_id" | "sender" | "content" | "created_at", ExtArgs["result"]["chat_history"]>
+  export type chat_historyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "session_id" | "sender" | "content" | "created_at" | "score" | "reason", ExtArgs["result"]["chat_history"]>
   export type chat_historyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_sessions?: boolean | chat_sessionsDefaultArgs<ExtArgs>
   }
@@ -4074,6 +4556,8 @@ export namespace Prisma {
       sender: string
       content: string
       created_at: Date | null
+      score: number | null
+      reason: string | null
     }, ExtArgs["result"]["chat_history"]>
     composites: {}
   }
@@ -4503,6 +4987,8 @@ export namespace Prisma {
     readonly sender: FieldRef<"chat_history", 'String'>
     readonly content: FieldRef<"chat_history", 'String'>
     readonly created_at: FieldRef<"chat_history", 'DateTime'>
+    readonly score: FieldRef<"chat_history", 'Int'>
+    readonly reason: FieldRef<"chat_history", 'String'>
   }
     
 
@@ -4939,6 +5425,7 @@ export namespace Prisma {
     topic_id: string | null
     started_at: Date | null
     created_at: Date | null
+    title: string | null
   }
 
   export type Chat_sessionsMaxAggregateOutputType = {
@@ -4948,6 +5435,7 @@ export namespace Prisma {
     topic_id: string | null
     started_at: Date | null
     created_at: Date | null
+    title: string | null
   }
 
   export type Chat_sessionsCountAggregateOutputType = {
@@ -4957,6 +5445,7 @@ export namespace Prisma {
     topic_id: number
     started_at: number
     created_at: number
+    title: number
     _all: number
   }
 
@@ -4968,6 +5457,7 @@ export namespace Prisma {
     topic_id?: true
     started_at?: true
     created_at?: true
+    title?: true
   }
 
   export type Chat_sessionsMaxAggregateInputType = {
@@ -4977,6 +5467,7 @@ export namespace Prisma {
     topic_id?: true
     started_at?: true
     created_at?: true
+    title?: true
   }
 
   export type Chat_sessionsCountAggregateInputType = {
@@ -4986,6 +5477,7 @@ export namespace Prisma {
     topic_id?: true
     started_at?: true
     created_at?: true
+    title?: true
     _all?: true
   }
 
@@ -5068,6 +5560,7 @@ export namespace Prisma {
     topic_id: string
     started_at: Date | null
     created_at: Date | null
+    title: string | null
     _count: Chat_sessionsCountAggregateOutputType | null
     _min: Chat_sessionsMinAggregateOutputType | null
     _max: Chat_sessionsMaxAggregateOutputType | null
@@ -5094,6 +5587,7 @@ export namespace Prisma {
     topic_id?: boolean
     started_at?: boolean
     created_at?: boolean
+    title?: boolean
     chat_history?: boolean | chat_sessions$chat_historyArgs<ExtArgs>
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
@@ -5108,6 +5602,7 @@ export namespace Prisma {
     topic_id?: boolean
     started_at?: boolean
     created_at?: boolean
+    title?: boolean
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
     users?: boolean | UserDefaultArgs<ExtArgs>
@@ -5120,6 +5615,7 @@ export namespace Prisma {
     topic_id?: boolean
     started_at?: boolean
     created_at?: boolean
+    title?: boolean
     classes?: boolean | classesDefaultArgs<ExtArgs>
     topics?: boolean | topicsDefaultArgs<ExtArgs>
     users?: boolean | UserDefaultArgs<ExtArgs>
@@ -5132,9 +5628,10 @@ export namespace Prisma {
     topic_id?: boolean
     started_at?: boolean
     created_at?: boolean
+    title?: boolean
   }
 
-  export type chat_sessionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"session_id" | "class_code" | "user_id" | "topic_id" | "started_at" | "created_at", ExtArgs["result"]["chat_sessions"]>
+  export type chat_sessionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"session_id" | "class_code" | "user_id" | "topic_id" | "started_at" | "created_at" | "title", ExtArgs["result"]["chat_sessions"]>
   export type chat_sessionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_history?: boolean | chat_sessions$chat_historyArgs<ExtArgs>
     classes?: boolean | classesDefaultArgs<ExtArgs>
@@ -5168,6 +5665,7 @@ export namespace Prisma {
       topic_id: string
       started_at: Date | null
       created_at: Date | null
+      title: string | null
     }, ExtArgs["result"]["chat_sessions"]>
     composites: {}
   }
@@ -5601,6 +6099,7 @@ export namespace Prisma {
     readonly topic_id: FieldRef<"chat_sessions", 'String'>
     readonly started_at: FieldRef<"chat_sessions", 'DateTime'>
     readonly created_at: FieldRef<"chat_sessions", 'DateTime'>
+    readonly title: FieldRef<"chat_sessions", 'String'>
   }
     
 
@@ -6050,8 +6549,18 @@ export namespace Prisma {
 
   export type AggregateClasses = {
     _count: ClassesCountAggregateOutputType | null
+    _avg: ClassesAvgAggregateOutputType | null
+    _sum: ClassesSumAggregateOutputType | null
     _min: ClassesMinAggregateOutputType | null
     _max: ClassesMaxAggregateOutputType | null
+  }
+
+  export type ClassesAvgAggregateOutputType = {
+    streak: number | null
+  }
+
+  export type ClassesSumAggregateOutputType = {
+    streak: number | null
   }
 
   export type ClassesMinAggregateOutputType = {
@@ -6061,6 +6570,8 @@ export namespace Prisma {
     created_at: Date | null
     user_id: string | null
     syllabus_url: string | null
+    streak: number | null
+    last_activity_date: Date | null
   }
 
   export type ClassesMaxAggregateOutputType = {
@@ -6070,6 +6581,8 @@ export namespace Prisma {
     created_at: Date | null
     user_id: string | null
     syllabus_url: string | null
+    streak: number | null
+    last_activity_date: Date | null
   }
 
   export type ClassesCountAggregateOutputType = {
@@ -6079,9 +6592,19 @@ export namespace Prisma {
     created_at: number
     user_id: number
     syllabus_url: number
+    streak: number
+    last_activity_date: number
     _all: number
   }
 
+
+  export type ClassesAvgAggregateInputType = {
+    streak?: true
+  }
+
+  export type ClassesSumAggregateInputType = {
+    streak?: true
+  }
 
   export type ClassesMinAggregateInputType = {
     class_code?: true
@@ -6090,6 +6613,8 @@ export namespace Prisma {
     created_at?: true
     user_id?: true
     syllabus_url?: true
+    streak?: true
+    last_activity_date?: true
   }
 
   export type ClassesMaxAggregateInputType = {
@@ -6099,6 +6624,8 @@ export namespace Prisma {
     created_at?: true
     user_id?: true
     syllabus_url?: true
+    streak?: true
+    last_activity_date?: true
   }
 
   export type ClassesCountAggregateInputType = {
@@ -6108,6 +6635,8 @@ export namespace Prisma {
     created_at?: true
     user_id?: true
     syllabus_url?: true
+    streak?: true
+    last_activity_date?: true
     _all?: true
   }
 
@@ -6149,6 +6678,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ClassesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ClassesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ClassesMinAggregateInputType
@@ -6179,6 +6720,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ClassesCountAggregateInputType | true
+    _avg?: ClassesAvgAggregateInputType
+    _sum?: ClassesSumAggregateInputType
     _min?: ClassesMinAggregateInputType
     _max?: ClassesMaxAggregateInputType
   }
@@ -6190,7 +6733,11 @@ export namespace Prisma {
     created_at: Date | null
     user_id: string | null
     syllabus_url: string | null
+    streak: number | null
+    last_activity_date: Date | null
     _count: ClassesCountAggregateOutputType | null
+    _avg: ClassesAvgAggregateOutputType | null
+    _sum: ClassesSumAggregateOutputType | null
     _min: ClassesMinAggregateOutputType | null
     _max: ClassesMaxAggregateOutputType | null
   }
@@ -6216,9 +6763,14 @@ export namespace Prisma {
     created_at?: boolean
     user_id?: boolean
     syllabus_url?: boolean
+    streak?: boolean
+    last_activity_date?: boolean
     chat_sessions?: boolean | classes$chat_sessionsArgs<ExtArgs>
+    class_tasks?: boolean | classes$class_tasksArgs<ExtArgs>
+    course_materials?: boolean | classes$course_materialsArgs<ExtArgs>
     daily_topic_metrics?: boolean | classes$daily_topic_metricsArgs<ExtArgs>
     topics?: boolean | classes$topicsArgs<ExtArgs>
+    user_classes?: boolean | classes$user_classesArgs<ExtArgs>
     _count?: boolean | ClassesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["classes"]>
 
@@ -6229,6 +6781,8 @@ export namespace Prisma {
     created_at?: boolean
     user_id?: boolean
     syllabus_url?: boolean
+    streak?: boolean
+    last_activity_date?: boolean
   }, ExtArgs["result"]["classes"]>
 
   export type classesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6238,6 +6792,8 @@ export namespace Prisma {
     created_at?: boolean
     user_id?: boolean
     syllabus_url?: boolean
+    streak?: boolean
+    last_activity_date?: boolean
   }, ExtArgs["result"]["classes"]>
 
   export type classesSelectScalar = {
@@ -6247,13 +6803,18 @@ export namespace Prisma {
     created_at?: boolean
     user_id?: boolean
     syllabus_url?: boolean
+    streak?: boolean
+    last_activity_date?: boolean
   }
 
-  export type classesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"class_code" | "subject" | "name" | "created_at" | "user_id" | "syllabus_url", ExtArgs["result"]["classes"]>
+  export type classesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"class_code" | "subject" | "name" | "created_at" | "user_id" | "syllabus_url" | "streak" | "last_activity_date", ExtArgs["result"]["classes"]>
   export type classesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_sessions?: boolean | classes$chat_sessionsArgs<ExtArgs>
+    class_tasks?: boolean | classes$class_tasksArgs<ExtArgs>
+    course_materials?: boolean | classes$course_materialsArgs<ExtArgs>
     daily_topic_metrics?: boolean | classes$daily_topic_metricsArgs<ExtArgs>
     topics?: boolean | classes$topicsArgs<ExtArgs>
+    user_classes?: boolean | classes$user_classesArgs<ExtArgs>
     _count?: boolean | ClassesCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type classesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6263,8 +6824,11 @@ export namespace Prisma {
     name: "classes"
     objects: {
       chat_sessions: Prisma.$chat_sessionsPayload<ExtArgs>[]
+      class_tasks: Prisma.$class_tasksPayload<ExtArgs>[]
+      course_materials: Prisma.$course_materialsPayload<ExtArgs>[]
       daily_topic_metrics: Prisma.$daily_topic_metricsPayload<ExtArgs>[]
       topics: Prisma.$topicsPayload<ExtArgs>[]
+      user_classes: Prisma.$user_classesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       class_code: string
@@ -6273,6 +6837,8 @@ export namespace Prisma {
       created_at: Date | null
       user_id: string | null
       syllabus_url: string | null
+      streak: number | null
+      last_activity_date: Date | null
     }, ExtArgs["result"]["classes"]>
     composites: {}
   }
@@ -6668,8 +7234,11 @@ export namespace Prisma {
   export interface Prisma__classesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chat_sessions<T extends classes$chat_sessionsArgs<ExtArgs> = {}>(args?: Subset<T, classes$chat_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_sessionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    class_tasks<T extends classes$class_tasksArgs<ExtArgs> = {}>(args?: Subset<T, classes$class_tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    course_materials<T extends classes$course_materialsArgs<ExtArgs> = {}>(args?: Subset<T, classes$course_materialsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     daily_topic_metrics<T extends classes$daily_topic_metricsArgs<ExtArgs> = {}>(args?: Subset<T, classes$daily_topic_metricsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     topics<T extends classes$topicsArgs<ExtArgs> = {}>(args?: Subset<T, classes$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$topicsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user_classes<T extends classes$user_classesArgs<ExtArgs> = {}>(args?: Subset<T, classes$user_classesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6705,6 +7274,8 @@ export namespace Prisma {
     readonly created_at: FieldRef<"classes", 'DateTime'>
     readonly user_id: FieldRef<"classes", 'String'>
     readonly syllabus_url: FieldRef<"classes", 'String'>
+    readonly streak: FieldRef<"classes", 'Int'>
+    readonly last_activity_date: FieldRef<"classes", 'DateTime'>
   }
     
 
@@ -7122,6 +7693,54 @@ export namespace Prisma {
   }
 
   /**
+   * classes.class_tasks
+   */
+  export type classes$class_tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    where?: class_tasksWhereInput
+    orderBy?: class_tasksOrderByWithRelationInput | class_tasksOrderByWithRelationInput[]
+    cursor?: class_tasksWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Class_tasksScalarFieldEnum | Class_tasksScalarFieldEnum[]
+  }
+
+  /**
+   * classes.course_materials
+   */
+  export type classes$course_materialsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    where?: course_materialsWhereInput
+    orderBy?: course_materialsOrderByWithRelationInput | course_materialsOrderByWithRelationInput[]
+    cursor?: course_materialsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Course_materialsScalarFieldEnum | Course_materialsScalarFieldEnum[]
+  }
+
+  /**
    * classes.daily_topic_metrics
    */
   export type classes$daily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7167,6 +7786,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TopicsScalarFieldEnum | TopicsScalarFieldEnum[]
+  }
+
+  /**
+   * classes.user_classes
+   */
+  export type classes$user_classesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    where?: user_classesWhereInput
+    orderBy?: user_classesOrderByWithRelationInput | user_classesOrderByWithRelationInput[]
+    cursor?: user_classesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: User_classesScalarFieldEnum | User_classesScalarFieldEnum[]
   }
 
   /**
@@ -13790,12 +14433,18 @@ export namespace Prisma {
     total_xp: number | null
     streak: number | null
     weekly_xp: number | null
+    ai_messages: number | null
+    quizzes_taken: number | null
+    retakes_taken: number | null
   }
 
   export type UserSumAggregateOutputType = {
     total_xp: number | null
     streak: number | null
     weekly_xp: number | null
+    ai_messages: number | null
+    quizzes_taken: number | null
+    retakes_taken: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -13814,6 +14463,10 @@ export namespace Prisma {
     class_status: string | null
     streak: number | null
     weekly_xp: number | null
+    ai_messages: number | null
+    quizzes_taken: number | null
+    retakes_taken: number | null
+    last_active_date: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -13832,6 +14485,10 @@ export namespace Prisma {
     class_status: string | null
     streak: number | null
     weekly_xp: number | null
+    ai_messages: number | null
+    quizzes_taken: number | null
+    retakes_taken: number | null
+    last_active_date: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -13850,6 +14507,10 @@ export namespace Prisma {
     class_status: number
     streak: number
     weekly_xp: number
+    ai_messages: number
+    quizzes_taken: number
+    retakes_taken: number
+    last_active_date: number
     _all: number
   }
 
@@ -13858,12 +14519,18 @@ export namespace Prisma {
     total_xp?: true
     streak?: true
     weekly_xp?: true
+    ai_messages?: true
+    quizzes_taken?: true
+    retakes_taken?: true
   }
 
   export type UserSumAggregateInputType = {
     total_xp?: true
     streak?: true
     weekly_xp?: true
+    ai_messages?: true
+    quizzes_taken?: true
+    retakes_taken?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -13882,6 +14549,10 @@ export namespace Prisma {
     class_status?: true
     streak?: true
     weekly_xp?: true
+    ai_messages?: true
+    quizzes_taken?: true
+    retakes_taken?: true
+    last_active_date?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -13900,6 +14571,10 @@ export namespace Prisma {
     class_status?: true
     streak?: true
     weekly_xp?: true
+    ai_messages?: true
+    quizzes_taken?: true
+    retakes_taken?: true
+    last_active_date?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -13918,6 +14593,10 @@ export namespace Prisma {
     class_status?: true
     streak?: true
     weekly_xp?: true
+    ai_messages?: true
+    quizzes_taken?: true
+    retakes_taken?: true
+    last_active_date?: true
     _all?: true
   }
 
@@ -14023,6 +14702,10 @@ export namespace Prisma {
     class_status: string | null
     streak: number | null
     weekly_xp: number | null
+    ai_messages: number
+    quizzes_taken: number
+    retakes_taken: number
+    last_active_date: Date | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -14060,6 +14743,10 @@ export namespace Prisma {
     class_status?: boolean
     streak?: boolean
     weekly_xp?: boolean
+    ai_messages?: boolean
+    quizzes_taken?: boolean
+    retakes_taken?: boolean
+    last_active_date?: boolean
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
     class_engagement?: boolean | User$class_engagementArgs<ExtArgs>
@@ -14069,6 +14756,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: boolean | User$friends_friends_friend_idTousersArgs<ExtArgs>
     friends_friends_user_idTousers?: boolean | User$friends_friends_user_idTousersArgs<ExtArgs>
     user_achievements?: boolean | User$user_achievementsArgs<ExtArgs>
+    user_classes?: boolean | User$user_classesArgs<ExtArgs>
     xp_system?: boolean | User$xp_systemArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -14089,6 +14777,10 @@ export namespace Prisma {
     class_status?: boolean
     streak?: boolean
     weekly_xp?: boolean
+    ai_messages?: boolean
+    quizzes_taken?: boolean
+    retakes_taken?: boolean
+    last_active_date?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -14107,6 +14799,10 @@ export namespace Prisma {
     class_status?: boolean
     streak?: boolean
     weekly_xp?: boolean
+    ai_messages?: boolean
+    quizzes_taken?: boolean
+    retakes_taken?: boolean
+    last_active_date?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -14125,9 +14821,13 @@ export namespace Prisma {
     class_status?: boolean
     streak?: boolean
     weekly_xp?: boolean
+    ai_messages?: boolean
+    quizzes_taken?: boolean
+    retakes_taken?: boolean
+    last_active_date?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "total_xp" | "image" | "emailVerified" | "createdAt" | "updatedAt" | "name" | "first_name" | "last_name" | "school" | "major" | "class_status" | "streak" | "weekly_xp", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "total_xp" | "image" | "emailVerified" | "createdAt" | "updatedAt" | "name" | "first_name" | "last_name" | "school" | "major" | "class_status" | "streak" | "weekly_xp" | "ai_messages" | "quizzes_taken" | "retakes_taken" | "last_active_date", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
@@ -14138,6 +14838,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: boolean | User$friends_friends_friend_idTousersArgs<ExtArgs>
     friends_friends_user_idTousers?: boolean | User$friends_friends_user_idTousersArgs<ExtArgs>
     user_achievements?: boolean | User$user_achievementsArgs<ExtArgs>
+    user_classes?: boolean | User$user_classesArgs<ExtArgs>
     xp_system?: boolean | User$xp_systemArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -14156,6 +14857,7 @@ export namespace Prisma {
       friends_friends_friend_idTousers: Prisma.$friendsPayload<ExtArgs>[]
       friends_friends_user_idTousers: Prisma.$friendsPayload<ExtArgs>[]
       user_achievements: Prisma.$user_achievementsPayload<ExtArgs>[]
+      user_classes: Prisma.$user_classesPayload<ExtArgs>[]
       xp_system: Prisma.$xp_systemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -14174,6 +14876,10 @@ export namespace Prisma {
       class_status: string | null
       streak: number | null
       weekly_xp: number | null
+      ai_messages: number
+      quizzes_taken: number
+      retakes_taken: number
+      last_active_date: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -14577,6 +15283,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers<T extends User$friends_friends_friend_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friends_friends_friend_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friendsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friends_friends_user_idTousers<T extends User$friends_friends_user_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friends_friends_user_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friendsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user_achievements<T extends User$user_achievementsArgs<ExtArgs> = {}>(args?: Subset<T, User$user_achievementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_achievementsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user_classes<T extends User$user_classesArgs<ExtArgs> = {}>(args?: Subset<T, User$user_classesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     xp_system<T extends User$xp_systemArgs<ExtArgs> = {}>(args?: Subset<T, User$xp_systemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$xp_systemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -14622,6 +15329,10 @@ export namespace Prisma {
     readonly class_status: FieldRef<"User", 'String'>
     readonly streak: FieldRef<"User", 'Int'>
     readonly weekly_xp: FieldRef<"User", 'Int'>
+    readonly ai_messages: FieldRef<"User", 'Int'>
+    readonly quizzes_taken: FieldRef<"User", 'Int'>
+    readonly retakes_taken: FieldRef<"User", 'Int'>
+    readonly last_active_date: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -15228,6 +15939,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: User_achievementsScalarFieldEnum | User_achievementsScalarFieldEnum[]
+  }
+
+  /**
+   * User.user_classes
+   */
+  export type User$user_classesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    where?: user_classesWhereInput
+    orderBy?: user_classesOrderByWithRelationInput | user_classesOrderByWithRelationInput[]
+    cursor?: user_classesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: User_classesScalarFieldEnum | User_classesScalarFieldEnum[]
   }
 
   /**
@@ -19778,6 +20513,7 @@ export namespace Prisma {
     correct_answer: string | null
     is_correct: boolean | null
     depth_score: number | null
+    explanation: string | null
   }
 
   export type Quiz_questionsMaxAggregateOutputType = {
@@ -19788,6 +20524,7 @@ export namespace Prisma {
     correct_answer: string | null
     is_correct: boolean | null
     depth_score: number | null
+    explanation: string | null
   }
 
   export type Quiz_questionsCountAggregateOutputType = {
@@ -19798,6 +20535,8 @@ export namespace Prisma {
     correct_answer: number
     is_correct: number
     depth_score: number
+    options: number
+    explanation: number
     _all: number
   }
 
@@ -19818,6 +20557,7 @@ export namespace Prisma {
     correct_answer?: true
     is_correct?: true
     depth_score?: true
+    explanation?: true
   }
 
   export type Quiz_questionsMaxAggregateInputType = {
@@ -19828,6 +20568,7 @@ export namespace Prisma {
     correct_answer?: true
     is_correct?: true
     depth_score?: true
+    explanation?: true
   }
 
   export type Quiz_questionsCountAggregateInputType = {
@@ -19838,6 +20579,8 @@ export namespace Prisma {
     correct_answer?: true
     is_correct?: true
     depth_score?: true
+    options?: true
+    explanation?: true
     _all?: true
   }
 
@@ -19935,6 +20678,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct: boolean | null
     depth_score: number | null
+    options: string[]
+    explanation: string | null
     _count: Quiz_questionsCountAggregateOutputType | null
     _avg: Quiz_questionsAvgAggregateOutputType | null
     _sum: Quiz_questionsSumAggregateOutputType | null
@@ -19964,6 +20709,8 @@ export namespace Prisma {
     correct_answer?: boolean
     is_correct?: boolean
     depth_score?: boolean
+    options?: boolean
+    explanation?: boolean
     quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quiz_questions"]>
 
@@ -19975,6 +20722,8 @@ export namespace Prisma {
     correct_answer?: boolean
     is_correct?: boolean
     depth_score?: boolean
+    options?: boolean
+    explanation?: boolean
     quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quiz_questions"]>
 
@@ -19986,6 +20735,8 @@ export namespace Prisma {
     correct_answer?: boolean
     is_correct?: boolean
     depth_score?: boolean
+    options?: boolean
+    explanation?: boolean
     quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quiz_questions"]>
 
@@ -19997,9 +20748,11 @@ export namespace Prisma {
     correct_answer?: boolean
     is_correct?: boolean
     depth_score?: boolean
+    options?: boolean
+    explanation?: boolean
   }
 
-  export type quiz_questionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quiz_id" | "question" | "user_answer" | "correct_answer" | "is_correct" | "depth_score", ExtArgs["result"]["quiz_questions"]>
+  export type quiz_questionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quiz_id" | "question" | "user_answer" | "correct_answer" | "is_correct" | "depth_score" | "options" | "explanation", ExtArgs["result"]["quiz_questions"]>
   export type quiz_questionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quizzes?: boolean | quizzesDefaultArgs<ExtArgs>
   }
@@ -20023,6 +20776,8 @@ export namespace Prisma {
       correct_answer: string
       is_correct: boolean | null
       depth_score: number | null
+      options: string[]
+      explanation: string | null
     }, ExtArgs["result"]["quiz_questions"]>
     composites: {}
   }
@@ -20454,6 +21209,8 @@ export namespace Prisma {
     readonly correct_answer: FieldRef<"quiz_questions", 'String'>
     readonly is_correct: FieldRef<"quiz_questions", 'Boolean'>
     readonly depth_score: FieldRef<"quiz_questions", 'Int'>
+    readonly options: FieldRef<"quiz_questions", 'String[]'>
+    readonly explanation: FieldRef<"quiz_questions", 'String'>
   }
     
 
@@ -20902,6 +21659,7 @@ export namespace Prisma {
     score: number | null
     date: Date | null
     retake_count: number | null
+    color: string | null
   }
 
   export type QuizzesMaxAggregateOutputType = {
@@ -20911,6 +21669,7 @@ export namespace Prisma {
     score: number | null
     date: Date | null
     retake_count: number | null
+    color: string | null
   }
 
   export type QuizzesCountAggregateOutputType = {
@@ -20920,6 +21679,7 @@ export namespace Prisma {
     score: number
     date: number
     retake_count: number
+    color: number
     _all: number
   }
 
@@ -20941,6 +21701,7 @@ export namespace Prisma {
     score?: true
     date?: true
     retake_count?: true
+    color?: true
   }
 
   export type QuizzesMaxAggregateInputType = {
@@ -20950,6 +21711,7 @@ export namespace Prisma {
     score?: true
     date?: true
     retake_count?: true
+    color?: true
   }
 
   export type QuizzesCountAggregateInputType = {
@@ -20959,6 +21721,7 @@ export namespace Prisma {
     score?: true
     date?: true
     retake_count?: true
+    color?: true
     _all?: true
   }
 
@@ -21055,6 +21818,7 @@ export namespace Prisma {
     score: number | null
     date: Date | null
     retake_count: number | null
+    color: string | null
     _count: QuizzesCountAggregateOutputType | null
     _avg: QuizzesAvgAggregateOutputType | null
     _sum: QuizzesSumAggregateOutputType | null
@@ -21083,6 +21847,7 @@ export namespace Prisma {
     score?: boolean
     date?: boolean
     retake_count?: boolean
+    color?: boolean
     quiz_questions?: boolean | quizzes$quiz_questionsArgs<ExtArgs>
     _count?: boolean | QuizzesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["quizzes"]>
@@ -21094,6 +21859,7 @@ export namespace Prisma {
     score?: boolean
     date?: boolean
     retake_count?: boolean
+    color?: boolean
   }, ExtArgs["result"]["quizzes"]>
 
   export type quizzesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21103,6 +21869,7 @@ export namespace Prisma {
     score?: boolean
     date?: boolean
     retake_count?: boolean
+    color?: boolean
   }, ExtArgs["result"]["quizzes"]>
 
   export type quizzesSelectScalar = {
@@ -21112,9 +21879,10 @@ export namespace Prisma {
     score?: boolean
     date?: boolean
     retake_count?: boolean
+    color?: boolean
   }
 
-  export type quizzesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "topic_id" | "score" | "date" | "retake_count", ExtArgs["result"]["quizzes"]>
+  export type quizzesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "topic_id" | "score" | "date" | "retake_count" | "color", ExtArgs["result"]["quizzes"]>
   export type quizzesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     quiz_questions?: boolean | quizzes$quiz_questionsArgs<ExtArgs>
     _count?: boolean | QuizzesCountOutputTypeDefaultArgs<ExtArgs>
@@ -21134,6 +21902,7 @@ export namespace Prisma {
       score: number | null
       date: Date | null
       retake_count: number | null
+      color: string | null
     }, ExtArgs["result"]["quizzes"]>
     composites: {}
   }
@@ -21564,6 +22333,7 @@ export namespace Prisma {
     readonly score: FieldRef<"quizzes", 'Int'>
     readonly date: FieldRef<"quizzes", 'DateTime'>
     readonly retake_count: FieldRef<"quizzes", 'Int'>
+    readonly color: FieldRef<"quizzes", 'String'>
   }
     
 
@@ -22025,6 +22795,8 @@ export namespace Prisma {
     class_name: string | null
     question_count: number | null
     week_start: Date | null
+    color: string | null
+    light: string | null
   }
 
   export type Class_engagementMaxAggregateOutputType = {
@@ -22033,6 +22805,8 @@ export namespace Prisma {
     class_name: string | null
     question_count: number | null
     week_start: Date | null
+    color: string | null
+    light: string | null
   }
 
   export type Class_engagementCountAggregateOutputType = {
@@ -22041,6 +22815,8 @@ export namespace Prisma {
     class_name: number
     question_count: number
     week_start: number
+    color: number
+    light: number
     _all: number
   }
 
@@ -22059,6 +22835,8 @@ export namespace Prisma {
     class_name?: true
     question_count?: true
     week_start?: true
+    color?: true
+    light?: true
   }
 
   export type Class_engagementMaxAggregateInputType = {
@@ -22067,6 +22845,8 @@ export namespace Prisma {
     class_name?: true
     question_count?: true
     week_start?: true
+    color?: true
+    light?: true
   }
 
   export type Class_engagementCountAggregateInputType = {
@@ -22075,6 +22855,8 @@ export namespace Prisma {
     class_name?: true
     question_count?: true
     week_start?: true
+    color?: true
+    light?: true
     _all?: true
   }
 
@@ -22170,6 +22952,8 @@ export namespace Prisma {
     class_name: string
     question_count: number | null
     week_start: Date
+    color: string | null
+    light: string | null
     _count: Class_engagementCountAggregateOutputType | null
     _avg: Class_engagementAvgAggregateOutputType | null
     _sum: Class_engagementSumAggregateOutputType | null
@@ -22197,6 +22981,8 @@ export namespace Prisma {
     class_name?: boolean
     question_count?: boolean
     week_start?: boolean
+    color?: boolean
+    light?: boolean
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["class_engagement"]>
 
@@ -22206,6 +22992,8 @@ export namespace Prisma {
     class_name?: boolean
     question_count?: boolean
     week_start?: boolean
+    color?: boolean
+    light?: boolean
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["class_engagement"]>
 
@@ -22215,6 +23003,8 @@ export namespace Prisma {
     class_name?: boolean
     question_count?: boolean
     week_start?: boolean
+    color?: boolean
+    light?: boolean
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["class_engagement"]>
 
@@ -22224,9 +23014,11 @@ export namespace Prisma {
     class_name?: boolean
     question_count?: boolean
     week_start?: boolean
+    color?: boolean
+    light?: boolean
   }
 
-  export type class_engagementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "class_name" | "question_count" | "week_start", ExtArgs["result"]["class_engagement"]>
+  export type class_engagementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "class_name" | "question_count" | "week_start" | "color" | "light", ExtArgs["result"]["class_engagement"]>
   export type class_engagementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     User?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -22248,6 +23040,8 @@ export namespace Prisma {
       class_name: string
       question_count: number | null
       week_start: Date
+      color: string | null
+      light: string | null
     }, ExtArgs["result"]["class_engagement"]>
     composites: {}
   }
@@ -22677,6 +23471,8 @@ export namespace Prisma {
     readonly class_name: FieldRef<"class_engagement", 'String'>
     readonly question_count: FieldRef<"class_engagement", 'Int'>
     readonly week_start: FieldRef<"class_engagement", 'DateTime'>
+    readonly color: FieldRef<"class_engagement", 'String'>
+    readonly light: FieldRef<"class_engagement", 'String'>
   }
     
 
@@ -23097,6 +23893,4229 @@ export namespace Prisma {
 
 
   /**
+   * Model class_tasks
+   */
+
+  export type AggregateClass_tasks = {
+    _count: Class_tasksCountAggregateOutputType | null
+    _min: Class_tasksMinAggregateOutputType | null
+    _max: Class_tasksMaxAggregateOutputType | null
+  }
+
+  export type Class_tasksMinAggregateOutputType = {
+    id: string | null
+    class_code: string | null
+    task_name: string | null
+    due_date: Date | null
+    created_at: Date | null
+  }
+
+  export type Class_tasksMaxAggregateOutputType = {
+    id: string | null
+    class_code: string | null
+    task_name: string | null
+    due_date: Date | null
+    created_at: Date | null
+  }
+
+  export type Class_tasksCountAggregateOutputType = {
+    id: number
+    class_code: number
+    task_name: number
+    due_date: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Class_tasksMinAggregateInputType = {
+    id?: true
+    class_code?: true
+    task_name?: true
+    due_date?: true
+    created_at?: true
+  }
+
+  export type Class_tasksMaxAggregateInputType = {
+    id?: true
+    class_code?: true
+    task_name?: true
+    due_date?: true
+    created_at?: true
+  }
+
+  export type Class_tasksCountAggregateInputType = {
+    id?: true
+    class_code?: true
+    task_name?: true
+    due_date?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Class_tasksAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which class_tasks to aggregate.
+     */
+    where?: class_tasksWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_tasks to fetch.
+     */
+    orderBy?: class_tasksOrderByWithRelationInput | class_tasksOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: class_tasksWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned class_tasks
+    **/
+    _count?: true | Class_tasksCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Class_tasksMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Class_tasksMaxAggregateInputType
+  }
+
+  export type GetClass_tasksAggregateType<T extends Class_tasksAggregateArgs> = {
+        [P in keyof T & keyof AggregateClass_tasks]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClass_tasks[P]>
+      : GetScalarType<T[P], AggregateClass_tasks[P]>
+  }
+
+
+
+
+  export type class_tasksGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: class_tasksWhereInput
+    orderBy?: class_tasksOrderByWithAggregationInput | class_tasksOrderByWithAggregationInput[]
+    by: Class_tasksScalarFieldEnum[] | Class_tasksScalarFieldEnum
+    having?: class_tasksScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Class_tasksCountAggregateInputType | true
+    _min?: Class_tasksMinAggregateInputType
+    _max?: Class_tasksMaxAggregateInputType
+  }
+
+  export type Class_tasksGroupByOutputType = {
+    id: string
+    class_code: string
+    task_name: string
+    due_date: Date
+    created_at: Date | null
+    _count: Class_tasksCountAggregateOutputType | null
+    _min: Class_tasksMinAggregateOutputType | null
+    _max: Class_tasksMaxAggregateOutputType | null
+  }
+
+  type GetClass_tasksGroupByPayload<T extends class_tasksGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Class_tasksGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Class_tasksGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Class_tasksGroupByOutputType[P]>
+            : GetScalarType<T[P], Class_tasksGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type class_tasksSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    class_code?: boolean
+    task_name?: boolean
+    due_date?: boolean
+    created_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class_tasks"]>
+
+  export type class_tasksSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    class_code?: boolean
+    task_name?: boolean
+    due_date?: boolean
+    created_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class_tasks"]>
+
+  export type class_tasksSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    class_code?: boolean
+    task_name?: boolean
+    due_date?: boolean
+    created_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class_tasks"]>
+
+  export type class_tasksSelectScalar = {
+    id?: boolean
+    class_code?: boolean
+    task_name?: boolean
+    due_date?: boolean
+    created_at?: boolean
+  }
+
+  export type class_tasksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "class_code" | "task_name" | "due_date" | "created_at", ExtArgs["result"]["class_tasks"]>
+  export type class_tasksInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }
+  export type class_tasksIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }
+  export type class_tasksIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }
+
+  export type $class_tasksPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "class_tasks"
+    objects: {
+      classes: Prisma.$classesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      class_code: string
+      task_name: string
+      due_date: Date
+      created_at: Date | null
+    }, ExtArgs["result"]["class_tasks"]>
+    composites: {}
+  }
+
+  type class_tasksGetPayload<S extends boolean | null | undefined | class_tasksDefaultArgs> = $Result.GetResult<Prisma.$class_tasksPayload, S>
+
+  type class_tasksCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<class_tasksFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Class_tasksCountAggregateInputType | true
+    }
+
+  export interface class_tasksDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['class_tasks'], meta: { name: 'class_tasks' } }
+    /**
+     * Find zero or one Class_tasks that matches the filter.
+     * @param {class_tasksFindUniqueArgs} args - Arguments to find a Class_tasks
+     * @example
+     * // Get one Class_tasks
+     * const class_tasks = await prisma.class_tasks.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends class_tasksFindUniqueArgs>(args: SelectSubset<T, class_tasksFindUniqueArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Class_tasks that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {class_tasksFindUniqueOrThrowArgs} args - Arguments to find a Class_tasks
+     * @example
+     * // Get one Class_tasks
+     * const class_tasks = await prisma.class_tasks.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends class_tasksFindUniqueOrThrowArgs>(args: SelectSubset<T, class_tasksFindUniqueOrThrowArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Class_tasks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_tasksFindFirstArgs} args - Arguments to find a Class_tasks
+     * @example
+     * // Get one Class_tasks
+     * const class_tasks = await prisma.class_tasks.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends class_tasksFindFirstArgs>(args?: SelectSubset<T, class_tasksFindFirstArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Class_tasks that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_tasksFindFirstOrThrowArgs} args - Arguments to find a Class_tasks
+     * @example
+     * // Get one Class_tasks
+     * const class_tasks = await prisma.class_tasks.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends class_tasksFindFirstOrThrowArgs>(args?: SelectSubset<T, class_tasksFindFirstOrThrowArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Class_tasks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_tasksFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Class_tasks
+     * const class_tasks = await prisma.class_tasks.findMany()
+     * 
+     * // Get first 10 Class_tasks
+     * const class_tasks = await prisma.class_tasks.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const class_tasksWithIdOnly = await prisma.class_tasks.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends class_tasksFindManyArgs>(args?: SelectSubset<T, class_tasksFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Class_tasks.
+     * @param {class_tasksCreateArgs} args - Arguments to create a Class_tasks.
+     * @example
+     * // Create one Class_tasks
+     * const Class_tasks = await prisma.class_tasks.create({
+     *   data: {
+     *     // ... data to create a Class_tasks
+     *   }
+     * })
+     * 
+     */
+    create<T extends class_tasksCreateArgs>(args: SelectSubset<T, class_tasksCreateArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Class_tasks.
+     * @param {class_tasksCreateManyArgs} args - Arguments to create many Class_tasks.
+     * @example
+     * // Create many Class_tasks
+     * const class_tasks = await prisma.class_tasks.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends class_tasksCreateManyArgs>(args?: SelectSubset<T, class_tasksCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Class_tasks and returns the data saved in the database.
+     * @param {class_tasksCreateManyAndReturnArgs} args - Arguments to create many Class_tasks.
+     * @example
+     * // Create many Class_tasks
+     * const class_tasks = await prisma.class_tasks.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Class_tasks and only return the `id`
+     * const class_tasksWithIdOnly = await prisma.class_tasks.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends class_tasksCreateManyAndReturnArgs>(args?: SelectSubset<T, class_tasksCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Class_tasks.
+     * @param {class_tasksDeleteArgs} args - Arguments to delete one Class_tasks.
+     * @example
+     * // Delete one Class_tasks
+     * const Class_tasks = await prisma.class_tasks.delete({
+     *   where: {
+     *     // ... filter to delete one Class_tasks
+     *   }
+     * })
+     * 
+     */
+    delete<T extends class_tasksDeleteArgs>(args: SelectSubset<T, class_tasksDeleteArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Class_tasks.
+     * @param {class_tasksUpdateArgs} args - Arguments to update one Class_tasks.
+     * @example
+     * // Update one Class_tasks
+     * const class_tasks = await prisma.class_tasks.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends class_tasksUpdateArgs>(args: SelectSubset<T, class_tasksUpdateArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Class_tasks.
+     * @param {class_tasksDeleteManyArgs} args - Arguments to filter Class_tasks to delete.
+     * @example
+     * // Delete a few Class_tasks
+     * const { count } = await prisma.class_tasks.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends class_tasksDeleteManyArgs>(args?: SelectSubset<T, class_tasksDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Class_tasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_tasksUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Class_tasks
+     * const class_tasks = await prisma.class_tasks.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends class_tasksUpdateManyArgs>(args: SelectSubset<T, class_tasksUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Class_tasks and returns the data updated in the database.
+     * @param {class_tasksUpdateManyAndReturnArgs} args - Arguments to update many Class_tasks.
+     * @example
+     * // Update many Class_tasks
+     * const class_tasks = await prisma.class_tasks.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Class_tasks and only return the `id`
+     * const class_tasksWithIdOnly = await prisma.class_tasks.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends class_tasksUpdateManyAndReturnArgs>(args: SelectSubset<T, class_tasksUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Class_tasks.
+     * @param {class_tasksUpsertArgs} args - Arguments to update or create a Class_tasks.
+     * @example
+     * // Update or create a Class_tasks
+     * const class_tasks = await prisma.class_tasks.upsert({
+     *   create: {
+     *     // ... data to create a Class_tasks
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Class_tasks we want to update
+     *   }
+     * })
+     */
+    upsert<T extends class_tasksUpsertArgs>(args: SelectSubset<T, class_tasksUpsertArgs<ExtArgs>>): Prisma__class_tasksClient<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Class_tasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_tasksCountArgs} args - Arguments to filter Class_tasks to count.
+     * @example
+     * // Count the number of Class_tasks
+     * const count = await prisma.class_tasks.count({
+     *   where: {
+     *     // ... the filter for the Class_tasks we want to count
+     *   }
+     * })
+    **/
+    count<T extends class_tasksCountArgs>(
+      args?: Subset<T, class_tasksCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Class_tasksCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Class_tasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Class_tasksAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Class_tasksAggregateArgs>(args: Subset<T, Class_tasksAggregateArgs>): Prisma.PrismaPromise<GetClass_tasksAggregateType<T>>
+
+    /**
+     * Group by Class_tasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {class_tasksGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends class_tasksGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: class_tasksGroupByArgs['orderBy'] }
+        : { orderBy?: class_tasksGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, class_tasksGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClass_tasksGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the class_tasks model
+   */
+  readonly fields: class_tasksFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for class_tasks.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__class_tasksClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    classes<T extends classesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, classesDefaultArgs<ExtArgs>>): Prisma__classesClient<$Result.GetResult<Prisma.$classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the class_tasks model
+   */
+  interface class_tasksFieldRefs {
+    readonly id: FieldRef<"class_tasks", 'String'>
+    readonly class_code: FieldRef<"class_tasks", 'String'>
+    readonly task_name: FieldRef<"class_tasks", 'String'>
+    readonly due_date: FieldRef<"class_tasks", 'DateTime'>
+    readonly created_at: FieldRef<"class_tasks", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * class_tasks findUnique
+   */
+  export type class_tasksFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * Filter, which class_tasks to fetch.
+     */
+    where: class_tasksWhereUniqueInput
+  }
+
+  /**
+   * class_tasks findUniqueOrThrow
+   */
+  export type class_tasksFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * Filter, which class_tasks to fetch.
+     */
+    where: class_tasksWhereUniqueInput
+  }
+
+  /**
+   * class_tasks findFirst
+   */
+  export type class_tasksFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * Filter, which class_tasks to fetch.
+     */
+    where?: class_tasksWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_tasks to fetch.
+     */
+    orderBy?: class_tasksOrderByWithRelationInput | class_tasksOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for class_tasks.
+     */
+    cursor?: class_tasksWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of class_tasks.
+     */
+    distinct?: Class_tasksScalarFieldEnum | Class_tasksScalarFieldEnum[]
+  }
+
+  /**
+   * class_tasks findFirstOrThrow
+   */
+  export type class_tasksFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * Filter, which class_tasks to fetch.
+     */
+    where?: class_tasksWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_tasks to fetch.
+     */
+    orderBy?: class_tasksOrderByWithRelationInput | class_tasksOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for class_tasks.
+     */
+    cursor?: class_tasksWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of class_tasks.
+     */
+    distinct?: Class_tasksScalarFieldEnum | Class_tasksScalarFieldEnum[]
+  }
+
+  /**
+   * class_tasks findMany
+   */
+  export type class_tasksFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * Filter, which class_tasks to fetch.
+     */
+    where?: class_tasksWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of class_tasks to fetch.
+     */
+    orderBy?: class_tasksOrderByWithRelationInput | class_tasksOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing class_tasks.
+     */
+    cursor?: class_tasksWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` class_tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` class_tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of class_tasks.
+     */
+    distinct?: Class_tasksScalarFieldEnum | Class_tasksScalarFieldEnum[]
+  }
+
+  /**
+   * class_tasks create
+   */
+  export type class_tasksCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * The data needed to create a class_tasks.
+     */
+    data: XOR<class_tasksCreateInput, class_tasksUncheckedCreateInput>
+  }
+
+  /**
+   * class_tasks createMany
+   */
+  export type class_tasksCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many class_tasks.
+     */
+    data: class_tasksCreateManyInput | class_tasksCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * class_tasks createManyAndReturn
+   */
+  export type class_tasksCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * The data used to create many class_tasks.
+     */
+    data: class_tasksCreateManyInput | class_tasksCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * class_tasks update
+   */
+  export type class_tasksUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * The data needed to update a class_tasks.
+     */
+    data: XOR<class_tasksUpdateInput, class_tasksUncheckedUpdateInput>
+    /**
+     * Choose, which class_tasks to update.
+     */
+    where: class_tasksWhereUniqueInput
+  }
+
+  /**
+   * class_tasks updateMany
+   */
+  export type class_tasksUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update class_tasks.
+     */
+    data: XOR<class_tasksUpdateManyMutationInput, class_tasksUncheckedUpdateManyInput>
+    /**
+     * Filter which class_tasks to update
+     */
+    where?: class_tasksWhereInput
+    /**
+     * Limit how many class_tasks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * class_tasks updateManyAndReturn
+   */
+  export type class_tasksUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * The data used to update class_tasks.
+     */
+    data: XOR<class_tasksUpdateManyMutationInput, class_tasksUncheckedUpdateManyInput>
+    /**
+     * Filter which class_tasks to update
+     */
+    where?: class_tasksWhereInput
+    /**
+     * Limit how many class_tasks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * class_tasks upsert
+   */
+  export type class_tasksUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * The filter to search for the class_tasks to update in case it exists.
+     */
+    where: class_tasksWhereUniqueInput
+    /**
+     * In case the class_tasks found by the `where` argument doesn't exist, create a new class_tasks with this data.
+     */
+    create: XOR<class_tasksCreateInput, class_tasksUncheckedCreateInput>
+    /**
+     * In case the class_tasks was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<class_tasksUpdateInput, class_tasksUncheckedUpdateInput>
+  }
+
+  /**
+   * class_tasks delete
+   */
+  export type class_tasksDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+    /**
+     * Filter which class_tasks to delete.
+     */
+    where: class_tasksWhereUniqueInput
+  }
+
+  /**
+   * class_tasks deleteMany
+   */
+  export type class_tasksDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which class_tasks to delete
+     */
+    where?: class_tasksWhereInput
+    /**
+     * Limit how many class_tasks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * class_tasks without action
+   */
+  export type class_tasksDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the class_tasks
+     */
+    select?: class_tasksSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the class_tasks
+     */
+    omit?: class_tasksOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: class_tasksInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model course_materials
+   */
+
+  export type AggregateCourse_materials = {
+    _count: Course_materialsCountAggregateOutputType | null
+    _min: Course_materialsMinAggregateOutputType | null
+    _max: Course_materialsMaxAggregateOutputType | null
+  }
+
+  export type Course_materialsMinAggregateOutputType = {
+    id: string | null
+    class_code: string | null
+    user_id: string | null
+    file_name: string | null
+    file_url: string | null
+    doc_type: string | null
+    uploaded_at: Date | null
+  }
+
+  export type Course_materialsMaxAggregateOutputType = {
+    id: string | null
+    class_code: string | null
+    user_id: string | null
+    file_name: string | null
+    file_url: string | null
+    doc_type: string | null
+    uploaded_at: Date | null
+  }
+
+  export type Course_materialsCountAggregateOutputType = {
+    id: number
+    class_code: number
+    user_id: number
+    file_name: number
+    file_url: number
+    doc_type: number
+    uploaded_at: number
+    _all: number
+  }
+
+
+  export type Course_materialsMinAggregateInputType = {
+    id?: true
+    class_code?: true
+    user_id?: true
+    file_name?: true
+    file_url?: true
+    doc_type?: true
+    uploaded_at?: true
+  }
+
+  export type Course_materialsMaxAggregateInputType = {
+    id?: true
+    class_code?: true
+    user_id?: true
+    file_name?: true
+    file_url?: true
+    doc_type?: true
+    uploaded_at?: true
+  }
+
+  export type Course_materialsCountAggregateInputType = {
+    id?: true
+    class_code?: true
+    user_id?: true
+    file_name?: true
+    file_url?: true
+    doc_type?: true
+    uploaded_at?: true
+    _all?: true
+  }
+
+  export type Course_materialsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which course_materials to aggregate.
+     */
+    where?: course_materialsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_materials to fetch.
+     */
+    orderBy?: course_materialsOrderByWithRelationInput | course_materialsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: course_materialsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_materials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_materials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned course_materials
+    **/
+    _count?: true | Course_materialsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Course_materialsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Course_materialsMaxAggregateInputType
+  }
+
+  export type GetCourse_materialsAggregateType<T extends Course_materialsAggregateArgs> = {
+        [P in keyof T & keyof AggregateCourse_materials]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCourse_materials[P]>
+      : GetScalarType<T[P], AggregateCourse_materials[P]>
+  }
+
+
+
+
+  export type course_materialsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: course_materialsWhereInput
+    orderBy?: course_materialsOrderByWithAggregationInput | course_materialsOrderByWithAggregationInput[]
+    by: Course_materialsScalarFieldEnum[] | Course_materialsScalarFieldEnum
+    having?: course_materialsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Course_materialsCountAggregateInputType | true
+    _min?: Course_materialsMinAggregateInputType
+    _max?: Course_materialsMaxAggregateInputType
+  }
+
+  export type Course_materialsGroupByOutputType = {
+    id: string
+    class_code: string
+    user_id: string
+    file_name: string
+    file_url: string | null
+    doc_type: string | null
+    uploaded_at: Date | null
+    _count: Course_materialsCountAggregateOutputType | null
+    _min: Course_materialsMinAggregateOutputType | null
+    _max: Course_materialsMaxAggregateOutputType | null
+  }
+
+  type GetCourse_materialsGroupByPayload<T extends course_materialsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Course_materialsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Course_materialsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Course_materialsGroupByOutputType[P]>
+            : GetScalarType<T[P], Course_materialsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type course_materialsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    class_code?: boolean
+    user_id?: boolean
+    file_name?: boolean
+    file_url?: boolean
+    doc_type?: boolean
+    uploaded_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course_materials"]>
+
+  export type course_materialsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    class_code?: boolean
+    user_id?: boolean
+    file_name?: boolean
+    file_url?: boolean
+    doc_type?: boolean
+    uploaded_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course_materials"]>
+
+  export type course_materialsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    class_code?: boolean
+    user_id?: boolean
+    file_name?: boolean
+    file_url?: boolean
+    doc_type?: boolean
+    uploaded_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course_materials"]>
+
+  export type course_materialsSelectScalar = {
+    id?: boolean
+    class_code?: boolean
+    user_id?: boolean
+    file_name?: boolean
+    file_url?: boolean
+    doc_type?: boolean
+    uploaded_at?: boolean
+  }
+
+  export type course_materialsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "class_code" | "user_id" | "file_name" | "file_url" | "doc_type" | "uploaded_at", ExtArgs["result"]["course_materials"]>
+  export type course_materialsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }
+  export type course_materialsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }
+  export type course_materialsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+  }
+
+  export type $course_materialsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "course_materials"
+    objects: {
+      classes: Prisma.$classesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      class_code: string
+      user_id: string
+      file_name: string
+      file_url: string | null
+      doc_type: string | null
+      uploaded_at: Date | null
+    }, ExtArgs["result"]["course_materials"]>
+    composites: {}
+  }
+
+  type course_materialsGetPayload<S extends boolean | null | undefined | course_materialsDefaultArgs> = $Result.GetResult<Prisma.$course_materialsPayload, S>
+
+  type course_materialsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<course_materialsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Course_materialsCountAggregateInputType | true
+    }
+
+  export interface course_materialsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['course_materials'], meta: { name: 'course_materials' } }
+    /**
+     * Find zero or one Course_materials that matches the filter.
+     * @param {course_materialsFindUniqueArgs} args - Arguments to find a Course_materials
+     * @example
+     * // Get one Course_materials
+     * const course_materials = await prisma.course_materials.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends course_materialsFindUniqueArgs>(args: SelectSubset<T, course_materialsFindUniqueArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Course_materials that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {course_materialsFindUniqueOrThrowArgs} args - Arguments to find a Course_materials
+     * @example
+     * // Get one Course_materials
+     * const course_materials = await prisma.course_materials.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends course_materialsFindUniqueOrThrowArgs>(args: SelectSubset<T, course_materialsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Course_materials that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_materialsFindFirstArgs} args - Arguments to find a Course_materials
+     * @example
+     * // Get one Course_materials
+     * const course_materials = await prisma.course_materials.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends course_materialsFindFirstArgs>(args?: SelectSubset<T, course_materialsFindFirstArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Course_materials that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_materialsFindFirstOrThrowArgs} args - Arguments to find a Course_materials
+     * @example
+     * // Get one Course_materials
+     * const course_materials = await prisma.course_materials.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends course_materialsFindFirstOrThrowArgs>(args?: SelectSubset<T, course_materialsFindFirstOrThrowArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Course_materials that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_materialsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Course_materials
+     * const course_materials = await prisma.course_materials.findMany()
+     * 
+     * // Get first 10 Course_materials
+     * const course_materials = await prisma.course_materials.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const course_materialsWithIdOnly = await prisma.course_materials.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends course_materialsFindManyArgs>(args?: SelectSubset<T, course_materialsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Course_materials.
+     * @param {course_materialsCreateArgs} args - Arguments to create a Course_materials.
+     * @example
+     * // Create one Course_materials
+     * const Course_materials = await prisma.course_materials.create({
+     *   data: {
+     *     // ... data to create a Course_materials
+     *   }
+     * })
+     * 
+     */
+    create<T extends course_materialsCreateArgs>(args: SelectSubset<T, course_materialsCreateArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Course_materials.
+     * @param {course_materialsCreateManyArgs} args - Arguments to create many Course_materials.
+     * @example
+     * // Create many Course_materials
+     * const course_materials = await prisma.course_materials.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends course_materialsCreateManyArgs>(args?: SelectSubset<T, course_materialsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Course_materials and returns the data saved in the database.
+     * @param {course_materialsCreateManyAndReturnArgs} args - Arguments to create many Course_materials.
+     * @example
+     * // Create many Course_materials
+     * const course_materials = await prisma.course_materials.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Course_materials and only return the `id`
+     * const course_materialsWithIdOnly = await prisma.course_materials.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends course_materialsCreateManyAndReturnArgs>(args?: SelectSubset<T, course_materialsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Course_materials.
+     * @param {course_materialsDeleteArgs} args - Arguments to delete one Course_materials.
+     * @example
+     * // Delete one Course_materials
+     * const Course_materials = await prisma.course_materials.delete({
+     *   where: {
+     *     // ... filter to delete one Course_materials
+     *   }
+     * })
+     * 
+     */
+    delete<T extends course_materialsDeleteArgs>(args: SelectSubset<T, course_materialsDeleteArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Course_materials.
+     * @param {course_materialsUpdateArgs} args - Arguments to update one Course_materials.
+     * @example
+     * // Update one Course_materials
+     * const course_materials = await prisma.course_materials.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends course_materialsUpdateArgs>(args: SelectSubset<T, course_materialsUpdateArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Course_materials.
+     * @param {course_materialsDeleteManyArgs} args - Arguments to filter Course_materials to delete.
+     * @example
+     * // Delete a few Course_materials
+     * const { count } = await prisma.course_materials.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends course_materialsDeleteManyArgs>(args?: SelectSubset<T, course_materialsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Course_materials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_materialsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Course_materials
+     * const course_materials = await prisma.course_materials.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends course_materialsUpdateManyArgs>(args: SelectSubset<T, course_materialsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Course_materials and returns the data updated in the database.
+     * @param {course_materialsUpdateManyAndReturnArgs} args - Arguments to update many Course_materials.
+     * @example
+     * // Update many Course_materials
+     * const course_materials = await prisma.course_materials.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Course_materials and only return the `id`
+     * const course_materialsWithIdOnly = await prisma.course_materials.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends course_materialsUpdateManyAndReturnArgs>(args: SelectSubset<T, course_materialsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Course_materials.
+     * @param {course_materialsUpsertArgs} args - Arguments to update or create a Course_materials.
+     * @example
+     * // Update or create a Course_materials
+     * const course_materials = await prisma.course_materials.upsert({
+     *   create: {
+     *     // ... data to create a Course_materials
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Course_materials we want to update
+     *   }
+     * })
+     */
+    upsert<T extends course_materialsUpsertArgs>(args: SelectSubset<T, course_materialsUpsertArgs<ExtArgs>>): Prisma__course_materialsClient<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Course_materials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_materialsCountArgs} args - Arguments to filter Course_materials to count.
+     * @example
+     * // Count the number of Course_materials
+     * const count = await prisma.course_materials.count({
+     *   where: {
+     *     // ... the filter for the Course_materials we want to count
+     *   }
+     * })
+    **/
+    count<T extends course_materialsCountArgs>(
+      args?: Subset<T, course_materialsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Course_materialsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Course_materials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Course_materialsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Course_materialsAggregateArgs>(args: Subset<T, Course_materialsAggregateArgs>): Prisma.PrismaPromise<GetCourse_materialsAggregateType<T>>
+
+    /**
+     * Group by Course_materials.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_materialsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends course_materialsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: course_materialsGroupByArgs['orderBy'] }
+        : { orderBy?: course_materialsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, course_materialsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCourse_materialsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the course_materials model
+   */
+  readonly fields: course_materialsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for course_materials.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__course_materialsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    classes<T extends classesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, classesDefaultArgs<ExtArgs>>): Prisma__classesClient<$Result.GetResult<Prisma.$classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the course_materials model
+   */
+  interface course_materialsFieldRefs {
+    readonly id: FieldRef<"course_materials", 'String'>
+    readonly class_code: FieldRef<"course_materials", 'String'>
+    readonly user_id: FieldRef<"course_materials", 'String'>
+    readonly file_name: FieldRef<"course_materials", 'String'>
+    readonly file_url: FieldRef<"course_materials", 'String'>
+    readonly doc_type: FieldRef<"course_materials", 'String'>
+    readonly uploaded_at: FieldRef<"course_materials", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * course_materials findUnique
+   */
+  export type course_materialsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * Filter, which course_materials to fetch.
+     */
+    where: course_materialsWhereUniqueInput
+  }
+
+  /**
+   * course_materials findUniqueOrThrow
+   */
+  export type course_materialsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * Filter, which course_materials to fetch.
+     */
+    where: course_materialsWhereUniqueInput
+  }
+
+  /**
+   * course_materials findFirst
+   */
+  export type course_materialsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * Filter, which course_materials to fetch.
+     */
+    where?: course_materialsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_materials to fetch.
+     */
+    orderBy?: course_materialsOrderByWithRelationInput | course_materialsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for course_materials.
+     */
+    cursor?: course_materialsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_materials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_materials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of course_materials.
+     */
+    distinct?: Course_materialsScalarFieldEnum | Course_materialsScalarFieldEnum[]
+  }
+
+  /**
+   * course_materials findFirstOrThrow
+   */
+  export type course_materialsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * Filter, which course_materials to fetch.
+     */
+    where?: course_materialsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_materials to fetch.
+     */
+    orderBy?: course_materialsOrderByWithRelationInput | course_materialsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for course_materials.
+     */
+    cursor?: course_materialsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_materials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_materials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of course_materials.
+     */
+    distinct?: Course_materialsScalarFieldEnum | Course_materialsScalarFieldEnum[]
+  }
+
+  /**
+   * course_materials findMany
+   */
+  export type course_materialsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * Filter, which course_materials to fetch.
+     */
+    where?: course_materialsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_materials to fetch.
+     */
+    orderBy?: course_materialsOrderByWithRelationInput | course_materialsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing course_materials.
+     */
+    cursor?: course_materialsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_materials from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_materials.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of course_materials.
+     */
+    distinct?: Course_materialsScalarFieldEnum | Course_materialsScalarFieldEnum[]
+  }
+
+  /**
+   * course_materials create
+   */
+  export type course_materialsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a course_materials.
+     */
+    data: XOR<course_materialsCreateInput, course_materialsUncheckedCreateInput>
+  }
+
+  /**
+   * course_materials createMany
+   */
+  export type course_materialsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many course_materials.
+     */
+    data: course_materialsCreateManyInput | course_materialsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * course_materials createManyAndReturn
+   */
+  export type course_materialsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * The data used to create many course_materials.
+     */
+    data: course_materialsCreateManyInput | course_materialsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * course_materials update
+   */
+  export type course_materialsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a course_materials.
+     */
+    data: XOR<course_materialsUpdateInput, course_materialsUncheckedUpdateInput>
+    /**
+     * Choose, which course_materials to update.
+     */
+    where: course_materialsWhereUniqueInput
+  }
+
+  /**
+   * course_materials updateMany
+   */
+  export type course_materialsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update course_materials.
+     */
+    data: XOR<course_materialsUpdateManyMutationInput, course_materialsUncheckedUpdateManyInput>
+    /**
+     * Filter which course_materials to update
+     */
+    where?: course_materialsWhereInput
+    /**
+     * Limit how many course_materials to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * course_materials updateManyAndReturn
+   */
+  export type course_materialsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * The data used to update course_materials.
+     */
+    data: XOR<course_materialsUpdateManyMutationInput, course_materialsUncheckedUpdateManyInput>
+    /**
+     * Filter which course_materials to update
+     */
+    where?: course_materialsWhereInput
+    /**
+     * Limit how many course_materials to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * course_materials upsert
+   */
+  export type course_materialsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the course_materials to update in case it exists.
+     */
+    where: course_materialsWhereUniqueInput
+    /**
+     * In case the course_materials found by the `where` argument doesn't exist, create a new course_materials with this data.
+     */
+    create: XOR<course_materialsCreateInput, course_materialsUncheckedCreateInput>
+    /**
+     * In case the course_materials was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<course_materialsUpdateInput, course_materialsUncheckedUpdateInput>
+  }
+
+  /**
+   * course_materials delete
+   */
+  export type course_materialsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+    /**
+     * Filter which course_materials to delete.
+     */
+    where: course_materialsWhereUniqueInput
+  }
+
+  /**
+   * course_materials deleteMany
+   */
+  export type course_materialsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which course_materials to delete
+     */
+    where?: course_materialsWhereInput
+    /**
+     * Limit how many course_materials to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * course_materials without action
+   */
+  export type course_materialsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_materials
+     */
+    select?: course_materialsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_materials
+     */
+    omit?: course_materialsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_materialsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model shared_classes
+   */
+
+  export type AggregateShared_classes = {
+    _count: Shared_classesCountAggregateOutputType | null
+    _min: Shared_classesMinAggregateOutputType | null
+    _max: Shared_classesMaxAggregateOutputType | null
+  }
+
+  export type Shared_classesMinAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    friend_id: string | null
+    class_code: string | null
+    class_name: string | null
+    created_at: Date | null
+  }
+
+  export type Shared_classesMaxAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    friend_id: string | null
+    class_code: string | null
+    class_name: string | null
+    created_at: Date | null
+  }
+
+  export type Shared_classesCountAggregateOutputType = {
+    id: number
+    user_id: number
+    friend_id: number
+    class_code: number
+    class_name: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Shared_classesMinAggregateInputType = {
+    id?: true
+    user_id?: true
+    friend_id?: true
+    class_code?: true
+    class_name?: true
+    created_at?: true
+  }
+
+  export type Shared_classesMaxAggregateInputType = {
+    id?: true
+    user_id?: true
+    friend_id?: true
+    class_code?: true
+    class_name?: true
+    created_at?: true
+  }
+
+  export type Shared_classesCountAggregateInputType = {
+    id?: true
+    user_id?: true
+    friend_id?: true
+    class_code?: true
+    class_name?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Shared_classesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which shared_classes to aggregate.
+     */
+    where?: shared_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of shared_classes to fetch.
+     */
+    orderBy?: shared_classesOrderByWithRelationInput | shared_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: shared_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` shared_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` shared_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned shared_classes
+    **/
+    _count?: true | Shared_classesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Shared_classesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Shared_classesMaxAggregateInputType
+  }
+
+  export type GetShared_classesAggregateType<T extends Shared_classesAggregateArgs> = {
+        [P in keyof T & keyof AggregateShared_classes]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateShared_classes[P]>
+      : GetScalarType<T[P], AggregateShared_classes[P]>
+  }
+
+
+
+
+  export type shared_classesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: shared_classesWhereInput
+    orderBy?: shared_classesOrderByWithAggregationInput | shared_classesOrderByWithAggregationInput[]
+    by: Shared_classesScalarFieldEnum[] | Shared_classesScalarFieldEnum
+    having?: shared_classesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Shared_classesCountAggregateInputType | true
+    _min?: Shared_classesMinAggregateInputType
+    _max?: Shared_classesMaxAggregateInputType
+  }
+
+  export type Shared_classesGroupByOutputType = {
+    id: string
+    user_id: string
+    friend_id: string
+    class_code: string
+    class_name: string
+    created_at: Date | null
+    _count: Shared_classesCountAggregateOutputType | null
+    _min: Shared_classesMinAggregateOutputType | null
+    _max: Shared_classesMaxAggregateOutputType | null
+  }
+
+  type GetShared_classesGroupByPayload<T extends shared_classesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Shared_classesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Shared_classesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Shared_classesGroupByOutputType[P]>
+            : GetScalarType<T[P], Shared_classesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type shared_classesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    friend_id?: boolean
+    class_code?: boolean
+    class_name?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["shared_classes"]>
+
+  export type shared_classesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    friend_id?: boolean
+    class_code?: boolean
+    class_name?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["shared_classes"]>
+
+  export type shared_classesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    friend_id?: boolean
+    class_code?: boolean
+    class_name?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["shared_classes"]>
+
+  export type shared_classesSelectScalar = {
+    id?: boolean
+    user_id?: boolean
+    friend_id?: boolean
+    class_code?: boolean
+    class_name?: boolean
+    created_at?: boolean
+  }
+
+  export type shared_classesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "friend_id" | "class_code" | "class_name" | "created_at", ExtArgs["result"]["shared_classes"]>
+
+  export type $shared_classesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "shared_classes"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      user_id: string
+      friend_id: string
+      class_code: string
+      class_name: string
+      created_at: Date | null
+    }, ExtArgs["result"]["shared_classes"]>
+    composites: {}
+  }
+
+  type shared_classesGetPayload<S extends boolean | null | undefined | shared_classesDefaultArgs> = $Result.GetResult<Prisma.$shared_classesPayload, S>
+
+  type shared_classesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<shared_classesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Shared_classesCountAggregateInputType | true
+    }
+
+  export interface shared_classesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['shared_classes'], meta: { name: 'shared_classes' } }
+    /**
+     * Find zero or one Shared_classes that matches the filter.
+     * @param {shared_classesFindUniqueArgs} args - Arguments to find a Shared_classes
+     * @example
+     * // Get one Shared_classes
+     * const shared_classes = await prisma.shared_classes.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends shared_classesFindUniqueArgs>(args: SelectSubset<T, shared_classesFindUniqueArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Shared_classes that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {shared_classesFindUniqueOrThrowArgs} args - Arguments to find a Shared_classes
+     * @example
+     * // Get one Shared_classes
+     * const shared_classes = await prisma.shared_classes.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends shared_classesFindUniqueOrThrowArgs>(args: SelectSubset<T, shared_classesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Shared_classes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {shared_classesFindFirstArgs} args - Arguments to find a Shared_classes
+     * @example
+     * // Get one Shared_classes
+     * const shared_classes = await prisma.shared_classes.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends shared_classesFindFirstArgs>(args?: SelectSubset<T, shared_classesFindFirstArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Shared_classes that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {shared_classesFindFirstOrThrowArgs} args - Arguments to find a Shared_classes
+     * @example
+     * // Get one Shared_classes
+     * const shared_classes = await prisma.shared_classes.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends shared_classesFindFirstOrThrowArgs>(args?: SelectSubset<T, shared_classesFindFirstOrThrowArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Shared_classes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {shared_classesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Shared_classes
+     * const shared_classes = await prisma.shared_classes.findMany()
+     * 
+     * // Get first 10 Shared_classes
+     * const shared_classes = await prisma.shared_classes.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const shared_classesWithIdOnly = await prisma.shared_classes.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends shared_classesFindManyArgs>(args?: SelectSubset<T, shared_classesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Shared_classes.
+     * @param {shared_classesCreateArgs} args - Arguments to create a Shared_classes.
+     * @example
+     * // Create one Shared_classes
+     * const Shared_classes = await prisma.shared_classes.create({
+     *   data: {
+     *     // ... data to create a Shared_classes
+     *   }
+     * })
+     * 
+     */
+    create<T extends shared_classesCreateArgs>(args: SelectSubset<T, shared_classesCreateArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Shared_classes.
+     * @param {shared_classesCreateManyArgs} args - Arguments to create many Shared_classes.
+     * @example
+     * // Create many Shared_classes
+     * const shared_classes = await prisma.shared_classes.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends shared_classesCreateManyArgs>(args?: SelectSubset<T, shared_classesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Shared_classes and returns the data saved in the database.
+     * @param {shared_classesCreateManyAndReturnArgs} args - Arguments to create many Shared_classes.
+     * @example
+     * // Create many Shared_classes
+     * const shared_classes = await prisma.shared_classes.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Shared_classes and only return the `id`
+     * const shared_classesWithIdOnly = await prisma.shared_classes.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends shared_classesCreateManyAndReturnArgs>(args?: SelectSubset<T, shared_classesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Shared_classes.
+     * @param {shared_classesDeleteArgs} args - Arguments to delete one Shared_classes.
+     * @example
+     * // Delete one Shared_classes
+     * const Shared_classes = await prisma.shared_classes.delete({
+     *   where: {
+     *     // ... filter to delete one Shared_classes
+     *   }
+     * })
+     * 
+     */
+    delete<T extends shared_classesDeleteArgs>(args: SelectSubset<T, shared_classesDeleteArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Shared_classes.
+     * @param {shared_classesUpdateArgs} args - Arguments to update one Shared_classes.
+     * @example
+     * // Update one Shared_classes
+     * const shared_classes = await prisma.shared_classes.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends shared_classesUpdateArgs>(args: SelectSubset<T, shared_classesUpdateArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Shared_classes.
+     * @param {shared_classesDeleteManyArgs} args - Arguments to filter Shared_classes to delete.
+     * @example
+     * // Delete a few Shared_classes
+     * const { count } = await prisma.shared_classes.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends shared_classesDeleteManyArgs>(args?: SelectSubset<T, shared_classesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Shared_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {shared_classesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Shared_classes
+     * const shared_classes = await prisma.shared_classes.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends shared_classesUpdateManyArgs>(args: SelectSubset<T, shared_classesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Shared_classes and returns the data updated in the database.
+     * @param {shared_classesUpdateManyAndReturnArgs} args - Arguments to update many Shared_classes.
+     * @example
+     * // Update many Shared_classes
+     * const shared_classes = await prisma.shared_classes.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Shared_classes and only return the `id`
+     * const shared_classesWithIdOnly = await prisma.shared_classes.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends shared_classesUpdateManyAndReturnArgs>(args: SelectSubset<T, shared_classesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Shared_classes.
+     * @param {shared_classesUpsertArgs} args - Arguments to update or create a Shared_classes.
+     * @example
+     * // Update or create a Shared_classes
+     * const shared_classes = await prisma.shared_classes.upsert({
+     *   create: {
+     *     // ... data to create a Shared_classes
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Shared_classes we want to update
+     *   }
+     * })
+     */
+    upsert<T extends shared_classesUpsertArgs>(args: SelectSubset<T, shared_classesUpsertArgs<ExtArgs>>): Prisma__shared_classesClient<$Result.GetResult<Prisma.$shared_classesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Shared_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {shared_classesCountArgs} args - Arguments to filter Shared_classes to count.
+     * @example
+     * // Count the number of Shared_classes
+     * const count = await prisma.shared_classes.count({
+     *   where: {
+     *     // ... the filter for the Shared_classes we want to count
+     *   }
+     * })
+    **/
+    count<T extends shared_classesCountArgs>(
+      args?: Subset<T, shared_classesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Shared_classesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Shared_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Shared_classesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Shared_classesAggregateArgs>(args: Subset<T, Shared_classesAggregateArgs>): Prisma.PrismaPromise<GetShared_classesAggregateType<T>>
+
+    /**
+     * Group by Shared_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {shared_classesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends shared_classesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: shared_classesGroupByArgs['orderBy'] }
+        : { orderBy?: shared_classesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, shared_classesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetShared_classesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the shared_classes model
+   */
+  readonly fields: shared_classesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for shared_classes.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__shared_classesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the shared_classes model
+   */
+  interface shared_classesFieldRefs {
+    readonly id: FieldRef<"shared_classes", 'String'>
+    readonly user_id: FieldRef<"shared_classes", 'String'>
+    readonly friend_id: FieldRef<"shared_classes", 'String'>
+    readonly class_code: FieldRef<"shared_classes", 'String'>
+    readonly class_name: FieldRef<"shared_classes", 'String'>
+    readonly created_at: FieldRef<"shared_classes", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * shared_classes findUnique
+   */
+  export type shared_classesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * Filter, which shared_classes to fetch.
+     */
+    where: shared_classesWhereUniqueInput
+  }
+
+  /**
+   * shared_classes findUniqueOrThrow
+   */
+  export type shared_classesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * Filter, which shared_classes to fetch.
+     */
+    where: shared_classesWhereUniqueInput
+  }
+
+  /**
+   * shared_classes findFirst
+   */
+  export type shared_classesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * Filter, which shared_classes to fetch.
+     */
+    where?: shared_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of shared_classes to fetch.
+     */
+    orderBy?: shared_classesOrderByWithRelationInput | shared_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for shared_classes.
+     */
+    cursor?: shared_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` shared_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` shared_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of shared_classes.
+     */
+    distinct?: Shared_classesScalarFieldEnum | Shared_classesScalarFieldEnum[]
+  }
+
+  /**
+   * shared_classes findFirstOrThrow
+   */
+  export type shared_classesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * Filter, which shared_classes to fetch.
+     */
+    where?: shared_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of shared_classes to fetch.
+     */
+    orderBy?: shared_classesOrderByWithRelationInput | shared_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for shared_classes.
+     */
+    cursor?: shared_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` shared_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` shared_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of shared_classes.
+     */
+    distinct?: Shared_classesScalarFieldEnum | Shared_classesScalarFieldEnum[]
+  }
+
+  /**
+   * shared_classes findMany
+   */
+  export type shared_classesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * Filter, which shared_classes to fetch.
+     */
+    where?: shared_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of shared_classes to fetch.
+     */
+    orderBy?: shared_classesOrderByWithRelationInput | shared_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing shared_classes.
+     */
+    cursor?: shared_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` shared_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` shared_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of shared_classes.
+     */
+    distinct?: Shared_classesScalarFieldEnum | Shared_classesScalarFieldEnum[]
+  }
+
+  /**
+   * shared_classes create
+   */
+  export type shared_classesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a shared_classes.
+     */
+    data: XOR<shared_classesCreateInput, shared_classesUncheckedCreateInput>
+  }
+
+  /**
+   * shared_classes createMany
+   */
+  export type shared_classesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many shared_classes.
+     */
+    data: shared_classesCreateManyInput | shared_classesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * shared_classes createManyAndReturn
+   */
+  export type shared_classesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * The data used to create many shared_classes.
+     */
+    data: shared_classesCreateManyInput | shared_classesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * shared_classes update
+   */
+  export type shared_classesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a shared_classes.
+     */
+    data: XOR<shared_classesUpdateInput, shared_classesUncheckedUpdateInput>
+    /**
+     * Choose, which shared_classes to update.
+     */
+    where: shared_classesWhereUniqueInput
+  }
+
+  /**
+   * shared_classes updateMany
+   */
+  export type shared_classesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update shared_classes.
+     */
+    data: XOR<shared_classesUpdateManyMutationInput, shared_classesUncheckedUpdateManyInput>
+    /**
+     * Filter which shared_classes to update
+     */
+    where?: shared_classesWhereInput
+    /**
+     * Limit how many shared_classes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * shared_classes updateManyAndReturn
+   */
+  export type shared_classesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * The data used to update shared_classes.
+     */
+    data: XOR<shared_classesUpdateManyMutationInput, shared_classesUncheckedUpdateManyInput>
+    /**
+     * Filter which shared_classes to update
+     */
+    where?: shared_classesWhereInput
+    /**
+     * Limit how many shared_classes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * shared_classes upsert
+   */
+  export type shared_classesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the shared_classes to update in case it exists.
+     */
+    where: shared_classesWhereUniqueInput
+    /**
+     * In case the shared_classes found by the `where` argument doesn't exist, create a new shared_classes with this data.
+     */
+    create: XOR<shared_classesCreateInput, shared_classesUncheckedCreateInput>
+    /**
+     * In case the shared_classes was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<shared_classesUpdateInput, shared_classesUncheckedUpdateInput>
+  }
+
+  /**
+   * shared_classes delete
+   */
+  export type shared_classesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+    /**
+     * Filter which shared_classes to delete.
+     */
+    where: shared_classesWhereUniqueInput
+  }
+
+  /**
+   * shared_classes deleteMany
+   */
+  export type shared_classesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which shared_classes to delete
+     */
+    where?: shared_classesWhereInput
+    /**
+     * Limit how many shared_classes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * shared_classes without action
+   */
+  export type shared_classesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the shared_classes
+     */
+    select?: shared_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the shared_classes
+     */
+    omit?: shared_classesOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model user_classes
+   */
+
+  export type AggregateUser_classes = {
+    _count: User_classesCountAggregateOutputType | null
+    _min: User_classesMinAggregateOutputType | null
+    _max: User_classesMaxAggregateOutputType | null
+  }
+
+  export type User_classesMinAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    class_code: string | null
+    enrolled_at: Date | null
+  }
+
+  export type User_classesMaxAggregateOutputType = {
+    id: string | null
+    user_id: string | null
+    class_code: string | null
+    enrolled_at: Date | null
+  }
+
+  export type User_classesCountAggregateOutputType = {
+    id: number
+    user_id: number
+    class_code: number
+    enrolled_at: number
+    _all: number
+  }
+
+
+  export type User_classesMinAggregateInputType = {
+    id?: true
+    user_id?: true
+    class_code?: true
+    enrolled_at?: true
+  }
+
+  export type User_classesMaxAggregateInputType = {
+    id?: true
+    user_id?: true
+    class_code?: true
+    enrolled_at?: true
+  }
+
+  export type User_classesCountAggregateInputType = {
+    id?: true
+    user_id?: true
+    class_code?: true
+    enrolled_at?: true
+    _all?: true
+  }
+
+  export type User_classesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user_classes to aggregate.
+     */
+    where?: user_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_classes to fetch.
+     */
+    orderBy?: user_classesOrderByWithRelationInput | user_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: user_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned user_classes
+    **/
+    _count?: true | User_classesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: User_classesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: User_classesMaxAggregateInputType
+  }
+
+  export type GetUser_classesAggregateType<T extends User_classesAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser_classes]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser_classes[P]>
+      : GetScalarType<T[P], AggregateUser_classes[P]>
+  }
+
+
+
+
+  export type user_classesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: user_classesWhereInput
+    orderBy?: user_classesOrderByWithAggregationInput | user_classesOrderByWithAggregationInput[]
+    by: User_classesScalarFieldEnum[] | User_classesScalarFieldEnum
+    having?: user_classesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: User_classesCountAggregateInputType | true
+    _min?: User_classesMinAggregateInputType
+    _max?: User_classesMaxAggregateInputType
+  }
+
+  export type User_classesGroupByOutputType = {
+    id: string
+    user_id: string
+    class_code: string
+    enrolled_at: Date | null
+    _count: User_classesCountAggregateOutputType | null
+    _min: User_classesMinAggregateOutputType | null
+    _max: User_classesMaxAggregateOutputType | null
+  }
+
+  type GetUser_classesGroupByPayload<T extends user_classesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<User_classesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof User_classesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], User_classesGroupByOutputType[P]>
+            : GetScalarType<T[P], User_classesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type user_classesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    class_code?: boolean
+    enrolled_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_classes"]>
+
+  export type user_classesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    class_code?: boolean
+    enrolled_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_classes"]>
+
+  export type user_classesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    user_id?: boolean
+    class_code?: boolean
+    enrolled_at?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["user_classes"]>
+
+  export type user_classesSelectScalar = {
+    id?: boolean
+    user_id?: boolean
+    class_code?: boolean
+    enrolled_at?: boolean
+  }
+
+  export type user_classesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "class_code" | "enrolled_at", ExtArgs["result"]["user_classes"]>
+  export type user_classesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type user_classesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type user_classesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $user_classesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "user_classes"
+    objects: {
+      classes: Prisma.$classesPayload<ExtArgs>
+      User: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      user_id: string
+      class_code: string
+      enrolled_at: Date | null
+    }, ExtArgs["result"]["user_classes"]>
+    composites: {}
+  }
+
+  type user_classesGetPayload<S extends boolean | null | undefined | user_classesDefaultArgs> = $Result.GetResult<Prisma.$user_classesPayload, S>
+
+  type user_classesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<user_classesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: User_classesCountAggregateInputType | true
+    }
+
+  export interface user_classesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['user_classes'], meta: { name: 'user_classes' } }
+    /**
+     * Find zero or one User_classes that matches the filter.
+     * @param {user_classesFindUniqueArgs} args - Arguments to find a User_classes
+     * @example
+     * // Get one User_classes
+     * const user_classes = await prisma.user_classes.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends user_classesFindUniqueArgs>(args: SelectSubset<T, user_classesFindUniqueArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one User_classes that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {user_classesFindUniqueOrThrowArgs} args - Arguments to find a User_classes
+     * @example
+     * // Get one User_classes
+     * const user_classes = await prisma.user_classes.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends user_classesFindUniqueOrThrowArgs>(args: SelectSubset<T, user_classesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User_classes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_classesFindFirstArgs} args - Arguments to find a User_classes
+     * @example
+     * // Get one User_classes
+     * const user_classes = await prisma.user_classes.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends user_classesFindFirstArgs>(args?: SelectSubset<T, user_classesFindFirstArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first User_classes that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_classesFindFirstOrThrowArgs} args - Arguments to find a User_classes
+     * @example
+     * // Get one User_classes
+     * const user_classes = await prisma.user_classes.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends user_classesFindFirstOrThrowArgs>(args?: SelectSubset<T, user_classesFindFirstOrThrowArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more User_classes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_classesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all User_classes
+     * const user_classes = await prisma.user_classes.findMany()
+     * 
+     * // Get first 10 User_classes
+     * const user_classes = await prisma.user_classes.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const user_classesWithIdOnly = await prisma.user_classes.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends user_classesFindManyArgs>(args?: SelectSubset<T, user_classesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a User_classes.
+     * @param {user_classesCreateArgs} args - Arguments to create a User_classes.
+     * @example
+     * // Create one User_classes
+     * const User_classes = await prisma.user_classes.create({
+     *   data: {
+     *     // ... data to create a User_classes
+     *   }
+     * })
+     * 
+     */
+    create<T extends user_classesCreateArgs>(args: SelectSubset<T, user_classesCreateArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many User_classes.
+     * @param {user_classesCreateManyArgs} args - Arguments to create many User_classes.
+     * @example
+     * // Create many User_classes
+     * const user_classes = await prisma.user_classes.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends user_classesCreateManyArgs>(args?: SelectSubset<T, user_classesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many User_classes and returns the data saved in the database.
+     * @param {user_classesCreateManyAndReturnArgs} args - Arguments to create many User_classes.
+     * @example
+     * // Create many User_classes
+     * const user_classes = await prisma.user_classes.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many User_classes and only return the `id`
+     * const user_classesWithIdOnly = await prisma.user_classes.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends user_classesCreateManyAndReturnArgs>(args?: SelectSubset<T, user_classesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a User_classes.
+     * @param {user_classesDeleteArgs} args - Arguments to delete one User_classes.
+     * @example
+     * // Delete one User_classes
+     * const User_classes = await prisma.user_classes.delete({
+     *   where: {
+     *     // ... filter to delete one User_classes
+     *   }
+     * })
+     * 
+     */
+    delete<T extends user_classesDeleteArgs>(args: SelectSubset<T, user_classesDeleteArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one User_classes.
+     * @param {user_classesUpdateArgs} args - Arguments to update one User_classes.
+     * @example
+     * // Update one User_classes
+     * const user_classes = await prisma.user_classes.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends user_classesUpdateArgs>(args: SelectSubset<T, user_classesUpdateArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more User_classes.
+     * @param {user_classesDeleteManyArgs} args - Arguments to filter User_classes to delete.
+     * @example
+     * // Delete a few User_classes
+     * const { count } = await prisma.user_classes.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends user_classesDeleteManyArgs>(args?: SelectSubset<T, user_classesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more User_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_classesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many User_classes
+     * const user_classes = await prisma.user_classes.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends user_classesUpdateManyArgs>(args: SelectSubset<T, user_classesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more User_classes and returns the data updated in the database.
+     * @param {user_classesUpdateManyAndReturnArgs} args - Arguments to update many User_classes.
+     * @example
+     * // Update many User_classes
+     * const user_classes = await prisma.user_classes.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more User_classes and only return the `id`
+     * const user_classesWithIdOnly = await prisma.user_classes.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends user_classesUpdateManyAndReturnArgs>(args: SelectSubset<T, user_classesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one User_classes.
+     * @param {user_classesUpsertArgs} args - Arguments to update or create a User_classes.
+     * @example
+     * // Update or create a User_classes
+     * const user_classes = await prisma.user_classes.upsert({
+     *   create: {
+     *     // ... data to create a User_classes
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User_classes we want to update
+     *   }
+     * })
+     */
+    upsert<T extends user_classesUpsertArgs>(args: SelectSubset<T, user_classesUpsertArgs<ExtArgs>>): Prisma__user_classesClient<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of User_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_classesCountArgs} args - Arguments to filter User_classes to count.
+     * @example
+     * // Count the number of User_classes
+     * const count = await prisma.user_classes.count({
+     *   where: {
+     *     // ... the filter for the User_classes we want to count
+     *   }
+     * })
+    **/
+    count<T extends user_classesCountArgs>(
+      args?: Subset<T, user_classesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], User_classesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {User_classesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends User_classesAggregateArgs>(args: Subset<T, User_classesAggregateArgs>): Prisma.PrismaPromise<GetUser_classesAggregateType<T>>
+
+    /**
+     * Group by User_classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {user_classesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends user_classesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: user_classesGroupByArgs['orderBy'] }
+        : { orderBy?: user_classesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, user_classesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUser_classesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the user_classes model
+   */
+  readonly fields: user_classesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for user_classes.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__user_classesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    classes<T extends classesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, classesDefaultArgs<ExtArgs>>): Prisma__classesClient<$Result.GetResult<Prisma.$classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the user_classes model
+   */
+  interface user_classesFieldRefs {
+    readonly id: FieldRef<"user_classes", 'String'>
+    readonly user_id: FieldRef<"user_classes", 'String'>
+    readonly class_code: FieldRef<"user_classes", 'String'>
+    readonly enrolled_at: FieldRef<"user_classes", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * user_classes findUnique
+   */
+  export type user_classesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_classes to fetch.
+     */
+    where: user_classesWhereUniqueInput
+  }
+
+  /**
+   * user_classes findUniqueOrThrow
+   */
+  export type user_classesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_classes to fetch.
+     */
+    where: user_classesWhereUniqueInput
+  }
+
+  /**
+   * user_classes findFirst
+   */
+  export type user_classesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_classes to fetch.
+     */
+    where?: user_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_classes to fetch.
+     */
+    orderBy?: user_classesOrderByWithRelationInput | user_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for user_classes.
+     */
+    cursor?: user_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_classes.
+     */
+    distinct?: User_classesScalarFieldEnum | User_classesScalarFieldEnum[]
+  }
+
+  /**
+   * user_classes findFirstOrThrow
+   */
+  export type user_classesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_classes to fetch.
+     */
+    where?: user_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_classes to fetch.
+     */
+    orderBy?: user_classesOrderByWithRelationInput | user_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for user_classes.
+     */
+    cursor?: user_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_classes.
+     */
+    distinct?: User_classesScalarFieldEnum | User_classesScalarFieldEnum[]
+  }
+
+  /**
+   * user_classes findMany
+   */
+  export type user_classesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * Filter, which user_classes to fetch.
+     */
+    where?: user_classesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of user_classes to fetch.
+     */
+    orderBy?: user_classesOrderByWithRelationInput | user_classesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing user_classes.
+     */
+    cursor?: user_classesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` user_classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` user_classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of user_classes.
+     */
+    distinct?: User_classesScalarFieldEnum | User_classesScalarFieldEnum[]
+  }
+
+  /**
+   * user_classes create
+   */
+  export type user_classesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a user_classes.
+     */
+    data: XOR<user_classesCreateInput, user_classesUncheckedCreateInput>
+  }
+
+  /**
+   * user_classes createMany
+   */
+  export type user_classesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many user_classes.
+     */
+    data: user_classesCreateManyInput | user_classesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * user_classes createManyAndReturn
+   */
+  export type user_classesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * The data used to create many user_classes.
+     */
+    data: user_classesCreateManyInput | user_classesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * user_classes update
+   */
+  export type user_classesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a user_classes.
+     */
+    data: XOR<user_classesUpdateInput, user_classesUncheckedUpdateInput>
+    /**
+     * Choose, which user_classes to update.
+     */
+    where: user_classesWhereUniqueInput
+  }
+
+  /**
+   * user_classes updateMany
+   */
+  export type user_classesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update user_classes.
+     */
+    data: XOR<user_classesUpdateManyMutationInput, user_classesUncheckedUpdateManyInput>
+    /**
+     * Filter which user_classes to update
+     */
+    where?: user_classesWhereInput
+    /**
+     * Limit how many user_classes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * user_classes updateManyAndReturn
+   */
+  export type user_classesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * The data used to update user_classes.
+     */
+    data: XOR<user_classesUpdateManyMutationInput, user_classesUncheckedUpdateManyInput>
+    /**
+     * Filter which user_classes to update
+     */
+    where?: user_classesWhereInput
+    /**
+     * Limit how many user_classes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * user_classes upsert
+   */
+  export type user_classesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the user_classes to update in case it exists.
+     */
+    where: user_classesWhereUniqueInput
+    /**
+     * In case the user_classes found by the `where` argument doesn't exist, create a new user_classes with this data.
+     */
+    create: XOR<user_classesCreateInput, user_classesUncheckedCreateInput>
+    /**
+     * In case the user_classes was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<user_classesUpdateInput, user_classesUncheckedUpdateInput>
+  }
+
+  /**
+   * user_classes delete
+   */
+  export type user_classesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+    /**
+     * Filter which user_classes to delete.
+     */
+    where: user_classesWhereUniqueInput
+  }
+
+  /**
+   * user_classes deleteMany
+   */
+  export type user_classesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user_classes to delete
+     */
+    where?: user_classesWhereInput
+    /**
+     * Limit how many user_classes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * user_classes without action
+   */
+  export type user_classesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user_classes
+     */
+    select?: user_classesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the user_classes
+     */
+    omit?: user_classesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: user_classesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -23116,7 +28135,9 @@ export namespace Prisma {
     description: 'description',
     xp_reward: 'xp_reward',
     created_at: 'created_at',
-    slug: 'slug'
+    slug: 'slug',
+    icon_colored: 'icon_colored',
+    icon_greyed: 'icon_greyed'
   };
 
   export type AchievementsScalarFieldEnum = (typeof AchievementsScalarFieldEnum)[keyof typeof AchievementsScalarFieldEnum]
@@ -23127,7 +28148,9 @@ export namespace Prisma {
     session_id: 'session_id',
     sender: 'sender',
     content: 'content',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    score: 'score',
+    reason: 'reason'
   };
 
   export type Chat_historyScalarFieldEnum = (typeof Chat_historyScalarFieldEnum)[keyof typeof Chat_historyScalarFieldEnum]
@@ -23139,7 +28162,8 @@ export namespace Prisma {
     user_id: 'user_id',
     topic_id: 'topic_id',
     started_at: 'started_at',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    title: 'title'
   };
 
   export type Chat_sessionsScalarFieldEnum = (typeof Chat_sessionsScalarFieldEnum)[keyof typeof Chat_sessionsScalarFieldEnum]
@@ -23151,7 +28175,9 @@ export namespace Prisma {
     name: 'name',
     created_at: 'created_at',
     user_id: 'user_id',
-    syllabus_url: 'syllabus_url'
+    syllabus_url: 'syllabus_url',
+    streak: 'streak',
+    last_activity_date: 'last_activity_date'
   };
 
   export type ClassesScalarFieldEnum = (typeof ClassesScalarFieldEnum)[keyof typeof ClassesScalarFieldEnum]
@@ -23238,7 +28264,11 @@ export namespace Prisma {
     major: 'major',
     class_status: 'class_status',
     streak: 'streak',
-    weekly_xp: 'weekly_xp'
+    weekly_xp: 'weekly_xp',
+    ai_messages: 'ai_messages',
+    quizzes_taken: 'quizzes_taken',
+    retakes_taken: 'retakes_taken',
+    last_active_date: 'last_active_date'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -23304,7 +28334,9 @@ export namespace Prisma {
     user_answer: 'user_answer',
     correct_answer: 'correct_answer',
     is_correct: 'is_correct',
-    depth_score: 'depth_score'
+    depth_score: 'depth_score',
+    options: 'options',
+    explanation: 'explanation'
   };
 
   export type Quiz_questionsScalarFieldEnum = (typeof Quiz_questionsScalarFieldEnum)[keyof typeof Quiz_questionsScalarFieldEnum]
@@ -23316,7 +28348,8 @@ export namespace Prisma {
     topic_id: 'topic_id',
     score: 'score',
     date: 'date',
-    retake_count: 'retake_count'
+    retake_count: 'retake_count',
+    color: 'color'
   };
 
   export type QuizzesScalarFieldEnum = (typeof QuizzesScalarFieldEnum)[keyof typeof QuizzesScalarFieldEnum]
@@ -23327,10 +28360,58 @@ export namespace Prisma {
     user_id: 'user_id',
     class_name: 'class_name',
     question_count: 'question_count',
-    week_start: 'week_start'
+    week_start: 'week_start',
+    color: 'color',
+    light: 'light'
   };
 
   export type Class_engagementScalarFieldEnum = (typeof Class_engagementScalarFieldEnum)[keyof typeof Class_engagementScalarFieldEnum]
+
+
+  export const Class_tasksScalarFieldEnum: {
+    id: 'id',
+    class_code: 'class_code',
+    task_name: 'task_name',
+    due_date: 'due_date',
+    created_at: 'created_at'
+  };
+
+  export type Class_tasksScalarFieldEnum = (typeof Class_tasksScalarFieldEnum)[keyof typeof Class_tasksScalarFieldEnum]
+
+
+  export const Course_materialsScalarFieldEnum: {
+    id: 'id',
+    class_code: 'class_code',
+    user_id: 'user_id',
+    file_name: 'file_name',
+    file_url: 'file_url',
+    doc_type: 'doc_type',
+    uploaded_at: 'uploaded_at'
+  };
+
+  export type Course_materialsScalarFieldEnum = (typeof Course_materialsScalarFieldEnum)[keyof typeof Course_materialsScalarFieldEnum]
+
+
+  export const Shared_classesScalarFieldEnum: {
+    id: 'id',
+    user_id: 'user_id',
+    friend_id: 'friend_id',
+    class_code: 'class_code',
+    class_name: 'class_name',
+    created_at: 'created_at'
+  };
+
+  export type Shared_classesScalarFieldEnum = (typeof Shared_classesScalarFieldEnum)[keyof typeof Shared_classesScalarFieldEnum]
+
+
+  export const User_classesScalarFieldEnum: {
+    id: 'id',
+    user_id: 'user_id',
+    class_code: 'class_code',
+    enrolled_at: 'enrolled_at'
+  };
+
+  export type User_classesScalarFieldEnum = (typeof User_classesScalarFieldEnum)[keyof typeof User_classesScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -23496,6 +28577,8 @@ export namespace Prisma {
     xp_reward?: IntNullableFilter<"achievements"> | number | null
     created_at?: DateTimeNullableFilter<"achievements"> | Date | string | null
     slug?: StringNullableFilter<"achievements"> | string | null
+    icon_colored?: StringNullableFilter<"achievements"> | string | null
+    icon_greyed?: StringNullableFilter<"achievements"> | string | null
     user_achievements?: User_achievementsListRelationFilter
   }
 
@@ -23506,6 +28589,8 @@ export namespace Prisma {
     xp_reward?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     slug?: SortOrderInput | SortOrder
+    icon_colored?: SortOrderInput | SortOrder
+    icon_greyed?: SortOrderInput | SortOrder
     user_achievements?: user_achievementsOrderByRelationAggregateInput
   }
 
@@ -23519,6 +28604,8 @@ export namespace Prisma {
     xp_reward?: IntNullableFilter<"achievements"> | number | null
     created_at?: DateTimeNullableFilter<"achievements"> | Date | string | null
     slug?: StringNullableFilter<"achievements"> | string | null
+    icon_colored?: StringNullableFilter<"achievements"> | string | null
+    icon_greyed?: StringNullableFilter<"achievements"> | string | null
     user_achievements?: User_achievementsListRelationFilter
   }, "id">
 
@@ -23529,6 +28616,8 @@ export namespace Prisma {
     xp_reward?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     slug?: SortOrderInput | SortOrder
+    icon_colored?: SortOrderInput | SortOrder
+    icon_greyed?: SortOrderInput | SortOrder
     _count?: achievementsCountOrderByAggregateInput
     _avg?: achievementsAvgOrderByAggregateInput
     _max?: achievementsMaxOrderByAggregateInput
@@ -23546,6 +28635,8 @@ export namespace Prisma {
     xp_reward?: IntNullableWithAggregatesFilter<"achievements"> | number | null
     created_at?: DateTimeNullableWithAggregatesFilter<"achievements"> | Date | string | null
     slug?: StringNullableWithAggregatesFilter<"achievements"> | string | null
+    icon_colored?: StringNullableWithAggregatesFilter<"achievements"> | string | null
+    icon_greyed?: StringNullableWithAggregatesFilter<"achievements"> | string | null
   }
 
   export type chat_historyWhereInput = {
@@ -23557,6 +28648,8 @@ export namespace Prisma {
     sender?: StringFilter<"chat_history"> | string
     content?: StringFilter<"chat_history"> | string
     created_at?: DateTimeNullableFilter<"chat_history"> | Date | string | null
+    score?: IntNullableFilter<"chat_history"> | number | null
+    reason?: StringNullableFilter<"chat_history"> | string | null
     chat_sessions?: XOR<Chat_sessionsScalarRelationFilter, chat_sessionsWhereInput>
   }
 
@@ -23566,6 +28659,8 @@ export namespace Prisma {
     sender?: SortOrder
     content?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    score?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
     chat_sessions?: chat_sessionsOrderByWithRelationInput
   }
 
@@ -23578,6 +28673,8 @@ export namespace Prisma {
     sender?: StringFilter<"chat_history"> | string
     content?: StringFilter<"chat_history"> | string
     created_at?: DateTimeNullableFilter<"chat_history"> | Date | string | null
+    score?: IntNullableFilter<"chat_history"> | number | null
+    reason?: StringNullableFilter<"chat_history"> | string | null
     chat_sessions?: XOR<Chat_sessionsScalarRelationFilter, chat_sessionsWhereInput>
   }, "id">
 
@@ -23587,9 +28684,13 @@ export namespace Prisma {
     sender?: SortOrder
     content?: SortOrder
     created_at?: SortOrderInput | SortOrder
+    score?: SortOrderInput | SortOrder
+    reason?: SortOrderInput | SortOrder
     _count?: chat_historyCountOrderByAggregateInput
+    _avg?: chat_historyAvgOrderByAggregateInput
     _max?: chat_historyMaxOrderByAggregateInput
     _min?: chat_historyMinOrderByAggregateInput
+    _sum?: chat_historySumOrderByAggregateInput
   }
 
   export type chat_historyScalarWhereWithAggregatesInput = {
@@ -23601,6 +28702,8 @@ export namespace Prisma {
     sender?: StringWithAggregatesFilter<"chat_history"> | string
     content?: StringWithAggregatesFilter<"chat_history"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"chat_history"> | Date | string | null
+    score?: IntNullableWithAggregatesFilter<"chat_history"> | number | null
+    reason?: StringNullableWithAggregatesFilter<"chat_history"> | string | null
   }
 
   export type chat_sessionsWhereInput = {
@@ -23613,6 +28716,7 @@ export namespace Prisma {
     topic_id?: StringFilter<"chat_sessions"> | string
     started_at?: DateTimeNullableFilter<"chat_sessions"> | Date | string | null
     created_at?: DateTimeNullableFilter<"chat_sessions"> | Date | string | null
+    title?: StringNullableFilter<"chat_sessions"> | string | null
     chat_history?: Chat_historyListRelationFilter
     classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
     topics?: XOR<TopicsScalarRelationFilter, topicsWhereInput>
@@ -23626,6 +28730,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     started_at?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
     chat_history?: chat_historyOrderByRelationAggregateInput
     classes?: classesOrderByWithRelationInput
     topics?: topicsOrderByWithRelationInput
@@ -23642,6 +28747,7 @@ export namespace Prisma {
     topic_id?: StringFilter<"chat_sessions"> | string
     started_at?: DateTimeNullableFilter<"chat_sessions"> | Date | string | null
     created_at?: DateTimeNullableFilter<"chat_sessions"> | Date | string | null
+    title?: StringNullableFilter<"chat_sessions"> | string | null
     chat_history?: Chat_historyListRelationFilter
     classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
     topics?: XOR<TopicsScalarRelationFilter, topicsWhereInput>
@@ -23655,6 +28761,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     started_at?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
     _count?: chat_sessionsCountOrderByAggregateInput
     _max?: chat_sessionsMaxOrderByAggregateInput
     _min?: chat_sessionsMinOrderByAggregateInput
@@ -23670,6 +28777,7 @@ export namespace Prisma {
     topic_id?: StringWithAggregatesFilter<"chat_sessions"> | string
     started_at?: DateTimeNullableWithAggregatesFilter<"chat_sessions"> | Date | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"chat_sessions"> | Date | string | null
+    title?: StringNullableWithAggregatesFilter<"chat_sessions"> | string | null
   }
 
   export type classesWhereInput = {
@@ -23682,9 +28790,14 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"classes"> | Date | string | null
     user_id?: StringNullableFilter<"classes"> | string | null
     syllabus_url?: StringNullableFilter<"classes"> | string | null
+    streak?: IntNullableFilter<"classes"> | number | null
+    last_activity_date?: DateTimeNullableFilter<"classes"> | Date | string | null
     chat_sessions?: Chat_sessionsListRelationFilter
+    class_tasks?: Class_tasksListRelationFilter
+    course_materials?: Course_materialsListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     topics?: TopicsListRelationFilter
+    user_classes?: User_classesListRelationFilter
   }
 
   export type classesOrderByWithRelationInput = {
@@ -23694,9 +28807,14 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     user_id?: SortOrderInput | SortOrder
     syllabus_url?: SortOrderInput | SortOrder
+    streak?: SortOrderInput | SortOrder
+    last_activity_date?: SortOrderInput | SortOrder
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
+    class_tasks?: class_tasksOrderByRelationAggregateInput
+    course_materials?: course_materialsOrderByRelationAggregateInput
     daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
     topics?: topicsOrderByRelationAggregateInput
+    user_classes?: user_classesOrderByRelationAggregateInput
   }
 
   export type classesWhereUniqueInput = Prisma.AtLeast<{
@@ -23709,9 +28827,14 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"classes"> | Date | string | null
     user_id?: StringNullableFilter<"classes"> | string | null
     syllabus_url?: StringNullableFilter<"classes"> | string | null
+    streak?: IntNullableFilter<"classes"> | number | null
+    last_activity_date?: DateTimeNullableFilter<"classes"> | Date | string | null
     chat_sessions?: Chat_sessionsListRelationFilter
+    class_tasks?: Class_tasksListRelationFilter
+    course_materials?: Course_materialsListRelationFilter
     daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     topics?: TopicsListRelationFilter
+    user_classes?: User_classesListRelationFilter
   }, "class_code">
 
   export type classesOrderByWithAggregationInput = {
@@ -23721,9 +28844,13 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     user_id?: SortOrderInput | SortOrder
     syllabus_url?: SortOrderInput | SortOrder
+    streak?: SortOrderInput | SortOrder
+    last_activity_date?: SortOrderInput | SortOrder
     _count?: classesCountOrderByAggregateInput
+    _avg?: classesAvgOrderByAggregateInput
     _max?: classesMaxOrderByAggregateInput
     _min?: classesMinOrderByAggregateInput
+    _sum?: classesSumOrderByAggregateInput
   }
 
   export type classesScalarWhereWithAggregatesInput = {
@@ -23736,6 +28863,8 @@ export namespace Prisma {
     created_at?: DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
     user_id?: StringNullableWithAggregatesFilter<"classes"> | string | null
     syllabus_url?: StringNullableWithAggregatesFilter<"classes"> | string | null
+    streak?: IntNullableWithAggregatesFilter<"classes"> | number | null
+    last_activity_date?: DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
   }
 
   export type daily_topic_metricsWhereInput = {
@@ -24117,6 +29246,10 @@ export namespace Prisma {
     class_status?: StringNullableFilter<"User"> | string | null
     streak?: IntNullableFilter<"User"> | number | null
     weekly_xp?: IntNullableFilter<"User"> | number | null
+    ai_messages?: IntFilter<"User"> | number
+    quizzes_taken?: IntFilter<"User"> | number
+    retakes_taken?: IntFilter<"User"> | number
+    last_active_date?: DateTimeNullableFilter<"User"> | Date | string | null
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
     class_engagement?: Class_engagementListRelationFilter
@@ -24126,6 +29259,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: FriendsListRelationFilter
     friends_friends_user_idTousers?: FriendsListRelationFilter
     user_achievements?: User_achievementsListRelationFilter
+    user_classes?: User_classesListRelationFilter
     xp_system?: Xp_systemListRelationFilter
   }
 
@@ -24145,6 +29279,10 @@ export namespace Prisma {
     class_status?: SortOrderInput | SortOrder
     streak?: SortOrderInput | SortOrder
     weekly_xp?: SortOrderInput | SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
+    last_active_date?: SortOrderInput | SortOrder
     Account?: AccountOrderByRelationAggregateInput
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
     class_engagement?: class_engagementOrderByRelationAggregateInput
@@ -24154,6 +29292,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsOrderByRelationAggregateInput
     friends_friends_user_idTousers?: friendsOrderByRelationAggregateInput
     user_achievements?: user_achievementsOrderByRelationAggregateInput
+    user_classes?: user_classesOrderByRelationAggregateInput
     xp_system?: xp_systemOrderByRelationAggregateInput
   }
 
@@ -24176,6 +29315,10 @@ export namespace Prisma {
     class_status?: StringNullableFilter<"User"> | string | null
     streak?: IntNullableFilter<"User"> | number | null
     weekly_xp?: IntNullableFilter<"User"> | number | null
+    ai_messages?: IntFilter<"User"> | number
+    quizzes_taken?: IntFilter<"User"> | number
+    retakes_taken?: IntFilter<"User"> | number
+    last_active_date?: DateTimeNullableFilter<"User"> | Date | string | null
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
     class_engagement?: Class_engagementListRelationFilter
@@ -24185,6 +29328,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: FriendsListRelationFilter
     friends_friends_user_idTousers?: FriendsListRelationFilter
     user_achievements?: User_achievementsListRelationFilter
+    user_classes?: User_classesListRelationFilter
     xp_system?: Xp_systemListRelationFilter
   }, "id" | "email">
 
@@ -24204,6 +29348,10 @@ export namespace Prisma {
     class_status?: SortOrderInput | SortOrder
     streak?: SortOrderInput | SortOrder
     weekly_xp?: SortOrderInput | SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
+    last_active_date?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -24230,6 +29378,10 @@ export namespace Prisma {
     class_status?: StringNullableWithAggregatesFilter<"User"> | string | null
     streak?: IntNullableWithAggregatesFilter<"User"> | number | null
     weekly_xp?: IntNullableWithAggregatesFilter<"User"> | number | null
+    ai_messages?: IntWithAggregatesFilter<"User"> | number
+    quizzes_taken?: IntWithAggregatesFilter<"User"> | number
+    retakes_taken?: IntWithAggregatesFilter<"User"> | number
+    last_active_date?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type AccountWhereInput = {
@@ -24514,6 +29666,8 @@ export namespace Prisma {
     correct_answer?: StringFilter<"quiz_questions"> | string
     is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableFilter<"quiz_questions"> | number | null
+    options?: StringNullableListFilter<"quiz_questions">
+    explanation?: StringNullableFilter<"quiz_questions"> | string | null
     quizzes?: XOR<QuizzesScalarRelationFilter, quizzesWhereInput>
   }
 
@@ -24525,6 +29679,8 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrderInput | SortOrder
     depth_score?: SortOrderInput | SortOrder
+    options?: SortOrder
+    explanation?: SortOrderInput | SortOrder
     quizzes?: quizzesOrderByWithRelationInput
   }
 
@@ -24539,6 +29695,8 @@ export namespace Prisma {
     correct_answer?: StringFilter<"quiz_questions"> | string
     is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableFilter<"quiz_questions"> | number | null
+    options?: StringNullableListFilter<"quiz_questions">
+    explanation?: StringNullableFilter<"quiz_questions"> | string | null
     quizzes?: XOR<QuizzesScalarRelationFilter, quizzesWhereInput>
   }, "id">
 
@@ -24550,6 +29708,8 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrderInput | SortOrder
     depth_score?: SortOrderInput | SortOrder
+    options?: SortOrder
+    explanation?: SortOrderInput | SortOrder
     _count?: quiz_questionsCountOrderByAggregateInput
     _avg?: quiz_questionsAvgOrderByAggregateInput
     _max?: quiz_questionsMaxOrderByAggregateInput
@@ -24568,6 +29728,8 @@ export namespace Prisma {
     correct_answer?: StringWithAggregatesFilter<"quiz_questions"> | string
     is_correct?: BoolNullableWithAggregatesFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableWithAggregatesFilter<"quiz_questions"> | number | null
+    options?: StringNullableListFilter<"quiz_questions">
+    explanation?: StringNullableWithAggregatesFilter<"quiz_questions"> | string | null
   }
 
   export type quizzesWhereInput = {
@@ -24580,6 +29742,7 @@ export namespace Prisma {
     score?: IntNullableFilter<"quizzes"> | number | null
     date?: DateTimeNullableFilter<"quizzes"> | Date | string | null
     retake_count?: IntNullableFilter<"quizzes"> | number | null
+    color?: StringNullableFilter<"quizzes"> | string | null
     quiz_questions?: Quiz_questionsListRelationFilter
   }
 
@@ -24590,6 +29753,7 @@ export namespace Prisma {
     score?: SortOrderInput | SortOrder
     date?: SortOrderInput | SortOrder
     retake_count?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
     quiz_questions?: quiz_questionsOrderByRelationAggregateInput
   }
 
@@ -24603,6 +29767,7 @@ export namespace Prisma {
     score?: IntNullableFilter<"quizzes"> | number | null
     date?: DateTimeNullableFilter<"quizzes"> | Date | string | null
     retake_count?: IntNullableFilter<"quizzes"> | number | null
+    color?: StringNullableFilter<"quizzes"> | string | null
     quiz_questions?: Quiz_questionsListRelationFilter
   }, "id">
 
@@ -24613,6 +29778,7 @@ export namespace Prisma {
     score?: SortOrderInput | SortOrder
     date?: SortOrderInput | SortOrder
     retake_count?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
     _count?: quizzesCountOrderByAggregateInput
     _avg?: quizzesAvgOrderByAggregateInput
     _max?: quizzesMaxOrderByAggregateInput
@@ -24630,6 +29796,7 @@ export namespace Prisma {
     score?: IntNullableWithAggregatesFilter<"quizzes"> | number | null
     date?: DateTimeNullableWithAggregatesFilter<"quizzes"> | Date | string | null
     retake_count?: IntNullableWithAggregatesFilter<"quizzes"> | number | null
+    color?: StringNullableWithAggregatesFilter<"quizzes"> | string | null
   }
 
   export type class_engagementWhereInput = {
@@ -24641,6 +29808,8 @@ export namespace Prisma {
     class_name?: StringFilter<"class_engagement"> | string
     question_count?: IntNullableFilter<"class_engagement"> | number | null
     week_start?: DateTimeFilter<"class_engagement"> | Date | string
+    color?: StringNullableFilter<"class_engagement"> | string | null
+    light?: StringNullableFilter<"class_engagement"> | string | null
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
@@ -24650,6 +29819,8 @@ export namespace Prisma {
     class_name?: SortOrder
     question_count?: SortOrderInput | SortOrder
     week_start?: SortOrder
+    color?: SortOrderInput | SortOrder
+    light?: SortOrderInput | SortOrder
     User?: UserOrderByWithRelationInput
   }
 
@@ -24663,6 +29834,8 @@ export namespace Prisma {
     class_name?: StringFilter<"class_engagement"> | string
     question_count?: IntNullableFilter<"class_engagement"> | number | null
     week_start?: DateTimeFilter<"class_engagement"> | Date | string
+    color?: StringNullableFilter<"class_engagement"> | string | null
+    light?: StringNullableFilter<"class_engagement"> | string | null
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "user_id_class_name_week_start">
 
@@ -24672,6 +29845,8 @@ export namespace Prisma {
     class_name?: SortOrder
     question_count?: SortOrderInput | SortOrder
     week_start?: SortOrder
+    color?: SortOrderInput | SortOrder
+    light?: SortOrderInput | SortOrder
     _count?: class_engagementCountOrderByAggregateInput
     _avg?: class_engagementAvgOrderByAggregateInput
     _max?: class_engagementMaxOrderByAggregateInput
@@ -24688,6 +29863,239 @@ export namespace Prisma {
     class_name?: StringWithAggregatesFilter<"class_engagement"> | string
     question_count?: IntNullableWithAggregatesFilter<"class_engagement"> | number | null
     week_start?: DateTimeWithAggregatesFilter<"class_engagement"> | Date | string
+    color?: StringNullableWithAggregatesFilter<"class_engagement"> | string | null
+    light?: StringNullableWithAggregatesFilter<"class_engagement"> | string | null
+  }
+
+  export type class_tasksWhereInput = {
+    AND?: class_tasksWhereInput | class_tasksWhereInput[]
+    OR?: class_tasksWhereInput[]
+    NOT?: class_tasksWhereInput | class_tasksWhereInput[]
+    id?: UuidFilter<"class_tasks"> | string
+    class_code?: StringFilter<"class_tasks"> | string
+    task_name?: StringFilter<"class_tasks"> | string
+    due_date?: DateTimeFilter<"class_tasks"> | Date | string
+    created_at?: DateTimeNullableFilter<"class_tasks"> | Date | string | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+  }
+
+  export type class_tasksOrderByWithRelationInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    task_name?: SortOrder
+    due_date?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    classes?: classesOrderByWithRelationInput
+  }
+
+  export type class_tasksWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: class_tasksWhereInput | class_tasksWhereInput[]
+    OR?: class_tasksWhereInput[]
+    NOT?: class_tasksWhereInput | class_tasksWhereInput[]
+    class_code?: StringFilter<"class_tasks"> | string
+    task_name?: StringFilter<"class_tasks"> | string
+    due_date?: DateTimeFilter<"class_tasks"> | Date | string
+    created_at?: DateTimeNullableFilter<"class_tasks"> | Date | string | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+  }, "id">
+
+  export type class_tasksOrderByWithAggregationInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    task_name?: SortOrder
+    due_date?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    _count?: class_tasksCountOrderByAggregateInput
+    _max?: class_tasksMaxOrderByAggregateInput
+    _min?: class_tasksMinOrderByAggregateInput
+  }
+
+  export type class_tasksScalarWhereWithAggregatesInput = {
+    AND?: class_tasksScalarWhereWithAggregatesInput | class_tasksScalarWhereWithAggregatesInput[]
+    OR?: class_tasksScalarWhereWithAggregatesInput[]
+    NOT?: class_tasksScalarWhereWithAggregatesInput | class_tasksScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"class_tasks"> | string
+    class_code?: StringWithAggregatesFilter<"class_tasks"> | string
+    task_name?: StringWithAggregatesFilter<"class_tasks"> | string
+    due_date?: DateTimeWithAggregatesFilter<"class_tasks"> | Date | string
+    created_at?: DateTimeNullableWithAggregatesFilter<"class_tasks"> | Date | string | null
+  }
+
+  export type course_materialsWhereInput = {
+    AND?: course_materialsWhereInput | course_materialsWhereInput[]
+    OR?: course_materialsWhereInput[]
+    NOT?: course_materialsWhereInput | course_materialsWhereInput[]
+    id?: StringFilter<"course_materials"> | string
+    class_code?: StringFilter<"course_materials"> | string
+    user_id?: StringFilter<"course_materials"> | string
+    file_name?: StringFilter<"course_materials"> | string
+    file_url?: StringNullableFilter<"course_materials"> | string | null
+    doc_type?: StringNullableFilter<"course_materials"> | string | null
+    uploaded_at?: DateTimeNullableFilter<"course_materials"> | Date | string | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+  }
+
+  export type course_materialsOrderByWithRelationInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    user_id?: SortOrder
+    file_name?: SortOrder
+    file_url?: SortOrderInput | SortOrder
+    doc_type?: SortOrderInput | SortOrder
+    uploaded_at?: SortOrderInput | SortOrder
+    classes?: classesOrderByWithRelationInput
+  }
+
+  export type course_materialsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: course_materialsWhereInput | course_materialsWhereInput[]
+    OR?: course_materialsWhereInput[]
+    NOT?: course_materialsWhereInput | course_materialsWhereInput[]
+    class_code?: StringFilter<"course_materials"> | string
+    user_id?: StringFilter<"course_materials"> | string
+    file_name?: StringFilter<"course_materials"> | string
+    file_url?: StringNullableFilter<"course_materials"> | string | null
+    doc_type?: StringNullableFilter<"course_materials"> | string | null
+    uploaded_at?: DateTimeNullableFilter<"course_materials"> | Date | string | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+  }, "id">
+
+  export type course_materialsOrderByWithAggregationInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    user_id?: SortOrder
+    file_name?: SortOrder
+    file_url?: SortOrderInput | SortOrder
+    doc_type?: SortOrderInput | SortOrder
+    uploaded_at?: SortOrderInput | SortOrder
+    _count?: course_materialsCountOrderByAggregateInput
+    _max?: course_materialsMaxOrderByAggregateInput
+    _min?: course_materialsMinOrderByAggregateInput
+  }
+
+  export type course_materialsScalarWhereWithAggregatesInput = {
+    AND?: course_materialsScalarWhereWithAggregatesInput | course_materialsScalarWhereWithAggregatesInput[]
+    OR?: course_materialsScalarWhereWithAggregatesInput[]
+    NOT?: course_materialsScalarWhereWithAggregatesInput | course_materialsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"course_materials"> | string
+    class_code?: StringWithAggregatesFilter<"course_materials"> | string
+    user_id?: StringWithAggregatesFilter<"course_materials"> | string
+    file_name?: StringWithAggregatesFilter<"course_materials"> | string
+    file_url?: StringNullableWithAggregatesFilter<"course_materials"> | string | null
+    doc_type?: StringNullableWithAggregatesFilter<"course_materials"> | string | null
+    uploaded_at?: DateTimeNullableWithAggregatesFilter<"course_materials"> | Date | string | null
+  }
+
+  export type shared_classesWhereInput = {
+    AND?: shared_classesWhereInput | shared_classesWhereInput[]
+    OR?: shared_classesWhereInput[]
+    NOT?: shared_classesWhereInput | shared_classesWhereInput[]
+    id?: StringFilter<"shared_classes"> | string
+    user_id?: StringFilter<"shared_classes"> | string
+    friend_id?: StringFilter<"shared_classes"> | string
+    class_code?: StringFilter<"shared_classes"> | string
+    class_name?: StringFilter<"shared_classes"> | string
+    created_at?: DateTimeNullableFilter<"shared_classes"> | Date | string | null
+  }
+
+  export type shared_classesOrderByWithRelationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    friend_id?: SortOrder
+    class_code?: SortOrder
+    class_name?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+  }
+
+  export type shared_classesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: shared_classesWhereInput | shared_classesWhereInput[]
+    OR?: shared_classesWhereInput[]
+    NOT?: shared_classesWhereInput | shared_classesWhereInput[]
+    user_id?: StringFilter<"shared_classes"> | string
+    friend_id?: StringFilter<"shared_classes"> | string
+    class_code?: StringFilter<"shared_classes"> | string
+    class_name?: StringFilter<"shared_classes"> | string
+    created_at?: DateTimeNullableFilter<"shared_classes"> | Date | string | null
+  }, "id">
+
+  export type shared_classesOrderByWithAggregationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    friend_id?: SortOrder
+    class_code?: SortOrder
+    class_name?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    _count?: shared_classesCountOrderByAggregateInput
+    _max?: shared_classesMaxOrderByAggregateInput
+    _min?: shared_classesMinOrderByAggregateInput
+  }
+
+  export type shared_classesScalarWhereWithAggregatesInput = {
+    AND?: shared_classesScalarWhereWithAggregatesInput | shared_classesScalarWhereWithAggregatesInput[]
+    OR?: shared_classesScalarWhereWithAggregatesInput[]
+    NOT?: shared_classesScalarWhereWithAggregatesInput | shared_classesScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"shared_classes"> | string
+    user_id?: StringWithAggregatesFilter<"shared_classes"> | string
+    friend_id?: StringWithAggregatesFilter<"shared_classes"> | string
+    class_code?: StringWithAggregatesFilter<"shared_classes"> | string
+    class_name?: StringWithAggregatesFilter<"shared_classes"> | string
+    created_at?: DateTimeNullableWithAggregatesFilter<"shared_classes"> | Date | string | null
+  }
+
+  export type user_classesWhereInput = {
+    AND?: user_classesWhereInput | user_classesWhereInput[]
+    OR?: user_classesWhereInput[]
+    NOT?: user_classesWhereInput | user_classesWhereInput[]
+    id?: UuidFilter<"user_classes"> | string
+    user_id?: StringFilter<"user_classes"> | string
+    class_code?: StringFilter<"user_classes"> | string
+    enrolled_at?: DateTimeNullableFilter<"user_classes"> | Date | string | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type user_classesOrderByWithRelationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_code?: SortOrder
+    enrolled_at?: SortOrderInput | SortOrder
+    classes?: classesOrderByWithRelationInput
+    User?: UserOrderByWithRelationInput
+  }
+
+  export type user_classesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    user_id_class_code?: user_classesUser_idClass_codeCompoundUniqueInput
+    AND?: user_classesWhereInput | user_classesWhereInput[]
+    OR?: user_classesWhereInput[]
+    NOT?: user_classesWhereInput | user_classesWhereInput[]
+    user_id?: StringFilter<"user_classes"> | string
+    class_code?: StringFilter<"user_classes"> | string
+    enrolled_at?: DateTimeNullableFilter<"user_classes"> | Date | string | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "user_id_class_code">
+
+  export type user_classesOrderByWithAggregationInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_code?: SortOrder
+    enrolled_at?: SortOrderInput | SortOrder
+    _count?: user_classesCountOrderByAggregateInput
+    _max?: user_classesMaxOrderByAggregateInput
+    _min?: user_classesMinOrderByAggregateInput
+  }
+
+  export type user_classesScalarWhereWithAggregatesInput = {
+    AND?: user_classesScalarWhereWithAggregatesInput | user_classesScalarWhereWithAggregatesInput[]
+    OR?: user_classesScalarWhereWithAggregatesInput[]
+    NOT?: user_classesScalarWhereWithAggregatesInput | user_classesScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"user_classes"> | string
+    user_id?: StringWithAggregatesFilter<"user_classes"> | string
+    class_code?: StringWithAggregatesFilter<"user_classes"> | string
+    enrolled_at?: DateTimeNullableWithAggregatesFilter<"user_classes"> | Date | string | null
   }
 
   export type achievementsCreateInput = {
@@ -24697,6 +30105,8 @@ export namespace Prisma {
     xp_reward?: number | null
     created_at?: Date | string | null
     slug?: string | null
+    icon_colored?: string | null
+    icon_greyed?: string | null
     user_achievements?: user_achievementsCreateNestedManyWithoutAchievementsInput
   }
 
@@ -24707,6 +30117,8 @@ export namespace Prisma {
     xp_reward?: number | null
     created_at?: Date | string | null
     slug?: string | null
+    icon_colored?: string | null
+    icon_greyed?: string | null
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutAchievementsInput
   }
 
@@ -24717,6 +30129,8 @@ export namespace Prisma {
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_colored?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_greyed?: NullableStringFieldUpdateOperationsInput | string | null
     user_achievements?: user_achievementsUpdateManyWithoutAchievementsNestedInput
   }
 
@@ -24727,6 +30141,8 @@ export namespace Prisma {
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_colored?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_greyed?: NullableStringFieldUpdateOperationsInput | string | null
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutAchievementsNestedInput
   }
 
@@ -24737,6 +30153,8 @@ export namespace Prisma {
     xp_reward?: number | null
     created_at?: Date | string | null
     slug?: string | null
+    icon_colored?: string | null
+    icon_greyed?: string | null
   }
 
   export type achievementsUpdateManyMutationInput = {
@@ -24746,6 +30164,8 @@ export namespace Prisma {
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_colored?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_greyed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type achievementsUncheckedUpdateManyInput = {
@@ -24755,6 +30175,8 @@ export namespace Prisma {
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_colored?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_greyed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyCreateInput = {
@@ -24762,6 +30184,8 @@ export namespace Prisma {
     sender: string
     content: string
     created_at?: Date | string | null
+    score?: number | null
+    reason?: string | null
     chat_sessions: chat_sessionsCreateNestedOneWithoutChat_historyInput
   }
 
@@ -24771,6 +30195,8 @@ export namespace Prisma {
     sender: string
     content: string
     created_at?: Date | string | null
+    score?: number | null
+    reason?: string | null
   }
 
   export type chat_historyUpdateInput = {
@@ -24778,6 +30204,8 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     chat_sessions?: chat_sessionsUpdateOneRequiredWithoutChat_historyNestedInput
   }
 
@@ -24787,6 +30215,8 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyCreateManyInput = {
@@ -24795,6 +30225,8 @@ export namespace Prisma {
     sender: string
     content: string
     created_at?: Date | string | null
+    score?: number | null
+    reason?: string | null
   }
 
   export type chat_historyUpdateManyMutationInput = {
@@ -24802,6 +30234,8 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyUncheckedUpdateManyInput = {
@@ -24810,12 +30244,15 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_sessionsCreateInput = {
     session_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyCreateNestedManyWithoutChat_sessionsInput
     classes: classesCreateNestedOneWithoutChat_sessionsInput
     topics: topicsCreateNestedOneWithoutChat_sessionsInput
@@ -24829,6 +30266,7 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyUncheckedCreateNestedManyWithoutChat_sessionsInput
   }
 
@@ -24836,6 +30274,7 @@ export namespace Prisma {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUpdateManyWithoutChat_sessionsNestedInput
     classes?: classesUpdateOneRequiredWithoutChat_sessionsNestedInput
     topics?: topicsUpdateOneRequiredWithoutChat_sessionsNestedInput
@@ -24849,6 +30288,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUncheckedUpdateManyWithoutChat_sessionsNestedInput
   }
 
@@ -24859,12 +30299,14 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
   }
 
   export type chat_sessionsUpdateManyMutationInput = {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_sessionsUncheckedUpdateManyInput = {
@@ -24874,6 +30316,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type classesCreateInput = {
@@ -24883,9 +30326,14 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
   }
 
   export type classesUncheckedCreateInput = {
@@ -24895,9 +30343,14 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
   }
 
   export type classesUpdateInput = {
@@ -24907,9 +30360,14 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
   }
 
   export type classesUncheckedUpdateInput = {
@@ -24919,9 +30377,14 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
   }
 
   export type classesCreateManyInput = {
@@ -24931,6 +30394,8 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
   }
 
   export type classesUpdateManyMutationInput = {
@@ -24940,6 +30405,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type classesUncheckedUpdateManyInput = {
@@ -24949,6 +30416,8 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type daily_topic_metricsCreateInput = {
@@ -25300,6 +30769,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -25309,6 +30782,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -25328,6 +30802,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -25337,6 +30815,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -25356,6 +30835,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -25365,6 +30848,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -25384,6 +30868,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -25393,6 +30881,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -25412,6 +30901,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -25430,6 +30923,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -25448,6 +30945,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AccountCreateInput = {
@@ -25740,6 +31241,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
+    options?: quiz_questionsCreateoptionsInput | string[]
+    explanation?: string | null
     quizzes: quizzesCreateNestedOneWithoutQuiz_questionsInput
   }
 
@@ -25751,6 +31254,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
+    options?: quiz_questionsCreateoptionsInput | string[]
+    explanation?: string | null
   }
 
   export type quiz_questionsUpdateInput = {
@@ -25760,6 +31265,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
     quizzes?: quizzesUpdateOneRequiredWithoutQuiz_questionsNestedInput
   }
 
@@ -25771,6 +31278,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quiz_questionsCreateManyInput = {
@@ -25781,6 +31290,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
+    options?: quiz_questionsCreateoptionsInput | string[]
+    explanation?: string | null
   }
 
   export type quiz_questionsUpdateManyMutationInput = {
@@ -25790,6 +31301,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quiz_questionsUncheckedUpdateManyInput = {
@@ -25800,6 +31313,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quizzesCreateInput = {
@@ -25809,6 +31324,7 @@ export namespace Prisma {
     score?: number | null
     date?: Date | string | null
     retake_count?: number | null
+    color?: string | null
     quiz_questions?: quiz_questionsCreateNestedManyWithoutQuizzesInput
   }
 
@@ -25819,6 +31335,7 @@ export namespace Prisma {
     score?: number | null
     date?: Date | string | null
     retake_count?: number | null
+    color?: string | null
     quiz_questions?: quiz_questionsUncheckedCreateNestedManyWithoutQuizzesInput
   }
 
@@ -25829,6 +31346,7 @@ export namespace Prisma {
     score?: NullableIntFieldUpdateOperationsInput | number | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     quiz_questions?: quiz_questionsUpdateManyWithoutQuizzesNestedInput
   }
 
@@ -25839,6 +31357,7 @@ export namespace Prisma {
     score?: NullableIntFieldUpdateOperationsInput | number | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     quiz_questions?: quiz_questionsUncheckedUpdateManyWithoutQuizzesNestedInput
   }
 
@@ -25849,6 +31368,7 @@ export namespace Prisma {
     score?: number | null
     date?: Date | string | null
     retake_count?: number | null
+    color?: string | null
   }
 
   export type quizzesUpdateManyMutationInput = {
@@ -25858,6 +31378,7 @@ export namespace Prisma {
     score?: NullableIntFieldUpdateOperationsInput | number | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quizzesUncheckedUpdateManyInput = {
@@ -25867,6 +31388,7 @@ export namespace Prisma {
     score?: NullableIntFieldUpdateOperationsInput | number | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type class_engagementCreateInput = {
@@ -25874,6 +31396,8 @@ export namespace Prisma {
     class_name: string
     question_count?: number | null
     week_start: Date | string
+    color?: string | null
+    light?: string | null
     User: UserCreateNestedOneWithoutClass_engagementInput
   }
 
@@ -25883,6 +31407,8 @@ export namespace Prisma {
     class_name: string
     question_count?: number | null
     week_start: Date | string
+    color?: string | null
+    light?: string | null
   }
 
   export type class_engagementUpdateInput = {
@@ -25890,6 +31416,8 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
     User?: UserUpdateOneRequiredWithoutClass_engagementNestedInput
   }
 
@@ -25899,6 +31427,8 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type class_engagementCreateManyInput = {
@@ -25907,6 +31437,8 @@ export namespace Prisma {
     class_name: string
     question_count?: number | null
     week_start: Date | string
+    color?: string | null
+    light?: string | null
   }
 
   export type class_engagementUpdateManyMutationInput = {
@@ -25914,6 +31446,8 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type class_engagementUncheckedUpdateManyInput = {
@@ -25922,6 +31456,242 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type class_tasksCreateInput = {
+    id: string
+    task_name: string
+    due_date: Date | string
+    created_at?: Date | string | null
+    classes: classesCreateNestedOneWithoutClass_tasksInput
+  }
+
+  export type class_tasksUncheckedCreateInput = {
+    id: string
+    class_code: string
+    task_name: string
+    due_date: Date | string
+    created_at?: Date | string | null
+  }
+
+  export type class_tasksUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    classes?: classesUpdateOneRequiredWithoutClass_tasksNestedInput
+  }
+
+  export type class_tasksUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type class_tasksCreateManyInput = {
+    id: string
+    class_code: string
+    task_name: string
+    due_date: Date | string
+    created_at?: Date | string | null
+  }
+
+  export type class_tasksUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type class_tasksUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type course_materialsCreateInput = {
+    id: string
+    user_id: string
+    file_name: string
+    file_url?: string | null
+    doc_type?: string | null
+    uploaded_at?: Date | string | null
+    classes: classesCreateNestedOneWithoutCourse_materialsInput
+  }
+
+  export type course_materialsUncheckedCreateInput = {
+    id: string
+    class_code: string
+    user_id: string
+    file_name: string
+    file_url?: string | null
+    doc_type?: string | null
+    uploaded_at?: Date | string | null
+  }
+
+  export type course_materialsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    classes?: classesUpdateOneRequiredWithoutCourse_materialsNestedInput
+  }
+
+  export type course_materialsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type course_materialsCreateManyInput = {
+    id: string
+    class_code: string
+    user_id: string
+    file_name: string
+    file_url?: string | null
+    doc_type?: string | null
+    uploaded_at?: Date | string | null
+  }
+
+  export type course_materialsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type course_materialsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type shared_classesCreateInput = {
+    id?: string
+    user_id: string
+    friend_id: string
+    class_code: string
+    class_name: string
+    created_at?: Date | string | null
+  }
+
+  export type shared_classesUncheckedCreateInput = {
+    id?: string
+    user_id: string
+    friend_id: string
+    class_code: string
+    class_name: string
+    created_at?: Date | string | null
+  }
+
+  export type shared_classesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    friend_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type shared_classesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    friend_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type shared_classesCreateManyInput = {
+    id?: string
+    user_id: string
+    friend_id: string
+    class_code: string
+    class_name: string
+    created_at?: Date | string | null
+  }
+
+  export type shared_classesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    friend_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type shared_classesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    friend_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    class_name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type user_classesCreateInput = {
+    id?: string
+    enrolled_at?: Date | string | null
+    classes: classesCreateNestedOneWithoutUser_classesInput
+    User: UserCreateNestedOneWithoutUser_classesInput
+  }
+
+  export type user_classesUncheckedCreateInput = {
+    id?: string
+    user_id: string
+    class_code: string
+    enrolled_at?: Date | string | null
+  }
+
+  export type user_classesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    classes?: classesUpdateOneRequiredWithoutUser_classesNestedInput
+    User?: UserUpdateOneRequiredWithoutUser_classesNestedInput
+  }
+
+  export type user_classesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type user_classesCreateManyInput = {
+    id?: string
+    user_id: string
+    class_code: string
+    enrolled_at?: Date | string | null
+  }
+
+  export type user_classesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type user_classesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -25998,6 +31768,8 @@ export namespace Prisma {
     xp_reward?: SortOrder
     created_at?: SortOrder
     slug?: SortOrder
+    icon_colored?: SortOrder
+    icon_greyed?: SortOrder
   }
 
   export type achievementsAvgOrderByAggregateInput = {
@@ -26011,6 +31783,8 @@ export namespace Prisma {
     xp_reward?: SortOrder
     created_at?: SortOrder
     slug?: SortOrder
+    icon_colored?: SortOrder
+    icon_greyed?: SortOrder
   }
 
   export type achievementsMinOrderByAggregateInput = {
@@ -26020,6 +31794,8 @@ export namespace Prisma {
     xp_reward?: SortOrder
     created_at?: SortOrder
     slug?: SortOrder
+    icon_colored?: SortOrder
+    icon_greyed?: SortOrder
   }
 
   export type achievementsSumOrderByAggregateInput = {
@@ -26103,6 +31879,12 @@ export namespace Prisma {
     sender?: SortOrder
     content?: SortOrder
     created_at?: SortOrder
+    score?: SortOrder
+    reason?: SortOrder
+  }
+
+  export type chat_historyAvgOrderByAggregateInput = {
+    score?: SortOrder
   }
 
   export type chat_historyMaxOrderByAggregateInput = {
@@ -26111,6 +31893,8 @@ export namespace Prisma {
     sender?: SortOrder
     content?: SortOrder
     created_at?: SortOrder
+    score?: SortOrder
+    reason?: SortOrder
   }
 
   export type chat_historyMinOrderByAggregateInput = {
@@ -26119,6 +31903,12 @@ export namespace Prisma {
     sender?: SortOrder
     content?: SortOrder
     created_at?: SortOrder
+    score?: SortOrder
+    reason?: SortOrder
+  }
+
+  export type chat_historySumOrderByAggregateInput = {
+    score?: SortOrder
   }
 
   export type Chat_historyListRelationFilter = {
@@ -26153,6 +31943,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     started_at?: SortOrder
     created_at?: SortOrder
+    title?: SortOrder
   }
 
   export type chat_sessionsMaxOrderByAggregateInput = {
@@ -26162,6 +31953,7 @@ export namespace Prisma {
     topic_id?: SortOrder
     started_at?: SortOrder
     created_at?: SortOrder
+    title?: SortOrder
   }
 
   export type chat_sessionsMinOrderByAggregateInput = {
@@ -26171,12 +31963,25 @@ export namespace Prisma {
     topic_id?: SortOrder
     started_at?: SortOrder
     created_at?: SortOrder
+    title?: SortOrder
   }
 
   export type Chat_sessionsListRelationFilter = {
     every?: chat_sessionsWhereInput
     some?: chat_sessionsWhereInput
     none?: chat_sessionsWhereInput
+  }
+
+  export type Class_tasksListRelationFilter = {
+    every?: class_tasksWhereInput
+    some?: class_tasksWhereInput
+    none?: class_tasksWhereInput
+  }
+
+  export type Course_materialsListRelationFilter = {
+    every?: course_materialsWhereInput
+    some?: course_materialsWhereInput
+    none?: course_materialsWhereInput
   }
 
   export type Daily_topic_metricsListRelationFilter = {
@@ -26191,7 +31996,21 @@ export namespace Prisma {
     none?: topicsWhereInput
   }
 
+  export type User_classesListRelationFilter = {
+    every?: user_classesWhereInput
+    some?: user_classesWhereInput
+    none?: user_classesWhereInput
+  }
+
   export type chat_sessionsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type class_tasksOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type course_materialsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -26203,6 +32022,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type user_classesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type classesCountOrderByAggregateInput = {
     class_code?: SortOrder
     subject?: SortOrder
@@ -26210,6 +32033,12 @@ export namespace Prisma {
     created_at?: SortOrder
     user_id?: SortOrder
     syllabus_url?: SortOrder
+    streak?: SortOrder
+    last_activity_date?: SortOrder
+  }
+
+  export type classesAvgOrderByAggregateInput = {
+    streak?: SortOrder
   }
 
   export type classesMaxOrderByAggregateInput = {
@@ -26219,6 +32048,8 @@ export namespace Prisma {
     created_at?: SortOrder
     user_id?: SortOrder
     syllabus_url?: SortOrder
+    streak?: SortOrder
+    last_activity_date?: SortOrder
   }
 
   export type classesMinOrderByAggregateInput = {
@@ -26228,6 +32059,12 @@ export namespace Prisma {
     created_at?: SortOrder
     user_id?: SortOrder
     syllabus_url?: SortOrder
+    streak?: SortOrder
+    last_activity_date?: SortOrder
+  }
+
+  export type classesSumOrderByAggregateInput = {
+    streak?: SortOrder
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -26569,12 +32406,19 @@ export namespace Prisma {
     class_status?: SortOrder
     streak?: SortOrder
     weekly_xp?: SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
+    last_active_date?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     total_xp?: SortOrder
     streak?: SortOrder
     weekly_xp?: SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -26593,6 +32437,10 @@ export namespace Prisma {
     class_status?: SortOrder
     streak?: SortOrder
     weekly_xp?: SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
+    last_active_date?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -26611,12 +32459,19 @@ export namespace Prisma {
     class_status?: SortOrder
     streak?: SortOrder
     weekly_xp?: SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
+    last_active_date?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     total_xp?: SortOrder
     streak?: SortOrder
     weekly_xp?: SortOrder
+    ai_messages?: SortOrder
+    quizzes_taken?: SortOrder
+    retakes_taken?: SortOrder
   }
 
   export type BigIntNullableFilter<$PrismaModel = never> = {
@@ -26877,6 +32732,14 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type QuizzesScalarRelationFilter = {
     is?: quizzesWhereInput
     isNot?: quizzesWhereInput
@@ -26890,6 +32753,8 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrder
     depth_score?: SortOrder
+    options?: SortOrder
+    explanation?: SortOrder
   }
 
   export type quiz_questionsAvgOrderByAggregateInput = {
@@ -26904,6 +32769,7 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrder
     depth_score?: SortOrder
+    explanation?: SortOrder
   }
 
   export type quiz_questionsMinOrderByAggregateInput = {
@@ -26914,6 +32780,7 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrder
     depth_score?: SortOrder
+    explanation?: SortOrder
   }
 
   export type quiz_questionsSumOrderByAggregateInput = {
@@ -26945,6 +32812,7 @@ export namespace Prisma {
     score?: SortOrder
     date?: SortOrder
     retake_count?: SortOrder
+    color?: SortOrder
   }
 
   export type quizzesAvgOrderByAggregateInput = {
@@ -26959,6 +32827,7 @@ export namespace Prisma {
     score?: SortOrder
     date?: SortOrder
     retake_count?: SortOrder
+    color?: SortOrder
   }
 
   export type quizzesMinOrderByAggregateInput = {
@@ -26968,6 +32837,7 @@ export namespace Prisma {
     score?: SortOrder
     date?: SortOrder
     retake_count?: SortOrder
+    color?: SortOrder
   }
 
   export type quizzesSumOrderByAggregateInput = {
@@ -26987,6 +32857,8 @@ export namespace Prisma {
     class_name?: SortOrder
     question_count?: SortOrder
     week_start?: SortOrder
+    color?: SortOrder
+    light?: SortOrder
   }
 
   export type class_engagementAvgOrderByAggregateInput = {
@@ -26999,6 +32871,8 @@ export namespace Prisma {
     class_name?: SortOrder
     question_count?: SortOrder
     week_start?: SortOrder
+    color?: SortOrder
+    light?: SortOrder
   }
 
   export type class_engagementMinOrderByAggregateInput = {
@@ -27007,10 +32881,146 @@ export namespace Prisma {
     class_name?: SortOrder
     question_count?: SortOrder
     week_start?: SortOrder
+    color?: SortOrder
+    light?: SortOrder
   }
 
   export type class_engagementSumOrderByAggregateInput = {
     question_count?: SortOrder
+  }
+
+  export type UuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
+  export type class_tasksCountOrderByAggregateInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    task_name?: SortOrder
+    due_date?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type class_tasksMaxOrderByAggregateInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    task_name?: SortOrder
+    due_date?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type class_tasksMinOrderByAggregateInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    task_name?: SortOrder
+    due_date?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type course_materialsCountOrderByAggregateInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    user_id?: SortOrder
+    file_name?: SortOrder
+    file_url?: SortOrder
+    doc_type?: SortOrder
+    uploaded_at?: SortOrder
+  }
+
+  export type course_materialsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    user_id?: SortOrder
+    file_name?: SortOrder
+    file_url?: SortOrder
+    doc_type?: SortOrder
+    uploaded_at?: SortOrder
+  }
+
+  export type course_materialsMinOrderByAggregateInput = {
+    id?: SortOrder
+    class_code?: SortOrder
+    user_id?: SortOrder
+    file_name?: SortOrder
+    file_url?: SortOrder
+    doc_type?: SortOrder
+    uploaded_at?: SortOrder
+  }
+
+  export type shared_classesCountOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    friend_id?: SortOrder
+    class_code?: SortOrder
+    class_name?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type shared_classesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    friend_id?: SortOrder
+    class_code?: SortOrder
+    class_name?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type shared_classesMinOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    friend_id?: SortOrder
+    class_code?: SortOrder
+    class_name?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type user_classesUser_idClass_codeCompoundUniqueInput = {
+    user_id: string
+    class_code: string
+  }
+
+  export type user_classesCountOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_code?: SortOrder
+    enrolled_at?: SortOrder
+  }
+
+  export type user_classesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_code?: SortOrder
+    enrolled_at?: SortOrder
+  }
+
+  export type user_classesMinOrderByAggregateInput = {
+    id?: SortOrder
+    user_id?: SortOrder
+    class_code?: SortOrder
+    enrolled_at?: SortOrder
   }
 
   export type user_achievementsCreateNestedManyWithoutAchievementsInput = {
@@ -27180,6 +33190,20 @@ export namespace Prisma {
     connect?: chat_sessionsWhereUniqueInput | chat_sessionsWhereUniqueInput[]
   }
 
+  export type class_tasksCreateNestedManyWithoutClassesInput = {
+    create?: XOR<class_tasksCreateWithoutClassesInput, class_tasksUncheckedCreateWithoutClassesInput> | class_tasksCreateWithoutClassesInput[] | class_tasksUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: class_tasksCreateOrConnectWithoutClassesInput | class_tasksCreateOrConnectWithoutClassesInput[]
+    createMany?: class_tasksCreateManyClassesInputEnvelope
+    connect?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+  }
+
+  export type course_materialsCreateNestedManyWithoutClassesInput = {
+    create?: XOR<course_materialsCreateWithoutClassesInput, course_materialsUncheckedCreateWithoutClassesInput> | course_materialsCreateWithoutClassesInput[] | course_materialsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: course_materialsCreateOrConnectWithoutClassesInput | course_materialsCreateOrConnectWithoutClassesInput[]
+    createMany?: course_materialsCreateManyClassesInputEnvelope
+    connect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+  }
+
   export type daily_topic_metricsCreateNestedManyWithoutClassesInput = {
     create?: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput> | daily_topic_metricsCreateWithoutClassesInput[] | daily_topic_metricsUncheckedCreateWithoutClassesInput[]
     connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutClassesInput | daily_topic_metricsCreateOrConnectWithoutClassesInput[]
@@ -27194,11 +33218,32 @@ export namespace Prisma {
     connect?: topicsWhereUniqueInput | topicsWhereUniqueInput[]
   }
 
+  export type user_classesCreateNestedManyWithoutClassesInput = {
+    create?: XOR<user_classesCreateWithoutClassesInput, user_classesUncheckedCreateWithoutClassesInput> | user_classesCreateWithoutClassesInput[] | user_classesUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutClassesInput | user_classesCreateOrConnectWithoutClassesInput[]
+    createMany?: user_classesCreateManyClassesInputEnvelope
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+  }
+
   export type chat_sessionsUncheckedCreateNestedManyWithoutClassesInput = {
     create?: XOR<chat_sessionsCreateWithoutClassesInput, chat_sessionsUncheckedCreateWithoutClassesInput> | chat_sessionsCreateWithoutClassesInput[] | chat_sessionsUncheckedCreateWithoutClassesInput[]
     connectOrCreate?: chat_sessionsCreateOrConnectWithoutClassesInput | chat_sessionsCreateOrConnectWithoutClassesInput[]
     createMany?: chat_sessionsCreateManyClassesInputEnvelope
     connect?: chat_sessionsWhereUniqueInput | chat_sessionsWhereUniqueInput[]
+  }
+
+  export type class_tasksUncheckedCreateNestedManyWithoutClassesInput = {
+    create?: XOR<class_tasksCreateWithoutClassesInput, class_tasksUncheckedCreateWithoutClassesInput> | class_tasksCreateWithoutClassesInput[] | class_tasksUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: class_tasksCreateOrConnectWithoutClassesInput | class_tasksCreateOrConnectWithoutClassesInput[]
+    createMany?: class_tasksCreateManyClassesInputEnvelope
+    connect?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+  }
+
+  export type course_materialsUncheckedCreateNestedManyWithoutClassesInput = {
+    create?: XOR<course_materialsCreateWithoutClassesInput, course_materialsUncheckedCreateWithoutClassesInput> | course_materialsCreateWithoutClassesInput[] | course_materialsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: course_materialsCreateOrConnectWithoutClassesInput | course_materialsCreateOrConnectWithoutClassesInput[]
+    createMany?: course_materialsCreateManyClassesInputEnvelope
+    connect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
   }
 
   export type daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput = {
@@ -27215,6 +33260,13 @@ export namespace Prisma {
     connect?: topicsWhereUniqueInput | topicsWhereUniqueInput[]
   }
 
+  export type user_classesUncheckedCreateNestedManyWithoutClassesInput = {
+    create?: XOR<user_classesCreateWithoutClassesInput, user_classesUncheckedCreateWithoutClassesInput> | user_classesCreateWithoutClassesInput[] | user_classesUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutClassesInput | user_classesCreateOrConnectWithoutClassesInput[]
+    createMany?: user_classesCreateManyClassesInputEnvelope
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+  }
+
   export type chat_sessionsUpdateManyWithoutClassesNestedInput = {
     create?: XOR<chat_sessionsCreateWithoutClassesInput, chat_sessionsUncheckedCreateWithoutClassesInput> | chat_sessionsCreateWithoutClassesInput[] | chat_sessionsUncheckedCreateWithoutClassesInput[]
     connectOrCreate?: chat_sessionsCreateOrConnectWithoutClassesInput | chat_sessionsCreateOrConnectWithoutClassesInput[]
@@ -27227,6 +33279,34 @@ export namespace Prisma {
     update?: chat_sessionsUpdateWithWhereUniqueWithoutClassesInput | chat_sessionsUpdateWithWhereUniqueWithoutClassesInput[]
     updateMany?: chat_sessionsUpdateManyWithWhereWithoutClassesInput | chat_sessionsUpdateManyWithWhereWithoutClassesInput[]
     deleteMany?: chat_sessionsScalarWhereInput | chat_sessionsScalarWhereInput[]
+  }
+
+  export type class_tasksUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<class_tasksCreateWithoutClassesInput, class_tasksUncheckedCreateWithoutClassesInput> | class_tasksCreateWithoutClassesInput[] | class_tasksUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: class_tasksCreateOrConnectWithoutClassesInput | class_tasksCreateOrConnectWithoutClassesInput[]
+    upsert?: class_tasksUpsertWithWhereUniqueWithoutClassesInput | class_tasksUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: class_tasksCreateManyClassesInputEnvelope
+    set?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    disconnect?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    delete?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    connect?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    update?: class_tasksUpdateWithWhereUniqueWithoutClassesInput | class_tasksUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: class_tasksUpdateManyWithWhereWithoutClassesInput | class_tasksUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: class_tasksScalarWhereInput | class_tasksScalarWhereInput[]
+  }
+
+  export type course_materialsUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<course_materialsCreateWithoutClassesInput, course_materialsUncheckedCreateWithoutClassesInput> | course_materialsCreateWithoutClassesInput[] | course_materialsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: course_materialsCreateOrConnectWithoutClassesInput | course_materialsCreateOrConnectWithoutClassesInput[]
+    upsert?: course_materialsUpsertWithWhereUniqueWithoutClassesInput | course_materialsUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: course_materialsCreateManyClassesInputEnvelope
+    set?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    disconnect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    delete?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    connect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    update?: course_materialsUpdateWithWhereUniqueWithoutClassesInput | course_materialsUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: course_materialsUpdateManyWithWhereWithoutClassesInput | course_materialsUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: course_materialsScalarWhereInput | course_materialsScalarWhereInput[]
   }
 
   export type daily_topic_metricsUpdateManyWithoutClassesNestedInput = {
@@ -27257,6 +33337,20 @@ export namespace Prisma {
     deleteMany?: topicsScalarWhereInput | topicsScalarWhereInput[]
   }
 
+  export type user_classesUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<user_classesCreateWithoutClassesInput, user_classesUncheckedCreateWithoutClassesInput> | user_classesCreateWithoutClassesInput[] | user_classesUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutClassesInput | user_classesCreateOrConnectWithoutClassesInput[]
+    upsert?: user_classesUpsertWithWhereUniqueWithoutClassesInput | user_classesUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: user_classesCreateManyClassesInputEnvelope
+    set?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    disconnect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    delete?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    update?: user_classesUpdateWithWhereUniqueWithoutClassesInput | user_classesUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: user_classesUpdateManyWithWhereWithoutClassesInput | user_classesUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
+  }
+
   export type chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput = {
     create?: XOR<chat_sessionsCreateWithoutClassesInput, chat_sessionsUncheckedCreateWithoutClassesInput> | chat_sessionsCreateWithoutClassesInput[] | chat_sessionsUncheckedCreateWithoutClassesInput[]
     connectOrCreate?: chat_sessionsCreateOrConnectWithoutClassesInput | chat_sessionsCreateOrConnectWithoutClassesInput[]
@@ -27269,6 +33363,34 @@ export namespace Prisma {
     update?: chat_sessionsUpdateWithWhereUniqueWithoutClassesInput | chat_sessionsUpdateWithWhereUniqueWithoutClassesInput[]
     updateMany?: chat_sessionsUpdateManyWithWhereWithoutClassesInput | chat_sessionsUpdateManyWithWhereWithoutClassesInput[]
     deleteMany?: chat_sessionsScalarWhereInput | chat_sessionsScalarWhereInput[]
+  }
+
+  export type class_tasksUncheckedUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<class_tasksCreateWithoutClassesInput, class_tasksUncheckedCreateWithoutClassesInput> | class_tasksCreateWithoutClassesInput[] | class_tasksUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: class_tasksCreateOrConnectWithoutClassesInput | class_tasksCreateOrConnectWithoutClassesInput[]
+    upsert?: class_tasksUpsertWithWhereUniqueWithoutClassesInput | class_tasksUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: class_tasksCreateManyClassesInputEnvelope
+    set?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    disconnect?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    delete?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    connect?: class_tasksWhereUniqueInput | class_tasksWhereUniqueInput[]
+    update?: class_tasksUpdateWithWhereUniqueWithoutClassesInput | class_tasksUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: class_tasksUpdateManyWithWhereWithoutClassesInput | class_tasksUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: class_tasksScalarWhereInput | class_tasksScalarWhereInput[]
+  }
+
+  export type course_materialsUncheckedUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<course_materialsCreateWithoutClassesInput, course_materialsUncheckedCreateWithoutClassesInput> | course_materialsCreateWithoutClassesInput[] | course_materialsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: course_materialsCreateOrConnectWithoutClassesInput | course_materialsCreateOrConnectWithoutClassesInput[]
+    upsert?: course_materialsUpsertWithWhereUniqueWithoutClassesInput | course_materialsUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: course_materialsCreateManyClassesInputEnvelope
+    set?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    disconnect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    delete?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    connect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+    update?: course_materialsUpdateWithWhereUniqueWithoutClassesInput | course_materialsUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: course_materialsUpdateManyWithWhereWithoutClassesInput | course_materialsUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: course_materialsScalarWhereInput | course_materialsScalarWhereInput[]
   }
 
   export type daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput = {
@@ -27297,6 +33419,20 @@ export namespace Prisma {
     update?: topicsUpdateWithWhereUniqueWithoutClassesInput | topicsUpdateWithWhereUniqueWithoutClassesInput[]
     updateMany?: topicsUpdateManyWithWhereWithoutClassesInput | topicsUpdateManyWithWhereWithoutClassesInput[]
     deleteMany?: topicsScalarWhereInput | topicsScalarWhereInput[]
+  }
+
+  export type user_classesUncheckedUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<user_classesCreateWithoutClassesInput, user_classesUncheckedCreateWithoutClassesInput> | user_classesCreateWithoutClassesInput[] | user_classesUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutClassesInput | user_classesCreateOrConnectWithoutClassesInput[]
+    upsert?: user_classesUpsertWithWhereUniqueWithoutClassesInput | user_classesUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: user_classesCreateManyClassesInputEnvelope
+    set?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    disconnect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    delete?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    update?: user_classesUpdateWithWhereUniqueWithoutClassesInput | user_classesUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: user_classesUpdateManyWithWhereWithoutClassesInput | user_classesUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
   }
 
   export type classesCreateNestedOneWithoutDaily_topic_metricsInput = {
@@ -27620,6 +33756,13 @@ export namespace Prisma {
     connect?: user_achievementsWhereUniqueInput | user_achievementsWhereUniqueInput[]
   }
 
+  export type user_classesCreateNestedManyWithoutUserInput = {
+    create?: XOR<user_classesCreateWithoutUserInput, user_classesUncheckedCreateWithoutUserInput> | user_classesCreateWithoutUserInput[] | user_classesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutUserInput | user_classesCreateOrConnectWithoutUserInput[]
+    createMany?: user_classesCreateManyUserInputEnvelope
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+  }
+
   export type xp_systemCreateNestedManyWithoutUsersInput = {
     create?: XOR<xp_systemCreateWithoutUsersInput, xp_systemUncheckedCreateWithoutUsersInput> | xp_systemCreateWithoutUsersInput[] | xp_systemUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: xp_systemCreateOrConnectWithoutUsersInput | xp_systemCreateOrConnectWithoutUsersInput[]
@@ -27688,6 +33831,13 @@ export namespace Prisma {
     connectOrCreate?: user_achievementsCreateOrConnectWithoutUsersInput | user_achievementsCreateOrConnectWithoutUsersInput[]
     createMany?: user_achievementsCreateManyUsersInputEnvelope
     connect?: user_achievementsWhereUniqueInput | user_achievementsWhereUniqueInput[]
+  }
+
+  export type user_classesUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<user_classesCreateWithoutUserInput, user_classesUncheckedCreateWithoutUserInput> | user_classesCreateWithoutUserInput[] | user_classesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutUserInput | user_classesCreateOrConnectWithoutUserInput[]
+    createMany?: user_classesCreateManyUserInputEnvelope
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
   }
 
   export type xp_systemUncheckedCreateNestedManyWithoutUsersInput = {
@@ -27821,6 +33971,20 @@ export namespace Prisma {
     update?: user_achievementsUpdateWithWhereUniqueWithoutUsersInput | user_achievementsUpdateWithWhereUniqueWithoutUsersInput[]
     updateMany?: user_achievementsUpdateManyWithWhereWithoutUsersInput | user_achievementsUpdateManyWithWhereWithoutUsersInput[]
     deleteMany?: user_achievementsScalarWhereInput | user_achievementsScalarWhereInput[]
+  }
+
+  export type user_classesUpdateManyWithoutUserNestedInput = {
+    create?: XOR<user_classesCreateWithoutUserInput, user_classesUncheckedCreateWithoutUserInput> | user_classesCreateWithoutUserInput[] | user_classesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutUserInput | user_classesCreateOrConnectWithoutUserInput[]
+    upsert?: user_classesUpsertWithWhereUniqueWithoutUserInput | user_classesUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: user_classesCreateManyUserInputEnvelope
+    set?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    disconnect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    delete?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    update?: user_classesUpdateWithWhereUniqueWithoutUserInput | user_classesUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: user_classesUpdateManyWithWhereWithoutUserInput | user_classesUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
   }
 
   export type xp_systemUpdateManyWithoutUsersNestedInput = {
@@ -27963,6 +34127,20 @@ export namespace Prisma {
     deleteMany?: user_achievementsScalarWhereInput | user_achievementsScalarWhereInput[]
   }
 
+  export type user_classesUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<user_classesCreateWithoutUserInput, user_classesUncheckedCreateWithoutUserInput> | user_classesCreateWithoutUserInput[] | user_classesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: user_classesCreateOrConnectWithoutUserInput | user_classesCreateOrConnectWithoutUserInput[]
+    upsert?: user_classesUpsertWithWhereUniqueWithoutUserInput | user_classesUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: user_classesCreateManyUserInputEnvelope
+    set?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    disconnect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    delete?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    connect?: user_classesWhereUniqueInput | user_classesWhereUniqueInput[]
+    update?: user_classesUpdateWithWhereUniqueWithoutUserInput | user_classesUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: user_classesUpdateManyWithWhereWithoutUserInput | user_classesUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
+  }
+
   export type xp_systemUncheckedUpdateManyWithoutUsersNestedInput = {
     create?: XOR<xp_systemCreateWithoutUsersInput, xp_systemUncheckedCreateWithoutUsersInput> | xp_systemCreateWithoutUsersInput[] | xp_systemUncheckedCreateWithoutUsersInput[]
     connectOrCreate?: xp_systemCreateOrConnectWithoutUsersInput | xp_systemCreateOrConnectWithoutUsersInput[]
@@ -28057,6 +34235,10 @@ export namespace Prisma {
     update?: XOR<XOR<chatsUpdateToOneWithWhereWithoutMessagesInput, chatsUpdateWithoutMessagesInput>, chatsUncheckedUpdateWithoutMessagesInput>
   }
 
+  export type quiz_questionsCreateoptionsInput = {
+    set: string[]
+  }
+
   export type quizzesCreateNestedOneWithoutQuiz_questionsInput = {
     create?: XOR<quizzesCreateWithoutQuiz_questionsInput, quizzesUncheckedCreateWithoutQuiz_questionsInput>
     connectOrCreate?: quizzesCreateOrConnectWithoutQuiz_questionsInput
@@ -28065,6 +34247,11 @@ export namespace Prisma {
 
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
+  }
+
+  export type quiz_questionsUpdateoptionsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type quizzesUpdateOneRequiredWithoutQuiz_questionsNestedInput = {
@@ -28129,6 +34316,62 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutClass_engagementInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutClass_engagementInput, UserUpdateWithoutClass_engagementInput>, UserUncheckedUpdateWithoutClass_engagementInput>
+  }
+
+  export type classesCreateNestedOneWithoutClass_tasksInput = {
+    create?: XOR<classesCreateWithoutClass_tasksInput, classesUncheckedCreateWithoutClass_tasksInput>
+    connectOrCreate?: classesCreateOrConnectWithoutClass_tasksInput
+    connect?: classesWhereUniqueInput
+  }
+
+  export type classesUpdateOneRequiredWithoutClass_tasksNestedInput = {
+    create?: XOR<classesCreateWithoutClass_tasksInput, classesUncheckedCreateWithoutClass_tasksInput>
+    connectOrCreate?: classesCreateOrConnectWithoutClass_tasksInput
+    upsert?: classesUpsertWithoutClass_tasksInput
+    connect?: classesWhereUniqueInput
+    update?: XOR<XOR<classesUpdateToOneWithWhereWithoutClass_tasksInput, classesUpdateWithoutClass_tasksInput>, classesUncheckedUpdateWithoutClass_tasksInput>
+  }
+
+  export type classesCreateNestedOneWithoutCourse_materialsInput = {
+    create?: XOR<classesCreateWithoutCourse_materialsInput, classesUncheckedCreateWithoutCourse_materialsInput>
+    connectOrCreate?: classesCreateOrConnectWithoutCourse_materialsInput
+    connect?: classesWhereUniqueInput
+  }
+
+  export type classesUpdateOneRequiredWithoutCourse_materialsNestedInput = {
+    create?: XOR<classesCreateWithoutCourse_materialsInput, classesUncheckedCreateWithoutCourse_materialsInput>
+    connectOrCreate?: classesCreateOrConnectWithoutCourse_materialsInput
+    upsert?: classesUpsertWithoutCourse_materialsInput
+    connect?: classesWhereUniqueInput
+    update?: XOR<XOR<classesUpdateToOneWithWhereWithoutCourse_materialsInput, classesUpdateWithoutCourse_materialsInput>, classesUncheckedUpdateWithoutCourse_materialsInput>
+  }
+
+  export type classesCreateNestedOneWithoutUser_classesInput = {
+    create?: XOR<classesCreateWithoutUser_classesInput, classesUncheckedCreateWithoutUser_classesInput>
+    connectOrCreate?: classesCreateOrConnectWithoutUser_classesInput
+    connect?: classesWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutUser_classesInput = {
+    create?: XOR<UserCreateWithoutUser_classesInput, UserUncheckedCreateWithoutUser_classesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUser_classesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type classesUpdateOneRequiredWithoutUser_classesNestedInput = {
+    create?: XOR<classesCreateWithoutUser_classesInput, classesUncheckedCreateWithoutUser_classesInput>
+    connectOrCreate?: classesCreateOrConnectWithoutUser_classesInput
+    upsert?: classesUpsertWithoutUser_classesInput
+    connect?: classesWhereUniqueInput
+    update?: XOR<XOR<classesUpdateToOneWithWhereWithoutUser_classesInput, classesUpdateWithoutUser_classesInput>, classesUncheckedUpdateWithoutUser_classesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutUser_classesNestedInput = {
+    create?: XOR<UserCreateWithoutUser_classesInput, UserUncheckedCreateWithoutUser_classesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUser_classesInput
+    upsert?: UserUpsertWithoutUser_classesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUser_classesInput, UserUpdateWithoutUser_classesInput>, UserUncheckedUpdateWithoutUser_classesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -28409,6 +34652,31 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type NestedUuidFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidFilter<$PrismaModel> | string
+  }
+
+  export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
   export type user_achievementsCreateWithoutAchievementsInput = {
     earned_at?: Date | string | null
     users: UserCreateNestedOneWithoutUser_achievementsInput
@@ -28458,6 +34726,7 @@ export namespace Prisma {
     session_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     classes: classesCreateNestedOneWithoutChat_sessionsInput
     topics: topicsCreateNestedOneWithoutChat_sessionsInput
     users: UserCreateNestedOneWithoutChat_sessionsInput
@@ -28470,6 +34739,7 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
   }
 
   export type chat_sessionsCreateOrConnectWithoutChat_historyInput = {
@@ -28492,6 +34762,7 @@ export namespace Prisma {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     classes?: classesUpdateOneRequiredWithoutChat_sessionsNestedInput
     topics?: topicsUpdateOneRequiredWithoutChat_sessionsNestedInput
     users?: UserUpdateOneRequiredWithoutChat_sessionsNestedInput
@@ -28504,6 +34775,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyCreateWithoutChat_sessionsInput = {
@@ -28511,6 +34783,8 @@ export namespace Prisma {
     sender: string
     content: string
     created_at?: Date | string | null
+    score?: number | null
+    reason?: string | null
   }
 
   export type chat_historyUncheckedCreateWithoutChat_sessionsInput = {
@@ -28518,6 +34792,8 @@ export namespace Prisma {
     sender: string
     content: string
     created_at?: Date | string | null
+    score?: number | null
+    reason?: string | null
   }
 
   export type chat_historyCreateOrConnectWithoutChat_sessionsInput = {
@@ -28537,8 +34813,13 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
   }
 
   export type classesUncheckedCreateWithoutChat_sessionsInput = {
@@ -28548,8 +34829,13 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
   }
 
   export type classesCreateOrConnectWithoutChat_sessionsInput = {
@@ -28592,6 +34878,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -28600,6 +34890,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -28619,6 +34910,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -28627,6 +34922,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -28660,6 +34956,8 @@ export namespace Prisma {
     sender?: StringFilter<"chat_history"> | string
     content?: StringFilter<"chat_history"> | string
     created_at?: DateTimeNullableFilter<"chat_history"> | Date | string | null
+    score?: IntNullableFilter<"chat_history"> | number | null
+    reason?: StringNullableFilter<"chat_history"> | string | null
   }
 
   export type classesUpsertWithoutChat_sessionsInput = {
@@ -28680,8 +34978,13 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
   }
 
   export type classesUncheckedUpdateWithoutChat_sessionsInput = {
@@ -28691,8 +34994,13 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
   }
 
   export type topicsUpsertWithoutChat_sessionsInput = {
@@ -28747,6 +35055,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -28755,6 +35067,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -28774,6 +35087,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -28782,6 +35099,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -28789,6 +35107,7 @@ export namespace Prisma {
     session_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyCreateNestedManyWithoutChat_sessionsInput
     topics: topicsCreateNestedOneWithoutChat_sessionsInput
     users: UserCreateNestedOneWithoutChat_sessionsInput
@@ -28800,6 +35119,7 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyUncheckedCreateNestedManyWithoutChat_sessionsInput
   }
 
@@ -28810,6 +35130,58 @@ export namespace Prisma {
 
   export type chat_sessionsCreateManyClassesInputEnvelope = {
     data: chat_sessionsCreateManyClassesInput | chat_sessionsCreateManyClassesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type class_tasksCreateWithoutClassesInput = {
+    id: string
+    task_name: string
+    due_date: Date | string
+    created_at?: Date | string | null
+  }
+
+  export type class_tasksUncheckedCreateWithoutClassesInput = {
+    id: string
+    task_name: string
+    due_date: Date | string
+    created_at?: Date | string | null
+  }
+
+  export type class_tasksCreateOrConnectWithoutClassesInput = {
+    where: class_tasksWhereUniqueInput
+    create: XOR<class_tasksCreateWithoutClassesInput, class_tasksUncheckedCreateWithoutClassesInput>
+  }
+
+  export type class_tasksCreateManyClassesInputEnvelope = {
+    data: class_tasksCreateManyClassesInput | class_tasksCreateManyClassesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type course_materialsCreateWithoutClassesInput = {
+    id: string
+    user_id: string
+    file_name: string
+    file_url?: string | null
+    doc_type?: string | null
+    uploaded_at?: Date | string | null
+  }
+
+  export type course_materialsUncheckedCreateWithoutClassesInput = {
+    id: string
+    user_id: string
+    file_name: string
+    file_url?: string | null
+    doc_type?: string | null
+    uploaded_at?: Date | string | null
+  }
+
+  export type course_materialsCreateOrConnectWithoutClassesInput = {
+    where: course_materialsWhereUniqueInput
+    create: XOR<course_materialsCreateWithoutClassesInput, course_materialsUncheckedCreateWithoutClassesInput>
+  }
+
+  export type course_materialsCreateManyClassesInputEnvelope = {
+    data: course_materialsCreateManyClassesInput | course_materialsCreateManyClassesInput[]
     skipDuplicates?: boolean
   }
 
@@ -28863,6 +35235,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type user_classesCreateWithoutClassesInput = {
+    id?: string
+    enrolled_at?: Date | string | null
+    User: UserCreateNestedOneWithoutUser_classesInput
+  }
+
+  export type user_classesUncheckedCreateWithoutClassesInput = {
+    id?: string
+    user_id: string
+    enrolled_at?: Date | string | null
+  }
+
+  export type user_classesCreateOrConnectWithoutClassesInput = {
+    where: user_classesWhereUniqueInput
+    create: XOR<user_classesCreateWithoutClassesInput, user_classesUncheckedCreateWithoutClassesInput>
+  }
+
+  export type user_classesCreateManyClassesInputEnvelope = {
+    data: user_classesCreateManyClassesInput | user_classesCreateManyClassesInput[]
+    skipDuplicates?: boolean
+  }
+
   export type chat_sessionsUpsertWithWhereUniqueWithoutClassesInput = {
     where: chat_sessionsWhereUniqueInput
     update: XOR<chat_sessionsUpdateWithoutClassesInput, chat_sessionsUncheckedUpdateWithoutClassesInput>
@@ -28889,6 +35283,63 @@ export namespace Prisma {
     topic_id?: StringFilter<"chat_sessions"> | string
     started_at?: DateTimeNullableFilter<"chat_sessions"> | Date | string | null
     created_at?: DateTimeNullableFilter<"chat_sessions"> | Date | string | null
+    title?: StringNullableFilter<"chat_sessions"> | string | null
+  }
+
+  export type class_tasksUpsertWithWhereUniqueWithoutClassesInput = {
+    where: class_tasksWhereUniqueInput
+    update: XOR<class_tasksUpdateWithoutClassesInput, class_tasksUncheckedUpdateWithoutClassesInput>
+    create: XOR<class_tasksCreateWithoutClassesInput, class_tasksUncheckedCreateWithoutClassesInput>
+  }
+
+  export type class_tasksUpdateWithWhereUniqueWithoutClassesInput = {
+    where: class_tasksWhereUniqueInput
+    data: XOR<class_tasksUpdateWithoutClassesInput, class_tasksUncheckedUpdateWithoutClassesInput>
+  }
+
+  export type class_tasksUpdateManyWithWhereWithoutClassesInput = {
+    where: class_tasksScalarWhereInput
+    data: XOR<class_tasksUpdateManyMutationInput, class_tasksUncheckedUpdateManyWithoutClassesInput>
+  }
+
+  export type class_tasksScalarWhereInput = {
+    AND?: class_tasksScalarWhereInput | class_tasksScalarWhereInput[]
+    OR?: class_tasksScalarWhereInput[]
+    NOT?: class_tasksScalarWhereInput | class_tasksScalarWhereInput[]
+    id?: UuidFilter<"class_tasks"> | string
+    class_code?: StringFilter<"class_tasks"> | string
+    task_name?: StringFilter<"class_tasks"> | string
+    due_date?: DateTimeFilter<"class_tasks"> | Date | string
+    created_at?: DateTimeNullableFilter<"class_tasks"> | Date | string | null
+  }
+
+  export type course_materialsUpsertWithWhereUniqueWithoutClassesInput = {
+    where: course_materialsWhereUniqueInput
+    update: XOR<course_materialsUpdateWithoutClassesInput, course_materialsUncheckedUpdateWithoutClassesInput>
+    create: XOR<course_materialsCreateWithoutClassesInput, course_materialsUncheckedCreateWithoutClassesInput>
+  }
+
+  export type course_materialsUpdateWithWhereUniqueWithoutClassesInput = {
+    where: course_materialsWhereUniqueInput
+    data: XOR<course_materialsUpdateWithoutClassesInput, course_materialsUncheckedUpdateWithoutClassesInput>
+  }
+
+  export type course_materialsUpdateManyWithWhereWithoutClassesInput = {
+    where: course_materialsScalarWhereInput
+    data: XOR<course_materialsUpdateManyMutationInput, course_materialsUncheckedUpdateManyWithoutClassesInput>
+  }
+
+  export type course_materialsScalarWhereInput = {
+    AND?: course_materialsScalarWhereInput | course_materialsScalarWhereInput[]
+    OR?: course_materialsScalarWhereInput[]
+    NOT?: course_materialsScalarWhereInput | course_materialsScalarWhereInput[]
+    id?: StringFilter<"course_materials"> | string
+    class_code?: StringFilter<"course_materials"> | string
+    user_id?: StringFilter<"course_materials"> | string
+    file_name?: StringFilter<"course_materials"> | string
+    file_url?: StringNullableFilter<"course_materials"> | string | null
+    doc_type?: StringNullableFilter<"course_materials"> | string | null
+    uploaded_at?: DateTimeNullableFilter<"course_materials"> | Date | string | null
   }
 
   export type daily_topic_metricsUpsertWithWhereUniqueWithoutClassesInput = {
@@ -28944,6 +35395,32 @@ export namespace Prisma {
     name?: StringFilter<"topics"> | string
   }
 
+  export type user_classesUpsertWithWhereUniqueWithoutClassesInput = {
+    where: user_classesWhereUniqueInput
+    update: XOR<user_classesUpdateWithoutClassesInput, user_classesUncheckedUpdateWithoutClassesInput>
+    create: XOR<user_classesCreateWithoutClassesInput, user_classesUncheckedCreateWithoutClassesInput>
+  }
+
+  export type user_classesUpdateWithWhereUniqueWithoutClassesInput = {
+    where: user_classesWhereUniqueInput
+    data: XOR<user_classesUpdateWithoutClassesInput, user_classesUncheckedUpdateWithoutClassesInput>
+  }
+
+  export type user_classesUpdateManyWithWhereWithoutClassesInput = {
+    where: user_classesScalarWhereInput
+    data: XOR<user_classesUpdateManyMutationInput, user_classesUncheckedUpdateManyWithoutClassesInput>
+  }
+
+  export type user_classesScalarWhereInput = {
+    AND?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
+    OR?: user_classesScalarWhereInput[]
+    NOT?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
+    id?: UuidFilter<"user_classes"> | string
+    user_id?: StringFilter<"user_classes"> | string
+    class_code?: StringFilter<"user_classes"> | string
+    enrolled_at?: DateTimeNullableFilter<"user_classes"> | Date | string | null
+  }
+
   export type classesCreateWithoutDaily_topic_metricsInput = {
     class_code: string
     subject: string
@@ -28951,8 +35428,13 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
   }
 
   export type classesUncheckedCreateWithoutDaily_topic_metricsInput = {
@@ -28962,8 +35444,13 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
   }
 
   export type classesCreateOrConnectWithoutDaily_topic_metricsInput = {
@@ -29006,6 +35493,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -29014,6 +35505,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -29033,6 +35525,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -29041,6 +35537,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -29067,8 +35564,13 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
   }
 
   export type classesUncheckedUpdateWithoutDaily_topic_metricsInput = {
@@ -29078,8 +35580,13 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
   }
 
   export type topicsUpsertWithoutDaily_topic_metricsInput = {
@@ -29134,6 +35641,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -29142,6 +35653,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -29161,6 +35673,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -29169,6 +35685,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -29188,6 +35705,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -29196,6 +35717,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -29215,6 +35737,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -29223,6 +35749,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -29247,6 +35774,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -29255,6 +35786,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -29274,6 +35806,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -29282,6 +35818,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -29317,6 +35854,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -29325,6 +35866,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -29344,6 +35886,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -29352,6 +35898,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -29382,6 +35929,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -29390,6 +35941,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -29409,6 +35961,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -29417,6 +35973,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -29436,6 +35993,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -29444,6 +36005,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -29463,6 +36025,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -29471,6 +36037,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -29495,6 +36062,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -29503,6 +36074,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -29522,6 +36094,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -29530,6 +36106,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -29565,6 +36142,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -29573,6 +36154,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -29592,6 +36174,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -29600,6 +36186,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -29630,6 +36217,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -29638,6 +36229,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -29657,6 +36249,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -29665,6 +36261,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -29672,6 +36269,7 @@ export namespace Prisma {
     session_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyCreateNestedManyWithoutChat_sessionsInput
     classes: classesCreateNestedOneWithoutChat_sessionsInput
     users: UserCreateNestedOneWithoutChat_sessionsInput
@@ -29683,6 +36281,7 @@ export namespace Prisma {
     user_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyUncheckedCreateNestedManyWithoutChat_sessionsInput
   }
 
@@ -29729,8 +36328,13 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
   }
 
   export type classesUncheckedCreateWithoutTopicsInput = {
@@ -29740,8 +36344,13 @@ export namespace Prisma {
     created_at?: Date | string | null
     user_id?: string | null
     syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
   }
 
   export type classesCreateOrConnectWithoutTopicsInput = {
@@ -29799,8 +36408,13 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
   }
 
   export type classesUncheckedUpdateWithoutTopicsInput = {
@@ -29810,8 +36424,13 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
   }
 
   export type achievementsCreateWithoutUser_achievementsInput = {
@@ -29821,6 +36440,8 @@ export namespace Prisma {
     xp_reward?: number | null
     created_at?: Date | string | null
     slug?: string | null
+    icon_colored?: string | null
+    icon_greyed?: string | null
   }
 
   export type achievementsUncheckedCreateWithoutUser_achievementsInput = {
@@ -29830,6 +36451,8 @@ export namespace Prisma {
     xp_reward?: number | null
     created_at?: Date | string | null
     slug?: string | null
+    icon_colored?: string | null
+    icon_greyed?: string | null
   }
 
   export type achievementsCreateOrConnectWithoutUser_achievementsInput = {
@@ -29853,6 +36476,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -29861,6 +36488,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -29880,6 +36508,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -29888,6 +36520,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -29914,6 +36547,8 @@ export namespace Prisma {
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_colored?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_greyed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type achievementsUncheckedUpdateWithoutUser_achievementsInput = {
@@ -29923,6 +36558,8 @@ export namespace Prisma {
     xp_reward?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     slug?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_colored?: NullableStringFieldUpdateOperationsInput | string | null
+    icon_greyed?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUpsertWithoutUser_achievementsInput = {
@@ -29952,6 +36589,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -29960,6 +36601,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -29979,6 +36621,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -29987,6 +36633,7 @@ export namespace Prisma {
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -30006,6 +36653,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
@@ -30015,6 +36666,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutXp_systemInput = {
@@ -30033,6 +36685,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
@@ -30042,6 +36698,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutXp_systemInput = {
@@ -30076,6 +36733,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
@@ -30085,6 +36746,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutXp_systemInput = {
@@ -30103,6 +36765,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
@@ -30112,6 +36778,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -30162,6 +36829,7 @@ export namespace Prisma {
     session_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyCreateNestedManyWithoutChat_sessionsInput
     classes: classesCreateNestedOneWithoutChat_sessionsInput
     topics: topicsCreateNestedOneWithoutChat_sessionsInput
@@ -30173,6 +36841,7 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
     chat_history?: chat_historyUncheckedCreateNestedManyWithoutChat_sessionsInput
   }
 
@@ -30191,6 +36860,8 @@ export namespace Prisma {
     class_name: string
     question_count?: number | null
     week_start: Date | string
+    color?: string | null
+    light?: string | null
   }
 
   export type class_engagementUncheckedCreateWithoutUserInput = {
@@ -30198,6 +36869,8 @@ export namespace Prisma {
     class_name: string
     question_count?: number | null
     week_start: Date | string
+    color?: string | null
+    light?: string | null
   }
 
   export type class_engagementCreateOrConnectWithoutUserInput = {
@@ -30364,6 +37037,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type user_classesCreateWithoutUserInput = {
+    id?: string
+    enrolled_at?: Date | string | null
+    classes: classesCreateNestedOneWithoutUser_classesInput
+  }
+
+  export type user_classesUncheckedCreateWithoutUserInput = {
+    id?: string
+    class_code: string
+    enrolled_at?: Date | string | null
+  }
+
+  export type user_classesCreateOrConnectWithoutUserInput = {
+    where: user_classesWhereUniqueInput
+    create: XOR<user_classesCreateWithoutUserInput, user_classesUncheckedCreateWithoutUserInput>
+  }
+
+  export type user_classesCreateManyUserInputEnvelope = {
+    data: user_classesCreateManyUserInput | user_classesCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type xp_systemCreateWithoutUsersInput = {
     id: string
     source: string
@@ -30466,6 +37161,8 @@ export namespace Prisma {
     class_name?: StringFilter<"class_engagement"> | string
     question_count?: IntNullableFilter<"class_engagement"> | number | null
     week_start?: DateTimeFilter<"class_engagement"> | Date | string
+    color?: StringNullableFilter<"class_engagement"> | string | null
+    light?: StringNullableFilter<"class_engagement"> | string | null
   }
 
   export type daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput = {
@@ -30589,6 +37286,22 @@ export namespace Prisma {
     data: XOR<user_achievementsUpdateManyMutationInput, user_achievementsUncheckedUpdateManyWithoutUsersInput>
   }
 
+  export type user_classesUpsertWithWhereUniqueWithoutUserInput = {
+    where: user_classesWhereUniqueInput
+    update: XOR<user_classesUpdateWithoutUserInput, user_classesUncheckedUpdateWithoutUserInput>
+    create: XOR<user_classesCreateWithoutUserInput, user_classesUncheckedCreateWithoutUserInput>
+  }
+
+  export type user_classesUpdateWithWhereUniqueWithoutUserInput = {
+    where: user_classesWhereUniqueInput
+    data: XOR<user_classesUpdateWithoutUserInput, user_classesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type user_classesUpdateManyWithWhereWithoutUserInput = {
+    where: user_classesScalarWhereInput
+    data: XOR<user_classesUpdateManyMutationInput, user_classesUncheckedUpdateManyWithoutUserInput>
+  }
+
   export type xp_systemUpsertWithWhereUniqueWithoutUsersInput = {
     where: xp_systemWhereUniqueInput
     update: XOR<xp_systemUpdateWithoutUsersInput, xp_systemUncheckedUpdateWithoutUsersInput>
@@ -30632,6 +37345,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -30640,6 +37357,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -30659,6 +37377,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -30667,6 +37389,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -30702,6 +37425,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -30710,6 +37437,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -30729,6 +37457,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
@@ -30737,6 +37469,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
   }
 
@@ -30847,6 +37580,7 @@ export namespace Prisma {
     score?: number | null
     date?: Date | string | null
     retake_count?: number | null
+    color?: string | null
   }
 
   export type quizzesUncheckedCreateWithoutQuiz_questionsInput = {
@@ -30856,6 +37590,7 @@ export namespace Prisma {
     score?: number | null
     date?: Date | string | null
     retake_count?: number | null
+    color?: string | null
   }
 
   export type quizzesCreateOrConnectWithoutQuiz_questionsInput = {
@@ -30881,6 +37616,7 @@ export namespace Prisma {
     score?: NullableIntFieldUpdateOperationsInput | number | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quizzesUncheckedUpdateWithoutQuiz_questionsInput = {
@@ -30890,6 +37626,7 @@ export namespace Prisma {
     score?: NullableIntFieldUpdateOperationsInput | number | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     retake_count?: NullableIntFieldUpdateOperationsInput | number | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quiz_questionsCreateWithoutQuizzesInput = {
@@ -30899,6 +37636,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
+    options?: quiz_questionsCreateoptionsInput | string[]
+    explanation?: string | null
   }
 
   export type quiz_questionsUncheckedCreateWithoutQuizzesInput = {
@@ -30908,6 +37647,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
+    options?: quiz_questionsCreateoptionsInput | string[]
+    explanation?: string | null
   }
 
   export type quiz_questionsCreateOrConnectWithoutQuizzesInput = {
@@ -30947,6 +37688,8 @@ export namespace Prisma {
     correct_answer?: StringFilter<"quiz_questions"> | string
     is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableFilter<"quiz_questions"> | number | null
+    options?: StringNullableListFilter<"quiz_questions">
+    explanation?: StringNullableFilter<"quiz_questions"> | string | null
   }
 
   export type UserCreateWithoutClass_engagementInput = {
@@ -30965,6 +37708,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
@@ -30973,6 +37720,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
     xp_system?: xp_systemCreateNestedManyWithoutUsersInput
   }
 
@@ -30992,6 +37740,10 @@ export namespace Prisma {
     class_status?: string | null
     streak?: number | null
     weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
@@ -31000,6 +37752,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
     user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
     xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
   }
 
@@ -31035,6 +37788,10 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
@@ -31043,6 +37800,7 @@ export namespace Prisma {
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
     user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
     xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
   }
 
@@ -31062,8 +37820,397 @@ export namespace Prisma {
     class_status?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
+    friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
+    friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
+    xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
+  export type classesCreateWithoutClass_tasksInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
+    topics?: topicsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesUncheckedCreateWithoutClass_tasksInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
+    topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesCreateOrConnectWithoutClass_tasksInput = {
+    where: classesWhereUniqueInput
+    create: XOR<classesCreateWithoutClass_tasksInput, classesUncheckedCreateWithoutClass_tasksInput>
+  }
+
+  export type classesUpsertWithoutClass_tasksInput = {
+    update: XOR<classesUpdateWithoutClass_tasksInput, classesUncheckedUpdateWithoutClass_tasksInput>
+    create: XOR<classesCreateWithoutClass_tasksInput, classesUncheckedCreateWithoutClass_tasksInput>
+    where?: classesWhereInput
+  }
+
+  export type classesUpdateToOneWithWhereWithoutClass_tasksInput = {
+    where?: classesWhereInput
+    data: XOR<classesUpdateWithoutClass_tasksInput, classesUncheckedUpdateWithoutClass_tasksInput>
+  }
+
+  export type classesUpdateWithoutClass_tasksInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
+    topics?: topicsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
+  }
+
+  export type classesUncheckedUpdateWithoutClass_tasksInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
+    topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
+  }
+
+  export type classesCreateWithoutCourse_materialsInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
+    topics?: topicsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesUncheckedCreateWithoutCourse_materialsInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
+    topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesCreateOrConnectWithoutCourse_materialsInput = {
+    where: classesWhereUniqueInput
+    create: XOR<classesCreateWithoutCourse_materialsInput, classesUncheckedCreateWithoutCourse_materialsInput>
+  }
+
+  export type classesUpsertWithoutCourse_materialsInput = {
+    update: XOR<classesUpdateWithoutCourse_materialsInput, classesUncheckedUpdateWithoutCourse_materialsInput>
+    create: XOR<classesCreateWithoutCourse_materialsInput, classesUncheckedCreateWithoutCourse_materialsInput>
+    where?: classesWhereInput
+  }
+
+  export type classesUpdateToOneWithWhereWithoutCourse_materialsInput = {
+    where?: classesWhereInput
+    data: XOR<classesUpdateWithoutCourse_materialsInput, classesUncheckedUpdateWithoutCourse_materialsInput>
+  }
+
+  export type classesUpdateWithoutCourse_materialsInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
+    topics?: topicsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
+  }
+
+  export type classesUncheckedUpdateWithoutCourse_materialsInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
+    topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
+  }
+
+  export type classesCreateWithoutUser_classesInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
+    topics?: topicsCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesUncheckedCreateWithoutUser_classesInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
+    topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesCreateOrConnectWithoutUser_classesInput = {
+    where: classesWhereUniqueInput
+    create: XOR<classesCreateWithoutUser_classesInput, classesUncheckedCreateWithoutUser_classesInput>
+  }
+
+  export type UserCreateWithoutUser_classesInput = {
+    id?: string
+    email: string
+    total_xp?: number | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
+    Account?: AccountCreateNestedManyWithoutUserInput
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
+    friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
+    friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    xp_system?: xp_systemCreateNestedManyWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutUser_classesInput = {
+    id?: string
+    email: string
+    total_xp?: number | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
+    Account?: AccountUncheckedCreateNestedManyWithoutUserInput
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
+    friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
+    friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type UserCreateOrConnectWithoutUser_classesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUser_classesInput, UserUncheckedCreateWithoutUser_classesInput>
+  }
+
+  export type classesUpsertWithoutUser_classesInput = {
+    update: XOR<classesUpdateWithoutUser_classesInput, classesUncheckedUpdateWithoutUser_classesInput>
+    create: XOR<classesCreateWithoutUser_classesInput, classesUncheckedCreateWithoutUser_classesInput>
+    where?: classesWhereInput
+  }
+
+  export type classesUpdateToOneWithWhereWithoutUser_classesInput = {
+    where?: classesWhereInput
+    data: XOR<classesUpdateWithoutUser_classesInput, classesUncheckedUpdateWithoutUser_classesInput>
+  }
+
+  export type classesUpdateWithoutUser_classesInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
+    topics?: topicsUpdateManyWithoutClassesNestedInput
+  }
+
+  export type classesUncheckedUpdateWithoutUser_classesInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
+    topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+  }
+
+  export type UserUpsertWithoutUser_classesInput = {
+    update: XOR<UserUpdateWithoutUser_classesInput, UserUncheckedUpdateWithoutUser_classesInput>
+    create: XOR<UserCreateWithoutUser_classesInput, UserUncheckedCreateWithoutUser_classesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUser_classesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUser_classesInput, UserUncheckedUpdateWithoutUser_classesInput>
+  }
+
+  export type UserUpdateWithoutUser_classesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Account?: AccountUpdateManyWithoutUserNestedInput
+    chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
+    friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
+    friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUser_classesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
     daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
@@ -31098,6 +38245,8 @@ export namespace Prisma {
     sender: string
     content: string
     created_at?: Date | string | null
+    score?: number | null
+    reason?: string | null
   }
 
   export type chat_historyUpdateWithoutChat_sessionsInput = {
@@ -31105,6 +38254,8 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyUncheckedUpdateWithoutChat_sessionsInput = {
@@ -31112,6 +38263,8 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_historyUncheckedUpdateManyWithoutChat_sessionsInput = {
@@ -31119,6 +38272,8 @@ export namespace Prisma {
     sender?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    score?: NullableIntFieldUpdateOperationsInput | number | null
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chat_sessionsCreateManyClassesInput = {
@@ -31127,6 +38282,23 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
+  }
+
+  export type class_tasksCreateManyClassesInput = {
+    id: string
+    task_name: string
+    due_date: Date | string
+    created_at?: Date | string | null
+  }
+
+  export type course_materialsCreateManyClassesInput = {
+    id: string
+    user_id: string
+    file_name: string
+    file_url?: string | null
+    doc_type?: string | null
+    uploaded_at?: Date | string | null
   }
 
   export type daily_topic_metricsCreateManyClassesInput = {
@@ -31142,10 +38314,17 @@ export namespace Prisma {
     name: string
   }
 
+  export type user_classesCreateManyClassesInput = {
+    id?: string
+    user_id: string
+    enrolled_at?: Date | string | null
+  }
+
   export type chat_sessionsUpdateWithoutClassesInput = {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUpdateManyWithoutChat_sessionsNestedInput
     topics?: topicsUpdateOneRequiredWithoutChat_sessionsNestedInput
     users?: UserUpdateOneRequiredWithoutChat_sessionsNestedInput
@@ -31157,6 +38336,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUncheckedUpdateManyWithoutChat_sessionsNestedInput
   }
 
@@ -31166,6 +38346,55 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type class_tasksUpdateWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type class_tasksUncheckedUpdateWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type class_tasksUncheckedUpdateManyWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task_name?: StringFieldUpdateOperationsInput | string
+    due_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type course_materialsUpdateWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type course_materialsUncheckedUpdateWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type course_materialsUncheckedUpdateManyWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    file_name?: StringFieldUpdateOperationsInput | string
+    file_url?: NullableStringFieldUpdateOperationsInput | string | null
+    doc_type?: NullableStringFieldUpdateOperationsInput | string | null
+    uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type daily_topic_metricsUpdateWithoutClassesInput = {
@@ -31211,12 +38440,31 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
   }
 
+  export type user_classesUpdateWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    User?: UserUpdateOneRequiredWithoutUser_classesNestedInput
+  }
+
+  export type user_classesUncheckedUpdateWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type user_classesUncheckedUpdateManyWithoutClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type chat_sessionsCreateManyTopicsInput = {
     session_id: string
     class_code: string
     user_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
   }
 
   export type daily_topic_metricsCreateManyTopicsInput = {
@@ -31231,6 +38479,7 @@ export namespace Prisma {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUpdateManyWithoutChat_sessionsNestedInput
     classes?: classesUpdateOneRequiredWithoutChat_sessionsNestedInput
     users?: UserUpdateOneRequiredWithoutChat_sessionsNestedInput
@@ -31242,6 +38491,7 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUncheckedUpdateManyWithoutChat_sessionsNestedInput
   }
 
@@ -31251,6 +38501,7 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type daily_topic_metricsUpdateWithoutTopicsInput = {
@@ -31300,6 +38551,7 @@ export namespace Prisma {
     topic_id: string
     started_at?: Date | string | null
     created_at?: Date | string | null
+    title?: string | null
   }
 
   export type class_engagementCreateManyUserInput = {
@@ -31307,6 +38559,8 @@ export namespace Prisma {
     class_name: string
     question_count?: number | null
     week_start: Date | string
+    color?: string | null
+    light?: string | null
   }
 
   export type daily_topic_metricsCreateManyUsersInput = {
@@ -31354,6 +38608,12 @@ export namespace Prisma {
   export type user_achievementsCreateManyUsersInput = {
     achievement_id: string
     earned_at?: Date | string | null
+  }
+
+  export type user_classesCreateManyUserInput = {
+    id?: string
+    class_code: string
+    enrolled_at?: Date | string | null
   }
 
   export type xp_systemCreateManyUsersInput = {
@@ -31418,6 +38678,7 @@ export namespace Prisma {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUpdateManyWithoutChat_sessionsNestedInput
     classes?: classesUpdateOneRequiredWithoutChat_sessionsNestedInput
     topics?: topicsUpdateOneRequiredWithoutChat_sessionsNestedInput
@@ -31429,6 +38690,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
     chat_history?: chat_historyUncheckedUpdateManyWithoutChat_sessionsNestedInput
   }
 
@@ -31438,6 +38700,7 @@ export namespace Prisma {
     topic_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type class_engagementUpdateWithoutUserInput = {
@@ -31445,6 +38708,8 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type class_engagementUncheckedUpdateWithoutUserInput = {
@@ -31452,6 +38717,8 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type class_engagementUncheckedUpdateManyWithoutUserInput = {
@@ -31459,6 +38726,8 @@ export namespace Prisma {
     class_name?: StringFieldUpdateOperationsInput | string
     question_count?: NullableIntFieldUpdateOperationsInput | number | null
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    light?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type daily_topic_metricsUpdateWithoutUsersInput = {
@@ -31602,6 +38871,24 @@ export namespace Prisma {
     earned_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type user_classesUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    classes?: classesUpdateOneRequiredWithoutUser_classesNestedInput
+  }
+
+  export type user_classesUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type user_classesUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    enrolled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type xp_systemUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
@@ -31665,6 +38952,8 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
+    options?: quiz_questionsCreateoptionsInput | string[]
+    explanation?: string | null
   }
 
   export type quiz_questionsUpdateWithoutQuizzesInput = {
@@ -31674,6 +38963,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quiz_questionsUncheckedUpdateWithoutQuizzesInput = {
@@ -31683,6 +38974,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type quiz_questionsUncheckedUpdateManyWithoutQuizzesInput = {
@@ -31692,6 +38985,8 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
+    options?: quiz_questionsUpdateoptionsInput | string[]
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

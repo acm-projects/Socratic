@@ -126,7 +126,9 @@ exports.Prisma.AchievementsScalarFieldEnum = {
   description: 'description',
   xp_reward: 'xp_reward',
   created_at: 'created_at',
-  slug: 'slug'
+  slug: 'slug',
+  icon_colored: 'icon_colored',
+  icon_greyed: 'icon_greyed'
 };
 
 exports.Prisma.Chat_historyScalarFieldEnum = {
@@ -134,7 +136,9 @@ exports.Prisma.Chat_historyScalarFieldEnum = {
   session_id: 'session_id',
   sender: 'sender',
   content: 'content',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  score: 'score',
+  reason: 'reason'
 };
 
 exports.Prisma.Chat_sessionsScalarFieldEnum = {
@@ -143,7 +147,8 @@ exports.Prisma.Chat_sessionsScalarFieldEnum = {
   user_id: 'user_id',
   topic_id: 'topic_id',
   started_at: 'started_at',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  title: 'title'
 };
 
 exports.Prisma.ClassesScalarFieldEnum = {
@@ -152,7 +157,9 @@ exports.Prisma.ClassesScalarFieldEnum = {
   name: 'name',
   created_at: 'created_at',
   user_id: 'user_id',
-  syllabus_url: 'syllabus_url'
+  syllabus_url: 'syllabus_url',
+  streak: 'streak',
+  last_activity_date: 'last_activity_date'
 };
 
 exports.Prisma.Daily_topic_metricsScalarFieldEnum = {
@@ -218,7 +225,11 @@ exports.Prisma.UserScalarFieldEnum = {
   major: 'major',
   class_status: 'class_status',
   streak: 'streak',
-  weekly_xp: 'weekly_xp'
+  weekly_xp: 'weekly_xp',
+  ai_messages: 'ai_messages',
+  quizzes_taken: 'quizzes_taken',
+  retakes_taken: 'retakes_taken',
+  last_active_date: 'last_active_date'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -269,7 +280,9 @@ exports.Prisma.Quiz_questionsScalarFieldEnum = {
   user_answer: 'user_answer',
   correct_answer: 'correct_answer',
   is_correct: 'is_correct',
-  depth_score: 'depth_score'
+  depth_score: 'depth_score',
+  options: 'options',
+  explanation: 'explanation'
 };
 
 exports.Prisma.QuizzesScalarFieldEnum = {
@@ -278,7 +291,8 @@ exports.Prisma.QuizzesScalarFieldEnum = {
   topic_id: 'topic_id',
   score: 'score',
   date: 'date',
-  retake_count: 'retake_count'
+  retake_count: 'retake_count',
+  color: 'color'
 };
 
 exports.Prisma.Class_engagementScalarFieldEnum = {
@@ -286,7 +300,43 @@ exports.Prisma.Class_engagementScalarFieldEnum = {
   user_id: 'user_id',
   class_name: 'class_name',
   question_count: 'question_count',
-  week_start: 'week_start'
+  week_start: 'week_start',
+  color: 'color',
+  light: 'light'
+};
+
+exports.Prisma.Class_tasksScalarFieldEnum = {
+  id: 'id',
+  class_code: 'class_code',
+  task_name: 'task_name',
+  due_date: 'due_date',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Course_materialsScalarFieldEnum = {
+  id: 'id',
+  class_code: 'class_code',
+  user_id: 'user_id',
+  file_name: 'file_name',
+  file_url: 'file_url',
+  doc_type: 'doc_type',
+  uploaded_at: 'uploaded_at'
+};
+
+exports.Prisma.Shared_classesScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  friend_id: 'friend_id',
+  class_code: 'class_code',
+  class_name: 'class_name',
+  created_at: 'created_at'
+};
+
+exports.Prisma.User_classesScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  class_code: 'class_code',
+  enrolled_at: 'enrolled_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -333,7 +383,11 @@ exports.Prisma.ModelName = {
   messages: 'messages',
   quiz_questions: 'quiz_questions',
   quizzes: 'quizzes',
-  class_engagement: 'class_engagement'
+  class_engagement: 'class_engagement',
+  class_tasks: 'class_tasks',
+  course_materials: 'course_materials',
+  shared_classes: 'shared_classes',
+  user_classes: 'user_classes'
 };
 
 /**

@@ -333,7 +333,6 @@ function RightSidebar() {
                             </div>
                         </div>
                     ))}
-
                     <button
                         onClick={() => setShowAddFriend(true)}
                         className="text-[#198788] text-xs font-medium self-end cursor-pointer">
@@ -365,7 +364,16 @@ function RightSidebar() {
 
 export default function Social4() {
     return (
-        <main className={"pt-10 min-h-screen bg-gradient-to-b from-[#EEF3F4] to-[#ededed] flex"}>
+       <div
+      className={`h-screen flex`}
+      style={{
+        backgroundImage: "linear-gradient(135deg, rgba(240,245,244,0.7) 0%, rgba(245,248,247,0.7) 60%, rgba(247,245,251,0.7) 100%), url('/gridbackground.svg')",
+        // backgroundImage: "linear-gradient(to right, rgba(234,244,242,0.85) 0%, rgba(245,248,247,0.45) 100%), url('/gridbackground.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+        }}
+         >
             <div className="flex flex-col gap-5 w-full p-5">
                 <StatsTopBar />
                 <div className="flex gap-4 flex-1 items-start">
@@ -377,8 +385,10 @@ export default function Social4() {
                 </div>
             </div>
             {/* Vertical divider matching Mariam's home page */}
-            <div className="w-px bg-gray-200 self-stretch shrink-0 mx-6" />
+             <div className="w-px self-stretch my-2" style={{
+            background: "linear-gradient(to bottom, transparent, #E0E5E4 20%, #E0E5E4 80%, transparent)"
+            }} />
             <RightSidebar />
-        </main>
+        </div>
     );
 }

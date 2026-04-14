@@ -234,7 +234,7 @@ export default function Schedulemodal({onClose}){
 
                 <button
                     onClick={handleSendInvite}
-                    className="w-full bg-[#3959E9] hover:bg-[#2039AF] text-white text-sm font-medium py-3 rounded-xl mt-2">
+                    className="w-full  bg-[#347A73] hover:bg-[#1F5C57] text-white text-sm font-medium py-3 rounded-xl mt-2">
                     Send Invite
                 </button>
             </div>

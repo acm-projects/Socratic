@@ -1,12 +1,11 @@
 "use client"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Plus, X, Pencil } from "lucide-react"
 import Addcoursemodal from "./Addcoursemodal"
 import DeleteCourseModal from "./DeleteCourseModal"
-import { useSession } from "next-auth/react"
-
-
+import EditCourseModal from "./EditCourseModal"
+import { useSession } from "next-auth/react" 
 
 const accents = ["corner-teal", "corner-magenta", "corner-blue", "corner-purple", "corner-green", "corner-indigo"]
 
@@ -17,24 +16,44 @@ export default function ClassesGrid({ courses: initialCourses }) {
   const [showModal, setShowModal] = useState(false)
   const [hoveredCode, setHoveredCode] = useState(null)
   const [courseToDelete, setCourseToDelete] = useState(null)
+  const [courseToEdit, setCourseToEdit] = useState(null)
  
-    useEffect(() => {
-    if (initialCourses) setCourses(initialCourses)
+  useEffect(() => {
+    if (initialCourses?.length > 0) setCourses(initialCourses)
   }, [initialCourses])
 
-
-
   const visible = courses.slice(page * 6, page * 6 + 6)
+  
+  const deleteCourse = async (class_code) => {
+    if (!session?.user?.id) {
+      console.error("No user session found")
+      return
+    }
+    
+    setCourses(prev => prev.filter(c => c.class_code !== class_code))
+    
+    try {
+      const res = await fetch(`http://3.128.186.118:5000/classes/${class_code}?user_id=${session.user.id}`, { 
+        method: "DELETE"
+      })
+      if (!res.ok) {
+        console.error("Delete failed:", res.status)
+      }
+    } catch (err) {
+      console.error("Delete error:", err)
+    }
+  }
 
-const deleteCourse = async (class_code) => {
-  const res = await fetch(`/backend/classes/${class_code}?user_id=${session?.user?.id}`, { method: "DELETE" })
-  console.log("delete status:", res.status)
-  setCourses(prev => prev.filter(c => c.class_code !== class_code))
-}
+  const updateCourse = (updatedCourse) => {
+    setCourses(prev => prev.map(c => 
+      c.class_code === updatedCourse.class_code ? updatedCourse : c
+    ))
+  }
+
   return (
-    <div className="flex flex-col gap-3 flex-1">
+    <div className="flex flex-col gap-3 h-full">
       
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-3 shrink-0">
         <button onClick={() => setShowModal(true)} className="text-xs font-semibold text-[#90aba7] hover:text-[#141f1d] transition-colors flex items-center gap-1">
           <Plus size={14} />
           Add class
@@ -62,11 +81,29 @@ const deleteCourse = async (class_code) => {
             </Link>
 
             {hoveredCode === c.class_code && (
-              <button
-                onClick={(e) => { e.preventDefault(); setCourseToDelete(c) }}
-                className="absolute top-3 right-3 w-5 h-5 rounded-full bg-white/80 flex items-center justify-center hover:bg-red-50 transition-colors z-10">
-                <X size={12} className="text-gray-400 hover:text-red-400" />
-              </button>
+              <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
+                <button
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                    setCourseToDelete(c);
+                  }}
+                  className="w-5 h-5 rounded-full bg-white/80 flex items-center justify-center hover:bg-red-50 transition-colors"
+                >
+                  <X size={14} className="text-gray-400 hover:text-red-400" />
+                </button>
+                
+                <button
+                  onClick={(e) => { 
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                    setCourseToEdit(c);
+                  }}
+                  className="w-5 h-5 rounded-full bg-white/80 flex items-center justify-center hover:bg-blue-50 transition-colors"
+                >
+                  <Pencil size={12} className="text-gray-400 hover:text-blue-500" />
+                </button>
+              </div>
             )}
           </div>
         ))}
@@ -75,7 +112,13 @@ const deleteCourse = async (class_code) => {
       {showModal && (
         <Addcoursemodal
           onClose={() => setShowModal(false)}
-          onAdd={(name) => { setCourses(prev => [...prev, name]); setShowModal(false) }}
+          onAdd={(course) => { 
+            setCourses(prev => {
+              const filtered = prev.filter(c => c.class_code !== course.class_code)
+              return [...filtered, course]
+            })
+            setShowModal(false) 
+          }}
         />
       )}
 
@@ -84,6 +127,14 @@ const deleteCourse = async (class_code) => {
           name={courseToDelete.name}
           onClose={() => setCourseToDelete(null)}
           onConfirm={() => { deleteCourse(courseToDelete.class_code); setCourseToDelete(null) }}
+        />
+      )}
+
+      {courseToEdit && (
+        <EditCourseModal
+          course={courseToEdit}
+          onClose={() => setCourseToEdit(null)}
+          onUpdate={updateCourse}
         />
       )}
 

@@ -71,11 +71,11 @@ export default function ConfirmCoursesForm() {
 
               <div className="flex gap-2">
                 {/* edit button */}
-                <button className="p-1 border-2 border-gray-400 rounded-md">
+                {/* <button className="p-1 border-2 border-gray-400 rounded-md">
                     <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M17.8526 0.866184C17.3235 0.31153 16.6064 0 15.8588 0C15.1111 0 14.394 0.31153 13.865 0.866184L0 15.4237V19.6106H3.98766L17.8526 5.05303C18.3807 4.49742 18.6773 3.74454 18.6773 2.95961C18.6773 2.17467 18.3807 1.4218 17.8526 0.866184ZM3.34639 17.9764H1.55646V16.097L11.9147 5.22953L13.7046 7.10887L3.34639 17.9764ZM16.7522 3.89765L14.8012 5.94613L13.0151 4.06679L14.9654 2.02157C15.2027 1.77235 15.5247 1.63235 15.8603 1.63235C16.196 1.63235 16.518 1.77235 16.7553 2.02157C16.9927 2.27079 17.126 2.6088 17.126 2.96124C17.126 3.31369 16.9927 3.6517 16.7553 3.90091L16.7522 3.89765Z" fill="#7C879B"/>
                     </svg>
-                </button>
+                </button> */}
 
                 {/* delete button */}
                 <button onClick={() => handleDelete(course.class_code)} className="p-1 border-2 border-gray-400 rounded-md">

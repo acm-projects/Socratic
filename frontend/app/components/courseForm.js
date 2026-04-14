@@ -12,82 +12,76 @@ export default function Home() {
   const [file, setFile] = useState(null)
 
     async function saveCourse() {
-      console.log("session:", session)
-      console.log("courseCode:", courseCode, "subject:", subject)
+  console.log("session:", session)
+  console.log("courseCode:", courseCode, "subject:", subject)
 
-      //get user
-      const usersRes = await fetch("http://3.128.186.118:5000/users")
-      const users = await usersRes.json()
-      const me = users.find(u => u.email === session.user.email)
+  // get user
+  const usersRes = await fetch("http://3.128.186.118:5000/users")
+  const users = await usersRes.json()
+  const me = users.find(u => u.email === session.user.email)
 
-      if (!me) { //user isnt found
-        console.error("User not found")
-        return
-      }
+  if (!me) {
+    console.error("User not found")
+    return
+  }
 
-      const courseRes = await fetch("http://3.128.186.118:5000/classes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          class_code: courseCode,
-          subject: subject,
-          name: subject,
-          user_id: me.id,
-        })
-        })
+  // save class
+  const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      class_code: courseCode,
+      subject: subject,
+      name: subject,
+      user_id: me.id,
+    })
+  })
 
-        if (!courseRes.ok) {
-          const err = await courseRes.text()
-          console.error("Failed to save class:", err)
-          return
-        }
+  if (!courseRes.ok) {
+    const err = await courseRes.text()
+    console.error("Failed to save class:", err)
+    return
+  }
 
-        console.log("Class saved")
+  console.log("Class saved")
 
-        //syllabus file added
-        if (file) {
-         //upload form to s3 
-        const uploadForm = new FormData()
-        uploadForm.append("syllabusPdf", file)
-        uploadForm.append("class_code", courseCode)
+  if (file) {
+    // upload to s3
+    const uploadForm = new FormData()
+    uploadForm.append("syllabusPdf", file)
+    uploadForm.append("class_code", courseCode)
 
-        const uploadRes = await fetch("http://3.128.186.118:5000/upload", {
-            method: "POST",
-            body: uploadForm
-          })
-          const uploadData = await uploadRes.json()
-        console.log("Uploaded:", uploadData.syllabus_url)
+    const uploadRes = await fetch("http://3.128.186.118:5000/api/syllabus/upload", {
+      method: "POST",
+      body: uploadForm
+    })
+    const uploadData = await uploadRes.json()
+    console.log("Uploaded:", uploadData.syllabus_url)
 
-        //extract from file
-        const extractForm = new FormData()
-        extractForm.append("syllabusPdf", file)
+    // extract — also saves internally, no /save needed
+    const extractForm = new FormData()
+    extractForm.append("syllabusPdf", file)
 
-        const extractRes = await fetch("http://3.128.186.118:5000/extract", {
-          method: "POST",
-          body: extractForm
-        })
+    const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
+      method: "POST",
+      body: extractForm
+    })
 
-        if (!extractRes.ok) {
-          const err = await extractRes.text()
-          console.error("Extract failed:", extractRes.status, err)
-          return
-        }
+    if (!extractRes.ok) {
+      const err = await extractRes.text()
+      console.error("Extract failed:", extractRes.status, err)
+      return
+    }
 
-        const extractData = await extractRes.json()
-        console.log("Extracted data:", extractData)
+    const extractData = await extractRes.json()
+    console.log("Extracted:", extractData.message)
 
-
-        //save extracted data to syllabus
-        const saveRes = await fetch("http://3.128.186.118:5000/save", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(extractData.data)
-        })
-        const saveData = await saveRes.json()
-        console.log("Saved topics:", saveData.data.savedTopics)
-        }
-        
-      }
+    // verify tasks saved
+    const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`)
+    const tasksData = await tasksRes.json()
+    console.log("Tasks saved:", tasksData)
+  }
+}
 
       
 
