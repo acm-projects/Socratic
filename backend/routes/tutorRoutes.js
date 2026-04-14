@@ -14,7 +14,9 @@ const userStatsModel = require('../models/userStatsModel');
 
 router.post('/chat', async (req, res, next) => {
   try {
-    const { userId, classCode, topic: topicName, message, chatId: providedChatId } = req.body;
+    // Accept either sessionId OR chatId (chatId is legacy, sessionId is the new name)
+    const { userId, classCode, topic: topicName, message, chatId: providedChatId, sessionId: providedSessionId } = req.body;
+    const incomingSessionId = providedSessionId || providedChatId || null;
 
     if (!userId || !classCode || !topicName || !message) {
       return res.status(400).json({ error: "Missing required fields: userId, classCode, topic, message" });
@@ -33,9 +35,12 @@ router.post('/chat', async (req, res, next) => {
     }
 
     // 2. Ensure Session Exists in Official table
-    let chatId = providedChatId || randomUUID();
-    
-    // Use the first message as the title (truncated for readability)
+    // If the frontend passes sessionId/chatId, reuse that session (append to it).
+    // Only generate a new UUID if this is the first message of a conversation.
+    const isNewSession = !incomingSessionId;
+    const chatId = incomingSessionId || randomUUID();
+
+    // Use the first message as the session title — only matters on creation
     const sessionTitle = message.length > 50 ? message.substring(0, 47) + "..." : message;
     const session = await sessionModel.upsertTutorSession({
       session_id: chatId,
@@ -148,6 +153,8 @@ router.post('/chat', async (req, res, next) => {
 
     res.json({
       chatId,
+      sessionId: chatId,   // return under both names for compatibility
+      isNewSession,        // true = first message, add to sidebar; false = existing session
       response: aiContent,
       score,
       reason
