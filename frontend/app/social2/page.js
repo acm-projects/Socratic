@@ -234,11 +234,14 @@ function UpcomingStudySessions() {
     console.log(session);
 
     useEffect(() => {
-        fetch('http://3.128.186.118:5000/api/calendar/upcoming-events')
-            .then(res => res.json())
-            .then(data => setMeetings(data))
-            .catch(err => console.error(err));
-    }, []);
+    if (!session?.user?.id) return
+    fetch(`/backend/api/calendar/upcoming-events?userId=${session.user.id}`, {
+        headers: { 'x-user-id': session.user.id }
+    })
+    .then(res => res.json())
+    .then(data => setMeetings(Array.isArray(data) ? data : []))
+    .catch(err => console.error(err))
+        }, []);
 
 
 return (

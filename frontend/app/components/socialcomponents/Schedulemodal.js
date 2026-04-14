@@ -62,10 +62,20 @@ export default function Schedulemodal({onClose}){
                 method: "POST",
                 headers: {
                  "Content-Type": "application/json",
-                 "Authorization": `Bearer ${session?.accessToken}`
+                 "Authorization": `Bearer ${session?.accessToken}`,
+                 "x-user-id": session?.user?.id   // add this
+
                 },
-                body: JSON.stringify(body),
+                body: JSON.stringify({
+                    ...body,
+                    userId: session?.user?.id   // add this
+
+        }),
             });
+    console.log("status:", res.status)
+    const text = await res.text()
+    console.log("response:", text)
+
             if (res.ok) {
                 setShowConfirmation(true);
             } else {

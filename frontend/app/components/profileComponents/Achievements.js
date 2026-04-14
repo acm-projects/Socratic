@@ -45,6 +45,7 @@ export default function Achievements() {
         colored: a.icon_colored,
         greyed: a.icon_greyed
       }))
+    .sort((a, b) => b.unlocked - a.unlocked)  // unlocked (true=1) first
 
         setAchievements(formatted)
       })

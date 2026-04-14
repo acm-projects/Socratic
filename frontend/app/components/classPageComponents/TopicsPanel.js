@@ -87,7 +87,7 @@ export default function TopicsPanel({ onQuizClick }) {
                     </span>
                     <div className="flex gap-2">
                       <button
-                        onClick={onQuizClick}
+                        onClick={() => onQuizClick(t.id)}
                         className="text-xs font-bold text-white bg-[#3a9e94] px-4 py-1.5 rounded-lg hover:bg-[#2d766f]">
                         Quiz
                       </button>
@@ -102,8 +102,7 @@ export default function TopicsPanel({ onQuizClick }) {
             <PastQuizzes
               topics={Topics}
               onRetake={(quizId) => router.push(`/class/${courseId}/quiz/${quizId}`)}
-              onReview={(quizId, attemptId) => router.push(`/class/${courseId}/quiz/${quizId}?mode=review&attemptId=${attemptId}`)}
-            />
+              onReview={(quizId) => router.push(`/class/${courseId}/quiz/${quizId}?mode=review&attemptId=${quizId}`)}            />
           )}
         </div>
       </div>

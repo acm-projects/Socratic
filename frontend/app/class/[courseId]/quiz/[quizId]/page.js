@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
-
+import { useSession } from "next-auth/react"
 
 
 
@@ -31,6 +31,8 @@ const attemptId = searchParams.get("attemptId")
 
 const { quizId, courseId } = useParams()
 const [quizQuestions, setQuizQuestions] = useState([])
+const [retakeCount, setRetakeCount] = useState(0)
+
 
 
 
@@ -43,16 +45,26 @@ const [quizQuestions, setQuizQuestions] = useState([])
   const [scores, setScores] = useState([])
   const [finished, setFinished] = useState(false)
   const router = useRouter()
+  const { data: session } = useSession()
+  const [topicId, setTopicId] = useState(null)  // add this
+
 
 
 
 // fetch quiz data
   useEffect(() => {
-      console.log("quizId:", quizId)
+    if (isReviewMode) return  // add this line
+
+console.log("quizId:", quizId)
   async function fetchQuiz() {
     const res = await fetch(`/backend/quizzes/${quizId}/questions`)
     const data = await res.json()
+    console.log("full quiz data:", data)  // check if topic_id is on data
     setQuizQuestions(data.questions)
+    setTopicId(data.topic_id)  // grab it from the quiz object
+    setRetakeCount(data.retake_count ?? 0)
+
+
   }
 
   if (quizId) fetchQuiz()
@@ -67,9 +79,14 @@ useEffect(() => {
   async function fetchAttempt() {
     const res = await fetch(`/backend/quizzes/${attemptId}/questions`)
     const data = await res.json()
+    console.log("attempt questions:", data.questions)
     setQuizQuestions(data.questions)
-    setFinished(true) // jump straight to review UI
+    // populate userAnswers and scores from stored data
+    setUserAnswers(data.questions.map(q => q.user_answer))
+    setScores(data.questions.map(q => q.is_correct))
+    setFinished(true)  // directly go to review screen
   }
+
 
   fetchAttempt()
 }, [isReviewMode, attemptId])
@@ -88,7 +105,7 @@ if (!quizQuestions || !quizQuestions.length) {
         const updated = [...userAnswers]
         updated[current] = selected
         setUserAnswers(updated)
-        const isCorrect = selected === quizQuestions[current]?.answer
+        const isCorrect = selected === quizQuestions[current]?.correct_answer
         const updatedScores = [...scores]
         updatedScores[current] = isCorrect
         setScores(updatedScores)
@@ -107,18 +124,36 @@ if (!quizQuestions || !quizQuestions.length) {
         }
     }
 
-    function handleFinish() {
-        const updated = [...userAnswers]
-        updated[current] = selected
-        setUserAnswers(updated)
-        const updatedScores = [...scores]
-        updatedScores[current] = (selected === quizQuestions[current]?.correct_answer)
-        setScores(updatedScores)
-        console.log("selected:", selected, "answer:", quizQuestions[current]?.correct_answer)
-        console.log("question:", quizQuestions[current])
+async function handleFinish() {
+    const updated = [...userAnswers]
+    updated[current] = selected
+    setUserAnswers(updated)
+    
+    const updatedScores = [...scores]
+    updatedScores[current] = (selected === quizQuestions[current]?.correct_answer)
+    setScores(updatedScores)
 
-        setFinished(true)
-        }
+    const numCorrect = updatedScores.filter(Boolean).length
+    const score = Math.round((numCorrect / quizQuestions.length) * 100)
+
+    // save completed attempt
+    await fetch(`/backend/quizzes/${quizId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            score: score,
+            retake_count: retakeCount + 1,
+            questions: quizQuestions.map((q, i) => ({
+                id: q.id,
+                user_answer: updated[i] ?? null,
+                is_correct: updatedScores[i] ?? false,
+
+            }))
+        })
+    })
+
+    setFinished(true)
+}
 
     function handleReviewNext() { //move to next question in review mode
         if (reviewIndex < quizQuestions.length - 1) {

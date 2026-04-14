@@ -4,34 +4,21 @@ import { useSession } from "next-auth/react"
 
 
 export default function LearningStats() {
-  const [stats, setStats] = useState({})
-  const { data: session } = useSession()
  
-  useEffect(() => {
-    if (!session?.user?.id) return
-    fetch(`/backend/users/${session.user.id}/stats`)
-      .then(res => res.json())
-      .then(data => {
-        console.log("stats:", data) 
-        console.log("stats:", JSON.stringify(data))
-        setStats(data)
-      })
-      .catch(err => console.error(err))
-  }, [session])
   
 
 
 
 
-  // const stats = {
-  //   totalQuizzes: 14,       
-  //   weeklyXp: 120,          
-  //   aiMessages: 126,        
-  //   retakes: 6, 
-  //   currentStreak: 10,            
-  //   bestTopic: "Graphs",    
-  //   needsWork: "Set Theory"
-  // }
+  const stats = {
+    totalQuizzes: 14,       
+    weeklyXp: 120,          
+    aiMessages: 126,        
+    retakes: 6, 
+    currentStreak: 10,            
+    bestTopic: "Graphs",    
+    needsWork: "Set Theory"
+  }
  
   return (
     <div className="flex flex-col divide-y divide-gray-100 py-2">

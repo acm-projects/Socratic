@@ -67,6 +67,18 @@ export default function ClassPage() {
   const { courseId } = useParams()
 
   const [showQuizModal, setShowQuizModal] = useState(false)
+  const [preselectedTopic, setPreselectedTopic] = useState(null)  // add this
+
+//   function handleRetake(topicId) {
+//     setPreselectedTopic(topicId)
+//     setShowQuizModal(true)
+//   }
+
+//   function handleReview(quizId) {
+//   router.push(`/class/${courseId}/quiz/${quizId}?mode=review&attemptId=${quizId}`)
+// }
+
+
   
   return (
    <div
@@ -155,14 +167,25 @@ export default function ClassPage() {
         {/* topics/past quizzes */}
 
         <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-4 flex-1 min-h-0 min-w-0 flex flex-col">
-            <TopicsPanel topics={topics} onQuizClick={() => setShowQuizModal(true)} />
-        </div>
+        <TopicsPanel 
+        topics={topics} 
+        onQuizClick={(topicId) => {
+           console.log("onQuizClick called with topicId:", topicId)
+           setPreselectedTopic(topicId); 
+           setShowQuizModal(true) 
+          
+          
+          }} 
+           
+           
+           />     
+          </div>
         </div>
 
         
 
         <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-12 py-6 h-fit shrink-0">
-        <StudyHeatmap />
+        <StudyHeatmap courseId={courseId} />
         </div>
 
       </div>
@@ -181,8 +204,13 @@ export default function ClassPage() {
         <CourseMaterial files={courseMaterials} />
       </div>
     </div>
-    {showQuizModal && <QuizModal onClose={() => setShowQuizModal(false)} courseId={courseId} />}
+{showQuizModal && (
+  <QuizModal
+    onClose={() => { setShowQuizModal(false); setPreselectedTopic(null) }}
+    courseId={courseId}
+    preselectedTopic={preselectedTopic}
+  />
+)}  
     </div>
-    
-  )
+   )
 }

@@ -96,32 +96,29 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-export default function StudyHeatmap({ data }) {
-  // 1. Start with an empty array 
-  const [heatmapData, setHeatmapData] = useState({});
-  const {data :session} = useSession()
+export default function StudyHeatmap({ courseId }) {
+  const [heatmapData, setHeatmapData] = useState({})
+  const { data: session } = useSession()
 
   useEffect(() => {
     if (!session) return
-    fetch (`/backend/users/${session.user.id}/metrics?days=180`)
+    const url = courseId
+      ? `/backend/classes/${courseId}/metrics?user_id=${session.user.id}&days=180`
+      : `/backend/users/${session.user.id}/metrics?days=180`
+    
+    fetch(url)
       .then(res => res.json())
       .then(data => {
-      console.log("raw API data:", data)
-      const map = {};
-      data.forEach(d => { 
-        const date = d.date.split("T")[0];
-        map[date] = d; 
-      });
-      console.log("map:", map) // ← and this
-      console.log("session user id:", session.user.id)
-
-      setHeatmapData(map);
-    });
-
-}, [session]);
-
-
-
+        console.log("raw API data:", data)
+        const map = {}
+        data.forEach(d => {
+          const date = d.date.split("T")[0]
+          map[date] = d
+        })
+        setHeatmapData(map)
+      })
+  }, [session, courseId])
+  
 
   const getColor = (avg_score) => {
   if (!avg_score) return "bg-[#ECEDF0]";

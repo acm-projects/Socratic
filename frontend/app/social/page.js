@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react"
 import { HiFire } from "react-icons/hi";
 import { CircleCheck, CircleX } from "lucide-react";
 import Schedulemodal from "../components/socialcomponents/Schedulemodal";
-import Sendrequestmodal from "../components/socialcomponents/Schedulemodal";
+import Sendrequestmodal from "../components/socialcomponents/Sendrequestmodal";
 
 
 
@@ -177,11 +177,14 @@ function UpcomingStudySessions() {
     const { data: session } = useSession();
 
     useEffect(() => {
-        fetch('/backend/api/calendar/upcoming-events')
-            .then(res => res.json())
-            .then(data => setMeetings(data))
-            .catch(err => console.error(err));
-    }, []);
+    if (!session?.user?.id) return
+    fetch(`/backend/api/calendar/upcoming-events?userId=${session.user.id}`, {
+        headers: { 'x-user-id': session.user.id }
+    })
+    .then(res => res.json())
+    .then(data => setMeetings(Array.isArray(data) ? data : []))
+    .catch(err => console.error(err))
+        }, []);
 
     return (
         <>

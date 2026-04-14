@@ -27,22 +27,41 @@ export default function Requests(){
               id: req.id,
               name: sender.name,
               email: sender.email,
+              sender_id: req.sender_id
             }
           })
         )
         setRequests(requestDetails)
       })
-  }, [])
+  }, [session])
 
 
 
-{/*removes them from requests array*/}
-function acceptRequest(id) {
-  setRequests(requests.filter(r => r.id !== id));
+async function acceptRequest(id, senderId) {
+    await fetch(`/backend/friend-requests/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "accepted" })
+    })
+    await fetch(`/backend/friends`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            user_id: session.user.id, 
+            friend_id: senderId 
+        })
+    })
+    setRequests(requests.filter(r => r.id !== id))
 }
 
-function declineRequest(id) {
-  setRequests(requests.filter(r => r.id !== id));
+
+async function declineRequest(id) {
+    await fetch(`/backend/friend-requests/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "declined" })
+    })
+    setRequests(requests.filter(r => r.id !== id))
 }
 
 
@@ -65,7 +84,7 @@ function declineRequest(id) {
 
             <div className = "flex gap-2">
                 <button 
-                onClick={() => acceptRequest(request.id)}
+                onClick={() => acceptRequest(request.id, request.sender_id)}
                   className="cursor-pointer bg-[#EEEFFE] text-black text-xs font-medium px-4 py-1.5 rounded-full">
                   Accept
                 </button>

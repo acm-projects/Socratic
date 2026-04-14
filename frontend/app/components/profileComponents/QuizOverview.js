@@ -42,9 +42,10 @@ export default function QuizOverview() {
     <div className="flex flex-col h-full">
       <p className="text-md font-semibold text-[#14153A] pb-1 shrink-0 px-2">Quiz Overview</p>
       <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide flex flex-col gap-6 p-2 ">
-        {courses.map((course) => (
-        <CourseRow key={course.class_code} course={course} />        ))}
-      </div>
+      {courses.map((course, i) => (
+          <CourseRow key={course.class_code ?? i} course={course} />
+      ))}      
+</div>
     </div>
   )
 }

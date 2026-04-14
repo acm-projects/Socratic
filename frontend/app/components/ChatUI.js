@@ -1,9 +1,8 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CircleArrowUp, Bookmark, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import ChatModal from "./ChatModal";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 
 
 
@@ -12,20 +11,22 @@ export default function ChatUI({ classCode, topic }) {
 
      const { data: session } = useSession()
 
+
     // saves chats to sidebar
-    useEffect(() => {
+useEffect(() => {
     if (!session) return
     fetch(`/backend/users/${session.user.id}/sessions`)
         .then(res => res.json())
         .then(data => {
-            console.log("sessions:", data)
+            console.log("raw sessions:", data)
             const formatted = data
-            .filter(s => s.class_code === classCode)  //  only show chats for this class
-            .map(s => ({
-                id: s.session_id,
-                title: s.title || "Untitled Chat"
-            }))
-            setChats(formatted)
+                .filter(s => s.class_code === classCode)
+                .map(s => ({
+                    id: s.session_id,
+                    title: s.title || "Untitled Chat"
+                }))
+            .reverse()  // 
+            setChats(formatted)  // just replace entirely, don't append
         })
         .catch(err => console.error(err))
 }, [session])
@@ -41,14 +42,8 @@ export default function ChatUI({ classCode, topic }) {
     const [saved, setSaved] = useState([]);
     const [chats, setChats] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
+    const activeChatIdRef = useRef(null)
 
-    function handleSave(content) {
-        if (saved.includes(content)) {
-            setSaved(saved.filter(s => s !== content));
-        } else {
-            setSaved([...saved, content]);
-        }
-    }
 
 async function handleSend() {
     if (!input || loading) return;
@@ -66,24 +61,24 @@ async function handleSend() {
                 userId: session?.user?.id,
                 classCode: classCode,
                 topic: topic,
+                sessionId: sessionId ?? undefined,
             })
         })
         const data = await res.json()
-        console.log("chat response:", data)
-        console.log(chats) // check if any chat.id is undefined or duplicate
-        console.log("sessions:", data) // expand this in devtools and check if ids are unique
 
+        if (!sessionId && data.chatId) {
+            setSessionId(data.chatId)
+        }
+
+        if (data.isNewSession) {
+            setChats(prev => [{ id: data.chatId, title: input }, ...prev])
+        }
 
         setMessages(prev => prev.map((m, i) => 
             i === prev.length - 1 ? { ...m, score: parseInt(data.score) } : m
         ))
         setMessages(prev => [...prev, { role: "ai", content: data.response }])
 
-        if (!activeChatId && data.chatId) {
-            const newChat = { id: data.chatId, title: input.slice(0, 30) }
-            setChats(prev => [newChat, ...prev])
-            setActiveChatId(data.chatId)
-        }
     } catch (err) {
         console.error("Chat error:", err)
     } finally {
@@ -92,11 +87,14 @@ async function handleSend() {
 }
 
 
+
  
 
     function handleNewChat() {
         setMessages([]);
         setActiveChatId(null);
+        activeChatIdRef.current = null
+        setSessionId(null);  //reset so next message starts a fresh session
         setInput("");
     }
 

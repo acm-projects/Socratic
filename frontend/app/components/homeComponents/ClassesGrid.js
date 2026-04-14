@@ -4,12 +4,15 @@ import { useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react"
 import Addcoursemodal from "./Addcoursemodal"
 import DeleteCourseModal from "./DeleteCourseModal"
+import { useSession } from "next-auth/react"
+
 
 
 const accents = ["corner-teal", "corner-magenta", "corner-blue", "corner-purple", "corner-green", "corner-indigo"]
 
 export default function ClassesGrid({ courses: initialCourses }) {
-const [courses, setCourses] = useState(initialCourses || [])
+  const { data: session } = useSession()
+  const [courses, setCourses] = useState(initialCourses || [])
   const [page, setPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [hoveredCode, setHoveredCode] = useState(null)
@@ -23,12 +26,11 @@ const [courses, setCourses] = useState(initialCourses || [])
 
   const visible = courses.slice(page * 6, page * 6 + 6)
 
-  const deleteCourse = (class_code) => {
-    setCourses(prev => prev.filter(c => c.class_code !== class_code))
-    // TODO: API call here
-    // await fetch(`http://3.128.186.118:5000/classes/${class_code}`, { method: "DELETE" })
-  }
-
+const deleteCourse = async (class_code) => {
+  const res = await fetch(`/backend/classes/${class_code}?user_id=${session?.user?.id}`, { method: "DELETE" })
+  console.log("delete status:", res.status)
+  setCourses(prev => prev.filter(c => c.class_code !== class_code))
+}
   return (
     <div className="flex flex-col gap-3 flex-1">
       

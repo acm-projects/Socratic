@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useEffect } from "react"
 
-export default function QuizModal({ onClose, courseId }) {
+export default function QuizModal({ onClose, courseId, preselectedTopic }) {
   const router = useRouter()  
   const { data: session } = useSession()
 
@@ -21,16 +21,22 @@ export default function QuizModal({ onClose, courseId }) {
     // fetch topics
     useEffect(() => {
         if (!courseId) return
+            console.log("preselectedTopic:", preselectedTopic)
+
         fetch(`/backend/classes/${courseId}/topics`)
             .then(res => res.json())
             .then(data => {
-              const topicsArray = Array.isArray(data) ? data : data.topics ?? []
-              setTopics(topicsArray)
-              if (topicsArray.length > 0) setTopic(topicsArray[0].name)
+                const topicsArray = Array.isArray(data) ? data : data.topics ?? []
+                setTopics(topicsArray)
+                if (preselectedTopic) {
+                    const match = topicsArray.find(t => t.id === preselectedTopic)
+                    setTopic(match?.name ?? topicsArray[0]?.name ?? "")
+                } else if (topicsArray.length > 0) {
+                    setTopic(topicsArray[0].name)
+                }
             })
             .catch(err => console.error(err))
-    }, [courseId])
-
+    }, [courseId, preselectedTopic])
 
 
 //   async function handleStartQuiz() {

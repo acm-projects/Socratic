@@ -1,11 +1,43 @@
 "use client"
 import { X } from "lucide-react";
 import { useState } from "react"
+import { useSession } from "next-auth/react"
+
 
 export default function Addcoursemodal({onClose, onAdd}) {
+  const { data: session } = useSession()
   const [subject, setSubject] = useState("")
   const [courseCode, setCourseCode] = useState("")
   const [file, setFile] = useState(null);
+
+
+
+  async function handleAdd() {
+  if (!subject || !courseCode) return
+  
+  const res = await fetch(`/backend/classes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      class_code: courseCode,
+      subject: subject,
+      name: subject,
+      user_id: session?.user?.id,
+
+
+
+    })
+  })
+
+    console.log("add class status:", res.status)
+  const data = await res.json()
+  console.log("add class response:", data)
+
+
+  onAdd({ name: subject, class_code: courseCode })
+  onClose()
+}
+
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -69,10 +101,9 @@ export default function Addcoursemodal({onClose, onAdd}) {
 
             </div>
           </div>
-            <button onClick={() => { onAdd(subject); onClose(); }} className="bg-[#2C2C2C] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2">
+          <button onClick={handleAdd} className="bg-[#2C2C2C] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2">
             Add Course
-            </button>
-
+          </button>
             </div>
       </div>
       </div>

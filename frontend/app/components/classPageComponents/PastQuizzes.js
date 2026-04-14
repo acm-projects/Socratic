@@ -43,6 +43,8 @@ export default function PastQuizzes({ topics, onRetake, onReview }) {
     fetch(`/backend/users/${session.user.id}/quizzes`)
       .then(res => res.json())
       .then(data => {
+        console.log("quiz objects:", quizzes)
+         console.log("raw quizzes:", data)
         console.log("quizzes:", data)
         const formatted = data.
           filter(q => topics.some(t => t.id === q.topic_id))  // 👈 only quizzes from this class's topics
@@ -90,12 +92,12 @@ export default function PastQuizzes({ topics, onRetake, onReview }) {
           {/* Buttons */}
           <div className="flex gap-2">
             <button 
-            onClick={() => onRetake(quiz.topic_id)}  
+            onClick={() => onRetake(quiz.id)}  
             className="text-xs font-medium text-gray-500 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50">
               Retake
             </button>
             <button 
-            onClick={() => onReview(quiz.topic_id, quiz.id)}
+            onClick={() => onReview(quiz.id)}
             className="text-xs font-bold text-white bg-[#3a9e94] px-3 py-1 rounded-lg hover:bg-[#2d766f]">
               Review
             </button>
