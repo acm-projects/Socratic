@@ -23,6 +23,16 @@ router.post('/', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+router.delete('/:code', async (req, res, next) => {
+  try {
+    const deletedClass = await classModel.deleteClass(req.params.code);
+    if (!deletedClass) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+    res.json({ message: "Successfully deleted class and all associated data.", class: deletedClass });
+  } catch (error) { next(error); }
+});
+
 router.delete('/', async (req, res, next) => {
   try {
     await classModel.deleteAllClasses();

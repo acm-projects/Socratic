@@ -42,15 +42,35 @@ const ensureClassExists = async (classCode, userId = null) => {
   });
 };
 
+const deleteClass = async (code) => {
+  // Cascading deletes to avoid foreign key violations
+  await db.query("DELETE FROM tasks WHERE class_code = $1", [code]);
+  await db.query(
+    "DELETE FROM chat_history WHERE session_id IN (SELECT session_id FROM chat_sessions WHERE class_code = $1)",
+    [code]
+  );
+  await db.query("DELETE FROM chat_sessions WHERE class_code = $1", [code]);
+  await db.query("DELETE FROM topics WHERE class_code = $1", [code]);
+  await db.query("DELETE FROM syllabus_info WHERE class_code = $1", [code]);
+  
+  // Finally delete the class
+  const result = await db.query("DELETE FROM classes WHERE class_code = $1 RETURNING *", [code]);
+  return result.rows[0];
+};
+
 const deleteAllClasses = async () => {
+  await db.query("DELETE FROM tasks");
+  await db.query("DELETE FROM chat_history");
+  await db.query("DELETE FROM chat_sessions");
+  await db.query("DELETE FROM syllabus_info");
   await db.query("DELETE FROM topics");
   await db.query("DELETE FROM classes");
 };
 
-module.exports = {
   getAllClasses,
   getClassByCode,
   createClass,
   ensureClassExists,
+  deleteClass,
   deleteAllClasses
 };
