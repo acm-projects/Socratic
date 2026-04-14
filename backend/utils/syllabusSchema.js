@@ -8,8 +8,14 @@ const syllabusSchema = z.object({
     instructor: z.object({
         name: z.string().nullable().optional(),
         email: z.string().nullable().optional(),
-        officeHours: z.string().nullable().optional()
+        officeHours: z.string().nullable().optional(),
+        officeLocation: z.string().nullable().optional().describe("Room/building for office hours e.g. ECSS 3.201")
     }),
+    ta: z.object({
+        name: z.string().nullable().optional(),
+        email: z.string().nullable().optional(),
+        officeHours: z.string().nullable().optional()
+    }).nullable().optional().describe("Teaching Assistant info if present"),
     gradingPolicy: z.array(
         z.object({
             category: z.string().describe("e.g., Homework, Midterm, Final"),

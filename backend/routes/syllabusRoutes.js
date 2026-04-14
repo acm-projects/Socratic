@@ -214,4 +214,40 @@ router.get('/data/:class_code', async (req, res, next) => {
   }
 });
 
+// GET /info/:class_code — Professor, TA, office hours, and grading policy
+router.get('/info/:class_code', async (req, res, next) => {
+  const { class_code } = req.params;
+  const normalizedCode = class_code.toUpperCase().trim();
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM syllabus_info WHERE class_code = $1',
+      [normalizedCode]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: `No syllabus info found for class ${normalizedCode}. Upload a syllabus first.` });
+    }
+
+    const row = result.rows[0];
+
+    res.json({
+      class_code:        row.class_code,
+      professor_name:    row.professor_name,
+      professor_email:   row.professor_email,
+      office_hours:      row.office_hours,
+      office_location:   row.office_location,
+      ta_name:           row.ta_name,
+      ta_email:          row.ta_email,
+      ta_office_hours:   row.ta_office_hours,
+      grading_policy:    row.grading_policy,   // JSONB array
+      updated_at:        row.updated_at
+    });
+
+  } catch (error) {
+    console.error(`[Syllabus] ❌ Info fetch failed for ${normalizedCode}:`, error.message);
+    next(error);
+  }
+});
+
 module.exports = router;

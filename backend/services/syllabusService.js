@@ -59,7 +59,8 @@ Return ONLY JSON matching this schema:
 {
   "courseName": "Full name",
   "courseCode": "ID (e.g. CS101)",
-  "instructor": { "name": "Name", "email": "email", "officeHours": "hours" },
+  "instructor": { "name": "Name", "email": "email", "officeHours": "hours", "officeLocation": "room/building" },
+  "ta": { "name": "TA Name", "email": "ta@email.edu", "officeHours": "hours" },
   "gradingPolicy": [ { "category": "category", "weightPercentage": 20 } ],
   "importantDates": [ { "eventName": "Name", "date": "YYYY-MM-DD" } ],
   "topics": ["Topic Name"]
@@ -115,7 +116,7 @@ Return ONLY JSON matching this schema:
 };
 
 const saveSyllabusData = async (payload) => {
-  const { courseName, courseCode, topics, importantDates, user_id } = payload;
+  const { courseName, courseCode, topics, importantDates, instructor, ta, gradingPolicy, user_id } = payload;
 
   const safeCourseCode = courseCode.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
   const subjectMatch = courseCode.match(/[a-zA-Z]+/);
@@ -130,6 +131,41 @@ const saveSyllabusData = async (payload) => {
   };
   const newClass = await classModel.createClass(classData);
   console.log(`[Syllabus] 🏫 Class verified/updated: ${classData.class_code}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
+
+  // 2. Upsert syllabus_info (professor, TA, grading)
+  try {
+    await pool.query(
+      `INSERT INTO syllabus_info
+         (class_code, professor_name, professor_email, office_hours, office_location,
+          ta_name, ta_email, ta_office_hours, grading_policy, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+       ON CONFLICT (class_code)
+       DO UPDATE SET
+         professor_name    = EXCLUDED.professor_name,
+         professor_email   = EXCLUDED.professor_email,
+         office_hours      = EXCLUDED.office_hours,
+         office_location   = EXCLUDED.office_location,
+         ta_name           = EXCLUDED.ta_name,
+         ta_email          = EXCLUDED.ta_email,
+         ta_office_hours   = EXCLUDED.ta_office_hours,
+         grading_policy    = EXCLUDED.grading_policy,
+         updated_at        = NOW()`,
+      [
+        safeCourseCode.substring(0, 50),
+        instructor?.name   || null,
+        instructor?.email  || null,
+        instructor?.officeHours    || null,
+        instructor?.officeLocation || null,
+        ta?.name       || null,
+        ta?.email      || null,
+        ta?.officeHours || null,
+        gradingPolicy ? JSON.stringify(gradingPolicy) : null
+      ]
+    );
+    console.log(`[Syllabus] 📋 syllabus_info upserted for ${safeCourseCode}`);
+  } catch (err) {
+    console.warn(`[Syllabus] ⚠️ Failed to save syllabus_info:`, err.message);
+  }
 
   // 2. Store Topics
   const savedTopics = [];
