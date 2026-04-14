@@ -65,7 +65,11 @@ router.post('/save', async (req, res, next) => {
       return res.status(400).json({ error: "Missing required syllabus payload fields (courseCode, courseName)." });
     }
 
-    const result = await syllabusService.saveSyllabusData(payload);
+    // Forward user_id so the class row gets linked to the user
+    const result = await syllabusService.saveSyllabusData({
+      ...payload,
+      user_id: payload.user_id || null
+    });
 
     console.log(`Successfully saved syllabus data for class: ${result.savedClass?.class_code || payload.courseCode}`);
     res.json({
@@ -85,7 +89,7 @@ router.post('/save', async (req, res, next) => {
 // POST /upload — Upload syllabus PDF to S3 and save URL to classes table
 router.post('/upload', upload.any(), async (req, res, next) => {
   try {
-    const { class_code } = req.body;
+    const { class_code, user_id } = req.body;  // <-- also read user_id
 
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
 
@@ -105,12 +109,14 @@ router.post('/upload', upload.any(), async (req, res, next) => {
     const placeholderName = `Course ${class_code}`;
 
     // UPSERT: Create class if it doesn't exist, otherwise update the syllabus_url
+    // Also set user_id so the row is correctly tied to the uploading user
     await pool.query(
-      `INSERT INTO classes (class_code, subject, name, syllabus_url) 
-       VALUES ($1, $2, $3, $4) 
+      `INSERT INTO classes (class_code, subject, name, syllabus_url, user_id) 
+       VALUES ($1, $2, $3, $4, $5) 
        ON CONFLICT (class_code) 
-       DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url`,
-      [class_code, subject, placeholderName, syllabusUrl]
+       DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url,
+                     user_id = COALESCE(classes.user_id, EXCLUDED.user_id)`,
+      [class_code, subject, placeholderName, syllabusUrl, user_id || null]
     );
 
     // AUTOMATED EXTRACTION (New Unified Workflow)
@@ -119,10 +125,11 @@ router.post('/upload', upload.any(), async (req, res, next) => {
     try {
       extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
       if (extractedData) {
-        // Override the courseCode from AI with the one provided by user to ensure consistency
-        extractedData.courseCode = class_code; 
+        // Override the courseCode from AI and inject user_id for proper DB linkage
+        extractedData.courseCode = class_code;
+        extractedData.user_id = user_id || null;
         await syllabusService.saveSyllabusData(extractedData);
-        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${class_code}`);
+        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${class_code}${user_id ? ` (user: ${user_id})` : ''}`);
       }
     } catch (extractErr) {
       console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${class_code}:`, extractErr.message);

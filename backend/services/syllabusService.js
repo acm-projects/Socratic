@@ -115,20 +115,21 @@ Return ONLY JSON matching this schema:
 };
 
 const saveSyllabusData = async (payload) => {
-  const { courseName, courseCode, topics, importantDates } = payload;
+  const { courseName, courseCode, topics, importantDates, user_id } = payload;
 
   const safeCourseCode = courseCode.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
   const subjectMatch = courseCode.match(/[a-zA-Z]+/);
   const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
 
-  // 1. Store Class
+  // 1. Store Class (include user_id so the class is tied to the user)
   const classData = {
     class_code: safeCourseCode.substring(0, 50),
     subject: subject,
-    name: courseName.substring(0, 30)
+    name: courseName.substring(0, 30),
+    user_id: user_id || null
   };
   const newClass = await classModel.createClass(classData);
-  console.log(`[Syllabus] 🏫 Class verified/updated: ${classData.class_code}`);
+  console.log(`[Syllabus] 🏫 Class verified/updated: ${classData.class_code}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
 
   // 2. Store Topics
   const savedTopics = [];
