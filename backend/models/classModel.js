@@ -16,7 +16,9 @@ const createClass = async (data) => {
     `INSERT INTO classes (class_code, subject, name, user_id) 
      VALUES ($1, $2, $3, $4) 
      ON CONFLICT (class_code) 
-     DO UPDATE SET subject = EXCLUDED.subject, name = EXCLUDED.name, user_id = EXCLUDED.user_id 
+     DO UPDATE SET subject = EXCLUDED.subject,
+                   name = EXCLUDED.name,
+                   user_id = COALESCE(EXCLUDED.user_id, classes.user_id)
      RETURNING *`,
     [class_code, subject, name || class_code, user_id || null]
   );
