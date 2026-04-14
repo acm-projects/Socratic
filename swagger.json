@@ -661,6 +661,47 @@
         }
       }
     },
+    "/api/syllabus/info/{class_code}": {
+      "get": {
+        "summary": "Get Detailed Syllabus Info",
+        "description": "Returns professor details, TA details, office hours, and grading policy extracted from the syllabus.",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "CS3345"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Syllabus info found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "class_code": { "type": "string" },
+                    "professor_name": { "type": "string" },
+                    "professor_email": { "type": "string" },
+                    "office_hours": { "type": "string" },
+                    "office_location": { "type": "string" },
+                    "ta_name": { "type": "string" },
+                    "ta_email": { "type": "string" },
+                    "ta_office_hours": { "type": "string" },
+                    "grading_policy": { "type": "array", "items": { "type": "object" } },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Syllabus info not found" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
     "/users": {
       "get": {
         "summary": "Get All Users",
