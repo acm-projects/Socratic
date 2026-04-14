@@ -57,7 +57,7 @@ export default function Studysession(){
                 <div className="flex justify-end mt-4">
                 <button 
                 onClick={()=> setShowModal(true)}
-                className="flex items-center gap-2 bg-[#3959E9] text-white text-sm font-medium px-4 py-2 rounded-xl cursor-pointer hover:bg-[#2039AF]">
+                className="flex items-center gap-2  bg-[#347A73] hover:bg-[#1F5C57] text-white text-sm font-medium px-4 py-2 rounded-xl cursor-pointer ">
                 Schedule Meeting
                 </button>
                 </div>

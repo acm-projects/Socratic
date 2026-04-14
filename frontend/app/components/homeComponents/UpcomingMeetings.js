@@ -9,14 +9,14 @@ export default function UpcomingMeetings() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    if (!session) return
-    fetch(`/backend/api/calendar/upcoming-events`)
-      .then(res => res.json())
-      .then(data => setMeetings(data))
-      .catch(err => console.error(err));
-  }
-  , [session])
-
+    if (!session) return
+    fetch(`/backend/api/calendar/upcoming-events?userId=${session.user.id}`, {
+      headers: { 'x-user-id': session.user.id }
+    })
+      .then(res => res.json())
+      .then(data => setMeetings(Array.isArray(data) ? data : []))
+      .catch(err => console.error(err));
+}, [session])
 
 
 

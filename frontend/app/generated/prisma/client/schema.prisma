@@ -14,6 +14,8 @@ model achievements {
   xp_reward         Int?                @default(0)
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   slug              String?
+  icon_colored      String?
+  icon_greyed       String?
   user_achievements user_achievements[]
 }
 
@@ -24,6 +26,8 @@ model chat_history {
   sender        String        @db.VarChar(10)
   content       String
   created_at    DateTime?     @default(now()) @db.Timestamp(6)
+  score         Int?          @default(0)
+  reason        String?
   chat_sessions chat_sessions @relation(fields: [session_id], references: [session_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_history_sessions")
 }
 
@@ -34,6 +38,7 @@ model chat_sessions {
   topic_id     String         @db.VarChar(50)
   started_at   DateTime?      @default(now()) @db.Timestamp(6)
   created_at   DateTime?      @default(now()) @db.Timestamp(6)
+  title        String?        @db.VarChar(100)
   chat_history chat_history[]
   classes      classes        @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_sessions_class")
   topics       topics         @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chat_sessions_topic")
@@ -47,9 +52,14 @@ model classes {
   created_at          DateTime?             @default(now()) @db.Timestamp(6)
   user_id             String?
   syllabus_url        String?
+  streak              Int?                  @default(0)
+  last_activity_date  DateTime?             @db.Date
   chat_sessions       chat_sessions[]
+  class_tasks         class_tasks[]
+  course_materials    course_materials[]
   daily_topic_metrics daily_topic_metrics[]
   topics              topics[]
+  user_classes        user_classes[]
 }
 
 model daily_topic_metrics {
@@ -138,6 +148,10 @@ model User {
   class_status                                       String?
   streak                                             Int?
   weekly_xp                                          Int?                  @default(0)
+  ai_messages                                        Int                   @default(0)
+  quizzes_taken                                      Int                   @default(0)
+  retakes_taken                                      Int                   @default(0)
+  last_active_date                                   DateTime?             @db.Date
   Account                                            Account[]
   chat_sessions                                      chat_sessions[]
   class_engagement                                   class_engagement[]
@@ -147,6 +161,7 @@ model User {
   friends_friends_friend_idTousers                   friends[]             @relation("friends_friend_idTousers")
   friends_friends_user_idTousers                     friends[]             @relation("friends_user_idTousers")
   user_achievements                                  user_achievements[]
+  user_classes                                       user_classes[]
   xp_system                                          xp_system[]
 }
 
@@ -204,6 +219,8 @@ model quiz_questions {
   correct_answer String
   is_correct     Boolean? @default(false)
   depth_score    Int?     @default(0)
+  options        String[]
+  explanation    String?
   quizzes        quizzes  @relation(fields: [quiz_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
@@ -214,6 +231,7 @@ model quizzes {
   score          Int?             @default(0)
   date           DateTime?        @default(now()) @db.Timestamp(6)
   retake_count   Int?             @default(0)
+  color          String?
   quiz_questions quiz_questions[]
 }
 
@@ -223,7 +241,51 @@ model class_engagement {
   class_name     String
   question_count Int?     @default(0)
   week_start     DateTime @db.Timestamp(6)
+  color          String?
+  light          String?
   User           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([user_id, class_name, week_start])
+}
+
+model class_tasks {
+  id         String    @id @db.Uuid
+  class_code String    @db.VarChar(50)
+  task_name  String    @db.VarChar(255)
+  due_date   DateTime  @db.Date
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  classes    classes   @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([class_code], map: "idx_class_tasks_code")
+}
+
+model course_materials {
+  id          String    @id
+  class_code  String
+  user_id     String
+  file_name   String
+  file_url    String?
+  doc_type    String?   @default("document")
+  uploaded_at DateTime? @default(now()) @db.Timestamp(6)
+  classes     classes   @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model shared_classes {
+  id         String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  user_id    String
+  friend_id  String
+  class_code String
+  class_name String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model user_classes {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String
+  class_code  String
+  enrolled_at DateTime? @default(now()) @db.Timestamp(6)
+  classes     classes   @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction)
+  User        User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, class_code])
 }

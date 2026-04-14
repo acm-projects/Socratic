@@ -17,6 +17,7 @@ export default function QuizModal({ onClose, courseId }) {
   const [easy, setEasy] = useState(true)
   const [medium, setMedium] = useState(true)
   const [hard, setHard] = useState(true)
+   const [isGenerating, setIsGenerating] = useState(false)  //loading state
 
     // fetch topics
     useEffect(() => {
@@ -68,6 +69,7 @@ export default function QuizModal({ onClose, courseId }) {
 // }
 
 async function handleStartQuiz() {
+ setIsGenerating(true) //start loading
 try {
     const res = await fetch("/backend/api/quizzes/generate", {
         method: "POST",
@@ -89,6 +91,7 @@ try {
     router.push(`/class/${courseId}/quiz/${quizId}`)
 } catch (err) {
     console.error("Quiz error:", err)
+    setIsGenerating(false)
 }
 }
 
@@ -99,8 +102,20 @@ try {
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
       <div className="bg-white rounded-3xl px-10 py-8 w-[520px] flex flex-col gap-8">
-
-        {/* Header */}
+          {/* loading state */}
+          {isGenerating ? (
+        <div className="flex flex-col items-center justify-center py-12 gap-6">
+          <img 
+            src="/icons/mascot-quiz.svg" 
+            className="w-24 h-24 object-contain" 
+            alt="Mascot" 
+          />
+          <div className="text-center">
+            <p className="text-lg font-semibold text-gray-800 mb-1">Generating your quiz...</p>
+          </div>
+        </div>
+      ) : (
+        <>
         <div className="flex items-center justify-center relative pt-2">
           <h2 className="text-xl font-bold text-gray-900">Quiz</h2>
           <X
@@ -196,7 +211,8 @@ try {
             className="self-center bg-[#347A73] hover:bg-[#1F5C57] text-white text-lg font-medium px-32 py-2 rounded-2xl transition-colors">
             Start Quiz
         </button>
-
+         </>
+         )}
       </div>
     </div>
   )

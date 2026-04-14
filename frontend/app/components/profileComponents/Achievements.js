@@ -28,7 +28,7 @@ import { useSession } from "next-auth/react"
 
 export default function Achievements() {
   const { data: session } = useSession()
-  const [achievements, setAchievements] = useState([])  
+  const [achievements, setAchievements] = useState([])
 
 
 
