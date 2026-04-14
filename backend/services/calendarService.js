@@ -8,6 +8,21 @@ const getOAuth2Client = () => new google.auth.OAuth2(
   'postmessage'
 );
 
+// Typed error for expired/revoked Google tokens so routes can return clean 401s
+class ReauthRequiredError extends Error {
+  constructor(userId) {
+    super(`Google authorization expired or revoked for user ${userId}. Please sign in with Google again.`);
+    this.name = 'ReauthRequiredError';
+    this.code = 'reauth_required';
+  }
+}
+
+// Returns true for any Google OAuth error that means "re-authorize this user"
+const isReauthError = (err) => {
+  const msg = err?.message || '';
+  return msg.includes('invalid_grant') || msg.includes('Token has been expired or revoked');
+};
+
 const getClientForUser = async (userId) => {
   const accounts = await accountModel.getAccountsByUserId(userId);
   const googleAccount = accounts.find(acc => acc.provider === 'google');
@@ -16,18 +31,20 @@ const getClientForUser = async (userId) => {
     throw new Error(`No Google account found for user ${userId}`);
   }
 
+  if (!googleAccount.refresh_token) {
+    throw new ReauthRequiredError(userId);
+  }
+
   const client = getOAuth2Client();
-  const tokens = {
-    access_token: googleAccount.access_token,
+  client.setCredentials({
+    access_token:  googleAccount.access_token,
     refresh_token: googleAccount.refresh_token,
-    token_type: googleAccount.type || 'Bearer',
-  };
+    token_type:    googleAccount.type || 'Bearer',
+  });
 
-  client.setCredentials(tokens);
-
-  // Listen for token refresh events and update the database
+  // Persist refreshed tokens back to DB so they stay fresh
   client.on('tokens', async (newTokens) => {
-    console.log(`Tokens refreshed for user ${userId}`);
+    console.log(`[Calendar] Tokens auto-refreshed for user ${userId}`);
     await accountModel.updateAccountTokens(
       'google',
       googleAccount.providerAccountId,
@@ -162,5 +179,7 @@ module.exports = {
   createCalendarEvent,
   getUpcomingMeetings,
   getEvents,
-  clearSocraticEvents
+  clearSocraticEvents,
+  ReauthRequiredError,
+  isReauthError
 };

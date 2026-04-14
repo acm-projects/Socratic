@@ -2,8 +2,24 @@ const express = require('express');
 const router = express.Router();
 const { google } = require('googleapis');
 const calendarService = require('../services/calendarService');
+const { ReauthRequiredError, isReauthError } = calendarService;
 const userModel = require('../models/userModel');
 const accountModel = require('../models/accountModel');
+
+// Unified error handler for calendar routes.
+// Converts expired/revoked token errors into a clean 401 so the frontend
+// knows to redirect the user to re-authorize with Google.
+const handleCalendarError = (error, res) => {
+  if (error instanceof ReauthRequiredError || isReauthError(error)) {
+    console.warn('[Calendar] Token expired/revoked:', error.message);
+    return res.status(401).json({
+      error: 'reauth_required',
+      message: 'Your Google authorization has expired. Please sign in with Google again.'
+    });
+  }
+  console.error('[Calendar] Unexpected error:', error.message);
+  res.status(500).json({ error: error.message || 'Internal server error' });
+};
 
 // In-memory session tracking for "Volatile Sessions" (restarts clear this)
 const activeSessions = new Set();
@@ -109,27 +125,27 @@ router.post('/create-tokens', async (req, res, next) => {
   }
 });
 
-router.post('/create-event', checkSession, async (req, res, next) => {
+router.post('/create-event', checkSession, async (req, res) => {
   try {
     const userId = req.resolvedUserId;
     const responseData = await calendarService.createCalendarEvent(userId, req.body);
     res.send(responseData);
   } catch (error) {
-    next(error);
+    handleCalendarError(error, res);
   }
 });
 
-router.get('/upcoming-events', checkSession, async (req, res, next) => {
+router.get('/upcoming-events', checkSession, async (req, res) => {
   try {
     const userId = req.resolvedUserId;
     const events = await calendarService.getUpcomingMeetings(userId);
     res.send(events);
   } catch (error) {
-    next(error);
+    handleCalendarError(error, res);
   }
 });
 
-router.get('/events', checkSession, async (req, res, next) => {
+router.get('/events', checkSession, async (req, res) => {
   try {
     const userId = req.resolvedUserId;
     const { timeMin, timeMax, maxResults } = req.query;
@@ -141,7 +157,7 @@ router.get('/events', checkSession, async (req, res, next) => {
     );
     res.send(events);
   } catch (error) {
-    next(error);
+    handleCalendarError(error, res);
   }
 });
 
