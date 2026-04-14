@@ -410,35 +410,23 @@
     "/api/tutor/chat": {
       "post": {
         "summary": "Chat with Socratic AI Tutor",
-        "description": "Send a message to the Socratic AI Tutor. It uses memory (Postgres) and RAG (Pinecone) to guide the student.",
+        "description": "Send a message to the Socratic AI Tutor. Pass an existing `sessionId` to continue a previous conversation — if omitted, a new session is created. The response always returns a `sessionId` and an `isNewSession` flag so the frontend knows whether to add a new entry to the sidebar.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "userId",
-                  "classCode",
-                  "topic",
-                  "message"
-                ],
+                "required": ["userId", "classCode", "topic", "message"],
                 "properties": {
-                  "userId": {
+                  "userId": { "type": "string", "example": "aakash" },
+                  "classCode": { "type": "string", "example": "CS3345" },
+                  "topic": { "type": "string", "example": "Binary Search Trees" },
+                  "message": { "type": "string", "example": "What is a BST?" },
+                  "sessionId": {
                     "type": "string",
-                    "example": "aakash"
-                  },
-                  "classCode": {
-                    "type": "string",
-                    "example": "CS 1000"
-                  },
-                  "topic": {
-                    "type": "string",
-                    "example": "Introduction to Algebra"
-                  },
-                  "message": {
-                    "type": "string",
-                    "example": "what is my name"
+                    "description": "Optional. Pass an existing sessionId to continue a previous chat. Omit to create a new session.",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
                   }
                 }
               }
@@ -447,8 +435,103 @@
         },
         "responses": {
           "200": {
-            "description": "Tutor response generated successfully"
+            "description": "Tutor response generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "reply": { "type": "string", "description": "The AI tutor's response" },
+                    "sessionId": { "type": "string", "description": "The chat session ID (new or existing)" },
+                    "isNewSession": { "type": "boolean", "description": "True if a new session was created. Use this to decide whether to add a sidebar entry." },
+                    "score": { "type": "integer", "description": "0-5 quality score of the user's question" },
+                    "reason": { "type": "string", "description": "Short explanation of the score" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/api/classes": {
+      "get": {
+        "summary": "Get All Classes",
+        "description": "Returns all classes in the database.",
+        "responses": {
+          "200": { "description": "A list of all classes" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "post": {
+        "summary": "Create or Update a Class",
+        "description": "Creates a new class. If the class_code already exists, updates the existing record (upsert).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["class_code", "subject"],
+                "properties": {
+                  "class_code": { "type": "string", "example": "CS3345" },
+                  "subject": { "type": "string", "example": "Data Structures" },
+                  "name": { "type": "string", "example": "Data Structures and Introduction to Algorithmic Analysis" },
+                  "user_id": { "type": "string", "example": "cmn9fnpv60000gox6sumckr25" }
+                }
+              }
+            }
           }
+        },
+        "responses": {
+          "200": { "description": "Class created or updated" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "delete": {
+        "summary": "Delete All Classes",
+        "description": "Deletes all classes, topics, chat sessions, chat history, tasks, and syllabus info from the database. ⚠️ This is a destructive operation.",
+        "responses": {
+          "200": { "description": "All classes deleted" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/api/classes/{class_code}": {
+      "get": {
+        "summary": "Get Class by Code",
+        "parameters": [
+          { "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS3345" }
+        ],
+        "responses": {
+          "200": { "description": "Class data" },
+          "404": { "description": "Class not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a Class by Code",
+        "description": "Deletes a specific class and **all associated data** in this order: tasks → chat history → chat sessions → topics → syllabus info → class. Safe to call even when the class has existing data.",
+        "parameters": [
+          { "name": "class_code", "in": "path", "required": true, "schema": { "type": "string" }, "example": "CS3345" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Class and all associated data deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" },
+                    "class": { "type": "object" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Class not found" },
+          "500": { "description": "Server error" }
         }
       }
     },
