@@ -99,7 +99,6 @@ router.post('/chat', async (req, res, next) => {
     const fullQuery = `${topic}: ${message}`;
     
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
-    // Detect if user is asking for a specific page/slide number
     const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     let targetedContext = [];
     
@@ -111,25 +110,49 @@ router.post('/chat', async (req, res, next) => {
         pageNumber: { "$eq": targetPage }
       });
       
-      targetedContext = targetedResults.map(doc => {
+      targetedResults.forEach(doc => {
         const page = doc.metadata.pageNumber || 'N/A';
         const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
-        return `[[PRIORITY DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
+        targetedContext.push(`[[PRIORITY DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`);
       });
     }
 
-    // Set k to 10 for broad context
-    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 10);
+    // --- NEW: LECTURE SNIPER SEARCH (Client-Side Filtering) ---
+    const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
+    const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
     
-    // Enrich context with Page Numbers and Filenames
-    const broadContext = resultsWithScores.map(([doc]) => {
+    if (targetLecture) {
+      console.log(`[Tutor] 🎯 Sniper Search active for Lecture ${targetLecture}`);
+    }
+
+    // Fetch 25 chunks. We will sort out the lecture-specific ones to guarantee they hit the LLM context.
+    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 25);
+    
+    let broadContext = [];
+    
+    resultsWithScores.forEach(([doc]) => {
       const page = doc.metadata.pageNumber || 'N/A';
       const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
-      return `[[DOCUMENT DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
+      const chunkStr = `[[DOCUMENT DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
+
+      if (targetLecture) {
+        const sourceRegex = new RegExp(`lecture[^a-zA-Z0-9]*0*${targetLecture}\\b`, 'i');
+        if (sourceRegex.test(source)) {
+          // Add to targeted context to give priority
+          targetedContext.push(chunkStr);
+          return;
+        }
+      }
+      broadContext.push(chunkStr);
     });
+
+    // Limit to prevent token overflow
+    targetedContext = targetedContext.slice(0, 10);
+    broadContext = broadContext.slice(0, 10);
 
     // Combine targeted and broad context (Targeted first)
     const context = [...targetedContext, ...broadContext].join('\n--- NEXT CHUNK ---\n');
+
 
     // 4. Run Socratic AI Tutor
     console.log(`[Tutor] 🧠 Thinking... (Topic: ${topic})`);
