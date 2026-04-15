@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('dotenv').config({ path: __dirname + '/backend/.env', override: false })
 
 const { randomUUID } = require("crypto")
 
@@ -1174,6 +1175,79 @@ app.post("/quizzes", async (req, res) => {
     }
 
     res.json({ ...quiz.rows[0], questions: savedQuestions })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// -----------------------------------------------------
+// PUT /quizzes/:id — Update quiz score + per-question answers after submission/retake
+// Uses backend/db module (proper connection) since root pool has no DATABASE_URL
+// -----------------------------------------------------
+const _db = require('./backend/db')
+
+app.put("/quizzes/:id", async (req, res) => {
+  try {
+    const { score, retake_count, questions } = req.body
+    const quizId = req.params.id
+
+    const newScore = (score !== undefined && score !== null) ? score : null
+    const newRetakeCount = (retake_count !== undefined && retake_count !== null) ? retake_count : null
+
+    // Update quiz record
+    const quizResult = await _db.query(
+      "UPDATE quizzes SET score = COALESCE($1, score), retake_count = COALESCE($2, retake_count) WHERE id = $3 RETURNING *",
+      [newScore, newRetakeCount, quizId]
+    )
+
+    if (!quizResult.rows[0]) {
+      return res.status(404).json({ error: "Quiz not found" })
+    }
+
+    // Update per-question user_answer and is_correct if provided
+    const updatedQuestions = []
+    if (Array.isArray(questions)) {
+      for (const q of questions) {
+        const updated = await _db.query(
+          "UPDATE quiz_questions SET user_answer = $1, is_correct = $2 WHERE id = $3 RETURNING *",
+          [q.user_answer, q.is_correct, q.id]
+        )
+        if (updated.rows[0]) updatedQuestions.push(updated.rows[0])
+      }
+    }
+
+    // Re-run achievement unlock checks
+    const user_id = quizResult.rows[0].user_id
+    try {
+      const allQuizzes = await _db.query(
+        "SELECT score, retake_count FROM quizzes WHERE user_id = $1",
+        [user_id]
+      )
+      const quizCount = allQuizzes.rows.length
+      const perfectScores = allQuizzes.rows.filter(q => parseInt(q.score) === 100).length
+      const totalRetakes = allQuizzes.rows.reduce((sum, q) => sum + (parseInt(q.retake_count) || 0), 0)
+
+      const toUnlock = []
+      if (quizCount >= 1) toUnlock.push('1')
+      if (quizCount >= 10) toUnlock.push('2')
+      if (totalRetakes > 0) toUnlock.push('3')
+      if (perfectScores >= 1) toUnlock.push('5')
+      if (perfectScores >= 5) toUnlock.push('7')
+      if (perfectScores >= 10) toUnlock.push('8')
+      if (totalRetakes >= 5) toUnlock.push('9')
+      if (totalRetakes >= 20) toUnlock.push('13')
+
+      for (const achId of toUnlock) {
+        await _db.query(
+          "INSERT INTO user_achievements (user_id, achievement_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+          [user_id, achId]
+        )
+      }
+    } catch (achErr) {
+      console.error('[Achievements] Failed to auto-unlock on quiz update:', achErr.message)
+    }
+
+    res.json({ ...quizResult.rows[0], questions: updatedQuestions })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
