@@ -257,4 +257,58 @@ router.get('/info/:class_code', async (req, res, next) => {
   }
 });
 
+// PUT /info/:class_code — Update Professor, TA, office hours, and grading policy
+router.put('/info/:class_code', async (req, res, next) => {
+  const { class_code } = req.params;
+  const normalizedCode = class_code.toUpperCase().trim();
+  const { 
+    professor_name, 
+    professor_email, 
+    office_hours, 
+    office_location, 
+    ta_name, 
+    ta_email, 
+    ta_office_hours, 
+    grading_policy 
+  } = req.body;
+
+  try {
+    // We use UPSERT in case the info row hasn't been created yet.
+    const result = await pool.query(
+      `INSERT INTO syllabus_info (
+         class_code, professor_name, professor_email, office_hours, office_location, 
+         ta_name, ta_email, ta_office_hours, grading_policy, updated_at
+       ) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+       ON CONFLICT (class_code) DO UPDATE SET
+         professor_name = EXCLUDED.professor_name,
+         professor_email = EXCLUDED.professor_email,
+         office_hours = EXCLUDED.office_hours,
+         office_location = EXCLUDED.office_location,
+         ta_name = EXCLUDED.ta_name,
+         ta_email = EXCLUDED.ta_email,
+         ta_office_hours = EXCLUDED.ta_office_hours,
+         grading_policy = EXCLUDED.grading_policy,
+         updated_at = NOW()
+       RETURNING *`,
+      [
+        normalizedCode,
+        professor_name,
+        professor_email,
+        office_hours,
+        office_location,
+        ta_name,
+        ta_email,
+        ta_office_hours,
+        grading_policy ? JSON.stringify(grading_policy) : null
+      ]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(`[Syllabus] ❌ Info update failed for ${normalizedCode}:`, error.message);
+    next(error);
+  }
+});
+
 module.exports = router;
