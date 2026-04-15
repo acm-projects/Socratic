@@ -156,6 +156,41 @@ router.get('/users/:id', async (req, res, next) => {
 });
 
 /**
+ * PUT /api/quizzes/:id
+ * Updates the score for a completed quiz.
+ * Body: { score, userId, topicId, classCode, numQuestions, isRetake? }
+ */
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { score, userId, topicId, classCode, numQuestions, isRetake = false } = req.body;
+
+    if (score === undefined || score === null) {
+      return res.status(400).json({ error: 'score is required' });
+    }
+
+    const updated = await quizModel.updateQuizScore(req.params.id, score, isRetake);
+    if (!updated) {
+      return res.status(404).json({ error: 'Quiz not found' });
+    }
+
+    // Update daily topic metrics if context is available
+    if (userId && classCode && topicId && numQuestions) {
+      await quizModel.updateTopicMetrics({
+        userId,
+        classCode,
+        topicId,
+        questionsAsked: numQuestions,
+        score,
+      });
+    }
+
+    res.json({ success: true, quiz: updated });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
  * POST /api/quizzes/:id/retake
  * Signals a quiz retake — increments retakes_taken for the user.
  * Body: { userId }

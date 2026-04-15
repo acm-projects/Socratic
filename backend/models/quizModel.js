@@ -88,10 +88,26 @@ const updateTopicMetrics = async ({ userId, classCode, topicId, questionsAsked, 
   );
 };
 
+/**
+ * Updates the score of an existing quiz by ID.
+ * Optionally increments retake_count if isRetake is true.
+ */
+const updateQuizScore = async (quizId, score, isRetake = false) => {
+  const result = await db.query(
+    `UPDATE quizzes
+     SET score = $1${isRetake ? ', retake_count = retake_count + 1' : ''}
+     WHERE id = $2
+     RETURNING *`,
+    [score, quizId]
+  );
+  return result.rows[0] || null;
+};
+
 module.exports = {
   createQuiz,
   saveQuestions,
   getQuestionsByQuizId,
   getQuizzesByUser,
-  updateTopicMetrics
+  updateTopicMetrics,
+  updateQuizScore
 };
