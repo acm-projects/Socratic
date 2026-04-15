@@ -864,6 +864,45 @@
           "404": { "description": "Syllabus info not found" },
           "500": { "description": "Server error" }
         }
+      },
+      "put": {
+        "summary": "Update Detailed Syllabus Info",
+        "description": "Upserts professor details, TA details, office hours, and grading policy.",
+        "parameters": [
+          {
+            "name": "class_code",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "CS3345"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "professor_name": { "type": "string" },
+                  "professor_email": { "type": "string" },
+                  "office_hours": { "type": "string" },
+                  "office_location": { "type": "string" },
+                  "ta_name": { "type": "string" },
+                  "ta_email": { "type": "string" },
+                  "ta_office_hours": { "type": "string" },
+                  "grading_policy": { "type": "array", "items": { "type": "object" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Syllabus info updated successfully"
+          },
+          "500": { "description": "Server error" }
+        }
       }
     },
     "/users": {
