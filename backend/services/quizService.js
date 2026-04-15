@@ -36,15 +36,8 @@ function getQuizGeneratorChain() {
     maxRetries: 1,
   });
 
-  const fallbackTwo = new ChatGoogleGenerativeAI({
-    model: "gemini-2.0-flash",
-    temperature: 0.2,
-    apiKey: process.env.GEMINI_API_KEY || process.env.GEMINI_RESPONSE_API,
-    maxRetries: 1,
-  });
-
   const llm = primaryLLM.withFallbacks({
-    fallbacks: [fallbackPro, fallbackLite, fallbackTwo]
+    fallbacks: [fallbackPro]
   });
 
   const prompt = PromptTemplate.fromTemplate(`

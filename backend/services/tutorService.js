@@ -32,15 +32,8 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
     maxRetries: 1,
   });
 
-  const fallbackTwo = new ChatGoogleGenerativeAI({
-    model: "gemini-2.0-flash",
-    apiKey: process.env.GEMINI_API_KEY,
-    temperature,
-    maxRetries: 1,
-  });
-
   return primary.withFallbacks({
-    fallbacks: [fallbackPro, fallbackLite, fallbackTwo]
+    fallbacks: [fallbackPro]
   });
 }
 
@@ -64,15 +57,8 @@ function getFastLLM() {
     maxRetries: 1,
   });
 
-  const fallbackTwo = new ChatGoogleGenerativeAI({
-    model: "gemini-2.0-flash",
-    apiKey: process.env.GEMINI_API_KEY,
-    temperature: 0.1,
-    maxRetries: 1,
-  });
-
   return primary.withFallbacks({
-    fallbacks: [fallbackPro, fallbackTwo]
+    fallbacks: [fallbackPro]
   });
 }
 
