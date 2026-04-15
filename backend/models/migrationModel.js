@@ -14,7 +14,9 @@ const runMigrations = async () => {
       'ALTER TABLE "User" ADD COLUMN IF NOT EXISTS retakes_taken INTEGER NOT NULL DEFAULT 0',
       'ALTER TABLE "User" ADD COLUMN IF NOT EXISTS last_active_date DATE',
       // Ensure existing rows are handled if columns were just added
-      'UPDATE "User" SET streak = 0 WHERE streak IS NULL'
+      'UPDATE "User" SET streak = 0 WHERE streak IS NULL',
+      // Ensure class_tasks has a completed status
+      'ALTER TABLE class_tasks ADD COLUMN IF NOT EXISTS completed BOOLEAN NOT NULL DEFAULT FALSE'
     ];
 
     for (const query of queries) {

@@ -20,10 +20,19 @@ const createUser = async (data) => {
 };
 
 const updateUser = async (id, data) => {
-  const { email, total_xp, weekly_xp, image } = data;
+  const { 
+    email, total_xp, weekly_xp, image, 
+    first_name, last_name, school, major, class_status, streak 
+  } = data;
+  
   const result = await db.query(
-    'UPDATE "User" SET email = $1, total_xp = $2, weekly_xp = $3, image = $4 WHERE id = $5 RETURNING *',
-    [email, total_xp, weekly_xp, image, id]
+    `UPDATE "User" SET 
+       email = $1, total_xp = $2, weekly_xp = $3, image = $4,
+       first_name = $5, last_name = $6, school = $7, major = $8, 
+       class_status = $9, streak = $10 
+     WHERE id = $11 
+     RETURNING *`,
+    [email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak, id]
   );
   return result.rows[0];
 };

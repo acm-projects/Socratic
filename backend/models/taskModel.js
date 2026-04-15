@@ -12,19 +12,34 @@ const getUpcomingTasksByUserId = async (userId) => {
       c.name AS class_name,
       ct.task_name,
       ct.due_date,
+      ct.completed,
       ct.created_at
     FROM user_classes uc
     JOIN classes c ON c.class_code = uc.class_code
     JOIN class_tasks ct ON ct.class_code = c.class_code
     WHERE uc.user_id = $1
       AND ct.due_date >= CURRENT_DATE
-      AND ct.due_date <= CURRENT_DATE + INTERVAL '7 days'
     ORDER BY ct.due_date ASC;
   `;
   const result = await db.query(query, [userId]);
   return result.rows;
 };
 
+/**
+ * Updates the completion status of a specific task.
+ */
+const updateTaskStatus = async (taskId, completed) => {
+  const query = `
+    UPDATE class_tasks
+    SET completed = $2
+    WHERE id = $1
+    RETURNING *;
+  `;
+  const result = await db.query(query, [taskId, completed]);
+  return result.rows[0];
+};
+
 module.exports = {
-  getUpcomingTasksByUserId
+  getUpcomingTasksByUserId,
+  updateTaskStatus
 };

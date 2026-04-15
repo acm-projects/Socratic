@@ -50,6 +50,28 @@ router.get('/:id/upcoming-tasks', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * PATCH /api/users/:id/tasks/:taskId
+ * Updates the completion status of a specific task.
+ */
+router.patch('/:id/tasks/:taskId', async (req, res, next) => {
+  try {
+    const { taskId } = req.params;
+    const { completed } = req.body;
+    
+    if (completed === undefined) {
+      return res.status(400).json({ error: "Missing required field: completed" });
+    }
+
+    const updatedTask = await taskModel.updateTaskStatus(taskId, completed);
+    if (!updatedTask) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json(updatedTask);
+  } catch (error) { next(error); }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const user = await userModel.getUserById(req.params.id);

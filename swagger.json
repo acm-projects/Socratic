@@ -413,7 +413,7 @@
     "/api/users/{id}/upcoming-tasks": {
       "get": {
         "summary": "Get All Upcoming Tasks for User",
-        "description": "Returns a chronologically sorted list of upcoming tasks (quizzes, exams, assignments) from all classes the user is enrolled in. Filters for tasks due within the next 7 days (including today).",
+        "description": "Returns a chronologically sorted list of academic deadlines (quizzes, exams, assignments) from all classes the user is enrolled in. Shows all tasks scheduled for the current date or later.",
         "parameters": [
           {
             "name": "id",
@@ -438,6 +438,7 @@
                       "class_name": { "type": "string", "example": "Intro to Programming" },
                       "task_name": { "type": "string", "example": "Midterm Exam" },
                       "due_date": { "type": "string", "format": "date", "example": "2026-05-15" },
+                      "completed": { "type": "boolean", "example": false },
                       "created_at": { "type": "string", "format": "date-time" }
                     }
                   }
@@ -1865,6 +1866,49 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/users/{id}/tasks/{taskId}": {
+      "patch": {
+        "summary": "Update Task Completion Status",
+        "description": "Toggles the completion status of a specific academic task.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "User ID"
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Task ID (UUID)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "completed": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated task object"
+          },
+          "404": {
+            "description": "Task not found"
           }
         }
       }
