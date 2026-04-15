@@ -20,10 +20,22 @@ const createUser = async (data) => {
 };
 
 const updateUser = async (id, data) => {
-  const { 
-    email, total_xp, weekly_xp, image, 
-    first_name, last_name, school, major, class_status, streak 
-  } = data;
+  // Fetch existing user to prevent overwriting with null
+  const existingResult = await db.query('SELECT * FROM "User" WHERE id = $1', [id]);
+  if (!existingResult.rows[0]) return null;
+  const existing = existingResult.rows[0];
+
+  const email = data.email !== undefined ? data.email : existing.email;
+  const total_xp = data.total_xp !== undefined ? data.total_xp : existing.total_xp;
+  const weekly_xp = data.weekly_xp !== undefined ? data.weekly_xp : existing.weekly_xp;
+  // Crucially, only update image if they actually provided a valid non-null string
+  const image = data.image ? data.image : existing.image;
+  const first_name = data.first_name !== undefined ? data.first_name : existing.first_name;
+  const last_name = data.last_name !== undefined ? data.last_name : existing.last_name;
+  const school = data.school !== undefined ? data.school : existing.school;
+  const major = data.major !== undefined ? data.major : existing.major;
+  const class_status = data.class_status !== undefined ? data.class_status : existing.class_status;
+  const streak = data.streak !== undefined ? data.streak : existing.streak;
   
   const result = await db.query(
     `UPDATE "User" SET 

@@ -199,16 +199,37 @@ app.post("/users", async (req, res) => {
 
 app.put("/users/:id", async (req, res) => {
   try {
-    const { email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak } = req.body
+    const id = req.params.id;
+    const existingResult = await pool.query('SELECT * FROM "User" WHERE id = $1', [id]);
+    if (!existingResult.rows[0]) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const existing = existingResult.rows[0];
+
+    const { email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak } = req.body;
+    
+    // Fallbacks
+    const updatedEmail = email !== undefined ? email : existing.email;
+    const updatedTotalXp = total_xp !== undefined ? total_xp : existing.total_xp;
+    const updatedWeeklyXp = weekly_xp !== undefined ? weekly_xp : existing.weekly_xp;
+    const updatedImage = image ? image : existing.image;
+    const updatedFirstName = first_name !== undefined ? first_name : existing.first_name;
+    const updatedLastName = last_name !== undefined ? last_name : existing.last_name;
+    const updatedSchool = school !== undefined ? school : existing.school;
+    const updatedMajor = major !== undefined ? major : existing.major;
+    const updatedClassStatus = class_status !== undefined ? class_status : existing.class_status;
+    const updatedStreak = streak !== undefined ? streak : existing.streak;
+
     const result = await pool.query(
       'UPDATE "User" SET email = $1, total_xp = $2, weekly_xp = $3, image = $4, first_name = $5, last_name = $6, school = $7, major = $8, class_status = $9, streak = $10 WHERE id = $11 RETURNING *',
-      [email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak, req.params.id]
+      [updatedEmail, updatedTotalXp, updatedWeeklyXp, updatedImage, updatedFirstName, updatedLastName, updatedSchool, updatedMajor, updatedClassStatus, updatedStreak, id]
     )
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
+
 
 app.delete("/users/:id", async (req, res) => {
   try {
