@@ -32,15 +32,15 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
     maxRetries: 1,
   });
 
-  const fallbackLatest = new ChatGoogleGenerativeAI({
-    model: "gemini-flash-latest",
+  const fallbackTwo = new ChatGoogleGenerativeAI({
+    model: "gemini-2.0-flash",
     apiKey: process.env.GEMINI_API_KEY,
     temperature,
     maxRetries: 1,
   });
 
   return primary.withFallbacks({
-    fallbacks: [fallbackPro, fallbackLite, fallbackLatest]
+    fallbacks: [fallbackPro, fallbackLite, fallbackTwo]
   });
 }
 
@@ -49,11 +49,30 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
  * Uses the Lite model for <1s latency.
  */
 function getFastLLM() {
-  return new ChatGoogleGenerativeAI({
-    model: "gemini-3.1-flash-lite-preview", // The newest and fastest lite model for your account
+  const primary = new ChatGoogleGenerativeAI({
+    model: "gemini-3.1-flash-lite-preview", 
     apiKey: process.env.GEMINI_API_KEY,
     temperature: 0.1,
-    maxRetries: 0,
+    maxRetries: 2, // Non-zero retries for transient 503s
+  });
+
+  // Fallback to high-token 2.0+ models as per user requirement
+  const fallbackPro = new ChatGoogleGenerativeAI({
+    model: "gemini-2.5-pro",
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature: 0.1,
+    maxRetries: 1,
+  });
+
+  const fallbackTwo = new ChatGoogleGenerativeAI({
+    model: "gemini-2.0-flash",
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature: 0.1,
+    maxRetries: 1,
+  });
+
+  return primary.withFallbacks({
+    fallbacks: [fallbackPro, fallbackTwo]
   });
 }
 
@@ -63,8 +82,9 @@ const parser = StructuredOutputParser.fromNamesAndDescriptions({
   reason: "A short, 1-sentence reason explaining why you assigned that score."
 });
 
-const evaluatorLLM = getFastLLM();
-
+/**
+ * EXPLICIT MODEL DEFINITIONS FOR SCORING ENGINE
+ */
 const evaluatorPrompt = PromptTemplate.fromTemplate(`
   You are a scoring engine for {class} focusing on {topic}.
   Evaluate this user input on a scale of 0 to 5 based on depth, critical thinking, and clarity.
@@ -80,7 +100,74 @@ const evaluatorPrompt = PromptTemplate.fromTemplate(`
   {format_instructions}
 `);
 
-const evalChain = RunnableSequence.from([evaluatorPrompt, evaluatorLLM, parser]);
+const getScoringModel = (modelName) => new ChatGoogleGenerativeAI({
+  model: modelName,
+  apiKey: process.env.GEMINI_API_KEY,
+  temperature: 0.1,
+  maxRetries: 0 // We handle retries manually for better logging
+});
+
+/**
+ * HIGH-RELIABILITY SCORING ENGINE
+ * Explicitly tries Lite, Pro, and then Flash with manual retries and logging.
+ */
+async function evaluateQuestion({ input, classCode, topicName }) {
+  const models = [
+    { name: "gemini-2.5-flash", label: "Standard (Primary - Most Stable)" },
+    { name: "gemini-2.5-pro", label: "Pro (High Tokens Fallback)" },
+    { name: "gemini-3.1-flash-lite-preview", label: "Lite (Speed Fallback)" }
+  ];
+
+  const scoringPrompt = await evaluatorPrompt.format({
+    class: classCode,
+    topic: topicName,
+    input: input,
+    format_instructions: parser.getFormatInstructions()
+  });
+
+  let lastError;
+  for (let i = 0; i < models.length; i++) {
+    const { name, label } = models[i];
+    try {
+      if (i > 0) {
+        // Small delay for retries/fallbacks
+        const delay = i === 1 ? 1500 : 500; 
+        await new Promise(r => setTimeout(r, delay));
+      }
+
+      console.log(`[Tutor] ⭐ Attempting evaluation with ${label}...`);
+      const llm = getScoringModel(name);
+      const res = await llm.invoke(scoringPrompt);
+      const parsed = await parser.parse(res.content || res);
+      
+      console.log(`[Tutor] ⭐ Successfully scored via ${label}`);
+      return parsed;
+
+    } catch (err) {
+      lastError = err;
+      const is503 = err.message?.includes("503") || err.message?.includes("Service Unavailable");
+      console.warn(`[Tutor] ⚠️  ${label} failed:`, is503 ? "503 Service Unavailable" : err.message);
+      
+      if (i === models.length - 1) {
+        console.error(`[Tutor] ❌ All scoring models failed. Final error:`, err.message);
+      }
+    }
+  }
+
+  // Final Fallback if everything fails
+  return { score: 0, reason: "Scoring failed after multiple fallbacks." };
+}
+
+// Keep legacy evalChain if needed elsewhere, but point to a robust runner
+const evalChain = {
+  invoke: async (params) => {
+    return evaluateQuestion({
+      input: params.input,
+      classCode: params.class,
+      topicName: params.topic
+    });
+  }
+};
 
 /**
  * Custom LangChain history adapter for the Socratic chat_history table.
@@ -172,5 +259,6 @@ Current question quality score: {score}/5 — {reason}.`
 module.exports = {
   parser,
   evalChain,
+  evaluateQuestion,
   getTutorChainWithHistory
 };

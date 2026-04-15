@@ -7,7 +7,7 @@ const express = require('express');
 const router = express.Router();
 const { randomUUID } = require('crypto');
 const { getClassVectorStore } = require('../services/vectorService');
-const { evalChain, parser, getTutorChainWithHistory } = require('../services/tutorService');
+const { evaluateQuestion, parser, getTutorChainWithHistory } = require('../services/tutorService');
 const classModel = require('../models/classModel');
 const userStatsModel = require('../models/userStatsModel');
 // We no longer use chatModel; we use sessionModel and topicModel instead.
@@ -56,11 +56,10 @@ router.post('/chat', async (req, res, next) => {
     let reason = "Evaluation skipped.";
     
     try {
-      const evalResult = await evalChain.invoke({ 
+      const evalResult = await evaluateQuestion({ 
         input: message, 
-        class: classCode, 
-        topic: topicName,
-        format_instructions: parser.getFormatInstructions()
+        classCode: classCode, 
+        topicName: topicName
       });
       score = evalResult.score;
       reason = evalResult.reason;
