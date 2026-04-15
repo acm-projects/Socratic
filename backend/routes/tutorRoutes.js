@@ -16,7 +16,12 @@ router.post('/chat', async (req, res, next) => {
   try {
     // Accept either sessionId OR chatId (chatId is legacy, sessionId is the new name)
     const { userId, classCode, topic: topicName, message, chatId: providedChatId, sessionId: providedSessionId } = req.body;
-    const incomingSessionId = providedSessionId || providedChatId || null;
+    
+    // Normalize sessionId: ignore empty strings or stringified 'null'/'undefined'
+    let incomingSessionId = providedSessionId || providedChatId || null;
+    if (incomingSessionId === 'null' || incomingSessionId === 'undefined' || incomingSessionId === '') {
+      incomingSessionId = null;
+    }
 
     if (!userId || !classCode || !topicName || !message) {
       return res.status(400).json({ error: "Missing required fields: userId, classCode, topic, message" });
@@ -35,10 +40,21 @@ router.post('/chat', async (req, res, next) => {
     }
 
     // 2. Ensure Session Exists in Official table
-    // If the frontend passes sessionId/chatId, reuse that session (append to it).
-    // Only generate a new UUID if this is the first message of a conversation.
-    const isNewSession = !incomingSessionId;
-    const chatId = incomingSessionId || randomUUID();
+    // If the frontend passes sessionId/chatId, check if it exists in DB.
+    let chatId = incomingSessionId;
+    let isNewSession = false;
+
+    if (chatId) {
+      const existingSession = await sessionModel.getSessionById(chatId);
+      if (!existingSession) {
+        // If an ID was provided but not found, we create a new one with that requested ID
+        // (This handles the case where frontend generates IDs locally)
+        isNewSession = true;
+      }
+    } else {
+      chatId = randomUUID();
+      isNewSession = true;
+    }
 
     // Use the first message as the session title — only matters on creation
     const sessionTitle = message.length > 50 ? message.substring(0, 47) + "..." : message;
@@ -152,9 +168,10 @@ router.post('/chat', async (req, res, next) => {
 
     res.json({
       chatId,
-      sessionId: chatId,   // return under both names for compatibility
-      isNewSession,        // true = first message, add to sidebar; false = existing session
-      response: aiContent,
+      sessionId: chatId,   
+      isNewSession,        
+      reply: aiContent,    // Align with Swagger UI
+      response: aiContent, // Stay compatible with existing code
       score,
       reason
     });
