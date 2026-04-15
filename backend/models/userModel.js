@@ -15,9 +15,8 @@ const createUser = async (data) => {
   const result = await db.query(
     `INSERT INTO "User" (id, email, total_xp, weekly_xp, image) 
      VALUES ($1, $2, $3, $4, $5)
-     ON CONFLICT (id) DO UPDATE SET
-       image = EXCLUDED.image,
-       email = EXCLUDED.email
+     ON CONFLICT (email) DO UPDATE SET
+       image = COALESCE(EXCLUDED.image, "User".image)
      RETURNING *`,
     [id, email, total_xp, weekly_xp, image]
   );
