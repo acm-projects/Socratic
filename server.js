@@ -187,8 +187,17 @@ app.get("/users/:id", async (req, res) => {
 app.post("/users", async (req, res) => {
   try {
     const { id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak } = req.body
+    
+    // UPSERT: If user signs in on frontend and syncs, ensure we save their latest profile pic
     const result = await pool.query(
-      'INSERT INTO "User" (id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
+      `INSERT INTO "User" (id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+       ON CONFLICT (id) DO UPDATE SET 
+         image = COALESCE(EXCLUDED.image, "User".image),
+         email = COALESCE(EXCLUDED.email, "User".email),
+         first_name = COALESCE(EXCLUDED.first_name, "User".first_name),
+         last_name = COALESCE(EXCLUDED.last_name, "User".last_name)
+       RETURNING *`,
       [id, email, total_xp, weekly_xp, image, first_name, last_name, school, major, class_status, streak]
     )
     res.json(result.rows[0])
