@@ -410,6 +410,44 @@
         }
       }
     },
+    "/api/users/{id}/upcoming-tasks": {
+      "get": {
+        "summary": "Get All Upcoming Tasks for User",
+        "description": "Returns a chronologically sorted list of upcoming tasks (quizzes, exams, assignments) from all classes the user is enrolled in. Filters by due_date >= current date.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "user_123"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of upcoming task objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string", "example": "task_001" },
+                      "class_code": { "type": "string", "example": "CS1436" },
+                      "class_name": { "type": "string", "example": "Intro to Programming" },
+                      "task_name": { "type": "string", "example": "Midterm Exam" },
+                      "due_date": { "type": "string", "format": "date", "example": "2026-05-15" },
+                      "created_at": { "type": "string", "format": "date-time" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
+      },
     "/api/quizzes/{id}/retake": {
       "post": {
         "summary": "Record a Quiz Retake",

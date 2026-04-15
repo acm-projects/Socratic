@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userModel = require('../models/userModel');
+const taskModel = require('../models/taskModel');
 const db = require('../db');
 
 router.get('/', async (req, res, next) => {
@@ -35,6 +36,17 @@ router.get('/:id/classes', async (req, res, next) => {
       [id]
     );
     res.json(result.rows);
+  } catch (error) { next(error); }
+});
+/**
+ * GET /api/users/:id/upcoming-tasks
+ * Returns all upcoming tasks for a specific user across all enrolled classes.
+ */
+router.get('/:id/upcoming-tasks', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const tasks = await taskModel.getUpcomingTasksByUserId(id);
+    res.json(tasks);
   } catch (error) { next(error); }
 });
 
