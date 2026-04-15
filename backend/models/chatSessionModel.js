@@ -5,6 +5,11 @@ const getSessionsByUserId = async (userId) => {
   return result.rows;
 };
 
+const getAllSessions = async () => {
+  const result = await db.query("SELECT * FROM chat_sessions ORDER BY created_at DESC");
+  return result.rows;
+};
+
 const getSessionById = async (sessionId) => {
   const result = await db.query("SELECT * FROM chat_sessions WHERE session_id = $1", [sessionId]);
   return result.rows[0];
@@ -51,10 +56,23 @@ const saveChatMessage = async (data) => {
   return result.rows[0];
 };
 
+/**
+ * Retrieves all messages for a specific session from chat_history.
+ */
+const getMessagesBySessionId = async (sessionId) => {
+  const result = await db.query(
+    "SELECT * FROM chat_history WHERE session_id = $1 ORDER BY created_at ASC",
+    [sessionId]
+  );
+  return result.rows;
+};
+
 module.exports = {
   getSessionsByUserId,
+  getAllSessions,
   getSessionById,
   createSession,
   upsertTutorSession,
-  saveChatMessage
+  saveChatMessage,
+  getMessagesBySessionId
 };
