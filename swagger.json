@@ -413,7 +413,7 @@
     "/api/users/{id}/upcoming-tasks": {
       "get": {
         "summary": "Get All Upcoming Tasks for User",
-        "description": "Returns a chronologically sorted list of upcoming tasks (quizzes, exams, assignments) from all classes the user is enrolled in. Filters by due_date >= current date.",
+        "description": "Returns a chronologically sorted list of upcoming tasks (quizzes, exams, assignments) from all classes the user is enrolled in. Filters for tasks due within the next 7 days (including today).",
         "parameters": [
           {
             "name": "id",

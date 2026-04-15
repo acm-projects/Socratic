@@ -17,8 +17,9 @@ const getUpcomingTasksByUserId = async (userId) => {
     JOIN classes c ON c.class_code = uc.class_code
     JOIN class_tasks ct ON ct.class_code = c.class_code
     WHERE uc.user_id = $1
-      AND (ct.due_date >= CURRENT_DATE OR ct.due_date IS NULL)
-    ORDER BY ct.due_date ASC NULLS LAST;
+      AND ct.due_date >= CURRENT_DATE
+      AND ct.due_date <= CURRENT_DATE + INTERVAL '7 days'
+    ORDER BY ct.due_date ASC;
   `;
   const result = await db.query(query, [userId]);
   return result.rows;
