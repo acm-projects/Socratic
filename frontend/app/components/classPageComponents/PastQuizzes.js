@@ -40,10 +40,10 @@ export default function PastQuizzes({ topics, onRetake, onReview }) {
 
   useEffect(() => {
     if (!session?.user?.id) return;
+    if (!topics || topics.length === 0) return  // 👈 guard so it waits for topics
     fetch(`/backend/users/${session.user.id}/quizzes`)
       .then(res => res.json())
       .then(data => {
-        console.log("quiz objects:", quizzes)
          console.log("raw quizzes:", data)
         console.log("quizzes:", data)
         const formatted = data.
@@ -59,7 +59,7 @@ export default function PastQuizzes({ topics, onRetake, onReview }) {
         setQuizzes(formatted);
       })
       .catch(err => console.error(err))
-  }, [session])
+  }, [session, topics.length])
 
 
 

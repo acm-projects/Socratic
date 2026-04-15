@@ -11,18 +11,18 @@ import { useSession } from "next-auth/react"
 import { useState } from "react"
 
 
-const upcomingTasks = [
-  { title: "Problem Set 4",  course: "Discrete Math",      due: "Apr 3"  },
-  { title: "Lab Report",     course: "Physics I",          due: "Apr 5"  },
-  { title: "HW 7",           course: "Calculus II",        due: "Apr 8"  },
-  { title: "Problem Set 5",  course: "Discrete Math",      due: "Apr 10" },
-  { title: "HW 8",           course: "Calculus II",        due: "Apr 15" },
-  { title: "Exam 2 Review",  course: "Physics I",          due: "Apr 17" },
-  { title: "Problem Set 6",  course: "Linear Algebra",     due: "Apr 19" },
-  { title: "Lab Report 2",   course: "Chemistry I",        due: "Apr 21" },
-  { title: "HW 9",           course: "Calculus II",        due: "Apr 24" },
-  { title: "Final Project",  course: "Computer Science I", due: "Apr 30" },
-]
+// const upcomingTasks = [
+//   { title: "Problem Set 4",  course: "Discrete Math",      due: "Apr 3"  },
+//   { title: "Lab Report",     course: "Physics I",          due: "Apr 5"  },
+//   { title: "HW 7",           course: "Calculus II",        due: "Apr 8"  },
+//   { title: "Problem Set 5",  course: "Discrete Math",      due: "Apr 10" },
+//   { title: "HW 8",           course: "Calculus II",        due: "Apr 15" },
+//   { title: "Exam 2 Review",  course: "Physics I",          due: "Apr 17" },
+//   { title: "Problem Set 6",  course: "Linear Algebra",     due: "Apr 19" },
+//   { title: "Lab Report 2",   course: "Chemistry I",        due: "Apr 21" },
+//   { title: "HW 9",           course: "Calculus II",        due: "Apr 24" },
+//   { title: "Final Project",  course: "Computer Science I", due: "Apr 30" },
+// ]
 
 // const upcomingMeetings = [
 //   { title: "Study Group",    course: "Computer Science I", date: "Tue, Apr 8",  time: "4:00 PM" },
@@ -31,12 +31,16 @@ const upcomingTasks = [
 //   { title: "Exam Review",    course: "Physics I",          date: "Sat, Apr 12", time: "5:00 PM" },
 // ]
 
+
+
 export default function HomePage() {
 
   // fetch data for classes grid
     const [courses, setCourses] = useState([]);
     const { data: session } = useSession();
+ 
 
+ 
   useEffect(() => { 
     if (!session) return;
    fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
@@ -133,7 +137,7 @@ useEffect(() => {
         </div>
 
         <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-12 pb-5 pt-2 shrink-0 mt-4">
-        <StudyHeatmap />
+<StudyHeatmap courseId={null} />
         </div>
 
       </div>
@@ -145,7 +149,7 @@ useEffect(() => {
         }} />
 
         <div className="p-9 w-1/4 flex flex-col gap-8 overflow-hidden h-screen sticky top-0">
-        <UpcomingTasks tasks={upcomingTasks} />
+        <UpcomingTasks/>
         <UpcomingMeetings />
         </div>
 

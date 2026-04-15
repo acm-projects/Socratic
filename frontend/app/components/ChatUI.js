@@ -9,6 +9,14 @@ import { useSession } from "next-auth/react";
 
 export default function ChatUI({ classCode, topic }) {
 
+ 
+
+
+
+
+
+
+
      const { data: session } = useSession()
 
 
@@ -46,7 +54,10 @@ useEffect(() => {
 
 
 async function handleSend() {
+        console.log("sessionId at send time:", sessionId)
+
     if (!input || loading) return;
+
     const userMessage = { role: "user", content: input, score: null }
     setMessages(prev => [...prev, userMessage])
     setInput("")
@@ -65,6 +76,10 @@ async function handleSend() {
             })
         })
         const data = await res.json()
+        console.log("backend response:", data)
+        console.log("loaded messages:", data)  // ← add this
+
+
 
         if (!sessionId && data.chatId) {
             setSessionId(data.chatId)
@@ -84,6 +99,33 @@ async function handleSend() {
     } finally {
         setLoading(false)
     }
+}
+
+
+  async function loadChat(chatId) {
+      console.log("loadChat called with:", chatId)  // ← add this
+
+  setActiveChatId(chatId);
+  activeChatIdRef.current = chatId;
+  setSessionId(chatId);
+  setLoading(true);
+
+  try {
+    const res = await fetch(`/backend/api/history/${chatId}`);
+        console.log("fetch status:", res.status)
+    const data = await res.json();
+        console.log("loaded messages:", data)
+    const formatted = data.map(m => ({
+      role: m.role === "assistant" ? "ai" : "user",  // ← "assistant" not "ai"
+      content: m.content,
+      score: m.score ?? null
+    }));
+    setMessages(formatted);
+  } catch (err) {
+    console.error("Failed to load chat:", err);
+  } finally {
+    setLoading(false);
+  }
 }
 
 
@@ -148,7 +190,7 @@ async function handleSend() {
                         {chats.map(chat => (
                             <button
                                 key={chat.id}
-                                onClick={() => setActiveChatId(chat.id)}
+                                onClick={() => loadChat(chat.id)}
                                 className={`
                                     text-left text-xs px-3 py-2 rounded-lg truncate
                                     transition-colors w-full flex-shrink-0
