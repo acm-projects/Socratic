@@ -317,7 +317,10 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
     const userId = req.params.id
 
     const friendsResult = await pool.query(
-      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f
+       JOIN "User" u ON f.friend_id = u.id
+       WHERE f.user_id = $1`,
       [userId]
     )
 
@@ -360,7 +363,10 @@ app.get("/users/:id/friends/achievements", async (req, res) => {
     const userId = req.params.id
 
     const friendsResult = await pool.query(
-      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f
+       JOIN "User" u ON f.friend_id = u.id
+       WHERE f.user_id = $1`,
       [userId]
     )
 
@@ -369,7 +375,11 @@ app.get("/users/:id/friends/achievements", async (req, res) => {
     const friendIds = friendsResult.rows.map(f => f.friend_id)
     const friendMap = {}
     friendsResult.rows.forEach(f => {
-      friendMap[f.friend_id] = { first_name: f.first_name, last_name: f.last_name }
+      friendMap[f.friend_id] = { 
+        first_name: f.first_name, 
+        last_name: f.last_name,
+        image: f.image
+      }
     })
 
     const achievementsResult = await pool.query(
@@ -387,6 +397,7 @@ app.get("/users/:id/friends/achievements", async (req, res) => {
       friend_id: row.user_id,
       first_name: friendMap[row.user_id]?.first_name || null,
       last_name: friendMap[row.user_id]?.last_name || null,
+      image: friendMap[row.user_id]?.image || null,
       achievement_id: row.achievement_id,
       achievement_title: row.achievement_name,
       earned_at: row.earned_at
@@ -934,7 +945,13 @@ app.delete("/accounts/:provider/:providerAccountId", async (req, res) => {
 
 app.get("/users/:id/friends", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM friends WHERE user_id = $1", [req.params.id])
+    const query = `
+      SELECT f.*, u.image, u.first_name, u.last_name, u.email
+      FROM friends f
+      JOIN "User" u ON f.friend_id = u.id
+      WHERE f.user_id = $1
+    `;
+    const result = await pool.query(query, [req.params.id])
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })

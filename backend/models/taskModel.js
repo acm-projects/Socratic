@@ -13,12 +13,13 @@ const getUpcomingTasksByUserId = async (userId) => {
       ct.task_name,
       ct.due_date,
       ct.completed,
+      ct.completed AS is_completed,
       ct.created_at
     FROM user_classes uc
     JOIN classes c ON c.class_code = uc.class_code
     JOIN class_tasks ct ON ct.class_code = c.class_code
     WHERE uc.user_id = $1
-      AND ct.due_date >= CURRENT_DATE
+      AND ct.due_date >= CURRENT_DATE - INTERVAL '1 day'
     ORDER BY ct.due_date ASC;
   `;
   const result = await db.query(query, [userId]);
