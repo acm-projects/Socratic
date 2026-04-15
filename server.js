@@ -296,8 +296,43 @@ app.get("/users/:id/xp-history", async (req, res) => {
 })
 
 // -----------------------------------------------------
+// UPCOMING TASKS (Legacy Mapping)
+// -----------------------------------------------------
+app.get("/users/:id/upcoming-tasks", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const taskModel = require('./backend/models/taskModel');
+    const tasks = await taskModel.getUpcomingTasksByUserId(userId);
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// -----------------------------------------------------
 // QUIZ OVERVIEW (grouped by class)
 // -----------------------------------------------------
+
+app.patch("/users/:id/tasks/:taskId", async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const { completed } = req.body;
+    
+    if (completed === undefined) {
+      return res.status(400).json({ error: "Missing required field: completed" });
+    }
+
+    const taskModel = require('./backend/models/taskModel');
+    const updatedTask = await taskModel.updateTaskStatus(taskId, completed);
+    if (!updatedTask) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json(updatedTask);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.get("/users/:id/quiz-overview", async (req, res) => {
   try {
