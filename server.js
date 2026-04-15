@@ -316,12 +316,6 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
   try {
     const userId = req.params.id
 
-    const userClasses = await pool.query(
-      "SELECT class_code FROM classes WHERE user_id = $1",
-      [userId]
-    )
-    const userClassCodes = userClasses.rows.map(r => r.class_code)
-
     const friendsResult = await pool.query(
       "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
       [userId]
@@ -330,11 +324,11 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
     const friendsWithSharedClasses = await Promise.all(
       friendsResult.rows.map(async (friend) => {
         const sharedResult = await pool.query(
-          `SELECT c.class_code, c.name
-           FROM classes c
-           WHERE c.user_id = $1
-           AND c.class_code = ANY($2::text[])`,
-          [friend.friend_id, userClassCodes]
+          `SELECT class_code, class_name AS name
+           FROM shared_classes
+           WHERE user_id = $1
+           AND friend_id = $2`,
+          [userId, friend.friend_id]
         )
 
         return {
