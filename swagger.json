@@ -369,6 +369,47 @@
         }
       }
     },
+    "/api/users/{id}/classes": {
+      "get": {
+        "summary": "Get All Classes for User",
+        "description": "Returns all classes a user is enrolled in via the user_classes table, joined with full class details (name, subject, syllabus_url, streak, etc.).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "cmn9fnpv60000gox6sumckr25"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of class objects for the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "class_code": { "type": "string", "example": "CS1436" },
+                      "name": { "type": "string", "example": "Intro to Programming" },
+                      "subject": { "type": "string", "example": "CS" },
+                      "syllabus_url": { "type": "string", "example": "https://s3.amazonaws.com/..." },
+                      "streak": { "type": "integer", "example": 3 },
+                      "last_activity_date": { "type": "string", "format": "date", "example": "2026-04-14" },
+                      "created_at": { "type": "string", "format": "date-time" },
+                      "enrolled_at": { "type": "string", "format": "date-time" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
     "/api/quizzes/{id}/retake": {
       "post": {
         "summary": "Record a Quiz Retake",
