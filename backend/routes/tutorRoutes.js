@@ -167,11 +167,9 @@ router.post('/chat', async (req, res, next) => {
     );
 
     res.json({
-      chatId,
       sessionId: chatId,   
       isNewSession,        
-      reply: aiContent,    // Align with Swagger UI
-      response: aiContent, // Stay compatible with existing code
+      reply: aiContent,    
       score,
       reason
     });
