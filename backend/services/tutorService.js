@@ -50,7 +50,7 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
  */
 function getFastLLM() {
   const primary = new ChatGoogleGenerativeAI({
-    model: "gemini-3.1-flash-lite-preview", 
+    model: "gemini-3.1-flash-lite-preview",
     apiKey: process.env.GEMINI_API_KEY,
     temperature: 0.1,
     maxRetries: 2, // Non-zero retries for transient 503s
@@ -90,11 +90,11 @@ const evaluatorPrompt = PromptTemplate.fromTemplate(`
   Evaluate this user input on a scale of 0 to 5 based on depth, critical thinking, and clarity.
   
   Score 0: Irrelevant / Not a question / Off-topic / Truly irrelevant garbage ("what is the meaning of life?", "what is rizz?", "skibidi")
-  Score 1: Basic definition question ("what is a variable?", "how does a for loop work?", "what is the syntax for a for loop?")
-  Score 2: A do it for me request ("How do I solve problem 4?" or "My code doesn't work, please fix it", "walk me through step by step to solve this problem")
-  Score 3: User asks for help but provides context. User asks why we use a certain concept or demonstrates critical thinking ("I'm trying to solve this problem, but I'm stuck, what am i missing?", "I know how to write a for loop, but I'm not sure how to use it to solve this problem, why do we use for loops how do they help our program?")
-  Score 4: User connects the dots ("Why is a hash map faster than an array for this specific type of data retrieval?", "so we use a for loop to iterate through each element of the array then?")
-  Score 5: What if hypthethical scenarios critical thinking ("So, is it accurate to think of a variable like a physical box? If so, what happens if I try to put a box inside another box?", "I understand how this physics formula works for positive velocity, but what if the object is thrown backward? Does the whole logic reverse, or does the math break?")
+  Score 1: Basic definition question ("what is a variable?", "how does a for loop work?", "what is the syntax for a for loop?, "what is the answer to this question?"")
+  Score 2: A do it for me request ("How do I solve problem 4?" or "My code doesn't work, why isn't it working", "walk me through step by step to solve this problem then give me the answer")
+  Score 3: User asks for help but provides context. User asks why we use a certain concept or demonstrates critical thinking ("I'm trying to solve this problem, but I'm stuck, what am i missing?", "I know how to write a for loop, but I'm not sure how to use it to solve this problem, why do we use for loops how do they help our program?, okay here are my steps what do I do after this?, okay so I know bernouli trials are indpendant but are they mutually exclusive?", "I know how to write a for loop, but I'm not sure how to use it to solve this problem, why do we use for loops how do they help our program?, okay here are my steps what do I do after this?, okay so I know bernouli trials are indpendant but are they mutually exclusive?")
+  Score 4: User connects the dots or asks for a practice problem ("Why is a hash map faster than an array for this specific type of data retrieval?", "so we use a for loop to iterate through each element of the array then?", "so bernouli trials are indpendant but are they mutually exclusive?", "give me a practice problem over this topic")
+  Score 5: What if hypthethical scenarios critical thinking explaining each step ("So, is it accurate to think of a variable like a physical box? If so, what happens if I try to put a box inside another box?", "I understand how this physics formula works for positive velocity, but what if the object is thrown backward? Does the whole logic reverse, or does the math break?", "so to recap, solving a deravidive take the power, subtract one, then you make that the coefcient?", "so if i have a function that is f(x) = x^2, the derivative is 2x, so if i have a function that is f(x) = x^3, the derivative is 3x^2?")
   User Input: "{input}"
   
   {format_instructions}
@@ -131,7 +131,7 @@ async function evaluateQuestion({ input, classCode, topicName }) {
     try {
       if (i > 0) {
         // Small delay for retries/fallbacks
-        const delay = i === 1 ? 1500 : 500; 
+        const delay = i === 1 ? 1500 : 500;
         await new Promise(r => setTimeout(r, delay));
       }
 
@@ -139,7 +139,7 @@ async function evaluateQuestion({ input, classCode, topicName }) {
       const llm = getScoringModel(name);
       const res = await llm.invoke(scoringPrompt);
       const parsed = await parser.parse(res.content || res);
-      
+
       console.log(`[Tutor] ⭐ Successfully scored via ${label}`);
       return parsed;
 
@@ -147,7 +147,7 @@ async function evaluateQuestion({ input, classCode, topicName }) {
       lastError = err;
       const is503 = err.message?.includes("503") || err.message?.includes("Service Unavailable");
       console.warn(`[Tutor] ⚠️  ${label} failed:`, is503 ? "503 Service Unavailable" : err.message);
-      
+
       if (i === models.length - 1) {
         console.error(`[Tutor] ❌ All scoring models failed. Final error:`, err.message);
       }
