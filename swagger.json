@@ -447,7 +447,8 @@
           },
           "500": { "description": "Server error" }
         }
-      },
+      }
+    },
     "/api/quizzes/{id}/retake": {
       "post": {
         "summary": "Record a Quiz Retake",
