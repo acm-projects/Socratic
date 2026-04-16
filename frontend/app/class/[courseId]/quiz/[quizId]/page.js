@@ -20,15 +20,10 @@ export default function Page() {
   const isReviewMode = searchParams.get("mode") === "review"
   const attemptId = searchParams.get("attemptId")
 
-
-
-const { quizId, courseId } = useParams()
-const [quizQuestions, setQuizQuestions] = useState([])
-const [retakeCount, setRetakeCount] = useState(0)
-
-
-
-
+  const { quizId, courseId } = useParams()
+  const [quizQuestions, setQuizQuestions] = useState([])
+  const [retakeCount, setRetakeCount] = useState(0)
+  const [classInfo, setClassInfo] = useState(null)
 
  
   const [current, setCurrent] = useState(0) //which question you are currently on
@@ -39,7 +34,8 @@ const [retakeCount, setRetakeCount] = useState(0)
   const [finished, setFinished] = useState(false)
   const router = useRouter()
   const { data: session } = useSession()
-  const [topicId, setTopicId] = useState(null)  // add this
+  const [topicId, setTopicId] = useState(null)  
+  const [topicName, setTopicName] = useState(QUIZ_SELECTION.topic)
 
 
   // fetch quiz data
@@ -54,6 +50,13 @@ console.log("quizId:", quizId)
     setQuizQuestions(data.questions)
     setTopicId(data.topic_id)  // grab it from the quiz object
     setRetakeCount(data.retake_count ?? 0)
+
+    if (data.topic_id) {
+        fetch(`/backend/topics/${data.topic_id}`)
+          .then(res => res.json())
+          .then(topicData => setTopicName(topicData.name))
+          .catch(() => {})
+      }
 
 
   }
@@ -75,11 +78,16 @@ console.log("quizId:", quizId)
     setScores(data.questions.map(q => q.is_correct))
     setFinished(true)  // directly go to review screen
   }
-
-
   fetchAttempt()
 }, [isReviewMode, attemptId])
 
+    useEffect(() => {
+      if (!courseId) return
+      fetch(`http://3.128.186.118:5000/classes/${courseId}`)
+        .then(res => res.json())
+        .then(data => setClassInfo(data))
+        .catch(err => console.error(err))
+    }, [courseId])
 
  // loading guard
 if (!quizQuestions || !quizQuestions.length) {
@@ -122,9 +130,9 @@ async function handleFinish() {
 
     const numCorrect = updatedScores.filter(Boolean).length
     const score = Math.round((numCorrect / quizQuestions.length) * 100)
-  console.log("Saving score for quizId:", quizId, "score:", score) // 👈 add here
-  console.log("freshScores:", freshScores)         // 👈 are they true/true/true?
-  console.log("score being saved:", score)          // 👈 is this 100?
+    console.log("Saving score for quizId:", quizId, "score:", score) // 👈 add here
+    console.log("freshScores:", freshScores)         // 👈 are they true/true/true?
+    console.log("score being saved:", score)          // 👈 is this 100?
 
     // save completed attempt
     await fetch(`/backend/quizzes/${quizId}`, {
@@ -192,13 +200,13 @@ async function handleFinish() {
               className="flex items-center gap-1.5 px-4 h-12 rounded-full bg-white/90 hover:bg-white transition-all"
             >
               <ChevronLeft size={18} className="text-[#141f1d]" />
-              <span className="text-sm font-semibold text-[#141f1d]">{courseId}</span>
+              <span className="text-sm font-semibold text-[#141f1d]">{classInfo?.name || courseId}</span>
             </Link>
           </div>
           
           <div className="flex justify-center">
             <h1 className="text-2xl font-bold text-gray-900">
-              {QUIZ_SELECTION.topic}
+              {topicName}
             </h1>
           </div>
 
@@ -313,13 +321,13 @@ async function handleFinish() {
               className="flex items-center gap-1.5 px-4 h-12 rounded-full bg-white/90 hover:bg-white transition-all"
             >
               <ChevronLeft size={18} className="text-[#141f1d]" />
-              <span className="text-sm font-semibold text-[#141f1d]">{courseId}</span>
+              <span className="text-sm font-semibold text-[#141f1d]">{classInfo?.name || courseId}</span>
             </Link>
           </div>
           
           <div className="flex justify-center">
             <h1 className="text-2xl font-bold text-gray-900">
-              {QUIZ_SELECTION.topic}
+              {topicName}
             </h1>
           </div>
 
