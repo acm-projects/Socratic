@@ -10,6 +10,7 @@ import QuizModal from "../../components/QuizModal"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import SyllabusInfo from "../../components/classPageComponents/SyllabusInfo"
+import EditSyllabusModal from "../../components/classPageComponents/EditSyllabusInfoModal"
 
 const fallbackTasks = [
   { title: "Problem Set 4", course: "Discrete Math",  due: "Apr 3"  },
@@ -62,6 +63,7 @@ export default function ClassPage() {
   const [topics, setTopics] = useState(fallbackTopics)
   const [upcomingTasks, setUpcomingTasks] = useState(fallbackTasks)
   const [classInfo, setClassInfo] = useState(null)
+  const [showEditSyllabusModal, setShowEditSyllabusModal] = useState(false)
 
   const [syllabusData, setSyllabusData] = useState({
   professor: { name: "Not available", email: "" },
@@ -210,7 +212,7 @@ useEffect(() => {
 
             {/* Ask Socratic AI */}
             <div onClick={() => router.push(`/class/${courseId}/chat`)}
-              className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[2] flex items-center gap-4 cursor-pointer group hover:bg-white/90 transition-all duration-200">
+              className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[1] flex items-center gap-4 cursor-pointer group hover:bg-white/90 transition-all duration-200">
               <div className="w-16 h-16 shrink-0 flex items-center justify-center ml-4 mr-2">
                 <img src="/icons/mascot-chat.svg" className="w-full h-full object-contain scale-125" alt="Mascot" />
               </div>
@@ -218,13 +220,13 @@ useEffect(() => {
                 <p className="text-lg font-bold text-[#141f1d]">Ask Socratic AI</p>
               </div>
               <div className="w-7 h-7 rounded-full flex items-center justify-center transition-colors group-hover:bg-gray-100 shrink-0">
-                <ChevronRight size={18} className="text-gray-400 group-hover:text-[#141f1d] transition-colors" />
+                <ChevronRight size={22} className="text-gray-400 group-hover:text-[#141f1d] transition-colors" />
               </div>
             </div>
 
             {/* Take a quiz */}
             <div onClick={() => setShowQuizModal(true)}
-              className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[2] flex items-center gap-4 cursor-pointer group hover:bg-white/90 transition-all duration-200">
+              className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[1] flex items-center gap-4 cursor-pointer group hover:bg-white/90 transition-all duration-200">
               <div className="w-18 h-18 shrink-0 flex items-center justify-center ml-4 mr-2">
                 <img src="/icons/mascot-quiz.svg" className="w-full h-full object-contain scale-125" alt="Mascot" />
               </div>
@@ -232,16 +234,17 @@ useEffect(() => {
                 <p className="text-lg font-bold text-[#141f1d]">Take a quiz</p>
               </div>
               <div className="w-7 h-7 rounded-full flex items-center justify-center transition-colors group-hover:bg-gray-100 shrink-0">
-                <ChevronRight size={18} className="text-gray-400 group-hover:text-[#141f1d] transition-colors" />
+                <ChevronRight size={22} className="text-gray-400 group-hover:text-[#141f1d] transition-colors" />
               </div>
             </div>
 
             {/* syllabus class info */}
-            <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[2] flex flex-col justify-between shrink-0">
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[1.5] flex flex-col justify-between min-h-0 overflow-hidden">
              <SyllabusInfo
                 professor={syllabusData.professor}
                 ta={syllabusData.ta}
                 officeHours={syllabusData.officeHours}
+                onEdit={() => setShowEditSyllabusModal(true)}
               />
             </div>
           </div>
@@ -292,6 +295,32 @@ useEffect(() => {
         preselectedTopic={preselectedTopic}
       />
     )}  
+
+    {showQuizModal && (
+  <QuizModal
+    onClose={() => { setShowQuizModal(false); setPreselectedTopic(null) }}
+    courseId={courseId}
+    preselectedTopic={preselectedTopic}
+  />
+)}
+
+    {showEditSyllabusModal && (
+      <EditSyllabusModal
+        professor={syllabusData.professor}
+        ta={syllabusData.ta}
+        officeHours={syllabusData.officeHours}
+        courseId={courseId}
+        onClose={() => setShowEditSyllabusModal(false)}
+        onUpdate={(updatedInfo) => {
+          setSyllabusData({
+            professor: { name: updatedInfo.professor_name, email: updatedInfo.professor_email },
+            ta: { name: updatedInfo.ta_name, email: updatedInfo.ta_email },
+            officeHours: { time: updatedInfo.office_hours, location: updatedInfo.office_location }
+          })
+          setShowEditSyllabusModal(false)
+        }}
+      />
+    )}
     </div>
   )
 }

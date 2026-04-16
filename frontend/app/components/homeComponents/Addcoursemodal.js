@@ -199,8 +199,8 @@ export default function Addcoursemodal({ onClose, onAdd }) {
 
           <button
             onClick={handleAdd}
-            disabled={loading || !subject.trim() || !courseCode.trim()}
-            className="bg-[#2C2C2C] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2 disabled:opacity-50"
+            disabled={loading || !subject.trim() || !courseCode.trim() || !file}
+            className="bg-[#347A73] hover:bg-[#1F5C57] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2 disabled:opacity-50"
           >
             {loading ? "Adding..." : "Add Course"}
           </button>

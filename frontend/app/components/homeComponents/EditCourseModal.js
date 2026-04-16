@@ -12,18 +12,37 @@ export default function EditCourseModal({ course, onClose, onUpdate }) {
     if (course) {
       setSubject(course.name || "")
       setCourseCode(course.class_code || "")
-      // existing syllabus
     }
   }, [course])
 
-  const handleUpdate = () => {
-    onUpdate({
+  const handleUpdate = async () => {
+    const updatedCourse = {
       ...course,
       name: subject,
-      class_code: courseCode,
-      // include file
-    })
-    onClose()
+      subject: subject
+    }
+    
+    try {
+      const res = await fetch(`http://3.128.186.118:5000/classes/${course.class_code}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...updatedCourse,
+          user_id: course.user_id 
+        })
+      })
+      
+      if (res.ok) {
+        const data = await res.json()
+        onUpdate(data || updatedCourse)
+        onClose()
+      } else {
+        const error = await res.text()
+        console.error("Update failed:", res.status, error)
+      }
+    } catch (err) {
+      console.error("Update error:", err)
+    }
   }
 
   return (
@@ -48,19 +67,19 @@ export default function EditCourseModal({ course, onClose, onUpdate }) {
             />
           </div>
 
-          {/* course */}
+          {/* course code - disabled */}
           <div>
             <label className="text-sm font-normal text-gray-900 ml-1">Course code</label>
             <input 
               value={courseCode}
-              onChange={(e) => setCourseCode(e.target.value)}
-              className="w-full bg-gray-100 rounded-lg p-3 text-sm text-gray-500 border border-gray-200"
-              placeholder="e.g., MATH2414"
+              disabled
+              className="w-full bg-gray-100 rounded-lg p-3 text-sm text-gray-400 border border-gray-200 cursor-not-allowed"
             />
+            <p className="text-xs text-gray-400 mt-1 ml-1">Course code cannot be changed</p>
           </div>
           
           {/* syllabus upload */}
-          <div>
+          {/* <div>
             <div className="w-full bg-gray-50 rounded-lg px-6 py-8 border border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 mt-3">
               <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_141_412)">
@@ -86,7 +105,7 @@ export default function EditCourseModal({ course, onClose, onUpdate }) {
               <input id="editSyllabusFileInput" type="file" className="hidden" onChange={(e) => setFile(e.target.files[0])}/>
 
             </div>
-          </div>
+          </div> */}
           
           <button 
             onClick={handleUpdate} 

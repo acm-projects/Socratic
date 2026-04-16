@@ -37,19 +37,6 @@ export default function SocialPage() {
  const [upcomingSessions, setUpcomingSessions] = useState([])
  const [sharedClasses, setSharedClasses] = useState([])
 
- // Hardcoded friend achievements
-//  const achievements = [
-//  { friend: "Priya Nair", achievement: "Perfect Score on a Quiz", icon: "/icons/medal-green.png" },
-//  { friend: "Sarah Lewis", achievement: "5 Day Study Streak", icon: "/icons/streak-blue.png" },
-//  { friend: "John Doe", achievement: "10 Quizzes Completed", icon: "/icons/pen-blue.png" },
-//  { friend: "Amjad Ali", achievement: "First Retake Completed", icon: "/icons/pen-blue.png" },
-//  { friend: "Maya Patel", achievement: "20 Chat Messages Sent", icon: "/icons/chat-purple.png" },
-//  { friend: "Alex Rivera", achievement: "First Quiz Completed", icon: "/icons/medal-green.png" },
-//  { friend: "Jordan Lee", achievement: "10 Day Study Streak", icon: "/icons/streak-blue.png" },
-//  { friend: "Emma Wilson", achievement: "5 Perfect Quiz Scores", icon: "/icons/pen-blue.png" },
-//  { friend: "Chris Kim", achievement: "First Study Session Scheduled", icon: "/icons/chat-green.png" },
-//  { friend: "Taylor Smith", achievement: "10 Perfect Score Questions", icon: "/icons/medal-green.png" },
-//  ]
 
 const [achievements, setAchievements] = useState([])
 const [addFriendSuccess, setAddFriendSuccess] = useState(false)
