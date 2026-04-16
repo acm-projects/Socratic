@@ -42,7 +42,7 @@ export default function HomePage() {
 
  
 
- 
+//  fetching courses for class grid
   useEffect(() => { 
     if (!session) return;
    fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
@@ -128,8 +128,8 @@ useEffect(() => {
           school={profile?.school || ""}
           major={profile?.major || ""}
           streak={profile?.streak || 0}
-          friends={profile?.friends || 0}
-          achievements={profile?.achievements || 0}
+          friends={profile?.friend_count || 0}
+          achievements={profile?.achievement_count || 0}
         />
         </div>
         {/* Classes Grid — 3 cols, 2 rows */}

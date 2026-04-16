@@ -79,7 +79,7 @@ useEffect(() => {
               </div>
 
               <button
-                onClick={() => toggle(task.task_name)}
+                onClick={() => toggle(task.id)}
                 className={`w-5 h-5 rounded-full border-1 flex items-center justify-center shrink-0 transition-all ${
                   done ? "bg-[#3a9e94] border-[#3a9e94]" : "border-[#c4c7c7] hover:border-[#3a9e94]"
                 }`}

@@ -1,183 +1,88 @@
 "use client"
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react"
+import { useState, useEffect } from "react"
+import { Trophy, Medal, Flame } from "lucide-react"
 
-import { HiFire } from "react-icons/hi";
+export default function Leaderboard({ userId, session }) {
+  const [friends, setFriends] = useState([])
 
-export default function Leaderboard(){
+  useEffect(() => {
+    if (!session) return
+    fetch(`/backend/users/${session.user.id}/friends`)
+      .then(res => res.json())
+      .then(async (data) => {
+          console.log("friends data:", data)  // 👈 check if image is in here
 
-    {/*array of friends and their streaks or points*/}
-    const [friends, setFriends] = useState([])
-    const { data: session, status } = useSession()
+        const friendDetails = data.map(f => ({
+          id: f.friend_id,
+          name: `${f.first_name} ${f.last_name}`,
+          pts: f.total_xp,
+          streak: f.streak,
+          profile_pic: f.profile_pic,  // 👈 add this
+          isYou: false
+        }))
 
+        const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
+        setFriends([...friendDetails, {
+          id: session.user.id,
+          name: "You",
+          pts: me.total_xp,
+          streak: me.streak,
+          profile_pic: session.user.image,  // 👈 add this (from Google session)
+          isYou: true
+        }])
+      })
+      .catch(err => console.error(err))
+  }, [session])
 
-    {/*fetch data*/}
-useEffect(() => {
-    if (!session) return  // add this line
-  fetch(`/backend/users/${session.user.id}/friends`)
-    .then(res => res.json())
-    .then(async (data) => {
-      const friendDetails = await Promise.all(
-        data.map(async (f) => {
-          const user = await fetch(`/backend/users/${f.friend_id}`).then(r => r.json())
-          console.log("user:", user) // just add this line
-        return {
-        id: f.friend_id,
-        name: user.name,
-        pts: user.total_xp,
-        streak: user.streak,  
-}
-        })
-      )
-      const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
-      setFriends([...friendDetails, { 
-        id: session.user.id, 
-        name: "You", 
-        pts: me.total_xp, 
-        streak: me.streak
-      }])
-    })
-}, [session])
+  const leaderboard = [...friends].sort((a, b) => b.streak - a.streak)
 
-
-
-    const sorted = friends.sort((a,b)=> b.streak - a.streak);
-    const podium = sorted.slice(0,3);
-    const top5 = sorted.slice(0,5);
-    const you = friends.find(f => f.name === "You")
-    const youInTop5 = top5.some(f => f.name === "You")
-    const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you].filter(Boolean)
-    const [searchQuery, setSearchQuery] = useState("");
-    const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
-
-
-
-
-if (status === "loading") return <div>Loading...</div>
-if (friends.length < 3) return <div>Loading...</div>
-
-
-
-
-
-
-    return(
-
-
-            <div className = "bg-white w-[500px] h-[650px] rounded-2xl p-9 mt-5 items-center flex flex-col gap-7">
-                <h2 className = "text-xl text-center font-semibold text-black">
-                        Friends
-                </h2>
-
-             {/*3 leaderboard rectangles*/}
-
-                <div className = "flex gap-9 items-end">
-
-             
-               
-                <div className = "flex flex-col items-center gap-3">
-                <div className = "relative">
-                <div className = "w-18 h-18 bg-gray-400 rounded-full"/>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
-                <p className="text-black text-xs font-bold">2</p>
-                </div>
-                </div>
-                
-                <div className="w-27 h-20 bg-[#D3E4FD] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
-                <p className = "text-black font-semibold text-xs text-center"> {podium[1].name} </p>   
-                <div className="flex items-center gap-1">
-                <HiFire className="text-black" size={16}/>
-                <p className="text-black text-xs font-semibold">{podium[1].streak}</p>
-                </div>
-
-                </div>
-                </div>
-
-
-                <div className = "flex flex-col items-center gap-3">
-                <div className = "relative">
-                <div className = "w-18 h-18 bg-gray-400 rounded-full"/>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
-                <p className="text-black text-xs font-bold">1</p>
-                </div>
-                </div>
-                <div className="w-27 h-35 bg-[#D3E4FD] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
-                <p className = "text-black font-semibold text-xs text-center"> {podium[0].name} </p>   
-                <div className="flex items-center gap-1">
-                <HiFire className="text-black" size={16}/>
-                <p className="text-black text-xs font-semibold">{podium[0].streak}</p>
-                </div>
-
-
-                </div>
-                </div>
-
-                
-                <div className = "flex flex-col items-center gap-3">
-                <div className = "relative">
-                <div className = "w-18 h-18 bg-gray-400 rounded-full"/>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
-                <p className="text-black text-xs font-bold">3</p>
-                </div>
-                </div>
-                <div className="w-27 h-20 bg-[#D3E4FD] rounded-2xl flex flex-col items-center justify-between py-3 px-3">
-                 <p className = "text-black font-semibold text-xs text-center"> {podium[2].name} </p>   
-                <div className="flex items-center gap-1">
-                <HiFire className="text-black" size={16}/>
-                <p className="text-black text-xs font-semibold">{podium[2].streak}</p>
-                </div>
-                </div>
-                </div>
-
-                </div>
-
-    {/*. Displaying the rest and YOU */}
-
-    <div className="flex flex-col gap-1 w-full">
-  {rest.map((friend, i) => (
-    <div key={friend.name} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#F9FAFB]" : ""}`}>
-      <div className="flex items-center gap-3">
-        <p className="text-gray-400 font-semibold text-sm">{i + 4}</p>
-        <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-        <p className={`text-sm ${friend.name === "You" ? "font-bold" : "font-semibold"}`}>{friend.name}</p>
+  return (
+    <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex flex-col shrink-0">
+      <div className="flex items-center gap-2 mb-4">
+        <Trophy size={18} className="text-[#ea9607]" />
+        <h2 className="text-md font-semibold text-[#14153A]">Leaderboard</h2>
       </div>
-      <p className={`text-sm ${friend.name === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
-    </div>
-  ))}
 
-    {/*. Search bar that needs a bit of work */}
-<div className="w-full mt-4">
-  <div className="flex items-center border border-gray-200 rounded-2xl px-4 py-2 gap-2">
-    <input
-      className="w-full outline-none text-sm text-gray-500"
-      placeholder="Search friends"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-    />
-  </div>
+      <div className="flex flex-col gap-1">
+        {leaderboard.slice(0, 5).map((user, i) => (
+          <div
+            key={user.id}
+            className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
+              user.isYou
+                ? "bg-[#347A73]/10 border border-[#347A73]/20"
+                : "hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-6 text-center">
+                {i === 0 && <Medal size={22} className="text-amber-500" />}
+                {i === 1 && <Medal size={22} className="text-gray-400" />}
+                {i === 2 && <Medal size={22} className="text-amber-600" />}
+                {i > 2 && <span className="text-sm font-semibold text-gray-400">{i + 1}</span>}
+              </div>
 
- {/*displaying search results */}
-  <div className="flex flex-col gap-2 mt-2">
-  {searchResults.map(friend => (
-    <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#D3E4FD]" : "bg-gray-50"}`}>
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-        <p className="text-sm font-semibold">{friend.name}</p>
+
+
+               <img
+                src={user.profile_pic}
+                alt={user.name}
+                className="w-8 h-8 opacity-80 rounded-full object-cover bg-gray-200"
+                onError={(e) => e.target.src = '/default-avatar.png'}
+              />
+
+
+              <span className={`text-sm font-medium ${user.isYou ? "text-[#347A73]" : "text-gray-700"}`}>
+                {user.name}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Flame size={14} className="text-gray-600" />
+              <span className="text-sm font-bold text-[#141f1d]">{user.streak}</span>
+              <span className="text-sm font-bold text-[#141f1d]"> days</span>
+            </div>
+          </div>
+        ))}
       </div>
-      <p className="text-sm text-gray-400">{friend.pts} pts</p>
     </div>
-  ))}
-</div>
-
-
-
-</div>
-
-     </div>
-
-     </div>
-
-       
-        
-    )
+  )
 }

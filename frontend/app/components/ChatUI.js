@@ -23,6 +23,8 @@ export default function ChatUI({ classCode, topic }) {
     // saves chats to sidebar
 useEffect(() => {
     if (!session) return
+        console.log("fetching chats for user:", session.user.id, session.user.email)
+
     fetch(`/backend/users/${session.user.id}/sessions`)
         .then(res => res.json())
         .then(data => {
