@@ -308,7 +308,10 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
     const userClassCodes = userClasses.rows.map(r => r.class_code)
 
     const friendsResult = await pool.query(
-      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f
+       JOIN "User" u ON f.friend_id = u.id
+       WHERE f.user_id = $1`,
       [userId]
     )
 
@@ -326,6 +329,7 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
           friend_id: friend.friend_id,
           first_name: friend.first_name,
           last_name: friend.last_name,
+          image: friend.image,
           shared_classes: sharedResult.rows.map(r => ({
             class_code: r.class_code,
             name: r.name

@@ -96,7 +96,7 @@ router.post('/chat', async (req, res, next) => {
 
     // 3. Vector Search (Simultaneous)
     const vectorStore = await getClassVectorStore(classCode);
-    const fullQuery = `${topic}: ${message}`;
+    const fullQuery = `${topicName}: ${message}`;
     
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
     const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
@@ -155,7 +155,7 @@ router.post('/chat', async (req, res, next) => {
 
 
     // 4. Run Socratic AI Tutor
-    console.log(`[Tutor] 🧠 Thinking... (Topic: ${topic})`);
+    console.log(`[Tutor] 🧠 Thinking... (Topic: ${topicName})`);
     const tutorStartTime = Date.now();
     const tutorChainWithHistory = getTutorChainWithHistory();
 

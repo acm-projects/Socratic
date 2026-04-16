@@ -20,7 +20,7 @@ router.get('/:id/classes', async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await db.query(
-      `SELECT
+      `SELECT DISTINCT
          c.class_code,
          c.name,
          c.subject,
@@ -28,11 +28,11 @@ router.get('/:id/classes', async (req, res, next) => {
          c.streak,
          c.last_activity_date,
          c.created_at,
-         uc.enrolled_at
-       FROM user_classes uc
-       JOIN classes c ON c.class_code = uc.class_code
-       WHERE uc.user_id = $1
-       ORDER BY uc.enrolled_at DESC`,
+         COALESCE(uc.enrolled_at, c.created_at) as enrolled_at
+       FROM classes c
+       LEFT JOIN user_classes uc ON c.class_code = uc.class_code AND uc.user_id = $1
+       WHERE c.user_id = $1 OR uc.user_id = $1
+       ORDER BY enrolled_at DESC`,
       [id]
     );
     res.json(result.rows);
