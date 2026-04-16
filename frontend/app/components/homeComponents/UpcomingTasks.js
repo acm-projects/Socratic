@@ -50,60 +50,6 @@ useEffect(() => {
 
 
 
-
-//   useEffect(() => {
-//     if (propTasks) return
-
-//     async function fetchAllTasks() {
-//       if (!session?.user?.id) return; // Ensure we have a user to filter by
-//       try {
-//         const classes = await fetch("http://3.128.186.118:5000/api/classes")
-//           .then(r => r.json())
-
-//         const taskArrays = await Promise.all(
-//           classes.map(cls =>
-//             fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${cls.class_code}`)
-//               .then(r => r.json())
-//               .then(data => Array.isArray(data) ? data.map(t => ({
-//                 title: t.task_name,
-//                 course: cls.name || cls.class_code,
-//                 courseCode: cls.class_code,              // ← added
-//                 due: new Date(t.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-//                 dueRaw: new Date(t.due_date),
-//               })) : [])
-//               .catch(() => [])
-//           )
-//         )
-
-//         const now = new Date()
-//         const in7days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
-
-//         const all = taskArrays.flat().sort((a, b) => a.dueRaw - b.dueRaw)
-
-//         // ADD THESE
-// console.log("now:", now)
-// console.log("in7days:", in7days)
-// console.log("sample dueRaw:", all[0]?.dueRaw)
-// console.log("all tasks:", all.map(t => ({ title: t.title, dueRaw: t.dueRaw })))
-
-//         const seen = new Set()
-//         const deduped = all.filter(t => {
-//           const k = `${t.courseCode}-${t.title}`
-//           if (seen.has(k)) return false
-//           seen.add(k)
-//           return true
-//         })
-
-//         setTasks(deduped.filter(t => t.dueRaw >= now && t.dueRaw <= in7days))
-
-//       } catch (err) {
-//         console.error("Failed to fetch tasks:", err)
-//       }
-//     }
-
-//     fetchAllTasks()
-//   }, [propTasks])
-
   const toggle = (id) => {
     setCompleted(prev =>
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
@@ -117,21 +63,23 @@ useEffect(() => {
         {tasks.map((task, i, arr) => {
           const done = completed.includes(task.id)
           return (
-            <div key={`${task.courseCode}-${task.title}-${i}`} className={`flex items-center gap-4 py-4 ${i !== arr.length - 1 ? "border-b border-[#EAEEED]" : ""}`}>  {/* ← fixed key */}
+            <div key={`${task.class_code}-${task.task_name}-${i}`} className={`flex items-center gap-4 py-4 ${i !== arr.length - 1 ? "border-b border-[#EAEEED]" : ""}`}>  {/* ← fixed key */}
 
               <div className={`flex items-center gap-4 flex-1 transition-opacity ${done ? "opacity-40" : "opacity-100"}`}>
                 <div className="w-28 pr-6 flex-shrink-0">
                   <p className="text-sm text-[#90aba7] pb-1">Due</p>
-                  <p className="text-sm font-bold text-[#141f1d]">{task.due}</p>
+                  <p className="text-sm font-bold text-[#141f1d]">
+                    {new Date(task.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </p>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold pb-1 text-[#141f1d]">{task.title}</p>
-                  <p className="text-xs text-[#90aba7] mt-0.5">{task.course}</p>
+                  <p className="text-sm font-semibold pb-1 text-[#141f1d]">{task.task_name}</p>
+                  <p className="text-xs text-[#90aba7] mt-0.5">{task.class_name}</p>
                 </div>
               </div>
 
               <button
-                onClick={() => toggle(task.title)}
+                onClick={() => toggle(task.task_name)}
                 className={`w-5 h-5 rounded-full border-1 flex items-center justify-center shrink-0 transition-all ${
                   done ? "bg-[#3a9e94] border-[#3a9e94]" : "border-[#c4c7c7] hover:border-[#3a9e94]"
                 }`}
