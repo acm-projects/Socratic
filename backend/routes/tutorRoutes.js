@@ -23,38 +23,56 @@ router.post('/chat', async (req, res, next) => {
       incomingSessionId = null;
     }
 
-    if (!userId || !classCode || !topicName || !message) {
-      return res.status(400).json({ error: "Missing required fields: userId, classCode, topic, message" });
+    if (!userId || !classCode || !message) {
+      return res.status(400).json({ error: "Missing required fields: userId, classCode, message" });
     }
 
     // 1. Resolve Topic ID (Official Schema requirement)
-    await classModel.ensureClassExists(classCode, userId);
-    let topic = await topicModel.getTopicByNameAndClass(topicName, classCode);
-    if (!topic) {
-      console.log(`[Tutor] 🆕 Creating new topic: ${topicName} for ${classCode}`);
-      topic = await topicModel.createTopic({
-        id: randomUUID(),
-        class_code: classCode,
-        name: topicName
-      });
-    }
+    // Try to resolve topic from: 1. Input param, 2. Existing session, 3. Default "General Discussion"
+    let topic;
+    let resolvedTopicName = topicName;
 
-    // 2. Ensure Session Exists in Official table
-    // If the frontend passes sessionId/chatId, check if it exists in DB.
+    // A. Check if session exists and has a topic
     let chatId = incomingSessionId;
     let isNewSession = false;
+    let existingSession = null;
 
     if (chatId) {
-      const existingSession = await sessionModel.getSessionById(chatId);
+      existingSession = await sessionModel.getSessionById(chatId);
       if (!existingSession) {
-        // If an ID was provided but not found, we create a new one with that requested ID
-        // (This handles the case where frontend generates IDs locally)
         isNewSession = true;
       }
     } else {
       chatId = randomUUID();
       isNewSession = true;
     }
+
+    if (!resolvedTopicName && existingSession) {
+      console.log(`[Tutor] ℹ️ Topic missing, inheriting from session ${chatId}`);
+      topic = await topicModel.getTopicById(existingSession.topic_id);
+      resolvedTopicName = topic ? topic.name : "General Discussion";
+    }
+
+    if (!resolvedTopicName) {
+      resolvedTopicName = "General Discussion";
+    }
+
+    await classModel.ensureClassExists(classCode, userId);
+    
+    if (!topic) {
+      topic = await topicModel.getTopicByNameAndClass(resolvedTopicName, classCode);
+      if (!topic) {
+        console.log(`[Tutor] 🆕 Creating topic: ${resolvedTopicName} for ${classCode}`);
+        topic = await topicModel.createTopic({
+          id: randomUUID(),
+          class_code: classCode,
+          name: resolvedTopicName
+        });
+      }
+    }
+
+    // 2. Ensure Session Exists in Official table
+    // (chatId and isNewSession already determined above)
 
     // Use the first message as the session title — only matters on creation
     const sessionTitle = message.length > 50 ? message.substring(0, 47) + "..." : message;
@@ -75,7 +93,7 @@ router.post('/chat', async (req, res, next) => {
       const evalResult = await evaluateQuestion({ 
         input: message, 
         classCode: classCode, 
-        topicName: topicName
+        topicName: resolvedTopicName
       });
       score = evalResult.score;
       reason = evalResult.reason;
@@ -96,7 +114,10 @@ router.post('/chat', async (req, res, next) => {
 
     // 3. Vector Search (Simultaneous)
     const vectorStore = await getClassVectorStore(classCode);
-    const fullQuery = `${topicName}: ${message}`;
+    // Only prepend topic if it's not a generic fallback, to keep search focused
+    const fullQuery = (resolvedTopicName === "General Discussion") 
+      ? message 
+      : `${resolvedTopicName}: ${message}`;
     
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
     const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
@@ -155,7 +176,7 @@ router.post('/chat', async (req, res, next) => {
 
 
     // 4. Run Socratic AI Tutor
-    console.log(`[Tutor] 🧠 Thinking... (Topic: ${topicName})`);
+    console.log(`[Tutor] 🧠 Thinking... (Topic: ${resolvedTopicName})`);
     const tutorStartTime = Date.now();
     const tutorChainWithHistory = getTutorChainWithHistory();
 
