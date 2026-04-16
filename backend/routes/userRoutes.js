@@ -51,18 +51,45 @@ router.get('/:id/upcoming-tasks', async (req, res, next) => {
 });
 
 /**
+ * GET /api/users/:id/quiz-overview
+ * Returns an overview of quizzes taken by the user, grouped by class.
+ */
+router.get('/:id/quiz-overview', async (req, res, next) => {
+  try {
+    const userId = req.params.id
+
+    const result = await db.query(
+      `SELECT c.name as class_name, c.class_code,
+              COUNT(q.id) as quiz_count,
+              ROUND(AVG(q.score), 1) as average_score,
+              MAX(q.color) as color
+       FROM quizzes q
+       JOIN topics t ON t.id = q.topic_id
+       JOIN classes c ON c.class_code = t.class_code
+       WHERE q.user_id = $1
+       GROUP BY c.name, c.class_code
+       ORDER BY quiz_count DESC`,
+      [userId]
+    )
+
+    const COLORS = ['#10B981','#8B5CF6','#3B82F6','#EC4899','#F59E0B','#06B6D4']
+    res.json(result.rows.map((row, i) => ({
+      class_name: row.class_name,
+      class_code: row.class_code,
+      quiz_count: parseInt(row.quiz_count),
+      average_score: parseFloat(row.average_score),
+      color: row.color || COLORS[i % COLORS.length]
+    })))
+  } catch (error) { next(error) }
+})
+
+/**
  * GET /api/users/:id/friends/shared-classes
  * Returns friends of the user along with the classes they share.
  */
 router.get('/:id/friends/shared-classes', async (req, res, next) => {
   try {
     const userId = req.params.id
-
-    const userClasses = await db.query(
-      "SELECT class_code FROM classes WHERE user_id = $1",
-      [userId]
-    )
-    const userClassCodes = userClasses.rows.map(r => r.class_code)
 
     const friendsResult = await db.query(
       `SELECT f.friend_id, u.first_name, u.last_name, u.image 
@@ -75,11 +102,17 @@ router.get('/:id/friends/shared-classes', async (req, res, next) => {
     const friendsWithSharedClasses = await Promise.all(
       friendsResult.rows.map(async (friend) => {
         const sharedResult = await db.query(
-          `SELECT c.class_code, c.name
+          `SELECT DISTINCT c.class_code, c.name
            FROM classes c
-           WHERE c.user_id = $1
-           AND c.class_code = ANY($2::text[])`,
-          [friend.friend_id, userClassCodes]
+           LEFT JOIN user_classes uc ON c.class_code = uc.class_code
+           WHERE 
+             (c.user_id = $1 OR uc.user_id = $1)
+             AND c.class_code IN (
+               SELECT class_code FROM classes WHERE user_id = $2
+               UNION
+               SELECT class_code FROM user_classes WHERE user_id = $2
+             )`,
+          [friend.friend_id, userId]
         )
 
         return {

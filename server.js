@@ -285,10 +285,10 @@ app.get("/users/:id/quiz-overview", async (req, res) => {
       `SELECT c.name as class_name, c.class_code,
               COUNT(q.id) as quiz_count,
               ROUND(AVG(q.score), 1) as average_score,
-              COALESCE(MAX(q.color), MAX(c.color)) as color
+              MAX(q.color) as color
        FROM quizzes q
        JOIN topics t ON t.id = q.topic_id
-       JOIN classes c ON c.class_code = t.class_code AND c.user_id = q.user_id
+       JOIN classes c ON c.class_code = t.class_code
        WHERE q.user_id = $1
        GROUP BY c.name, c.class_code
        ORDER BY quiz_count DESC`,
@@ -334,11 +334,17 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
     const friendsWithSharedClasses = await Promise.all(
       friendsResult.rows.map(async (friend) => {
         const sharedResult = await pool.query(
-          `SELECT c.class_code, c.name
+          `SELECT DISTINCT c.class_code, c.name
            FROM classes c
-           WHERE c.user_id = $1
-           AND c.class_code = ANY($2::text[])`,
-          [friend.friend_id, userClassCodes]
+           LEFT JOIN user_classes uc ON c.class_code = uc.class_code
+           WHERE 
+             (c.user_id = $1 OR uc.user_id = $1)
+             AND c.class_code IN (
+               SELECT class_code FROM classes WHERE user_id = $2
+               UNION
+               SELECT class_code FROM user_classes WHERE user_id = $2
+             )`,
+          [friend.friend_id, userId]
         )
 
         return {
