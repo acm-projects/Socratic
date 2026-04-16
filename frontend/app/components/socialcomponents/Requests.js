@@ -1,20 +1,11 @@
 "use client"
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react"
-import Sendrequestmodal from "./Sendrequestmodal";
+import { useState, useEffect } from "react"
+import { Users } from "lucide-react"
 
+export default function FriendRequests({ session, onShowAddFriend }) {
+  const [requests, setRequests] = useState([])
 
-
-
-
-export default function Requests(){
-  const { data: session, status } = useSession()
-  const [requests, setRequests] = useState([]);
-  const [showAddFriend, setShowAddFriend] = useState(false);
-
-
-
-    useEffect(() => {
+  useEffect(() => {
     if (!session) return
     fetch(`/backend/users/${session.user.id}/friend-requests`)
       .then(res => res.json())
@@ -23,94 +14,90 @@ export default function Requests(){
         const requestDetails = await Promise.all(
           pending.map(async (req) => {
             const sender = await fetch(`/backend/users/${req.sender_id}`).then(r => r.json())
-            return {
-              id: req.id,
-              name: sender.name,
-              email: sender.email,
-              sender_id: req.sender_id
-            }
+            return { id: req.id, name: sender.name, email: sender.email, image: sender.image
+}
           })
         )
         setRequests(requestDetails)
       })
+      .catch(err => console.error(err))
   }, [session])
 
-
-
-async function acceptRequest(id, senderId) {
-    await fetch(`/backend/friend-requests/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "accepted" })
+  function acceptRequest(id) {
+    fetch(`/backend/friend-requests/${id}/accept`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
     })
-    await fetch(`/backend/friends`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            user_id: session.user.id, 
-            friend_id: senderId 
-        })
+      .then(res => {
+        if (res.ok) {
+          setRequests(requests.filter(r => r.id !== id))
+        } else {
+          console.error("Failed to accept request")
+        }
+      })
+      .catch(err => console.error(err))
+  }
+
+  function declineRequest(id) {
+    fetch(`/backend/friend-requests/${id}/decline`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
     })
-    setRequests(requests.filter(r => r.id !== id))
-}
+      .then(res => {
+        if (res.ok) {
+          setRequests(requests.filter(r => r.id !== id))
+        } else {
+          console.error("Failed to decline request")
+        }
+      })
+      .catch(err => console.error(err))
+  }
+
+  return (
+    <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex-1 flex flex-col min-h-0">
+      <div className="flex items-center gap-2 mb-4 shrink-0">
+        <h2 className="text-md font-semibold text-[#14153A]">Friend Requests</h2>
+      </div>
+
+      <div className="flex flex-col gap-2 overflow-y-auto">
+        {requests.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Users size={40} className="text-gray-300 mb-3" />
+            <p className="text-sm font-medium text-gray-600 mb-1">No pending requests</p>
+            <p className="text-xs text-gray-400">When someone adds you, they'll appear here</p>
+          </div>
+        ) : (
+          requests.map((request) => (
+            <div key={request.id} className="flex items-center justify-between p-3 bg-white/40 rounded-xl">
+              <div className="flex items-center gap-3">
 
 
-async function declineRequest(id) {
-    await fetch(`/backend/friend-requests/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "declined" })
-    })
-    setRequests(requests.filter(r => r.id !== id))
-}
+              <img
+                src={request.image}
+                alt={request.name}
+                className="w-9 h-9 rounded-full object-cover bg-gray-200"
+                onError={(e) => e.target.src = '/default-avatar.png'}
+              />
 
 
-    return(
-            <div className="bg-white w-[430px]] h-77 rounded-xl p-7 mt-5">
-            <div className = "flex flex-col gap-5">
-            <h2 className="text-l font-semibold text-black">Friend Requests</h2>
-            <div className = "flex flex-col gap-3">
-
-             {/*displays array of requests*/}
-
-            {requests.map((request) => (
-                <div key ={request.id} className = "flex items-center justify-between bg-[#F9FAFB] rounded-xl px-4 py-3">
-                <div className = "flex flex-col">
-                    <p className="text-sm font-semibold text-black">{request.name} </p>
-                    <p className="text-xs text-gray-400">{request.email} </p>
+                <div>
+                  <p className="text-sm font-medium text-gray-800">{request.name}</p>
+                  <p className="text-xs text-gray-500">{request.email}</p>
                 </div>
-
-              {/*accept and decline buttons*/}
-
-            <div className = "flex gap-2">
-                <button 
-                onClick={() => acceptRequest(request.id, request.sender_id)}
-                  className="cursor-pointer bg-[#EEEFFE] text-black text-xs font-medium px-4 py-1.5 rounded-full">
-                  Accept
-                </button>
-                <button
-                  onClick={() => declineRequest(request.id)}
-                  className=" cursor-pointer border border-gray-300 text-gray-500 text-xs font-medium px-4 py-1.5 rounded-full hover:bg-gray-50">
-                  Decline
-                </button>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => acceptRequest(request.id)} className="text-xs font-medium text-white bg-[#3a9e94] px-2 py-1.5 rounded-lg hover:bg-[#2d766f] cursor-pointer">Accept</button>
+                <button onClick={() => declineRequest(request.id)} className="px-2 py-1.5 bg-gray-200 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-300 cursor-pointer">Decline</button>
               </div>
             </div>
-          ))}
-        </div>
-
-
-
-{/*displays the modal to add friend*/}
-
-        <div className="flex justify-end">
-          <button 
-          onClick ={() => setShowAddFriend(true)}
-          className="cursor-pointer flex items-center gap-2 bg-[#3959E9] hover:bg-[#2039AF] text-white text-sm font-medium px-4 py-2 rounded-xl">
-            Add Friend
-          </button>
-        </div>
+          ))
+        )}
       </div>
-      {showAddFriend && <Sendrequestmodal onClose={() => setShowAddFriend(false)} />}
+      <button
+        onClick={onShowAddFriend}
+        className="text-[#198788] text-xs font-medium self-end cursor-pointer mt-2">
+        Add Friend
+      </button>
     </div>
-  );
+  )
 }
