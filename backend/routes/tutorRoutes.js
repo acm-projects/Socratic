@@ -127,8 +127,9 @@ router.post('/chat', async (req, res, next) => {
       : `${resolvedTopicName}: ${message}`;
 
     if (targetLecture && resolvedTopicName === "General Discussion") {
-      console.log(`[Tutor] 🚀 Boosting query for Lecture ${targetLecture}`);
-      fullQuery = `Lecture ${targetLecture}: ${fullQuery}`;
+      console.log(`[Tutor] 🚀 Dynamic Topic Override: General -> Lecture ${targetLecture}`);
+      resolvedTopicName = `Lecture ${targetLecture}`;
+      fullQuery = `${resolvedTopicName}: ${message}`;
     }
 
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
