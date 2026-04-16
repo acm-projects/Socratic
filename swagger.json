@@ -1831,10 +1831,21 @@
     },
     "/api/history": {
       "get": {
-        "summary": "Retrieve all chat sessions from PostgreSQL",
+        "summary": "Retrieve chat sessions for a specific user from PostgreSQL",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the user whose chat history should be retrieved",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "A list of chat sessions.",
+            "description": "A list of chat sessions for the user.",
             "content": {
               "application/json": {
                 "schema": {

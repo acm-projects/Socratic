@@ -2,10 +2,16 @@ const express = require('express');
 const router = express.Router();
 const sessionModel = require('../models/chatSessionModel');
 
-// GET /api/history - Retrieve all chat sessions
+// GET /api/history - Retrieve chat sessions for a specific user
 router.get('/', async (req, res, next) => {
   try {
-    const sessions = await sessionModel.getAllSessions();
+    const { userId } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: "Missing required query parameter: userId" });
+    }
+
+    const sessions = await sessionModel.getSessionsByUserId(userId);
     // Map session_id to id for frontend compatibility
     const mapped = sessions.map(s => ({
       ...s,
