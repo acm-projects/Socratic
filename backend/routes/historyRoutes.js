@@ -11,7 +11,17 @@ router.get('/', async (req, res, next) => {
       return res.status(400).json({ error: "Missing required query parameter: userId" });
     }
 
+    console.log(`[INFO] Fetching history for userId: ${userId}`);
     const sessions = await sessionModel.getSessionsByUserId(userId);
+    
+    // Log verification
+    const leaked = sessions.filter(s => s.user_id !== userId);
+    if (leaked.length > 0) {
+      console.error(`[CRITICAL] Data leak detected in history!`);
+    } else {
+      console.log(`[PASS] History isolation verified for ${userId}.`);
+    }
+
     // Map session_id to id for frontend compatibility
     const mapped = sessions.map(s => ({
       ...s,

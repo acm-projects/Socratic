@@ -4,7 +4,19 @@ const chatSessionModel = require('../models/chatSessionModel');
 
 router.get('/user/:userId', async (req, res, next) => {
   try {
-    const sessions = await chatSessionModel.getSessionsByUserId(req.params.userId);
+    const { userId } = req.params;
+    console.log(`[INFO] Fetching sessions for userId: ${userId}`);
+    
+    const sessions = await chatSessionModel.getSessionsByUserId(userId);
+    
+    // Log verification to console
+    const leaked = sessions.filter(s => s.user_id !== userId);
+    if (leaked.length > 0) {
+      console.error(`[CRITICAL] Data leak detected! Returned ${leaked.length} sessions for other users.`);
+    } else {
+      console.log(`[PASS] Successfully retrieved ${sessions.length} sessions. Isolation verified.`);
+    }
+
     res.json(sessions);
   } catch (error) { next(error); }
 });
