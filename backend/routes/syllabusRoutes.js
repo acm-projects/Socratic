@@ -179,7 +179,7 @@ router.get('/:class_code', async (req, res, next) => {
 router.get('/tasks/:class_code', async (req, res, next) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM class_tasks WHERE class_code = $1 ORDER BY due_date ASC",
+      "SELECT * FROM class_tasks WHERE class_code = $1 AND due_date >= CURRENT_DATE ORDER BY due_date ASC",
       [req.params.class_code]
     );
 
@@ -201,7 +201,7 @@ router.get('/data/:class_code', async (req, res, next) => {
     // Perform queries in parallel for peak performance
     const [classRes, tasksRes, topicsRes] = await Promise.all([
       pool.query("SELECT * FROM classes WHERE class_code = $1", [normalizedCode]),
-      pool.query("SELECT * FROM class_tasks WHERE class_code = $1 ORDER BY due_date ASC", [normalizedCode]),
+      pool.query("SELECT * FROM class_tasks WHERE class_code = $1 AND due_date >= CURRENT_DATE ORDER BY due_date ASC", [normalizedCode]),
       pool.query("SELECT * FROM topics WHERE class_code = $1", [normalizedCode])
     ]);
 
