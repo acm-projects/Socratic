@@ -115,8 +115,10 @@ async function handleSend() {
         console.log("fetch status:", res.status)
     const data = await res.json();
         console.log("loaded messages:", data)
+        console.log("roles:", data.map(m => m.role))
+
     const formatted = data.map(m => ({
-      role: m.role === "assistant" ? "ai" : "user",  // ← "assistant" not "ai"
+      role: m.role === "user" ? "user" : "ai",  
       content: m.content,
       score: m.score ?? null
     }));

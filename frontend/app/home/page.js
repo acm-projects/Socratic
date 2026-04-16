@@ -38,6 +38,8 @@ export default function HomePage() {
   // fetch data for classes grid
     const [courses, setCourses] = useState([]);
     const { data: session } = useSession();
+    // const profilePic = session?.user?.image
+
  
 
  
@@ -137,7 +139,7 @@ useEffect(() => {
         </div>
 
         <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-12 pb-5 pt-2 shrink-0 mt-4">
-<StudyHeatmap courseId={null} />
+        <StudyHeatmap courseId={null} />
         </div>
 
       </div>

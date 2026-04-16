@@ -1,10 +1,40 @@
+"use client"
+
 import { Flame, Users, Trophy } from 'lucide-react'
+import { useSession } from "next-auth/react"
 
 export default function ProfileCard({ name, school, major, streak, friends, achievements }) {
+    const { data: session } = useSession()
+    const profilePic = session?.user?.image  // ← NextAuth gives you this automatically
+
+
+    console.log('session:', session)
+  console.log('session.user.image:', session?.user?.image)
+  console.log('profilePic prop:', profilePic)
+
+
+
+
+
+
   return (
+    
     <div className="rounded-2xl p-6 flex flex-col items-center justify-center w-full">  {/* w-80 h-100 removed */}
       
-      <div className="w-20 h-20 rounded-full bg-[#D0E8E4] mb-2" />
+        {profilePic ? (
+          <img 
+            src={profilePic} 
+            alt={name}
+              referrerPolicy="no-referrer"
+
+            className="w-20 h-20 opacity-80 rounded-full object-cover mb-2" 
+          />
+        ) : (
+          <div className="w-20 h-20 rounded-full bg-[#D0E8E4] mb-2" />  
+        )}
+
+
+
 
       <p className="text-lg font-bold text-[#141f1d] py-3">{name}</p>
       

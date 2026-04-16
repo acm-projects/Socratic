@@ -49,6 +49,15 @@ async jwt({ token, account, profile }) {
       where: { email: profile.email }
     })
     token.id = dbUser?.id
+    token.picture = profile.picture  // ← added this for pic, remove if not needed
+
+
+        // ← added  this for pic, remove if not needed
+    await prisma.user.update({
+      where: { email: profile.email },
+      data: { image: profile.picture }
+    })
+
   }
   return token
 },
@@ -57,6 +66,8 @@ async jwt({ token, account, profile }) {
       session.user.id = token.id
       session.isNewUser = token.isNewUser
       session.accessToken = token.accessToken
+      session.user.image = token.picture  // ← add this for pic
+
       return session
     },
 

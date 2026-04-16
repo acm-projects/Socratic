@@ -32,6 +32,8 @@ useEffect(() => {
         `http://3.128.186.118:5000/api/users/${userId}/upcoming-tasks`
       );
       const data = await res.json();
+      console.log('tasks:', data)  // ← here
+
       setTasks(data);
     } catch (err) {
       console.error("Failed to fetch tasks:", err);
@@ -112,9 +114,6 @@ useEffect(() => {
     <div className="flex flex-col flex-1 min-h-0">
       <h2 className="text-base font-semibold text-[#141f1d] mb-3 shrink-0">Upcoming Tasks</h2>
       <div className="overflow-y-auto scrollbar-hide flex flex-col">
-        {tasks.length === 0 && (
-          <p className="text-sm text-[#90aba7]">No tasks due in the next 7 days.</p>
-        )}
         {tasks.map((task, i, arr) => {
           const done = completed.includes(task.id)
           return (

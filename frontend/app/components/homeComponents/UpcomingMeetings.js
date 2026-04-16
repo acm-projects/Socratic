@@ -41,7 +41,13 @@ useEffect(() => {
             <p className="text-sm font-semibold text-[#141f1d] pb-1">{meeting.summary}</p>
             <p className="text-xs text-[#90aba7] mt-0.5">{meeting.description}</p>
             </div>
-            <ArrowUpRight size={20} className="text-[#7f8887]" />
+          <button
+            onClick={() => window.open(meeting.hangoutLink, '_blank')}
+            disabled={!meeting.hangoutLink}  
+            className="text-[#7f8887] cursor-pointer hover:text-[#3551D2] disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ArrowUpRight size={20} />
+          </button>          
           </div>
         ))}
       </div>
