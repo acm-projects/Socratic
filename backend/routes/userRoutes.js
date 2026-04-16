@@ -51,6 +51,55 @@ router.get('/:id/upcoming-tasks', async (req, res, next) => {
 });
 
 /**
+ * GET /api/users/:id/friends/shared-classes
+ * Returns friends of the user along with the classes they share.
+ */
+router.get('/:id/friends/shared-classes', async (req, res, next) => {
+  try {
+    const userId = req.params.id
+
+    const userClasses = await db.query(
+      "SELECT class_code FROM classes WHERE user_id = $1",
+      [userId]
+    )
+    const userClassCodes = userClasses.rows.map(r => r.class_code)
+
+    const friendsResult = await db.query(
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f
+       JOIN "User" u ON f.friend_id = u.id
+       WHERE f.user_id = $1`,
+      [userId]
+    )
+
+    const friendsWithSharedClasses = await Promise.all(
+      friendsResult.rows.map(async (friend) => {
+        const sharedResult = await db.query(
+          `SELECT c.class_code, c.name
+           FROM classes c
+           WHERE c.user_id = $1
+           AND c.class_code = ANY($2::text[])`,
+          [friend.friend_id, userClassCodes]
+        )
+
+        return {
+          friend_id: friend.friend_id,
+          first_name: friend.first_name,
+          last_name: friend.last_name,
+          image: friend.image,
+          shared_classes: sharedResult.rows.map(r => ({
+            class_code: r.class_code,
+            name: r.name
+          }))
+        }
+      })
+    )
+
+    res.json(friendsWithSharedClasses)
+  } catch (error) { next(error) }
+})
+
+/**
  * PATCH /api/users/:id/tasks/:taskId
  * Updates the completion status of a specific task.
  */
