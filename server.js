@@ -28,6 +28,7 @@ const topicRoutes = require('./backend/routes/topicRoutes')
 const chatSessionRoutes = require('./backend/routes/chatSessionRoutes')
 const achievementRoutes = require('./backend/routes/achievementRoutes')
 const userStatsRoutes = require('./backend/routes/userStatsRoutes')
+const sharedClassModel = require('./backend/models/sharedClassModel')
 const accountRoutes = require('./backend/routes/accountRoutes')
 const friendRoutes = require('./backend/routes/friendRoutes')
 
@@ -317,12 +318,6 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
   try {
     const userId = req.params.id
 
-    const userClasses = await pool.query(
-      "SELECT class_code FROM classes WHERE user_id = $1",
-      [userId]
-    )
-    const userClassCodes = userClasses.rows.map(r => r.class_code)
-
     const friendsResult = await pool.query(
       `SELECT f.friend_id, u.first_name, u.last_name, u.image 
        FROM friends f
@@ -331,34 +326,27 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
       [userId]
     )
 
-    const friendsWithSharedClasses = await Promise.all(
-      friendsResult.rows.map(async (friend) => {
-        const sharedResult = await pool.query(
-          `SELECT DISTINCT c.class_code, c.name
-           FROM classes c
-           LEFT JOIN user_classes uc ON c.class_code = uc.class_code
-           WHERE 
-             (c.user_id = $1 OR uc.user_id = $1)
-             AND c.class_code IN (
-               SELECT class_code FROM classes WHERE user_id = $2
-               UNION
-               SELECT class_code FROM user_classes WHERE user_id = $2
-             )`,
-          [friend.friend_id, userId]
-        )
+    // 1. Sync the shared_classes table using the new model logic
+    await sharedClassModel.syncSharedClasses(userId)
 
-        return {
-          friend_id: friend.friend_id,
-          first_name: friend.first_name,
-          last_name: friend.last_name,
-          image: friend.image,
-          shared_classes: sharedResult.rows.map(r => ({
-            class_code: r.class_code,
-            name: r.name
-          }))
-        }
-      })
-    )
+    // 2. Fetch results from the persistence table
+    const sharedClassesFromTable = await sharedClassModel.getSharedClassesByUserId(userId)
+
+    // 3. Group by friend
+    const friendsWithSharedClasses = friendsResult.rows.map((friend) => {
+      const friendShared = sharedClassesFromTable.filter(r => r.friend_id === friend.friend_id)
+
+      return {
+        friend_id: friend.friend_id,
+        first_name: friend.first_name,
+        last_name: friend.last_name,
+        image: friend.image,
+        shared_classes: friendShared.map(r => ({
+          class_code: r.class_code,
+          name: r.class_name
+        }))
+      }
+    })
 
     res.json(friendsWithSharedClasses)
   } catch (error) {
