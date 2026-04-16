@@ -110,7 +110,7 @@ export default function Page() {
                 <h1 className="text-2xl font-bold text-[#14153A]">
                     Discrete Math{" "}
                     <span className="text-gray-300 font-normal">—</span>{" "}
-                    <span className="text-gray-400 font-semibold">{QUIZ_SELECTION.topic}</span>
+                    <span className="text-gray-400 font-light">{QUIZ_SELECTION.topic}</span>
                 </h1>
                 </div>
                 

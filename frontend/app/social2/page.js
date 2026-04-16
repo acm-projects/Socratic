@@ -48,7 +48,7 @@ const [addFriendError, setAddFriendError] = useState("")
  //fetch friends achievements
  useEffect(() => {
   if (!session) return
-  fetch(`/backend/users/${session.user.id}/friends/achievements`)
+  fetch(`http://3.128.186.118:5000/users/${session.user.id}/friends/achievements`)
     .then(res => res.json())
     .then(data => {
       const formatted = data.map(f => ({
@@ -66,7 +66,7 @@ const [addFriendError, setAddFriendError] = useState("")
  // Fetch friends + leaderboard
  useEffect(() => {
  if (!session) return
- fetch(`/backend/users/${session.user.id}/friends`)
+ fetch(`http://3.128.186.118:5000/users/${session.user.id}/friends`)
  .then(res => res.json())
  .then(async (data) => {
  const friendDetails = data.map(f => ({
@@ -76,7 +76,7 @@ const [addFriendError, setAddFriendError] = useState("")
  streak: f.streak,
  isYou: false
  }))
- const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
+ const me = await fetch(`http://3.128.186.118:5000/users/${session.user.id}`).then(r => r.json())
  setFriends([...friendDetails, {
  id: session.user.id,
  name: "You",
@@ -96,7 +96,7 @@ const [addFriendError, setAddFriendError] = useState("")
  // Fetch friend requests
  useEffect(() => {
  if (!session) return
- fetch(`/backend/users/${session.user.id}/friend-requests`)
+ fetch(`http://3.128.186.118:5000/users/${session.user.id}/friend-requests`)
  .then(res => res.json())
  .then(async (data) => {
  const pending = data.filter(req => req.status === "pending")

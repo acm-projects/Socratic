@@ -205,7 +205,7 @@ async function handleFinish() {
           </div>
           
           <div className="flex justify-center">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900 text-center">
               {topicName}
             </h1>
           </div>
@@ -326,7 +326,7 @@ async function handleFinish() {
           </div>
           
           <div className="flex justify-center">
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900 text-center">
               {topicName}
             </h1>
           </div>

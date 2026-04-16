@@ -11,27 +11,6 @@ import { useSession } from "next-auth/react"
 import { useState } from "react"
 
 
-// const upcomingTasks = [
-//   { title: "Problem Set 4",  course: "Discrete Math",      due: "Apr 3"  },
-//   { title: "Lab Report",     course: "Physics I",          due: "Apr 5"  },
-//   { title: "HW 7",           course: "Calculus II",        due: "Apr 8"  },
-//   { title: "Problem Set 5",  course: "Discrete Math",      due: "Apr 10" },
-//   { title: "HW 8",           course: "Calculus II",        due: "Apr 15" },
-//   { title: "Exam 2 Review",  course: "Physics I",          due: "Apr 17" },
-//   { title: "Problem Set 6",  course: "Linear Algebra",     due: "Apr 19" },
-//   { title: "Lab Report 2",   course: "Chemistry I",        due: "Apr 21" },
-//   { title: "HW 9",           course: "Calculus II",        due: "Apr 24" },
-//   { title: "Final Project",  course: "Computer Science I", due: "Apr 30" },
-// ]
-
-// const upcomingMeetings = [
-//   { title: "Study Group",    course: "Computer Science I", date: "Tue, Apr 8",  time: "4:00 PM" },
-//   { title: "Exam 3 Review",  course: "Discrete Math",      date: "Wed, Apr 9",  time: "2:00 PM" },
-//   { title: "Review Session", course: "Physics I",          date: "Fri, Apr 11", time: "5:00 PM" },
-//   { title: "Exam Review",    course: "Physics I",          date: "Sat, Apr 12", time: "5:00 PM" },
-// ]
-
-
 
 export default function HomePage() {
 
@@ -59,7 +38,7 @@ const [profile, setProfile] = useState(null);
 
 useEffect(() => {
   if (!session) return;
-  fetch(`/backend/users/${session.user.id}`)
+  fetch(`http://3.128.186.118:5000/users/${session.user.id}`)
     .then(res => res.json())
     .then(data => setProfile(data))
     .catch(err => console.error(err));
