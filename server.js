@@ -365,7 +365,10 @@ app.get("/users/:id/friends/achievements", async (req, res) => {
     const userId = req.params.id
 
     const friendsResult = await pool.query(
-      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f 
+       JOIN "User" u ON f.friend_id = u.id 
+       WHERE f.user_id = $1`,
       [userId]
     )
 
@@ -943,7 +946,13 @@ app.delete("/accounts/:provider/:providerAccountId", async (req, res) => {
 
 app.get("/users/:id/friends", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM friends WHERE user_id = $1", [req.params.id])
+    const result = await pool.query(
+      `SELECT f.*, u.image, u.first_name, u.last_name 
+       FROM friends f 
+       JOIN "User" u ON f.friend_id = u.id 
+       WHERE f.user_id = $1`, 
+      [req.params.id]
+    )
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
