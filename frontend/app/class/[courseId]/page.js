@@ -1,4 +1,5 @@
 "use client"
+import { useSession } from "next-auth/react"
 import { useState, useEffect } from "react"
 import StudyHeatmap from "../../components/StudyHeatmap"
 import { Flame, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -45,19 +46,16 @@ const courseMaterials = [
 export default function ClassPage() {
   const router = useRouter()
   const { courseId } = useParams()
+  const { data: session } = useSession()
 
   const [showQuizModal, setShowQuizModal] = useState(false)
   const [preselectedTopic, setPreselectedTopic] = useState(null)  // add this
 
-//   function handleRetake(topicId) {
-//     setPreselectedTopic(topicId)
-//     setShowQuizModal(true)
-//   }
-
-//   function handleReview(quizId) {
-//   router.push(`/class/${courseId}/quiz/${quizId}?mode=review&attemptId=${quizId}`)
-// }
-
+  const handleTaskToggle = (taskId, completed) => {
+    setUpcomingTasks(prev => prev.map(t => 
+      t.id === taskId ? { ...t, completed } : t
+    ))
+  }
 
   
   const [topics, setTopics] = useState(fallbackTopics)
@@ -154,16 +152,18 @@ useEffect(() => {
     .catch(err => console.log("topics fetch failed:", err))
 
   fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseId}`)
-    .then(res => res.json())
-    .then(data => {
-      if (Array.isArray(data) && data.length > 0) {
-        setUpcomingTasks(data.map(t => ({
-          title: t.task_name,
-          course: courseId,
-          due: new Date(t.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-        })))
-      }
-    })
+  .then(res => res.json())
+  .then(data => {
+    if (Array.isArray(data) && data.length > 0) {
+      setUpcomingTasks(data.map(t => ({
+        id: t.id,                                    // ADD THIS
+        title: t.task_name,
+        due: new Date(t.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        completed: t.completed || false,              // ADD THIS
+        user_id: classInfo?.user_id || session?.user?.id  // ADD THIS (get from session)
+      })))
+    }
+  })
     .catch(err => console.log("tasks fetch failed:", err))
 
 }, [courseId])
@@ -281,7 +281,7 @@ useEffect(() => {
 
       <div className="p-9 w-1/4 flex flex-col gap-8 h-screen sticky top-0 overflow-hidden">
         <div className="flex flex-col flex-1 min-h-0">
-          <UpcomingTasks tasks={upcomingTasks} />
+         <UpcomingTasks tasks={upcomingTasks} onToggle={handleTaskToggle} />
         </div>
         <div className="flex flex-col flex-1 min-h-0">
           <CourseMaterial files={courseMaterials} courseId={courseId} />
@@ -295,14 +295,6 @@ useEffect(() => {
         preselectedTopic={preselectedTopic}
       />
     )}  
-
-    {showQuizModal && (
-  <QuizModal
-    onClose={() => { setShowQuizModal(false); setPreselectedTopic(null) }}
-    courseId={courseId}
-    preselectedTopic={preselectedTopic}
-  />
-)}
 
     {showEditSyllabusModal && (
       <EditSyllabusModal
@@ -321,6 +313,8 @@ useEffect(() => {
         }}
       />
     )}
+
+    
     </div>
   )
 }

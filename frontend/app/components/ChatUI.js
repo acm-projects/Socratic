@@ -9,12 +9,6 @@ import { useSession } from "next-auth/react";
 
 export default function ChatUI({ classCode, topic }) {
 
- 
-
-
-
-
-
 
 
      const { data: session } = useSession()
@@ -216,6 +210,13 @@ async function handleSend() {
                 {messages.length === 0 ? (
                     /* ── Welcome screen ── */
                     <div className="flex-1 flex flex-col items-center justify-center gap-2 min-h-0">
+                        <div className="w-32 h-32 mb-1">
+                            <img 
+                                src="/icons/mascot-chat.svg" 
+                                alt="Socratic Mascot" 
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
                         <p className="text-4xl font-bold text-black mb-2">
                             Welcome back!
                         </p>
