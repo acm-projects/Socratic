@@ -114,19 +114,27 @@ router.post('/chat', async (req, res, next) => {
 
     // 3. Vector Search (Simultaneous)
     const vectorStore = await getClassVectorStore(classCode);
-    // Only prepend topic if it's not a generic fallback, to keep search focused
-    const fullQuery = (resolvedTopicName === "General Discussion") 
+    
+    // --- EARLY DETECTION: Detect Page/Lecture references for Sniper Search ---
+    const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
+    const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
+    const targetPage = pageMatch ? parseInt(pageMatch[1]) : null;
+    const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
+
+    // --- SMART QUERY EXPANSION: Prepend Lecture if detected and topic is generic ---
+    let fullQuery = (resolvedTopicName === "General Discussion") 
       ? message 
       : `${resolvedTopicName}: ${message}`;
-    
+
+    if (targetLecture && resolvedTopicName === "General Discussion") {
+      console.log(`[Tutor] 🚀 Boosting query for Lecture ${targetLecture}`);
+      fullQuery = `Lecture ${targetLecture}: ${fullQuery}`;
+    }
+
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
-    const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     let targetedContext = [];
-    
-    if (pageMatch) {
-      const targetPage = parseInt(pageMatch[1]);
+    if (targetPage) {
       console.log(`[Tutor] 🎯 Sniper Search active for Page ${targetPage}`);
-      
       const targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
         pageNumber: { "$eq": targetPage }
       });
@@ -138,16 +146,12 @@ router.post('/chat', async (req, res, next) => {
       });
     }
 
-    // --- NEW: LECTURE SNIPER SEARCH (Client-Side Filtering) ---
-    const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
-    const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
-    
     if (targetLecture) {
       console.log(`[Tutor] 🎯 Sniper Search active for Lecture ${targetLecture}`);
     }
 
-    // Fetch 25 chunks. We will sort out the lecture-specific ones to guarantee they hit the LLM context.
-    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 25);
+    // Fetch 50 chunks (Increased from 25 to improve Sniper Search filtering). 
+    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 50);
     
     let broadContext = [];
     
