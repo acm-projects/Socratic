@@ -146,12 +146,8 @@ router.post('/chat', async (req, res, next) => {
       });
     }
 
-    if (targetLecture) {
-      console.log(`[Tutor] 🎯 Sniper Search active for Lecture ${targetLecture}`);
-    }
-
-    // Fetch 50 chunks (Increased from 25 to improve Sniper Search filtering). 
-    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 50);
+    // Fetch 100 chunks (Increased to cast a much wider net for implicit references). 
+    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
     
     let broadContext = [];
     
@@ -171,12 +167,20 @@ router.post('/chat', async (req, res, next) => {
       broadContext.push(chunkStr);
     });
 
-    // Limit to prevent token overflow
-    targetedContext = targetedContext.slice(0, 10);
-    broadContext = broadContext.slice(0, 10);
+    // --- ADAPTIVE CONTEXT SLICING ---
+    // Gemini has huge context; we want to be as aggressive as possible (top 50 chunks total).
+    // Strategy: Take all targeted hits first (up to 25), then fill the remaining budget with broad search.
+    const MAX_TOTAL_CHUNKS = 50;
+    const MAX_TARGETED = 30; // Prioritize specific matches
+    
+    const finalTargeted = targetedContext.slice(0, MAX_TARGETED);
+    const remainingBudget = Math.max(0, MAX_TOTAL_CHUNKS - finalTargeted.length);
+    const finalBroad = broadContext.slice(0, remainingBudget);
+
+    console.log(`[Tutor] 📚 RAG Density: ${finalTargeted.length} Targeted, ${finalBroad.length} Broad (Total: ${finalTargeted.length + finalBroad.length} chunks)`);
 
     // Combine targeted and broad context (Targeted first)
-    const context = [...targetedContext, ...broadContext].join('\n--- NEXT CHUNK ---\n');
+    const context = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
 
 
     // 4. Run Socratic AI Tutor
