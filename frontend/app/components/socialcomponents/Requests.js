@@ -59,7 +59,7 @@ export default function FriendRequests({ session, onShowAddFriend }) {
         <h2 className="text-md font-semibold text-[#14153A]">Friend Requests</h2>
       </div>
 
-      <div className="flex flex-col gap-2 overflow-y-auto">
+      <div className="flex flex-col gap-2 overflow-y-auto flex-1">
         {requests.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Users size={40} className="text-gray-300 mb-3" />
@@ -95,7 +95,7 @@ export default function FriendRequests({ session, onShowAddFriend }) {
       </div>
       <button
         onClick={onShowAddFriend}
-        className="text-[#198788] text-xs font-medium self-end cursor-pointer mt-2">
+        className="text-[#198788] text-xs font-medium self-end cursor-pointer mt-auto shrink-0">
         Add Friend
       </button>
     </div>

@@ -73,7 +73,7 @@ export default function Schedulemodal({onClose}){
         }),
             });
     console.log("status:", res.status)
-    const text = await res.text()
+    console.log("Error response:", text);
     console.log("response:", text)
 
             if (res.ok) {

@@ -1,8 +1,10 @@
 "use client"
 import { useState } from "react"
 import { Check } from "lucide-react"
+import { useSession } from "next-auth/react"
 
-export default function UpcomingTasks({ tasks, onToggle }) {
+export default function UpcomingTasks({ tasks, onToggle, classInfo }) {
+    const { data: session } = useSession();
   const toggle = async (task) => {
     const newCompleted = !task.completed
     
@@ -25,9 +27,52 @@ export default function UpcomingTasks({ tasks, onToggle }) {
     }
   }
 
+  const syncAllTasksToCalendar = async () => {
+    
+    for (const task of tasks) {
+      if (task.completed) continue; // skip completed 
+      
+      // Convert due date to proper format
+      const dueDate = new Date(task.due);
+      dueDate.setHours(23, 59, 0, 0); //  11:59
+      
+      const endDate = new Date(dueDate);
+      endDate.setHours(23, 59, 0, 0);
+      
+      const event = {
+        summary: task.title,       
+        description: `${classInfo.name} Deadline`, // "Statistics Deadline"
+        startDateTime: dueDate.toISOString(),
+        endDateTime: endDate.toISOString(),
+        createMeet: false,             
+        attendeeEmails: []                
+      };
+      
+      await fetch("/backend/api/calendar/create-event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.accessToken}`,
+          "x-user-id": session?.user?.id
+        },
+        body: JSON.stringify({ ...event, userId: session?.user?.id })
+      });
+    }
+    
+    alert("Tasks synced to Google Calendar");
+  };
+
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <h2 className="text-base font-semibold text-[#141f1d] mb-3 shrink-0">Upcoming Tasks</h2>
+      <div className="flex items-center justify-between mb-3 shrink-0">
+      <h2 className="text-base font-semibold text-[#141f1d]">Upcoming Tasks</h2>
+      <button 
+        onClick={syncAllTasksToCalendar}
+        className="text-xs text-[#3a9e94] hover:text-[#2d766f] flex items-center gap-1"
+      >
+        Sync to Calendar
+      </button>
+    </div>
       <div className="overflow-y-auto scrollbar-hide flex flex-col">
         {tasks.map((task, i, arr) => {
           const done = task.completed
