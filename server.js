@@ -253,11 +253,16 @@ app.get("/users/:id/quiz-overview", async (req, res) => {
       `SELECT c.name as class_name, c.class_code,
               COUNT(q.id) as quiz_count,
               ROUND(AVG(q.score), 1) as average_score,
-              COALESCE(MAX(q.color), MAX(c.color)) as color
+              MAX(q.color) as color
        FROM quizzes q
        JOIN topics t ON t.id = q.topic_id
        JOIN classes c ON c.class_code = t.class_code
        WHERE q.user_id = $1
+       AND c.class_code IN (
+         SELECT class_code FROM user_classes WHERE user_id = $1
+         UNION
+         SELECT class_code FROM classes WHERE user_id = $1
+       )
        GROUP BY c.name, c.class_code
        ORDER BY quiz_count DESC`,
       [userId]
