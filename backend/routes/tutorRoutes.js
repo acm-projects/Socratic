@@ -214,9 +214,13 @@ router.post('/chat', async (req, res, next) => {
       content: aiContent
     });
 
-    // 8. Track ai_messages count + streak (fire-and-forget, non-blocking)
     userStatsModel.incrementAiMessages(userId).catch(err =>
       console.warn('[Tutor] ⚠️ Failed to increment ai_messages:', err.message)
+    );
+
+    // 9. Update heatmap (daily_topic_metrics)
+    userStatsModel.updateHeatmap(userId, topic.id, classCode, score).catch(err =>
+      console.warn('[Tutor] ⚠️ Failed to update heatmap:', err.message)
     );
 
     res.json({

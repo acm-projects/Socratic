@@ -31,6 +31,7 @@ const userStatsRoutes = require('./backend/routes/userStatsRoutes')
 const sharedClassModel = require('./backend/models/sharedClassModel')
 const accountRoutes = require('./backend/routes/accountRoutes')
 const friendRoutes = require('./backend/routes/friendRoutes')
+const userStatsModel = require('./backend/models/userStatsModel')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
@@ -101,32 +102,8 @@ const updateClassStreak = async (class_code, user_id) => {
 
 
 // -----------------------------------------------------
-// HEATMAP AUTO-UPDATE HELPER
-// Called when: user chats (POST /sessions) or takes a quiz (POST /quizzes)
-// Upserts a row in daily_topic_metrics for today
+// TABLE DISCOVERY
 // -----------------------------------------------------
-
-const updateHeatmap = async (user_id, topic_id, class_code, score) => {
-  try {
-    const today = new Date().toISOString().split('T')[0]
-    const numericScore = score !== undefined && score !== null ? parseFloat(score) / 20 : null // convert 0-100 to 0-5 scale
-
-    await pool.query(
-      `INSERT INTO daily_topic_metrics (user_id, topic_id, class_code, metric_date, questions_asked, avg_score)
-       VALUES ($1, $2, $3, $4, 1, $5)
-       ON CONFLICT (user_id, topic_id, metric_date)
-       DO UPDATE SET
-         questions_asked = daily_topic_metrics.questions_asked + 1,
-         avg_score = CASE
-           WHEN $5 IS NOT NULL THEN ROUND(((daily_topic_metrics.avg_score * daily_topic_metrics.questions_asked) + $5) / (daily_topic_metrics.questions_asked + 1), 2)
-           ELSE daily_topic_metrics.avg_score
-         END`,
-      [user_id, topic_id, class_code, today, numericScore]
-    )
-  } catch (err) {
-    console.error('[Heatmap] Failed to update:', err.message)
-  }
-}
 
 // -----------------------------------------------------
 // TABLE DISCOVERY
@@ -573,7 +550,7 @@ app.post("/sessions", async (req, res) => {
     // Update class streak + heatmap when a chat session is created
     if (class_code && user_id) {
       await updateClassStreak(class_code, user_id)
-      await updateHeatmap(user_id, topic_id, class_code, null)
+      await userStatsModel.updateHeatmap(user_id, topic_id, class_code, null)
     }
 
     res.json(result.rows[0])
@@ -1173,7 +1150,8 @@ app.post("/quizzes", async (req, res) => {
     try {
       const topicForHeatmap = await pool.query("SELECT class_code FROM topics WHERE id = $1", [topic_id])
       if (topicForHeatmap.rows[0]) {
-        await updateHeatmap(user_id, topic_id, topicForHeatmap.rows[0].class_code, score)
+        const normalizedScore = score !== undefined && score !== null ? parseFloat(score) / 20 : null
+        await userStatsModel.updateHeatmap(user_id, topic_id, topicForHeatmap.rows[0].class_code, normalizedScore)
       }
     } catch (heatmapErr) {
       console.error('[Heatmap] Failed to update from quiz:', heatmapErr.message)
