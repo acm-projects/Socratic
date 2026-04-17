@@ -2,10 +2,10 @@ const { google } = require("googleapis");
 const crypto = require("crypto");
 const accountModel = require("../models/accountModel");
 
-const getOAuth2Client = () => new google.auth.OAuth2(
+const getOAuth2Client = (redirectUri = 'postmessage') => new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  'postmessage'
+  redirectUri
 );
 
 // Typed error for expired/revoked Google tokens so routes can return clean 401s
@@ -56,8 +56,8 @@ const getClientForUser = async (userId) => {
   return client;
 };
 
-const getCalendarTokens = async (code) => {
-  const client = getOAuth2Client();
+const getCalendarTokens = async (code, redirectUri) => {
+  const client = getOAuth2Client(redirectUri);
   const { tokens } = await client.getToken(code);
   return tokens;
 };

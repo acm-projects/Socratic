@@ -210,7 +210,10 @@ function App() {
   const responseGoogle = response => {
     console.log(response);
     const { code } = response
-    axios.post(`${API_URL}/api/calendar/create-tokens`, { code })
+    axios.post(`${API_URL}/api/calendar/create-tokens`, { 
+      code, 
+      redirect_uri: window.location.origin 
+    })
       .then(response => {
         console.log("Token response:", response.data);
         const { userId: newUserId, tokens } = response.data;
