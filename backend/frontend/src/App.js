@@ -25,6 +25,7 @@ function LoginButton({ onSuccess }) {
     },
     onError: (error) => console.log('Login Failed:', error),
     flow: 'auth-code', // Necessary for 'offline' access/refresh tokens
+    prompt: 'consent', // Forces Google to issue a new refresh token
     scope: 'openid email profile https://www.googleapis.com/auth/calendar',
   });
 
