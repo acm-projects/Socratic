@@ -256,7 +256,7 @@ app.get("/users/:id/quiz-overview", async (req, res) => {
               COALESCE(MAX(q.color), MAX(c.color)) as color
        FROM quizzes q
        JOIN topics t ON t.id = q.topic_id
-       JOIN classes c ON c.class_code = t.class_code AND c.user_id = q.user_id
+       JOIN classes c ON c.class_code = t.class_code
        WHERE q.user_id = $1
        GROUP BY c.name, c.class_code
        ORDER BY quiz_count DESC`,
