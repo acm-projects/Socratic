@@ -12,7 +12,7 @@ const pool = new Pool({
 })
 
 const app = express()
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerDoc = require('./swagger.json')
@@ -22,6 +22,16 @@ const historyRoutes = require('./backend/routes/historyRoutes')
 const tutorRoutes = require('./backend/routes/tutorRoutes')
 const ingestRoutes = require('./backend/routes/ingestRoutes')
 const quizRoutes = require('./backend/routes/quizRoutes')
+const classRoutes = require('./backend/routes/classRoutes')
+const userRoutes = require('./backend/routes/userRoutes')
+const topicRoutes = require('./backend/routes/topicRoutes')
+const chatSessionRoutes = require('./backend/routes/chatSessionRoutes')
+const achievementRoutes = require('./backend/routes/achievementRoutes')
+const userStatsRoutes = require('./backend/routes/userStatsRoutes')
+const sharedClassModel = require('./backend/models/sharedClassModel')
+const accountRoutes = require('./backend/routes/accountRoutes')
+const friendRoutes = require('./backend/routes/friendRoutes')
+const userStatsModel = require('./backend/models/userStatsModel')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
@@ -33,6 +43,14 @@ app.use('/api/history', historyRoutes)
 app.use('/api/tutor', tutorRoutes)
 app.use('/api/ingest', ingestRoutes)
 app.use('/api/quizzes', quizRoutes)
+app.use('/api/classes', classRoutes)
+app.use('/api/users', userRoutes)
+app.use('/api/topics', topicRoutes)
+app.use('/api/sessions', chatSessionRoutes)
+app.use('/api/achievements', achievementRoutes)
+app.use('/api/stats', userStatsRoutes)
+app.use('/api/accounts', accountRoutes)
+app.use('/api/friends', friendRoutes)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Socratic API is live 🚀' })
@@ -84,32 +102,8 @@ const updateClassStreak = async (class_code, user_id) => {
 
 
 // -----------------------------------------------------
-// HEATMAP AUTO-UPDATE HELPER
-// Called when: user chats (POST /sessions) or takes a quiz (POST /quizzes)
-// Upserts a row in daily_topic_metrics for today
+// TABLE DISCOVERY
 // -----------------------------------------------------
-
-const updateHeatmap = async (user_id, topic_id, class_code, score) => {
-  try {
-    const today = new Date().toISOString().split('T')[0]
-    const numericScore = score !== undefined && score !== null ? parseFloat(score) / 20 : null // convert 0-100 to 0-5 scale
-
-    await pool.query(
-      `INSERT INTO daily_topic_metrics (user_id, topic_id, class_code, metric_date, questions_asked, avg_score)
-       VALUES ($1, $2, $3, $4, 1, $5)
-       ON CONFLICT (user_id, topic_id, metric_date)
-       DO UPDATE SET
-         questions_asked = daily_topic_metrics.questions_asked + 1,
-         avg_score = CASE
-           WHEN $5 IS NOT NULL THEN ROUND(((daily_topic_metrics.avg_score * daily_topic_metrics.questions_asked) + $5) / (daily_topic_metrics.questions_asked + 1), 2)
-           ELSE daily_topic_metrics.avg_score
-         END`,
-      [user_id, topic_id, class_code, today, numericScore]
-    )
-  } catch (err) {
-    console.error('[Heatmap] Failed to update:', err.message)
-  }
-}
 
 // -----------------------------------------------------
 // TABLE DISCOVERY
@@ -269,10 +263,10 @@ app.get("/users/:id/quiz-overview", async (req, res) => {
       `SELECT c.name as class_name, c.class_code,
               COUNT(q.id) as quiz_count,
               ROUND(AVG(q.score), 1) as average_score,
-              COALESCE(MAX(q.color), MAX(c.color)) as color
+              MAX(q.color) as color
        FROM quizzes q
        JOIN topics t ON t.id = q.topic_id
-       JOIN classes c ON c.class_code = t.class_code AND c.user_id = q.user_id
+       JOIN classes c ON c.class_code = t.class_code
        WHERE q.user_id = $1
        GROUP BY c.name, c.class_code
        ORDER BY quiz_count DESC`,
@@ -301,38 +295,35 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
   try {
     const userId = req.params.id
 
-    const userClasses = await pool.query(
-      "SELECT class_code FROM classes WHERE user_id = $1",
-      [userId]
-    )
-    const userClassCodes = userClasses.rows.map(r => r.class_code)
-
     const friendsResult = await pool.query(
-      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f
+       JOIN "User" u ON f.friend_id = u.id
+       WHERE f.user_id = $1`,
       [userId]
     )
 
-    const friendsWithSharedClasses = await Promise.all(
-      friendsResult.rows.map(async (friend) => {
-        const sharedResult = await pool.query(
-          `SELECT c.class_code, c.name
-           FROM classes c
-           WHERE c.user_id = $1
-           AND c.class_code = ANY($2::text[])`,
-          [friend.friend_id, userClassCodes]
-        )
+    // 1. Sync the shared_classes table using the new model logic
+    await sharedClassModel.syncSharedClasses(userId)
 
-        return {
-          friend_id: friend.friend_id,
-          first_name: friend.first_name,
-          last_name: friend.last_name,
-          shared_classes: sharedResult.rows.map(r => ({
-            class_code: r.class_code,
-            name: r.name
-          }))
-        }
-      })
-    )
+    // 2. Fetch results from the persistence table
+    const sharedClassesFromTable = await sharedClassModel.getSharedClassesByUserId(userId)
+
+    // 3. Group by friend
+    const friendsWithSharedClasses = friendsResult.rows.map((friend) => {
+      const friendShared = sharedClassesFromTable.filter(r => r.friend_id === friend.friend_id)
+
+      return {
+        friend_id: friend.friend_id,
+        first_name: friend.first_name,
+        last_name: friend.last_name,
+        image: friend.image,
+        shared_classes: friendShared.map(r => ({
+          class_code: r.class_code,
+          name: r.class_name
+        }))
+      }
+    })
 
     res.json(friendsWithSharedClasses)
   } catch (error) {
@@ -351,7 +342,10 @@ app.get("/users/:id/friends/achievements", async (req, res) => {
     const userId = req.params.id
 
     const friendsResult = await pool.query(
-      "SELECT friend_id, first_name, last_name FROM friends WHERE user_id = $1",
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f 
+       JOIN "User" u ON f.friend_id = u.id 
+       WHERE f.user_id = $1`,
       [userId]
     )
 
@@ -471,7 +465,14 @@ app.delete("/classes/:code", async (req, res) => {
       return res.status(404).json({ error: "Class not found or you do not have permission to delete it" })
     }
 
-    res.json({ message: "Class and topics deleted successfully", deletedClass: result.rows[0] })
+    // Cleanup class_engagement records for this user
+    const deletedClass = result.rows[0]
+    await pool.query(
+      "DELETE FROM class_engagement WHERE user_id = $1 AND class_name = $2",
+      [user_id, deletedClass.name]
+    )
+
+    res.json({ message: "Class, topics, and engagement data deleted successfully", deletedClass })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -549,7 +550,7 @@ app.post("/sessions", async (req, res) => {
     // Update class streak + heatmap when a chat session is created
     if (class_code && user_id) {
       await updateClassStreak(class_code, user_id)
-      await updateHeatmap(user_id, topic_id, class_code, null)
+      await userStatsModel.updateHeatmap(user_id, topic_id, class_code, null)
     }
 
     res.json(result.rows[0])
@@ -792,10 +793,15 @@ app.get("/classes/:code/metrics", async (req, res) => {
 app.get("/users/:id/engagement/class-distribution", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT class_name, SUM(question_count) as question_count, MAX(color) as color, MAX(light) as light
-       FROM class_engagement
-       WHERE user_id = $1
-       GROUP BY class_name
+      `SELECT ce.class_name, SUM(ce.question_count) as question_count, MAX(ce.color) as color, MAX(ce.light) as light
+       FROM class_engagement ce
+       WHERE ce.user_id = $1
+       AND ce.class_name IN (
+         SELECT c.name FROM classes c
+         LEFT JOIN user_classes uc ON c.class_code = uc.class_code
+         WHERE c.user_id = $1 OR uc.user_id = $1
+       )
+       GROUP BY ce.class_name
        ORDER BY question_count DESC`,
       [req.params.id]
     )
@@ -929,7 +935,13 @@ app.delete("/accounts/:provider/:providerAccountId", async (req, res) => {
 
 app.get("/users/:id/friends", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM friends WHERE user_id = $1", [req.params.id])
+    const result = await pool.query(
+      `SELECT f.*, u.image, u.first_name, u.last_name 
+       FROM friends f 
+       JOIN "User" u ON f.friend_id = u.id 
+       WHERE f.user_id = $1`, 
+      [req.params.id]
+    )
     res.json(result.rows)
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -1138,7 +1150,8 @@ app.post("/quizzes", async (req, res) => {
     try {
       const topicForHeatmap = await pool.query("SELECT class_code FROM topics WHERE id = $1", [topic_id])
       if (topicForHeatmap.rows[0]) {
-        await updateHeatmap(user_id, topic_id, topicForHeatmap.rows[0].class_code, score)
+        const normalizedScore = score !== undefined && score !== null ? parseFloat(score) / 20 : null
+        await userStatsModel.updateHeatmap(user_id, topic_id, topicForHeatmap.rows[0].class_code, normalizedScore)
       }
     } catch (heatmapErr) {
       console.error('[Heatmap] Failed to update from quiz:', heatmapErr.message)

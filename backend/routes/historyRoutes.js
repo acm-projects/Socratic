@@ -2,10 +2,26 @@ const express = require('express');
 const router = express.Router();
 const sessionModel = require('../models/chatSessionModel');
 
-// GET /api/history - Retrieve all chat sessions
+// GET /api/history - Retrieve chat sessions for a specific user
 router.get('/', async (req, res, next) => {
   try {
-    const sessions = await sessionModel.getAllSessions();
+    const { userId } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({ error: "Missing required query parameter: userId" });
+    }
+
+    console.log(`[INFO] Fetching history for userId: ${userId}`);
+    const sessions = await sessionModel.getSessionsByUserId(userId);
+    
+    // Log verification
+    const leaked = sessions.filter(s => s.user_id !== userId);
+    if (leaked.length > 0) {
+      console.error(`[CRITICAL] Data leak detected in history!`);
+    } else {
+      console.log(`[PASS] History isolation verified for ${userId}.`);
+    }
+
     // Map session_id to id for frontend compatibility
     const mapped = sessions.map(s => ({
       ...s,

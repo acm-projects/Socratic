@@ -2,7 +2,7 @@ const db = require('../db');
 
 const getFriendsByUserId = async (userId) => {
   const query = `
-    SELECT f.*, u.image, u.first_name, u.last_name, u.email
+    SELECT f.*, u.image AS profile_pic, u.image, u.first_name, u.last_name, u.email
     FROM friends f
     JOIN "User" u ON f.friend_id = u.id
     WHERE f.user_id = $1

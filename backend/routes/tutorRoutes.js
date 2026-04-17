@@ -23,38 +23,56 @@ router.post('/chat', async (req, res, next) => {
       incomingSessionId = null;
     }
 
-    if (!userId || !classCode || !topicName || !message) {
-      return res.status(400).json({ error: "Missing required fields: userId, classCode, topic, message" });
+    if (!userId || !classCode || !message) {
+      return res.status(400).json({ error: "Missing required fields: userId, classCode, message" });
     }
 
     // 1. Resolve Topic ID (Official Schema requirement)
-    await classModel.ensureClassExists(classCode, userId);
-    let topic = await topicModel.getTopicByNameAndClass(topicName, classCode);
-    if (!topic) {
-      console.log(`[Tutor] 🆕 Creating new topic: ${topicName} for ${classCode}`);
-      topic = await topicModel.createTopic({
-        id: randomUUID(),
-        class_code: classCode,
-        name: topicName
-      });
-    }
+    // Try to resolve topic from: 1. Input param, 2. Existing session, 3. Default "General Discussion"
+    let topic;
+    let resolvedTopicName = topicName;
 
-    // 2. Ensure Session Exists in Official table
-    // If the frontend passes sessionId/chatId, check if it exists in DB.
+    // A. Check if session exists and has a topic
     let chatId = incomingSessionId;
     let isNewSession = false;
+    let existingSession = null;
 
     if (chatId) {
-      const existingSession = await sessionModel.getSessionById(chatId);
+      existingSession = await sessionModel.getSessionById(chatId);
       if (!existingSession) {
-        // If an ID was provided but not found, we create a new one with that requested ID
-        // (This handles the case where frontend generates IDs locally)
         isNewSession = true;
       }
     } else {
       chatId = randomUUID();
       isNewSession = true;
     }
+
+    if (!resolvedTopicName && existingSession) {
+      console.log(`[Tutor] ℹ️ Topic missing, inheriting from session ${chatId}`);
+      topic = await topicModel.getTopicById(existingSession.topic_id);
+      resolvedTopicName = topic ? topic.name : "General Discussion";
+    }
+
+    if (!resolvedTopicName) {
+      resolvedTopicName = "General Discussion";
+    }
+
+    await classModel.ensureClassExists(classCode, userId);
+    
+    if (!topic) {
+      topic = await topicModel.getTopicByNameAndClass(resolvedTopicName, classCode);
+      if (!topic) {
+        console.log(`[Tutor] 🆕 Creating topic: ${resolvedTopicName} for ${classCode}`);
+        topic = await topicModel.createTopic({
+          id: randomUUID(),
+          class_code: classCode,
+          name: resolvedTopicName
+        });
+      }
+    }
+
+    // 2. Ensure Session Exists in Official table
+    // (chatId and isNewSession already determined above)
 
     // Use the first message as the session title — only matters on creation
     const sessionTitle = message.length > 50 ? message.substring(0, 47) + "..." : message;
@@ -75,7 +93,7 @@ router.post('/chat', async (req, res, next) => {
       const evalResult = await evaluateQuestion({ 
         input: message, 
         classCode: classCode, 
-        topicName: topicName
+        topicName: resolvedTopicName
       });
       score = evalResult.score;
       reason = evalResult.reason;
@@ -96,16 +114,28 @@ router.post('/chat', async (req, res, next) => {
 
     // 3. Vector Search (Simultaneous)
     const vectorStore = await getClassVectorStore(classCode);
-    const fullQuery = `${topic}: ${message}`;
     
-    // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
+    // --- EARLY DETECTION: Detect Page/Lecture references for Sniper Search ---
     const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
+    const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
+    const targetPage = pageMatch ? parseInt(pageMatch[1]) : null;
+    const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
+
+    // --- SMART QUERY EXPANSION: Prepend Lecture if detected and topic is generic ---
+    let fullQuery = (resolvedTopicName === "General Discussion") 
+      ? message 
+      : `${resolvedTopicName}: ${message}`;
+
+    if (targetLecture && resolvedTopicName === "General Discussion") {
+      console.log(`[Tutor] 🚀 Dynamic Topic Override: General -> Lecture ${targetLecture}`);
+      resolvedTopicName = `Lecture ${targetLecture}`;
+      fullQuery = `${resolvedTopicName}: ${message}`;
+    }
+
+    // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
     let targetedContext = [];
-    
-    if (pageMatch) {
-      const targetPage = parseInt(pageMatch[1]);
+    if (targetPage) {
       console.log(`[Tutor] 🎯 Sniper Search active for Page ${targetPage}`);
-      
       const targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
         pageNumber: { "$eq": targetPage }
       });
@@ -117,16 +147,8 @@ router.post('/chat', async (req, res, next) => {
       });
     }
 
-    // --- NEW: LECTURE SNIPER SEARCH (Client-Side Filtering) ---
-    const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
-    const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
-    
-    if (targetLecture) {
-      console.log(`[Tutor] 🎯 Sniper Search active for Lecture ${targetLecture}`);
-    }
-
-    // Fetch 25 chunks. We will sort out the lecture-specific ones to guarantee they hit the LLM context.
-    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 25);
+    // Fetch 100 chunks (Increased to cast a much wider net for implicit references). 
+    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
     
     let broadContext = [];
     
@@ -146,16 +168,24 @@ router.post('/chat', async (req, res, next) => {
       broadContext.push(chunkStr);
     });
 
-    // Limit to prevent token overflow
-    targetedContext = targetedContext.slice(0, 10);
-    broadContext = broadContext.slice(0, 10);
+    // --- ADAPTIVE CONTEXT SLICING ---
+    // Gemini has huge context; we want to be as aggressive as possible (top 50 chunks total).
+    // Strategy: Take all targeted hits first (up to 25), then fill the remaining budget with broad search.
+    const MAX_TOTAL_CHUNKS = 50;
+    const MAX_TARGETED = 30; // Prioritize specific matches
+    
+    const finalTargeted = targetedContext.slice(0, MAX_TARGETED);
+    const remainingBudget = Math.max(0, MAX_TOTAL_CHUNKS - finalTargeted.length);
+    const finalBroad = broadContext.slice(0, remainingBudget);
+
+    console.log(`[Tutor] 📚 RAG Density: ${finalTargeted.length} Targeted, ${finalBroad.length} Broad (Total: ${finalTargeted.length + finalBroad.length} chunks)`);
 
     // Combine targeted and broad context (Targeted first)
-    const context = [...targetedContext, ...broadContext].join('\n--- NEXT CHUNK ---\n');
+    const context = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
 
 
     // 4. Run Socratic AI Tutor
-    console.log(`[Tutor] 🧠 Thinking... (Topic: ${topic})`);
+    console.log(`[Tutor] 🧠 Thinking... (Topic: ${resolvedTopicName})`);
     const tutorStartTime = Date.now();
     const tutorChainWithHistory = getTutorChainWithHistory();
 
@@ -184,9 +214,13 @@ router.post('/chat', async (req, res, next) => {
       content: aiContent
     });
 
-    // 8. Track ai_messages count + streak (fire-and-forget, non-blocking)
     userStatsModel.incrementAiMessages(userId).catch(err =>
       console.warn('[Tutor] ⚠️ Failed to increment ai_messages:', err.message)
+    );
+
+    // 9. Update heatmap (daily_topic_metrics)
+    userStatsModel.updateHeatmap(userId, topic.id, classCode, score).catch(err =>
+      console.warn('[Tutor] ⚠️ Failed to update heatmap:', err.message)
     );
 
     res.json({

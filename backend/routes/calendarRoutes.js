@@ -60,17 +60,20 @@ router.get('/session-check', checkSession, (req, res) => {
 
 router.post('/create-tokens', async (req, res, next) => {
   try {
-    const { code } = req.body;
-    console.log("1. Backend successfully received the Auth Code:", code);
+    const { code, redirect_uri } = req.body;
+    console.log("[Auth] Backend received Auth Code and Redirect URI:", redirect_uri);
 
     // 1. Exchange code for tokens
-    const tokens = await calendarService.getCalendarTokens(code);
+    const tokens = await calendarService.getCalendarTokens(code, redirect_uri);
+    console.log("[Auth] Tokens successfully exchanged with Google.");
 
     // 2. Use tokens to get user profile from Google
+    // IMPORTANT: If frontend sends code with a specific redirect_uri, 
+    // we must match it here. Defaulting to 'postmessage' or the origin.
     const oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
-      'postmessage'
+      'postmessage' 
     );
     oauth2Client.setCredentials(tokens);
     const oauth2 = google.oauth2({ version: 'v2', auth: oauth2Client });
@@ -109,6 +112,8 @@ router.post('/create-tokens', async (req, res, next) => {
         tokens.refresh_token || account.refresh_token
       );
     }
+
+    console.log(`[Auth] User ${profile.email} authenticated. Refresh Token Present: ${!!(tokens.refresh_token || (account && account.refresh_token))}`);
 
     // 5. Register in volatile memory
     activeSessions.add(user.id);

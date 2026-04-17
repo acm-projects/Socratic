@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+
+
 // Axios Interceptor for "Restart Logout" Logic
 axios.interceptors.response.use(
   (response) => response,
@@ -25,6 +28,7 @@ function LoginButton({ onSuccess }) {
     },
     onError: (error) => console.log('Login Failed:', error),
     flow: 'auth-code', // Necessary for 'offline' access/refresh tokens
+    prompt: 'consent', // Forces Google to issue a new refresh token
     scope: 'openid email profile https://www.googleapis.com/auth/calendar',
   });
 
@@ -61,7 +65,7 @@ function App() {
   // Proactive Session Check (Sync with Backend Restart)
   useEffect(() => {
     if (isSignedIn && userId) {
-      axios.get(`http://localhost:4000/api/calendar/session-check?userId=${userId}`)
+      axios.get(`${API_URL}/api/calendar/session-check?userId=${userId}`)
         .catch(() => {
           /* Interceptor handles logout on 401 */
         });
@@ -70,7 +74,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:4000/api/calendar/create-event', {
+    axios.post(`${API_URL}/api/calendar/create-event`, {
       userId,
       summary,
       description,
@@ -114,7 +118,7 @@ function App() {
     setExtractionResult(null);
 
     try {
-      const response = await axios.post("http://localhost:4000/api/syllabus/extract", formData, {
+      const response = await axios.post(`${API_URL}/api/syllabus/extract`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       setExtractionResult(response.data);
@@ -131,7 +135,7 @@ function App() {
     if (!extractionResult?.data) return;
 
     try {
-      const response = await axios.post("http://localhost:4000/api/syllabus/save", extractionResult.data);
+      const response = await axios.post(`${API_URL}/api/syllabus/save`, extractionResult.data);
       alert("Syllabus successfully saved to the database!");
       console.log("Save Response:", response.data);
       // Automatically refresh the classes list if it's currently showing
@@ -144,14 +148,14 @@ function App() {
 
   const fetchSavedClasses = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/classes");
+      const response = await axios.get(`${API_URL}/api/classes`);
       const classesData = response.data;
 
       // Fetch topics for each class to prove they are dynamically stored
       const classesWithTopics = await Promise.all(
         classesData.map(async (cls) => {
           try {
-            const topicRes = await axios.get(`http://localhost:4000/api/topics/class/${cls.class_code}`);
+            const topicRes = await axios.get(`${API_URL}/api/topics/class/${cls.class_code}`);
             return { ...cls, topics: topicRes.data };
           } catch (e) {
             return { ...cls, topics: [] };
@@ -168,7 +172,7 @@ function App() {
 
   const fetchAllTopics = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/topics");
+      const response = await axios.get(`${API_URL}/api/topics`);
       setAllTopics(response.data);
     } catch (error) {
       console.error(error);
@@ -182,7 +186,7 @@ function App() {
       return;
     }
     try {
-      const response = await axios.get(`http://localhost:4000/api/calendar/upcoming-events?userId=${userId}`);
+      const response = await axios.get(`${API_URL}/api/calendar/upcoming-events?userId=${userId}`);
       setUpcomingMeetings(response.data);
     } catch (error) {
       console.error(error);
@@ -192,7 +196,7 @@ function App() {
 
   const handleClearDatabase = async () => {
     try {
-      await axios.delete("http://localhost:4000/api/classes");
+      await axios.delete(`${API_URL}/api/classes`);
       setSavedClasses([]);
       setAllTopics([]);
       setExtractionResult(null);
@@ -206,10 +210,19 @@ function App() {
   const responseGoogle = response => {
     console.log(response);
     const { code } = response
-    axios.post('http://localhost:4000/api/calendar/create-tokens', { code })
+    axios.post(`${API_URL}/api/calendar/create-tokens`, { 
+      code, 
+      redirect_uri: window.location.origin 
+    })
       .then(response => {
         console.log("Token response:", response.data);
-        const { userId: newUserId } = response.data;
+        const { userId: newUserId, tokens } = response.data;
+        
+        if (!tokens.refresh_token) {
+          console.warn("No refresh token received. Calendar sync may be limited.");
+          // We don't alert every time to avoid annoyance, but logging it helps debugging
+        }
+
         setIsSignedIn(true);
         setUserId(newUserId);
         sessionStorage.setItem('isSignedIn', 'true');

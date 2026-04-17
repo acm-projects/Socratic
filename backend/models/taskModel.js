@@ -6,7 +6,7 @@ const db = require('../db');
  */
 const getUpcomingTasksByUserId = async (userId) => {
   const query = `
-    SELECT
+    SELECT DISTINCT
       ct.id,
       ct.class_code,
       c.name AS class_name,
@@ -15,11 +15,11 @@ const getUpcomingTasksByUserId = async (userId) => {
       ct.completed,
       ct.completed AS is_completed,
       ct.created_at
-    FROM user_classes uc
-    JOIN classes c ON c.class_code = uc.class_code
-    JOIN class_tasks ct ON ct.class_code = c.class_code
-    WHERE uc.user_id = $1
-      AND ct.due_date >= CURRENT_DATE - INTERVAL '1 day'
+    FROM class_tasks ct
+    JOIN classes c ON c.class_code = ct.class_code
+    LEFT JOIN user_classes uc ON uc.class_code = c.class_code AND uc.user_id = $1
+    WHERE (c.user_id = $1 OR uc.user_id = $1)
+      AND ct.due_date >= CURRENT_DATE
     ORDER BY ct.due_date ASC;
   `;
   const result = await db.query(query, [userId]);

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userModel = require('../models/userModel');
 const taskModel = require('../models/taskModel');
+const sharedClassModel = require('../models/sharedClassModel');
 const db = require('../db');
 
 router.get('/', async (req, res, next) => {
@@ -20,7 +21,7 @@ router.get('/:id/classes', async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await db.query(
-      `SELECT
+      `SELECT DISTINCT
          c.class_code,
          c.name,
          c.subject,
@@ -28,11 +29,11 @@ router.get('/:id/classes', async (req, res, next) => {
          c.streak,
          c.last_activity_date,
          c.created_at,
-         uc.enrolled_at
-       FROM user_classes uc
-       JOIN classes c ON c.class_code = uc.class_code
-       WHERE uc.user_id = $1
-       ORDER BY uc.enrolled_at DESC`,
+         COALESCE(uc.enrolled_at, c.created_at) as enrolled_at
+       FROM classes c
+       LEFT JOIN user_classes uc ON c.class_code = uc.class_code AND uc.user_id = $1
+       WHERE c.user_id = $1 OR uc.user_id = $1
+       ORDER BY enrolled_at DESC`,
       [id]
     );
     res.json(result.rows);
@@ -49,6 +50,82 @@ router.get('/:id/upcoming-tasks', async (req, res, next) => {
     res.json(tasks);
   } catch (error) { next(error); }
 });
+
+/**
+ * GET /api/users/:id/quiz-overview
+ * Returns an overview of quizzes taken by the user, grouped by class.
+ */
+router.get('/:id/quiz-overview', async (req, res, next) => {
+  try {
+    const userId = req.params.id
+
+    const result = await db.query(
+      `SELECT c.name as class_name, c.class_code,
+              COUNT(q.id) as quiz_count,
+              ROUND(AVG(q.score), 1) as average_score,
+              MAX(q.color) as color
+       FROM quizzes q
+       JOIN topics t ON t.id = q.topic_id
+       JOIN classes c ON c.class_code = t.class_code
+       WHERE q.user_id = $1
+       GROUP BY c.name, c.class_code
+       ORDER BY quiz_count DESC`,
+      [userId]
+    )
+
+    const COLORS = ['#10B981','#8B5CF6','#3B82F6','#EC4899','#F59E0B','#06B6D4']
+    res.json(result.rows.map((row, i) => ({
+      class_name: row.class_name,
+      class_code: row.class_code,
+      quiz_count: parseInt(row.quiz_count),
+      average_score: parseFloat(row.average_score),
+      color: row.color || COLORS[i % COLORS.length]
+    })))
+  } catch (error) { next(error) }
+})
+
+/**
+ * GET /api/users/:id/friends/shared-classes
+ * Returns friends of the user along with the classes they share.
+ */
+router.get('/:id/friends/shared-classes', async (req, res, next) => {
+  try {
+    const userId = req.params.id
+
+    const friendsResult = await db.query(
+      `SELECT f.friend_id, u.first_name, u.last_name, u.image 
+       FROM friends f
+       JOIN "User" u ON f.friend_id = u.id
+       WHERE f.user_id = $1`,
+      [userId]
+    )
+
+    // 1. Trigger an automated sync to ensure the shared_classes table is updated
+    await sharedClassModel.syncSharedClasses(userId);
+
+    // 2. Fetch the updated results from the persistence table
+    const sharedClassesFromTable = await sharedClassModel.getSharedClassesByUserId(userId);
+
+    // 3. Map the results back to the friend-grouped format
+    const friendsWithSharedClasses = friendsResult.rows.map((friend) => {
+      // Filter the synced results for this specific friend
+      const friendShared = sharedClassesFromTable.filter(r => r.friend_id === friend.friend_id);
+
+      return {
+        friend_id: friend.friend_id,
+        first_name: friend.first_name,
+        last_name: friend.last_name,
+        image: friend.image,
+        shared_classes: friendShared.map(r => ({
+          class_code: r.class_code,
+          name: r.class_name
+        }))
+      };
+    });
+
+    res.json(friendsWithSharedClasses);
+  } catch (error) { next(error) }
+})
 
 /**
  * PATCH /api/users/:id/tasks/:taskId

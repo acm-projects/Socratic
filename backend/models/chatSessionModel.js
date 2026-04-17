@@ -5,11 +5,6 @@ const getSessionsByUserId = async (userId) => {
   return result.rows;
 };
 
-const getAllSessions = async () => {
-  const result = await db.query("SELECT * FROM chat_sessions ORDER BY created_at DESC");
-  return result.rows;
-};
-
 const getSessionById = async (sessionId) => {
   const result = await db.query("SELECT * FROM chat_sessions WHERE session_id = $1", [sessionId]);
   return result.rows[0];
@@ -69,7 +64,6 @@ const getMessagesBySessionId = async (sessionId) => {
 
 module.exports = {
   getSessionsByUserId,
-  getAllSessions,
   getSessionById,
   createSession,
   upsertTutorSession,
