@@ -213,7 +213,13 @@ function App() {
     axios.post(`${API_URL}/api/calendar/create-tokens`, { code })
       .then(response => {
         console.log("Token response:", response.data);
-        const { userId: newUserId } = response.data;
+        const { userId: newUserId, tokens } = response.data;
+        
+        if (!tokens.refresh_token) {
+          console.warn("No refresh token received. Calendar sync may be limited.");
+          // We don't alert every time to avoid annoyance, but logging it helps debugging
+        }
+
         setIsSignedIn(true);
         setUserId(newUserId);
         sessionStorage.setItem('isSignedIn', 'true');

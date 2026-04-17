@@ -110,6 +110,8 @@ router.post('/create-tokens', async (req, res, next) => {
       );
     }
 
+    console.log(`[Auth] User ${profile.email} authenticated. Refresh Token Present: ${!!(tokens.refresh_token || (account && account.refresh_token))}`);
+
     // 5. Register in volatile memory
     activeSessions.add(user.id);
 
