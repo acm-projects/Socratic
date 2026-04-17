@@ -488,7 +488,14 @@ app.delete("/classes/:code", async (req, res) => {
       return res.status(404).json({ error: "Class not found or you do not have permission to delete it" })
     }
 
-    res.json({ message: "Class and topics deleted successfully", deletedClass: result.rows[0] })
+    // Cleanup class_engagement records for this user
+    const deletedClass = result.rows[0]
+    await pool.query(
+      "DELETE FROM class_engagement WHERE user_id = $1 AND class_name = $2",
+      [user_id, deletedClass.name]
+    )
+
+    res.json({ message: "Class, topics, and engagement data deleted successfully", deletedClass })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -809,10 +816,15 @@ app.get("/classes/:code/metrics", async (req, res) => {
 app.get("/users/:id/engagement/class-distribution", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT class_name, SUM(question_count) as question_count, MAX(color) as color, MAX(light) as light
-       FROM class_engagement
-       WHERE user_id = $1
-       GROUP BY class_name
+      `SELECT ce.class_name, SUM(ce.question_count) as question_count, MAX(ce.color) as color, MAX(ce.light) as light
+       FROM class_engagement ce
+       WHERE ce.user_id = $1
+       AND ce.class_name IN (
+         SELECT c.name FROM classes c
+         LEFT JOIN user_classes uc ON c.class_code = uc.class_code
+         WHERE c.user_id = $1 OR uc.user_id = $1
+       )
+       GROUP BY ce.class_name
        ORDER BY question_count DESC`,
       [req.params.id]
     )
