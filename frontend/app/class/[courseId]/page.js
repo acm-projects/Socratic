@@ -281,7 +281,7 @@ useEffect(() => {
 
       <div className="p-9 w-1/4 flex flex-col gap-8 h-screen sticky top-0 overflow-hidden">
         <div className="flex flex-col flex-1 min-h-0">
-         <UpcomingTasks tasks={upcomingTasks} onToggle={handleTaskToggle} />
+         <UpcomingTasks tasks={upcomingTasks} onToggle={handleTaskToggle} classInfo={classInfo} />
         </div>
         <div className="flex flex-col flex-1 min-h-0">
           <CourseMaterial files={courseMaterials} courseId={courseId} />
