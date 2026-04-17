@@ -55,14 +55,27 @@ export default function SearchFriends({ session }) {
             <div key={f.id} className="flex items-center justify-between px-3 py-2 bg-white/40 rounded-xl">
               <div className="flex items-center gap-2">
 
-                {/* <div className="w-7 h-7 rounded-full bg-gray-200" /> */}
-                <img
+                {/* <img
                 src={f.profile_pic}
                 alt={f.name}
                 className="w-7 h-7 rounded-full object-cover bg-gray-200"
                 onError={(e) => e.target.src = '/default-avatar.png'}
-                />
+                /> */}
 
+{f.profile_pic ? (
+  <img
+    src={f.profile_pic}
+    alt={f.name}
+    className="w-7 h-7 rounded-full object-cover bg-gray-200"
+    onError={(e) => { e.target.onerror = null; e.target.src = '/default-avatar.png' }}
+  />
+) : (
+  <img
+    src="/default-avatar.png"
+    alt={f.name}
+    className="w-7 h-7 rounded-full object-cover bg-gray-200"
+  />
+)}
 
 
 

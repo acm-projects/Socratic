@@ -17,7 +17,7 @@ export default function Leaderboard({ userId, session }) {
           name: `${f.first_name} ${f.last_name}`,
           pts: f.total_xp,
           streak: f.streak,
-          profile_pic: f.profile_pic,  // 👈 add this
+          profile_pic: f.image,  // 👈 add this
           isYou: false
         }))
 
