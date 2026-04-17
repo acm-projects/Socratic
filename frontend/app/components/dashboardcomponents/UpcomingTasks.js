@@ -1,0 +1,61 @@
+"use client";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";           
+import {useState} from "react";
+import {EllipsisVertical, Folder} from "lucide-react";
+
+
+export default function UpcomingTasks() {
+    //array of tasks
+   const [showModal, setShowModal] = useState(false);
+   const [meetings, setMeetings] = useState([]);
+   const [tasks, setTasks] = useState([]);
+   const { data: session } = useSession();
+   console.log(session);
+
+
+   useEffect(() => {
+       fetch('http://3.128.186.118:5000/api/calendar/upcoming-events')
+           .then(res => res.json())
+           .then(data => setMeetings(data))
+           .catch(err => console.error(err));
+   }, []);
+
+
+    return (
+        <div className="relative w-[301px] bg-white rounded-xl p-5 flex flex-col">
+            <h2 className="ml-5 text-l font-semibold text-black">
+                Upcoming Tasks 
+            </h2>                
+            
+
+
+
+            {/*display tasks*/}
+            <div className = "flex flex-col gap-3.5 mt-5 ml-1">
+                {tasks.map((task) => (
+                    <div key = {task.id} className = "flex items-center justify-between">
+                        <div className = "flex items-center gap-3">
+                            <div className = "w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <Folder className = "text-gray-400" size={16}/>
+                            </div>
+                            <div>
+                            <p className="text-sm font-medium text-black">{task.title}</p>
+                            <p className="text-xs font-semibold text-gray-400">{task.course}</p>
+                            </div>
+                            </div>
+                             <span className="text-xs bg-sky-100 text-sky-700 font-medium px-4 py-1.5 rounded-full">
+                            {task.date}
+                            </span>
+                            </div>
+
+
+                ))}
+
+
+                </div>
+
+            </div>
+    );
+
+}
