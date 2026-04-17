@@ -74,10 +74,7 @@ const updateClassStreak = async (class_code, user_id) => {
     const { streak, last_activity_date } = classResult.rows[0]
     const lastDate = last_activity_date ? new Date(last_activity_date).toISOString().split('T')[0] : null
 
-    if (lastDate === today) {
-      // Already studied today, no change
-      return
-    }
+    if (lastDate === today) return
 
     let newStreak = 1
     if (lastDate) {
@@ -85,10 +82,8 @@ const updateClassStreak = async (class_code, user_id) => {
       yesterday.setDate(yesterday.getDate() - 1)
       const yesterdayStr = yesterday.toISOString().split('T')[0]
       if (lastDate === yesterdayStr) {
-        // Studied yesterday, increment
         newStreak = (streak || 0) + 1
       }
-      // else missed a day, reset to 1
     }
 
     await pool.query(
@@ -99,11 +94,6 @@ const updateClassStreak = async (class_code, user_id) => {
     console.error('[ClassStreak] Failed to update:', err.message)
   }
 }
-
-
-// -----------------------------------------------------
-// TABLE DISCOVERY
-// -----------------------------------------------------
 
 // -----------------------------------------------------
 // TABLE DISCOVERY
@@ -197,7 +187,7 @@ app.delete("/users/:id", async (req, res) => {
 })
 
 // -----------------------------------------------------
-// XP HISTORY (Points Earned Over Time)
+// XP HISTORY
 // -----------------------------------------------------
 
 app.get("/users/:id/xp-history", async (req, res) => {
@@ -217,42 +207,42 @@ app.get("/users/:id/xp-history", async (req, res) => {
          ORDER BY month_date ASC`,
         [userId]
       )
-      res.json(result.rows.map(row => ({
+      return res.json(result.rows.map(row => ({
         month: row.month,
         total_xp: parseInt(row.total_xp)
       })))
-    } else {
-      const result = await pool.query(
-        `SELECT DATE(created_at) as date, SUM(amount) as xp_earned
-         FROM xp_system
-         WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '${days} days'
-         GROUP BY DATE(created_at)
-         ORDER BY date ASC`,
-        [userId]
-      )
-
-      const xpMap = {}
-      result.rows.forEach(row => {
-        xpMap[row.date.toISOString().split('T')[0]] = parseInt(row.xp_earned)
-      })
-
-      const filled = []
-      for (let i = days - 1; i >= 0; i--) {
-        const d = new Date()
-        d.setDate(d.getDate() - i)
-        const dateStr = d.toISOString().split('T')[0]
-        filled.push({ date: dateStr, xp_earned: xpMap[dateStr] || 0 })
-      }
-
-      res.json(filled)
     }
+
+    const result = await pool.query(
+      `SELECT DATE(created_at) as date, SUM(amount) as xp_earned
+       FROM xp_system
+       WHERE user_id = $1 AND created_at >= NOW() - INTERVAL '${days} days'
+       GROUP BY DATE(created_at)
+       ORDER BY date ASC`,
+      [userId]
+    )
+
+    const xpMap = {}
+    result.rows.forEach(row => {
+      xpMap[row.date.toISOString().split('T')[0]] = parseInt(row.xp_earned)
+    })
+
+    const filled = []
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      const dateStr = d.toISOString().split('T')[0]
+      filled.push({ date: dateStr, xp_earned: xpMap[dateStr] || 0 })
+    }
+
+    res.json(filled)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
 // -----------------------------------------------------
-// QUIZ OVERVIEW (grouped by class)
+// QUIZ OVERVIEW (grouped by class) — color fallback palette
 // -----------------------------------------------------
 
 app.get("/users/:id/quiz-overview", async (req, res) => {
@@ -263,17 +253,16 @@ app.get("/users/:id/quiz-overview", async (req, res) => {
       `SELECT c.name as class_name, c.class_code,
               COUNT(q.id) as quiz_count,
               ROUND(AVG(q.score), 1) as average_score,
-              MAX(q.color) as color
+              COALESCE(MAX(q.color), MAX(c.color)) as color
        FROM quizzes q
        JOIN topics t ON t.id = q.topic_id
-       JOIN classes c ON c.class_code = t.class_code
+       JOIN classes c ON c.class_code = t.class_code AND c.user_id = q.user_id
        WHERE q.user_id = $1
        GROUP BY c.name, c.class_code
        ORDER BY quiz_count DESC`,
       [userId]
     )
 
-    // Fallback color palette if still null
     const COLORS = ['#10B981','#8B5CF6','#3B82F6','#EC4899','#F59E0B','#06B6D4']
     res.json(result.rows.map((row, i) => ({
       class_name: row.class_name,
@@ -303,16 +292,11 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
       [userId]
     )
 
-    // 1. Sync the shared_classes table using the new model logic
     await sharedClassModel.syncSharedClasses(userId)
-
-    // 2. Fetch results from the persistence table
     const sharedClassesFromTable = await sharedClassModel.getSharedClassesByUserId(userId)
 
-    // 3. Group by friend
     const friendsWithSharedClasses = friendsResult.rows.map((friend) => {
       const friendShared = sharedClassesFromTable.filter(r => r.friend_id === friend.friend_id)
-
       return {
         friend_id: friend.friend_id,
         first_name: friend.first_name,
@@ -331,10 +315,9 @@ app.get("/users/:id/friends/shared-classes", async (req, res) => {
   }
 })
 
-
 // -----------------------------------------------------
 // GET /users/:id/friends/achievements
-// Returns recent achievements from all of the user's friends
+// Returns recent achievements from all friends with icons
 // -----------------------------------------------------
 
 app.get("/users/:id/friends/achievements", async (req, res) => {
@@ -396,12 +379,7 @@ app.get("/classes", async (req, res) => {
     const { user_id } = req.query
     let query = "SELECT * FROM classes"
     let params = []
-
-    if (user_id) {
-      query += " WHERE user_id = $1"
-      params = [user_id]
-    }
-
+    if (user_id) { query += " WHERE user_id = $1"; params = [user_id] }
     const result = await pool.query(query, params)
     res.json(result.rows)
   } catch (error) {
@@ -438,9 +416,7 @@ app.put("/classes/:code", async (req, res) => {
       "UPDATE classes SET subject = $1, name = $2 WHERE class_code = $3 RETURNING *",
       [subject, name, req.params.code]
     )
-    if (!result.rows[0]) {
-      return res.status(404).json({ error: "Class not found" })
-    }
+    if (!result.rows[0]) return res.status(404).json({ error: "Class not found" })
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -450,11 +426,15 @@ app.put("/classes/:code", async (req, res) => {
 app.delete("/classes/:code", async (req, res) => {
   try {
     const { user_id } = req.query
-    if (!user_id) {
-      return res.status(400).json({ error: "user_id is required to delete a class" })
-    }
+    if (!user_id) return res.status(400).json({ error: "user_id is required to delete a class" })
 
     await pool.query("DELETE FROM topics WHERE class_code = $1", [req.params.code])
+
+    // Get class name before deleting so we can clean up engagement
+    const classInfo = await pool.query(
+      "SELECT name FROM classes WHERE class_code = $1 AND user_id = $2",
+      [req.params.code, user_id]
+    )
 
     const result = await pool.query(
       "DELETE FROM classes WHERE class_code = $1 AND user_id = $2 RETURNING *",
@@ -465,14 +445,15 @@ app.delete("/classes/:code", async (req, res) => {
       return res.status(404).json({ error: "Class not found or you do not have permission to delete it" })
     }
 
-    // Cleanup class_engagement records for this user
-    const deletedClass = result.rows[0]
-    await pool.query(
-      "DELETE FROM class_engagement WHERE user_id = $1 AND class_name = $2",
-      [user_id, deletedClass.name]
-    )
+    // Cascade delete class_engagement for this class
+    if (classInfo.rows[0]) {
+      await pool.query(
+        "DELETE FROM class_engagement WHERE user_id = $1 AND class_name = $2",
+        [user_id, classInfo.rows[0].name]
+      )
+    }
 
-    res.json({ message: "Class, topics, and engagement data deleted successfully", deletedClass })
+    res.json({ message: "Class, topics, and engagement data deleted successfully", deletedClass: result.rows[0] })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -547,7 +528,6 @@ app.post("/sessions", async (req, res) => {
       [session_id, class_code, user_id, topic_id]
     )
 
-    // Update class streak + heatmap when a chat session is created
     if (class_code && user_id) {
       await updateClassStreak(class_code, user_id)
       await userStatsModel.updateHeatmap(user_id, topic_id, class_code, null)
@@ -621,16 +601,14 @@ app.get("/users/:id/achievements", async (req, res) => {
     )
 
     const earnedMap = {}
-    earnedResult.rows.forEach(row => {
-      earnedMap[row.achievement_id] = row.earned_at
-    })
+    earnedResult.rows.forEach(row => { earnedMap[row.achievement_id] = row.earned_at })
 
     const iconsMap = {}
     iconsResult.rows.forEach(row => {
       iconsMap[row.id] = { icon_colored: row.icon_colored, icon_greyed: row.icon_greyed }
     })
 
-    const achievements = ACHIEVEMENT_LIST.map(a => ({
+    res.json(ACHIEVEMENT_LIST.map(a => ({
       id: String(a.id),
       name: a.name,
       description: a.description,
@@ -640,9 +618,7 @@ app.get("/users/:id/achievements", async (req, res) => {
       unlocked: !!earnedMap[String(a.id)],
       unlocked_at: earnedMap[String(a.id)] || null,
       user_name: userName
-    }))
-
-    res.json(achievements)
+    })))
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -656,26 +632,19 @@ app.get("/users/:id/stats", async (req, res) => {
   try {
     const userId = req.params.id
 
-    const quizStats = await pool.query(
-      "SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1",
-      [userId]
-    )
-
-    const userResult = await pool.query(
-      'SELECT weekly_xp, streak FROM "User" WHERE id = $1',
-      [userId]
-    )
+    const [quizStats, userResult] = await Promise.all([
+      pool.query("SELECT COUNT(*) as quizzes_taken, COALESCE(SUM(retake_count), 0) as retakes_taken FROM quizzes WHERE user_id = $1", [userId]),
+      pool.query('SELECT weekly_xp, streak FROM "User" WHERE id = $1', [userId])
+    ])
 
     let aiMessages = 0
     try {
-      const messageCount = await pool.query(
+      const msg = await pool.query(
         "SELECT COUNT(*) as ai_messages FROM messages WHERE chat_id IN (SELECT id FROM chats WHERE user_id = $1)",
         [userId]
       )
-      aiMessages = parseInt(messageCount.rows[0].ai_messages) || 0
-    } catch (e) {
-      aiMessages = 0
-    }
+      aiMessages = parseInt(msg.rows[0].ai_messages) || 0
+    } catch (e) {}
 
     const user = userResult.rows[0] || {}
     const stats = quizStats.rows[0]
@@ -787,7 +756,7 @@ app.get("/classes/:code/metrics", async (req, res) => {
 })
 
 // -----------------------------------------------------
-// CLASS DISTRIBUTION (Engagement pie chart)
+// CLASS DISTRIBUTION — filtered to user's actual classes
 // -----------------------------------------------------
 
 app.get("/users/:id/engagement/class-distribution", async (req, res) => {
@@ -939,7 +908,7 @@ app.get("/users/:id/friends", async (req, res) => {
       `SELECT f.*, u.image, u.first_name, u.last_name 
        FROM friends f 
        JOIN "User" u ON f.friend_id = u.id 
-       WHERE f.user_id = $1`, 
+       WHERE f.user_id = $1`,
       [req.params.id]
     )
     res.json(result.rows)
@@ -1017,31 +986,17 @@ app.put("/friend-requests/:id", async (req, res) => {
   }
 })
 
-
-// -----------------------------------------------------
-// POST /friend-requests/:id/accept
-// Accepts request and auto-creates friendship in both directions
-// -----------------------------------------------------
-
 app.post("/friend-requests/:id/accept", async (req, res) => {
   try {
     const requestId = req.params.id
 
-    const reqResult = await pool.query(
-      "SELECT * FROM friend_requests WHERE id = $1",
-      [requestId]
-    )
+    const reqResult = await pool.query("SELECT * FROM friend_requests WHERE id = $1", [requestId])
     if (!reqResult.rows[0]) return res.status(404).json({ error: "Friend request not found" })
 
     const { sender_id, receiver_id } = reqResult.rows[0]
 
-    // Update request status
-    await pool.query(
-      "UPDATE friend_requests SET status = 'accepted' WHERE id = $1",
-      [requestId]
-    )
+    await pool.query("UPDATE friend_requests SET status = 'accepted' WHERE id = $1", [requestId])
 
-    // Fetch both users for name/xp/streak
     const [senderRes, receiverRes] = await Promise.all([
       pool.query('SELECT first_name, last_name, streak, total_xp FROM "User" WHERE id = $1', [sender_id]),
       pool.query('SELECT first_name, last_name, streak, total_xp FROM "User" WHERE id = $1', [receiver_id])
@@ -1049,17 +1004,14 @@ app.post("/friend-requests/:id/accept", async (req, res) => {
     const sender = senderRes.rows[0] || {}
     const receiver = receiverRes.rows[0] || {}
 
-    // Create friendship in both directions
     await pool.query(
       `INSERT INTO friends (user_id, friend_id, first_name, last_name, streak, total_xp)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       ON CONFLICT DO NOTHING`,
+       VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING`,
       [receiver_id, sender_id, sender.first_name, sender.last_name, sender.streak || 0, sender.total_xp || 0]
     )
     await pool.query(
       `INSERT INTO friends (user_id, friend_id, first_name, last_name, streak, total_xp)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       ON CONFLICT DO NOTHING`,
+       VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT DO NOTHING`,
       [sender_id, receiver_id, receiver.first_name, receiver.last_name, receiver.streak || 0, receiver.total_xp || 0]
     )
 
@@ -1069,17 +1021,9 @@ app.post("/friend-requests/:id/accept", async (req, res) => {
   }
 })
 
-// -----------------------------------------------------
-// POST /friend-requests/:id/decline
-// Declines and deletes the friend request
-// -----------------------------------------------------
-
 app.post("/friend-requests/:id/decline", async (req, res) => {
   try {
-    const result = await pool.query(
-      "DELETE FROM friend_requests WHERE id = $1 RETURNING *",
-      [req.params.id]
-    )
+    const result = await pool.query("DELETE FROM friend_requests WHERE id = $1 RETURNING *", [req.params.id])
     if (!result.rows[0]) return res.status(404).json({ error: "Friend request not found" })
     res.json({ message: "Friend request declined" })
   } catch (error) {
@@ -1107,9 +1051,7 @@ app.get("/quizzes/:id/questions", async (req, res) => {
   try {
     const quiz = await pool.query("SELECT * FROM quizzes WHERE id = $1", [req.params.id])
     const questions = await pool.query("SELECT * FROM quiz_questions WHERE quiz_id = $1", [req.params.id])
-    if (!quiz.rows[0]) {
-      return res.status(404).json({ error: "Quiz not found" })
-    }
+    if (!quiz.rows[0]) return res.status(404).json({ error: "Quiz not found" })
     res.json({ ...quiz.rows[0], questions: questions.rows })
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -1146,7 +1088,7 @@ app.post("/quizzes", async (req, res) => {
       console.error('[ClassStreak] Failed to update from quiz:', streakErr.message)
     }
 
-    // Update heatmap when a quiz is taken
+    // Update heatmap
     try {
       const topicForHeatmap = await pool.query("SELECT class_code FROM topics WHERE id = $1", [topic_id])
       if (topicForHeatmap.rows[0]) {
@@ -1157,34 +1099,28 @@ app.post("/quizzes", async (req, res) => {
       console.error('[Heatmap] Failed to update from quiz:', heatmapErr.message)
     }
 
-    // -----------------------------------------------------
-    // AUTO-UNLOCK ACHIEVEMENTS
-    // -----------------------------------------------------
+    // Auto-unlock achievements
     try {
       const allQuizzes = await pool.query(
-        "SELECT score, retake_count FROM quizzes WHERE user_id = $1",
-        [user_id]
+        "SELECT score, retake_count FROM quizzes WHERE user_id = $1", [user_id]
       )
       const quizCount = allQuizzes.rows.length
       const perfectScores = allQuizzes.rows.filter(q => parseInt(q.score) === 100).length
       const totalRetakes = allQuizzes.rows.reduce((sum, q) => sum + (parseInt(q.retake_count) || 0), 0)
-      const hasRetake = totalRetakes > 0
 
       const toUnlock = []
-      if (quizCount >= 1) toUnlock.push('1')
-      if (quizCount >= 10) toUnlock.push('2')
-      if (hasRetake) toUnlock.push('3')
-      if (perfectScores >= 1) toUnlock.push('5')
-      if (perfectScores >= 5) toUnlock.push('7')
+      if (quizCount >= 1)      toUnlock.push('1')
+      if (quizCount >= 10)     toUnlock.push('2')
+      if (totalRetakes > 0)    toUnlock.push('3')
+      if (perfectScores >= 1)  toUnlock.push('5')
+      if (perfectScores >= 5)  toUnlock.push('7')
       if (perfectScores >= 10) toUnlock.push('8')
-      if (totalRetakes >= 5) toUnlock.push('9')
-      if (totalRetakes >= 20) toUnlock.push('13')
+      if (totalRetakes >= 5)   toUnlock.push('9')
+      if (totalRetakes >= 20)  toUnlock.push('13')
 
       for (const achId of toUnlock) {
         await pool.query(
-          `INSERT INTO user_achievements (user_id, achievement_id)
-           VALUES ($1, $2)
-           ON CONFLICT DO NOTHING`,
+          `INSERT INTO user_achievements (user_id, achievement_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
           [user_id, achId]
         )
       }
