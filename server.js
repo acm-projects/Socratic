@@ -12,7 +12,7 @@ const pool = new Pool({
 })
 
 const app = express()
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 
 const swaggerUi = require('swagger-ui-express')
 const swaggerDoc = require('./swagger.json')
