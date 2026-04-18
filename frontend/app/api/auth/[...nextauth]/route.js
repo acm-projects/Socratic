@@ -42,7 +42,9 @@ const authOption = {
 async jwt({ token, account, profile }) {
   if (account) {
     token.accessToken = account.access_token
-    token.refreshToken = account.refresh_token // refresh token
+    if (account.refresh_token) {
+      token.refreshToken = account.refresh_token
+    }
     token.isNewUser = newUsers.has(profile.email)  
     newUsers.delete(profile.email) 
     
@@ -59,6 +61,16 @@ async jwt({ token, account, profile }) {
       data: { image: profile.picture }
     })
 
+    const accountUpdateData = {
+      access_token: account.access_token,
+      expires_at: account.expires_at,
+      id_token: account.id_token
+    }
+
+    if (account.refresh_token) {
+      accountUpdateData.refresh_token = account.refresh_token
+    }
+
     await prisma.account.update({
       where: {
         provider_providerAccountId: {
@@ -66,12 +78,7 @@ async jwt({ token, account, profile }) {
           providerAccountId: account.providerAccountId
         }
       },
-      data: {
-        access_token: account.access_token,
-        refresh_token: account.refresh_token,
-        expires_at: account.expires_at,
-        id_token: account.id_token
-      }
+      data: accountUpdateData
     })
 
   }
