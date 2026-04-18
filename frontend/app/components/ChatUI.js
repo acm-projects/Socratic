@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { CircleArrowUp, Bookmark, PanelLeftOpen, PanelLeftClose, SquarePen, ChevronLeft } from 'lucide-react';
 import ChatModal from "./ChatModal";
 import { useSession } from "next-auth/react";
+import ReactMarkdown from 'react-markdown'
+
 
 
 
@@ -29,7 +31,11 @@ useEffect(() => {
                     id: s.session_id,
                     title: s.title || "Untitled Chat"
                 }))
-            .reverse()  // 
+                    .filter((chat, index, self) => 
+        index === self.findIndex(c => c.id === chat.id)  // remove duplicates
+    )
+    .reverse()
+
             setChats(formatted)  // just replace entirely, don't append
         })
         .catch(err => console.error(err))
@@ -88,7 +94,7 @@ async function handleSend() {
         setMessages(prev => prev.map((m, i) => 
             i === prev.length - 1 ? { ...m, score: parseInt(data.score) } : m
         ))
-        setMessages(prev => [...prev, { role: "ai", content: data.response }])
+        setMessages(prev => [...prev, { role: "ai", content: data.reply }])
 
     } catch (err) {
         console.error("Chat error:", err)
@@ -277,9 +283,9 @@ async function handleSend() {
         
         {/* Message content */}
         <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
-            <div className={"text-base text-black"}>
-                {message.content}
-            </div>
+        <div className="text-base text-black prose prose-sm max-w-none">
+            <ReactMarkdown>{message.content}</ReactMarkdown>
+        </div>
             <button
                 onClick={() => { handleSave(message.content); setShowModal(true); }}
                 className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50"

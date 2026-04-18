@@ -123,16 +123,19 @@ async function handleFinish() {
   )
   setScores(freshScores)
 
-    
-    const updatedScores = [...scores]
-    updatedScores[current] = (selected === quizQuestions[current]?.correct_answer)
-    setScores(updatedScores)
+        const numCorrect = freshScores.filter(Boolean).length
+        const score = Math.round((numCorrect / quizQuestions.length) * 100)
 
-    const numCorrect = updatedScores.filter(Boolean).length
-    const score = Math.round((numCorrect / quizQuestions.length) * 100)
     console.log("Saving score for quizId:", quizId, "score:", score) // 👈 add here
     console.log("freshScores:", freshScores)         // 👈 are they true/true/true?
     console.log("score being saved:", score)          // 👈 is this 100?
+    console.log("updated answers:", updated)
+console.log("correct answers:", quizQuestions.map(q => q.correct_answer))
+console.log("freshScores:", freshScores)
+console.log("score:", score)
+
+
+    
 
     // save completed attempt
     await fetch(`/backend/quizzes/${quizId}`, {
@@ -144,7 +147,7 @@ async function handleFinish() {
             questions: quizQuestions.map((q, i) => ({
                 id: q.id,
                 user_answer: updated[i] ?? null,
-                is_correct: updatedScores[i] ?? false,
+                is_correct: freshScores[i] ?? false,
 
             }))
         })

@@ -60,6 +60,7 @@ export default function UpcomingTasks({ tasks, onToggle, classInfo }) {
       });
       console.log(res.status, await res.json()); // add this
       console.log(task.due)
+      console.log(tasks)
 
 
     }

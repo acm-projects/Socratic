@@ -73,8 +73,8 @@ export default function Schedulemodal({onClose}){
         }),
             });
     console.log("status:", res.status)
-    console.log("Error response:", text);
-    console.log("response:", text)
+    // console.log("Error response:", text);
+    // console.log("response:", text)
 
             if (res.ok) {
                 setShowConfirmation(true);
