@@ -54,7 +54,7 @@ model quiz_questions {
   user_answer    String?
   is_correct     Boolean?
   depth_score    Int?
-  options        String[]
+  options        Json
   explanation    String?
 }
 

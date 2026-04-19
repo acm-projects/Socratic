@@ -15,13 +15,13 @@ router.post('/generate', async (req, res, next) => {
     if (!classCode || !topic) {
       return res.status(400).json({ error: "Missing required fields: classCode, topic" });
     }
-    
+
     const count = parseInt(numQuestions) || 5;
 
     // Construct difficulty requirements based on the difficulty array
     const selectedLevels = [];
     const levels = Array.isArray(difficulty) ? difficulty : [];
-    
+
     if (levels.includes("easy")) selectedLevels.push("Easy (Recall/Definitions)");
     if (levels.includes("medium")) selectedLevels.push("Medium (Application/Relationships)");
     if (levels.includes("hard")) selectedLevels.push("Hard (Deep Analysis/Problem-Solving)");
@@ -32,12 +32,12 @@ router.post('/generate', async (req, res, next) => {
 
     // 1. Search the shared class knowledge base (populated by PDF ingest)
     const vectorStore = await getClassVectorStore(classCode);
-    
+
     console.log(`[QuizGen] Querying Pinecone namespace for class: ${classCode}`);
-    
+
     // We want broad context for the topic. Retrieve the top 8 most relevant chunks for better recall.
     const resultsWithScores = await vectorStore.similaritySearchWithScore(topic, 8);
-    
+
     const context = resultsWithScores.map(([doc]) => doc.pageContent).join('\n---\n');
     const sources = resultsWithScores.map(([doc]) => ({
       source: doc.metadata.source || 'Unknown',
@@ -46,7 +46,7 @@ router.post('/generate', async (req, res, next) => {
 
     console.log(`[QuizGen] Retrieved ${resultsWithScores.length} context chunks from Pinecone.`);
     resultsWithScores.forEach(([doc], i) => {
-      console.log(`  - Chunk ${i+1} Source: ${doc.metadata.source || 'Local Seed'}`);
+      console.log(`  - Chunk ${i + 1} Source: ${doc.metadata.source || 'Local Seed'}`);
     });
 
     // 2. Initialize the LLM Chain
@@ -55,7 +55,7 @@ router.post('/generate', async (req, res, next) => {
     // 3. Generate the Quiz
     console.log(`[QuizGen] 🎓 Generating ${count} ${selectedLevels.join("/")} questions for ${classCode}...`);
     const quizStartTime = Date.now();
-    
+
     const result = await chain.invoke({
       class: classCode,
       topic: topic,
@@ -70,7 +70,7 @@ router.post('/generate', async (req, res, next) => {
 
     // 4. Resolve Topic ID
     await classModel.ensureClassExists(classCode, userId);
-    
+
     let topicEntity = await topicModel.getTopicByNameAndClass(topic, classCode);
     if (!topicEntity) {
       console.log(`[QuizGen] 🆕 Creating new topic: ${topic} for ${classCode}`);
@@ -101,13 +101,14 @@ router.post('/generate', async (req, res, next) => {
 
     // 7. Update daily heatmap metrics (questions asked + avg score for that topic)
     const numQuestionsGenerated = questions.length;
-    await quizModel.updateTopicMetrics({
+    // AFTER
+    quizModel.updateTopicMetrics({
       userId,
       classCode,
       topicId: topicEntity.id,
       questionsAsked: numQuestionsGenerated,
-      score: 0 // Score starts at 0 until the user submits answers
-    });
+      score: 0
+    }).catch(err => console.warn('[QuizGen] ⚠️ Stats update failed (non-critical):', err.message));
 
     // 8. Track quizzes_taken stat (fire-and-forget, non-blocking)
     userStatsModel.incrementQuizzesTaken(userId).catch(err =>
@@ -175,13 +176,13 @@ router.put('/:id', async (req, res, next) => {
 
     // Update daily topic metrics if context is available
     if (userId && classCode && topicId && numQuestions) {
-      await quizModel.updateTopicMetrics({
+      quizModel.updateTopicMetrics({
         userId,
         classCode,
         topicId,
         questionsAsked: numQuestions,
         score,
-      });
+      }).catch(err => console.warn('[QuizGen] ⚠️ Stats update failed (non-critical):', err.message));
     }
 
     res.json({ success: true, quiz: updated });
