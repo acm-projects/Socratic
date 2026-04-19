@@ -19,8 +19,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            set -e
             cd ~/backend
-            git pull origin backend
-            npm install
-            cd backend && npm install && cd ..
+            git fetch origin backend
+            git reset --hard origin/backend
+            cd backend && npm install --legacy-peer-deps
             pm2 restart server
