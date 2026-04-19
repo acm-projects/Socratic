@@ -20,6 +20,16 @@ const quizOutputSchema = z.object({
 
 const parser = StructuredOutputParser.fromZodSchema(quizOutputSchema);
 
+// ADD THIS after: const parser = StructuredOutputParser.fromZodSchema(quizOutputSchema);
+
+const cleanAndParse = (text) => {
+  let cleaned = text.replace(/```json|```/g, '').trim();
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start === -1 || end === -1) throw new Error('No JSON object found in LLM response');
+  return JSON.parse(cleaned.slice(start, end + 1));
+};
+
 function getQuizGeneratorChain() {
   // Primary
   const primaryLLM = new ChatGoogleGenerativeAI({
@@ -63,11 +73,32 @@ function getQuizGeneratorChain() {
     4. Provide the exact text of the correct answer in the correct_answer field.
     5. Provide a concise explanation for the correct answer based on the context.
     6. Do NOT include phrases like "According to the context". State questions as objective facts based on the provided material.
-  
+   7. IMPORTANT: Return ONLY raw JSON. No markdown, no backticks, no extra text.
     {format_instructions}
   `);
 
-  return RunnableSequence.from([prompt, llm, parser]);
+  return {
+    invoke: async (input) => {
+      const MAX_RETRIES = 3;
+      let lastError;
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          const formattedPrompt = await prompt.format(input);
+          const response = await llm.invoke(formattedPrompt);
+          const text = response.content || response.text || String(response);
+          const parsed = cleanAndParse(text);
+          if (!parsed.questions || !Array.isArray(parsed.questions)) {
+            throw new Error('Response missing questions array');
+          }
+          return parsed;
+        } catch (err) {
+          lastError = err;
+          console.warn(`[QuizService] Attempt ${attempt}/${MAX_RETRIES} failed: ${err.message}`);
+        }
+      }
+      throw lastError;
+    }
+  };
 }
 
 module.exports = {
