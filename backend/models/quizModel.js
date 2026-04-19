@@ -110,8 +110,17 @@ const updateQuizScore = async (quizId, score, isRetake = false) => {
   return result.rows[0] || null;
 };
 
+/**
+ * Retrieves a single quiz by its ID.
+ */
+const getQuizById = async (id) => {
+  const result = await db.query("SELECT * FROM quizzes WHERE id = $1", [id]);
+  return result.rows[0];
+};
+
 module.exports = {
   createQuiz,
+  getQuizById,
   saveQuestions,
   getQuestionsByQuizId,
   getQuizzesByUser,

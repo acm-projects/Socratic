@@ -149,7 +149,15 @@ router.get('/:id/questions', async (req, res, next) => {
     if (!questions || questions.length === 0) {
       return res.status(404).json({ error: "Quiz not found or has no questions" });
     }
-    res.json(questions);
+
+    // Get quiz metadata for topic_id and retake_count
+    const quiz = await quizModel.getQuizById(req.params.id);
+
+    res.json({
+      questions: questions,
+      topic_id: quiz?.topic_id ?? null,
+      retake_count: quiz?.retake_count ?? 0
+    });
   } catch (error) {
     next(error);
   }
