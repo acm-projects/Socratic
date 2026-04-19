@@ -86,6 +86,7 @@ function getQuizGeneratorChain() {
           const formattedPrompt = await prompt.format(input);
           const response = await llm.invoke(formattedPrompt);
           const text = response.content || response.text || String(response);
+          console.error(`[QuizService] Raw LLM response (Attempt ${attempt}):`, text);
           const parsed = cleanAndParse(text);
           if (!parsed.questions || !Array.isArray(parsed.questions)) {
             throw new Error('Response missing questions array');

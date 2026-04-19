@@ -77,7 +77,9 @@ async function getClassVectorStore(classCode) {
     if (desc.status && desc.status.ready) { ready = true; break; }
     await new Promise(res => setTimeout(res, 3000));
   }
-  if (!ready) throw new Error('Pinecone index not ready.');
+  if (!ready) {
+    console.warn('[VectorStore] Pinecone index not ready after wait — proceeding anyway');
+  }
 
   const pineconeIndex = pinecone.Index(indexName);
   const embeddings = new GeminiEmbeddings();
@@ -116,7 +118,9 @@ async function getVectorStore(namespace = '') {
     console.log('[VectorStore] Waiting for Pinecone index to be ready...');
     await new Promise(res => setTimeout(res, 3000));
   }
-  if (!ready) throw new Error('Pinecone index not ready after 30 seconds.');
+  if (!ready) {
+    console.warn('[VectorStore] Pinecone index not ready after 30 seconds — proceeding anyway');
+  }
 
   const pineconeIndex = pinecone.Index(indexName);
   const embeddings = new GeminiEmbeddings();
