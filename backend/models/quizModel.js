@@ -18,18 +18,41 @@ const createQuiz = async (data) => {
  */
 const saveQuestions = async (quizId, questions) => {
   console.log(`[QuizModel] 💾 Saving ${questions.length} questions for Quiz: ${quizId}`);
+  console.log('[QuizModel] 🔍 Raw questions payload:', JSON.stringify(questions, null, 2));
+
   const queries = questions.map((q, index) => {
     const qId = `${quizId}-q${index}`;
-    // Type-safe serialization to prevent double-encoding or invalid JSON syntax
-    const opts = typeof q.options === 'string' ? q.options : JSON.stringify(q.options);
-    console.log(`[QuizModel] 📝 [q${index}] Question: "${q.question.substring(0, 30)}..." | Opts: ${opts.substring(0, 30)}...`);
+
+    // ENSURE options is a valid JSON string for PostgreSQL
+    let opts;
+    try {
+      if (typeof q.options === 'string') {
+        // If it's already a string, check if it's a valid JSON array
+        try {
+          JSON.parse(q.options);
+          opts = q.options; // It's valid JSON
+        } catch {
+          // It's a plain string, wrap it in an array to make it valid JSON
+          opts = JSON.stringify([q.options]);
+        }
+      } else {
+        // It's an object or array, stringify it
+        opts = JSON.stringify(q.options || []);
+      }
+    } catch (err) {
+      console.warn(`[QuizModel] ⚠️ Failed to serialize options for q${index}, defaulting to empty array.`);
+      opts = JSON.stringify([]);
+    }
+
+    console.log(`[QuizModel] 📝 [q${index}] Sanitized Opts: ${opts.substring(0, 50)}${opts.length > 50 ? '...' : ''}`);
     
     return db.query(
       `INSERT INTO quiz_questions (id, quiz_id, question, correct_answer, options, explanation) 
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [qId, quizId, q.question, q.correct_answer, opts, q.explanation]
     ).catch(err => {
-      console.error(`[QuizModel] ❌ FAILED to save question ${index}:`, err.message);
+      console.error(`[QuizModel] ❌ DATABASE ERROR on question ${index}:`, err.message);
+      console.error(`[QuizModel] ❌ Failed payload for q${index}:`, { qId, quizId, opts });
       throw err;
     });
   });
