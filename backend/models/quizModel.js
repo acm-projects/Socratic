@@ -18,11 +18,14 @@ const createQuiz = async (data) => {
 const saveQuestions = async (quizId, questions) => {
   const queries = questions.map((q, index) => {
     const qId = `${quizId}-q${index}`;
-    console.log(`[saveQuestions] q${index} options type:`, typeof q.options, '| value:', JSON.stringify(q.options));
+    // Type-safe serialization to prevent double-encoding or invalid JSON syntax
+    const opts = typeof q.options === 'string' ? q.options : JSON.stringify(q.options);
+    console.log(`[saveQuestions] q${index} opts processed:`, opts);
+    
     return db.query(
       `INSERT INTO quiz_questions (id, quiz_id, question, correct_answer, options, explanation) 
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [qId, quizId, q.question, q.correct_answer, JSON.stringify(q.options), q.explanation]
+      [qId, quizId, q.question, q.correct_answer, opts, q.explanation]
     );
   });
   await Promise.all(queries);
