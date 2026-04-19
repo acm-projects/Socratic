@@ -4,7 +4,6 @@ const getAllClasses = async () => {
   const result = await db.query("SELECT * FROM classes");
   return result.rows;
 };
-
 const getClassByCode = async (code) => {
   const result = await db.query("SELECT * FROM classes WHERE class_code = $1", [code]);
   return result.rows[0];
@@ -30,18 +29,18 @@ const createClass = async (data) => {
  * If it doesn't, creates a placeholder record.
  */
 const ensureClassExists = async (classCode, userId = null) => {
-  const existing = await getClassByCode(classCode);
+  const decoded = decodeURIComponent(classCode || '');
+  const existing = await getClassByCode(decoded);
   if (existing) return existing;
 
-  console.log(`[ClassModel] 🛠️ Auto-provisioning placeholder class: ${classCode}`);
+  console.log(`[ClassModel] 🛠️ Auto-provisioning placeholder class: ${decoded}`);
   return await createClass({
-    class_code: classCode,
+    class_code: decoded,
     subject: 'General Study',
-    name: classCode,
+    name: decoded,
     user_id: userId
   });
 };
-
 const deleteClass = async (code) => {
   // Cascading deletes to avoid foreign key violations
   await db.query("DELETE FROM tasks WHERE class_code = $1", [code]);
@@ -52,7 +51,7 @@ const deleteClass = async (code) => {
   await db.query("DELETE FROM chat_sessions WHERE class_code = $1", [code]);
   await db.query("DELETE FROM topics WHERE class_code = $1", [code]);
   await db.query("DELETE FROM syllabus_info WHERE class_code = $1", [code]);
-  
+
   // Finally delete the class
   const result = await db.query("DELETE FROM classes WHERE class_code = $1 RETURNING *", [code]);
   return result.rows[0];

@@ -10,7 +10,8 @@ const userStatsModel = require('../models/userStatsModel');
 
 router.post('/generate', async (req, res, next) => {
   try {
-    const { classCode, topic, numQuestions = 5, difficulty, easy, medium, hard, userId } = req.body;
+    const { classCode: rawClassCode, topic, numQuestions = 5, difficulty, easy, medium, hard, userId } = req.body;
+    const classCode = decodeURIComponent(rawClassCode || '');
 
     if (!classCode || !topic) {
       return res.status(400).json({ error: "Missing required fields: classCode, topic" });
