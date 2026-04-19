@@ -10,6 +10,7 @@ const { getClassVectorStore } = require('../services/vectorService');
 const { evaluateQuestion, parser, getTutorChainWithHistory } = require('../services/tutorService');
 const classModel = require('../models/classModel');
 const userStatsModel = require('../models/userStatsModel');
+const quizModel = require('../models/quizModel');
 // We no longer use chatModel; we use sessionModel and topicModel instead.
 
 router.post('/chat', async (req, res, next) => {
@@ -222,7 +223,13 @@ router.post('/chat', async (req, res, next) => {
     );
 
     // 9. Update heatmap (daily_topic_metrics)
-    userStatsModel.updateHeatmap(userId, topic.id, classCode, score).catch(err =>
+    quizModel.updateTopicMetrics({ 
+        userId, 
+        classCode, 
+        topicId: topic.id, 
+        questionsAsked: 1, 
+        score 
+    }).catch(err =>
       console.warn('[Tutor] ⚠️ Failed to update heatmap:', err.message)
     );
 
