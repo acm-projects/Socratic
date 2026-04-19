@@ -25,20 +25,18 @@ const saveQuestions = async (quizId, questions) => {
 
     let opts;
     try {
-      // If it's already a string, verify it's valid JSON
-      if (typeof q.options === 'string') {
-        JSON.parse(q.options); // test if valid
-        opts = q.options;
-      } else {
-        opts = JSON.stringify(q.options);
-      }
+      const rawOptions = typeof q.options === 'string' ? JSON.parse(q.options) : q.options;
+      // Ensure it's an array of strings
+      const safeOptions = Array.isArray(rawOptions) 
+        ? rawOptions.map(o => String(o)) 
+        : [String(rawOptions)];
+      opts = JSON.stringify(safeOptions);
     } catch (e) {
-      // If parsing fails, force it into a valid JSON array
       console.error(`[saveQuestions] Invalid options for q${index}:`, q.options);
-      opts = JSON.stringify([String(q.options)]);
+      opts = JSON.stringify(['Option A', 'Option B', 'Option C', 'Option D']);
     }
 
-    console.log(`[QuizModel] 📝 [q${index}] Final Opts for DB: ${opts.substring(0, 50)}${opts.length > 50 ? '...' : ''}`);
+    console.log(`[QuizModel] 📝 [q${index}] Final JSONB Opts: ${opts.substring(0, 50)}${opts.length > 50 ? '...' : ''}`);
     
     return db.query(
       `INSERT INTO quiz_questions (id, quiz_id, question, correct_answer, options, explanation) 

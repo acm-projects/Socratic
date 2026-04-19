@@ -23,11 +23,21 @@ const parser = StructuredOutputParser.fromZodSchema(quizOutputSchema);
 // ADD THIS after: const parser = StructuredOutputParser.fromZodSchema(quizOutputSchema);
 
 const cleanAndParse = (text) => {
-  let cleaned = text.replace(/```json|```/g, '').trim();
+  let cleaned = text
+    .replace(/```json|```/g, '')
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // strip control characters
+    .trim();
   const start = cleaned.indexOf('{');
   const end = cleaned.lastIndexOf('}');
   if (start === -1 || end === -1) throw new Error('No JSON object found in LLM response');
-  return JSON.parse(cleaned.slice(start, end + 1));
+  const jsonStr = cleaned.slice(start, end + 1);
+  try {
+    return JSON.parse(jsonStr);
+  } catch (e) {
+    // Try fixing single quotes
+    const fixed = jsonStr.replace(/'/g, '"');
+    return JSON.parse(fixed);
+  }
 };
 
 function getQuizGeneratorChain() {
