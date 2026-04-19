@@ -53,7 +53,11 @@ const getQuizzesByUser = async (userId) => {
        MAX(q.date) AS last_taken
      FROM quizzes q
      JOIN topics t ON t.id = q.topic_id
-     WHERE q.user_id = $1
+     WHERE q.user_id IN (
+       SELECT id FROM "User" WHERE email = (SELECT email FROM "User" WHERE id = $1)
+       UNION
+       SELECT $1
+     )
      GROUP BY t.id, t.name, t.class_code
      ORDER BY last_taken DESC`,
     [userId]

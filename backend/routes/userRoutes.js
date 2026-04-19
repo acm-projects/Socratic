@@ -31,8 +31,20 @@ router.get('/:id/classes', async (req, res, next) => {
          c.created_at,
          COALESCE(uc.enrolled_at, c.created_at) as enrolled_at
        FROM classes c
-       LEFT JOIN user_classes uc ON c.class_code = uc.class_code AND uc.user_id = $1
-       WHERE c.user_id = $1 OR uc.user_id = $1
+       LEFT JOIN user_classes uc ON c.class_code = uc.class_code AND uc.user_id IN (
+         SELECT id FROM "User" WHERE email = (SELECT email FROM "User" WHERE id = $1)
+         UNION
+         SELECT $1
+       )
+       WHERE c.user_id IN (
+         SELECT id FROM "User" WHERE email = (SELECT email FROM "User" WHERE id = $1)
+         UNION
+         SELECT $1
+       ) OR uc.user_id IN (
+         SELECT id FROM "User" WHERE email = (SELECT email FROM "User" WHERE id = $1)
+         UNION
+         SELECT $1
+       )
        ORDER BY enrolled_at DESC`,
       [id]
     );
@@ -60,15 +72,20 @@ router.get('/:id/quiz-overview', async (req, res, next) => {
     const userId = req.params.id
 
     const result = await db.query(
-      `SELECT c.name as class_name, c.class_code,
+      `SELECT COALESCE(c.name, 'Uncategorized') as class_name, 
+              COALESCE(c.class_code, 'N/A') as class_code,
               COUNT(q.id) as quiz_count,
               ROUND(AVG(q.score), 1) as average_score,
               MAX(q.color) as color
        FROM quizzes q
-       JOIN topics t ON t.id = q.topic_id
-       JOIN classes c ON c.class_code = t.class_code
-       WHERE q.user_id = $1
-       GROUP BY c.name, c.class_code
+       LEFT JOIN topics t ON t.id = q.topic_id
+       LEFT JOIN classes c ON c.class_code = t.class_code
+       WHERE q.user_id IN (
+         SELECT id FROM "User" WHERE email = (SELECT email FROM "User" WHERE id = $1)
+         UNION
+         SELECT $1
+       )
+       GROUP BY COALESCE(c.name, 'Uncategorized'), COALESCE(c.class_code, 'N/A')
        ORDER BY quiz_count DESC`,
       [userId]
     )
