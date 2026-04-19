@@ -129,6 +129,7 @@ router.post('/generate', async (req, res, next) => {
     );
 
     // 9. Return generated quiz data with quizId
+    console.log(`[QuizGen] 🚀 Finalizing response for Quiz: ${quizId}`);
     res.json({
       success: true,
       quizId: quizId,
@@ -136,7 +137,16 @@ router.post('/generate', async (req, res, next) => {
       sources: sources
     });
   } catch (error) {
-    next(error);
+    console.error('[QuizGen] ❌ FATAL ERROR DURING GENERATION:', error.message);
+    console.error(error.stack);
+    
+    // Send detailed error back to frontend so it can be seen in Network tab
+    res.status(500).json({ 
+      error: error.message, 
+      stack: error.stack,
+      phase: 'generation-failure',
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
