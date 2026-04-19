@@ -18,33 +18,27 @@ const createQuiz = async (data) => {
  */
 const saveQuestions = async (quizId, questions) => {
   console.log(`[QuizModel] 💾 Saving ${questions.length} questions for Quiz: ${quizId}`);
-  console.log('[QuizModel] 🔍 Raw questions payload:', JSON.stringify(questions, null, 2));
+  console.log('[saveQuestions] Raw questions from LLM:', JSON.stringify(questions, null, 2));
 
   const queries = questions.map((q, index) => {
     const qId = `${quizId}-q${index}`;
 
-    // ENSURE options is a valid JSON string for PostgreSQL
     let opts;
     try {
+      // If it's already a string, verify it's valid JSON
       if (typeof q.options === 'string') {
-        // If it's already a string, check if it's a valid JSON array
-        try {
-          JSON.parse(q.options);
-          opts = q.options; // It's valid JSON
-        } catch {
-          // It's a plain string, wrap it in an array to make it valid JSON
-          opts = JSON.stringify([q.options]);
-        }
+        JSON.parse(q.options); // test if valid
+        opts = q.options;
       } else {
-        // It's an object or array, stringify it
-        opts = JSON.stringify(q.options || []);
+        opts = JSON.stringify(q.options);
       }
-    } catch (err) {
-      console.warn(`[QuizModel] ⚠️ Failed to serialize options for q${index}, defaulting to empty array.`);
-      opts = JSON.stringify([]);
+    } catch (e) {
+      // If parsing fails, force it into a valid JSON array
+      console.error(`[saveQuestions] Invalid options for q${index}:`, q.options);
+      opts = JSON.stringify([String(q.options)]);
     }
 
-    console.log(`[QuizModel] 📝 [q${index}] Sanitized Opts: ${opts.substring(0, 50)}${opts.length > 50 ? '...' : ''}`);
+    console.log(`[QuizModel] 📝 [q${index}] Final Opts for DB: ${opts.substring(0, 50)}${opts.length > 50 ? '...' : ''}`);
     
     return db.query(
       `INSERT INTO quiz_questions (id, quiz_id, question, correct_answer, options, explanation) 
