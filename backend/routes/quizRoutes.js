@@ -10,7 +10,7 @@ const userStatsModel = require('../models/userStatsModel');
 
 router.post('/generate', async (req, res, next) => {
   try {
-    const { classCode, topic, numQuestions = 5, difficulty = ["easy", "medium"], userId } = req.body;
+    const { classCode, topic, numQuestions = 5, difficulty, easy, medium, hard, userId } = req.body;
 
     if (!classCode || !topic) {
       return res.status(400).json({ error: "Missing required fields: classCode, topic" });
@@ -18,10 +18,22 @@ router.post('/generate', async (req, res, next) => {
 
     const count = parseInt(numQuestions) || 5;
 
-    // Construct difficulty requirements based on the difficulty array
-    const selectedLevels = [];
-    const levels = Array.isArray(difficulty) ? difficulty : [];
+    // Normalize difficulty: handle both ["easy"], { easy: true }, and top-level easy/medium/hard
+    let levels = [];
+    if (Array.isArray(difficulty)) {
+      levels = difficulty;
+    } else if (typeof difficulty === 'object' && difficulty !== null) {
+      levels = Object.keys(difficulty).filter(key => difficulty[key] === true);
+    } else {
+      // Handle frontend sending easy/medium/hard as separate boolean fields
+      if (easy) levels.push("easy");
+      if (medium) levels.push("medium");
+      if (hard) levels.push("hard");
+      // Default to all three if nothing was sent
+      if (levels.length === 0) levels = ["easy", "medium", "hard"];
+    }
 
+    const selectedLevels = [];
     if (levels.includes("easy")) selectedLevels.push("Easy (Recall/Definitions)");
     if (levels.includes("medium")) selectedLevels.push("Medium (Application/Relationships)");
     if (levels.includes("hard")) selectedLevels.push("Hard (Deep Analysis/Problem-Solving)");
