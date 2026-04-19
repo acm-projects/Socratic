@@ -27,17 +27,15 @@ const saveQuestions = async (quizId, questions) => {
     try {
       const rawOptions = typeof q.options === 'string' ? JSON.parse(q.options) : q.options;
       // Ensure it's an array of strings
-      const safeOptions = Array.isArray(rawOptions) 
-        ? rawOptions.map(o => String(o)) 
+      const safeOptions = Array.isArray(rawOptions)
+        ? rawOptions.map(o => String(o))
         : [String(rawOptions)];
       opts = safeOptions; // let pg driver handle jsonb serialization
     } catch (e) {
       console.error(`[saveQuestions] Invalid options for q${index}:`, q.options);
       opts = ['Option A', 'Option B', 'Option C', 'Option D'];
     }
-
-    console.log(`[QuizModel] 📝 [q${index}] Final JSONB Opts: ${opts.substring(0, 50)}${opts.length > 50 ? '...' : ''}`);
-    
+    console.log(`[QuizModel] 📝 [q${index}] Final JSONB Opts:`, opts);
     return db.query(
       `INSERT INTO quiz_questions (id, quiz_id, question, correct_answer, options, explanation) 
        VALUES ($1, $2, $3, $4, $5, $6)`,
