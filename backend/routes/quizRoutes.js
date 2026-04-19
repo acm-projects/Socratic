@@ -150,15 +150,20 @@ router.get('/users/:id', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const { score, userId, topicId, classCode, numQuestions, isRetake = false } = req.body;
+    console.log(`[Score Update] 📡 INCOMING: ID=${req.params.id} | Score=${score} | User=${userId} | Topic=${topicId}`);
 
     if (score === undefined || score === null) {
+      console.warn(`[Score Update] ⚠️ REJECTED: Score is missing for Quiz ${req.params.id}`);
       return res.status(400).json({ error: 'score is required' });
     }
 
     const updated = await quizModel.updateQuizScore(req.params.id, score, isRetake);
     if (!updated) {
+      console.error(`[Score Update] ❌ NOT FOUND: Quiz ${req.params.id} does not exist in DB.`);
       return res.status(404).json({ error: 'Quiz not found' });
     }
+
+    console.log(`[Score Update] ✅ SUCCESS: Quiz ${req.params.id} updated to ${score}%`);
 
     // Update daily topic metrics if context is available
     if (userId && classCode && topicId && numQuestions) {
