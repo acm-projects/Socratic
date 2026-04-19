@@ -770,11 +770,6 @@ app.get("/users/:id/engagement/class-distribution", async (req, res) => {
       `SELECT ce.class_name, SUM(ce.question_count) as question_count, MAX(ce.color) as color, MAX(ce.light) as light
        FROM class_engagement ce
        WHERE ce.user_id = $1
-       AND ce.class_name IN (
-         SELECT c.name FROM classes c
-         LEFT JOIN user_classes uc ON c.class_code = uc.class_code
-         WHERE c.user_id = $1 OR uc.user_id = $1
-       )
        GROUP BY ce.class_name
        ORDER BY question_count DESC`,
       [req.params.id]
