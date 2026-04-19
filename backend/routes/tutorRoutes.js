@@ -149,6 +149,7 @@ router.post('/chat', async (req, res, next) => {
 
     // Fetch 100 chunks (Increased to cast a much wider net for implicit references). 
     const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+    console.log(`[Tutor] 📚 Pinecone search returned ${resultsWithScores.length} potential hits for class ${classCode}`);
     
     let broadContext = [];
     
@@ -200,6 +201,8 @@ router.post('/chat', async (req, res, next) => {
       },
       { configurable: { sessionId: chatId } }
     );
+
+    console.log(`[Tutor] 🧠 AI thinking complete. Response length: ${tutorRes.content?.length || tutorRes.length} chars`);
 
     const tutorDuration = ((Date.now() - tutorStartTime) / 1000).toFixed(1);
     console.log(`[Tutor] ✅ Brainstormed response in ${tutorDuration}s`);

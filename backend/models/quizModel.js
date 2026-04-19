@@ -5,6 +5,7 @@ const db = require('../db');
  */
 const createQuiz = async (data) => {
   const { id, user_id, topic_id, score = 0, color = null } = data;
+  console.log(`[QuizModel] 💾 Inserting Quiz metadata: id=${id} | user=${user_id}`);
   const result = await db.query(
     "INSERT INTO quizzes (id, user_id, topic_id, score, date, retake_count, color) VALUES ($1, $2, $3, $4, NOW(), 0, $5) RETURNING *",
     [id, user_id, topic_id, score, color]
@@ -16,19 +17,24 @@ const createQuiz = async (data) => {
  * Saves multiple questions for a specific quiz.
  */
 const saveQuestions = async (quizId, questions) => {
+  console.log(`[QuizModel] 💾 Saving ${questions.length} questions for Quiz: ${quizId}`);
   const queries = questions.map((q, index) => {
     const qId = `${quizId}-q${index}`;
     // Type-safe serialization to prevent double-encoding or invalid JSON syntax
     const opts = typeof q.options === 'string' ? q.options : JSON.stringify(q.options);
-    console.log(`[saveQuestions] q${index} opts processed:`, opts);
+    console.log(`[QuizModel] 📝 [q${index}] Question: "${q.question.substring(0, 30)}..." | Opts: ${opts.substring(0, 30)}...`);
     
     return db.query(
       `INSERT INTO quiz_questions (id, quiz_id, question, correct_answer, options, explanation) 
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [qId, quizId, q.question, q.correct_answer, opts, q.explanation]
-    );
+    ).catch(err => {
+      console.error(`[QuizModel] ❌ FAILED to save question ${index}:`, err.message);
+      throw err;
+    });
   });
   await Promise.all(queries);
+  console.log(`[QuizModel] ✅ All ${questions.length} questions saved successfully.`);
 };
 
 /**

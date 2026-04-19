@@ -44,12 +44,12 @@ router.post('/generate', async (req, res, next) => {
       : "Provide a balanced variety of difficulty levels.";
 
     // 1. Search the shared class knowledge base (populated by PDF ingest)
+    console.log(`[QuizGen] 🔍 Searching Pinecone for topic: "${topic}" in class: ${classCode}`);
     const vectorStore = await getClassVectorStore(classCode);
-
-    console.log(`[QuizGen] Querying Pinecone namespace for class: ${classCode}`);
 
     // We want broad context for the topic. Retrieve the top 8 most relevant chunks for better recall.
     const resultsWithScores = await vectorStore.similaritySearchWithScore(topic, 8);
+    console.log(`[QuizGen] 📚 Found ${resultsWithScores.length} context chunks. Top score: ${resultsWithScores[0]?.[1]?.toFixed(4) || 'N/A'}`);
 
     const context = resultsWithScores.map(([doc]) => doc.pageContent).join('\n---\n');
     const sources = resultsWithScores.map(([doc]) => ({
