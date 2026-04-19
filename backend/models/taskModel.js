@@ -14,7 +14,8 @@ const getUpcomingTasksByUserId = async (userId) => {
       ct.due_date,
       ct.completed,
       ct.completed AS is_completed,
-      ct.created_at
+      ct.created_at,
+      'task' AS entry_type
     FROM class_tasks ct
     JOIN classes c ON c.class_code = ct.class_code
     LEFT JOIN user_classes uc ON uc.class_code = c.class_code AND uc.user_id = $1

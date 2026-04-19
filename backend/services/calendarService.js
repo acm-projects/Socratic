@@ -113,6 +113,7 @@ const formatEvent = (event) => ({
   end: event.end,
   attendees: event.attendees ? event.attendees.map(a => ({ email: a.email })) : [],
   hangoutLink: event.hangoutLink || null,
+  type: 'meeting',
 });
 
 const getUpcomingMeetings = async (userId) => {
