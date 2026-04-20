@@ -14,11 +14,9 @@ useEffect(() => {
       headers: { 'x-user-id': session.user.id }
     })
       .then(res => res.json())
-      .then(data => setMeetings(Array.isArray(data) ? data : []))
+      .then(data => setMeetings(Array.isArray(data) ? data.filter(e => e.hangoutLink) : [])) //filter to only meetings (w google meets link)
       .catch(err => console.error(err));
 }, [session])
-
-
 
 
 

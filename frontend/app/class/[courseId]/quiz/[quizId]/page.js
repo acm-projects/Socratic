@@ -44,7 +44,7 @@ export default function Page() {
 
 console.log("quizId:", quizId)
   async function fetchQuiz() {
-    const res = await fetch(`/backend/quizzes/${quizId}/questions`)
+    const res = await fetch(`/backend/quizzes/${quizId}/questions`) 
     const data = await res.json()
     console.log("full quiz data:", data)  // check if topic_id is on data
     setQuizQuestions(data.questions)
@@ -126,19 +126,19 @@ async function handleFinish() {
         const numCorrect = freshScores.filter(Boolean).length
         const score = Math.round((numCorrect / quizQuestions.length) * 100)
 
-    console.log("Saving score for quizId:", quizId, "score:", score) // 👈 add here
-    console.log("freshScores:", freshScores)         // 👈 are they true/true/true?
-    console.log("score being saved:", score)          // 👈 is this 100?
+    console.log("Saving score for quizId:", quizId, "score:", score) //  add here
+    console.log("freshScores:", freshScores)         // are they true/true/true?
+    console.log("score being saved:", score)          //  is this 100?
     console.log("updated answers:", updated)
-console.log("correct answers:", quizQuestions.map(q => q.correct_answer))
-console.log("freshScores:", freshScores)
-console.log("score:", score)
+    console.log("correct answers:", quizQuestions.map(q => q.correct_answer))
+    console.log("freshScores:", freshScores)
+    console.log("score:", score)
 
 
     
 
     // save completed attempt
-    await fetch(`/backend/quizzes/${quizId}`, {
+    await fetch(`/backend/api/quizzes/${quizId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

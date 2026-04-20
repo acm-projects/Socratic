@@ -301,11 +301,20 @@ async function handleSend() {
                                         )}
                                     </div>
                                 ))}
-                                {loading && (
-    <div className="flex justify-start">
-        <div className="text-sm text-gray-400 px-4 py-2">Thinking...</div>
-    </div>
-)}
+                                                            {loading && (
+                                <div className="flex justify-start">
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex-shrink-0 w-22 h-22 flex items-center justify-center overflow-hidden">
+                                            <img
+                                                src="/icons/mascot-thinking.svg"
+                                                alt="Thinking"
+                                                className="w-full h-full object-contain animate-pulse"
+                                            />
+                                        </div>
+                                        <div className="text-md text-gray-400 px-4 py-2 animate-pulse">Thinking...</div>
+                                    </div>
+                                </div>
+                            )}
                             </div>
                         </div>
 

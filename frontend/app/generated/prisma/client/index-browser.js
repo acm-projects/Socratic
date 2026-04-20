@@ -162,15 +162,6 @@ exports.Prisma.ClassesScalarFieldEnum = {
   last_activity_date: 'last_activity_date'
 };
 
-exports.Prisma.Daily_topic_metricsScalarFieldEnum = {
-  user_id: 'user_id',
-  class_code: 'class_code',
-  topic_id: 'topic_id',
-  metric_date: 'metric_date',
-  avg_score: 'avg_score',
-  questions_asked: 'questions_asked'
-};
-
 exports.Prisma.Friend_requestsScalarFieldEnum = {
   id: 'id',
   sender_id: 'sender_id',
@@ -247,7 +238,8 @@ exports.Prisma.AccountScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   refresh_token_expires_in: 'refresh_token_expires_in',
-  updatedat: 'updatedat'
+  updatedat: 'updatedat',
+  is_approved: 'is_approved'
 };
 
 exports.Prisma.ChatsScalarFieldEnum = {
@@ -310,7 +302,8 @@ exports.Prisma.Class_tasksScalarFieldEnum = {
   class_code: 'class_code',
   task_name: 'task_name',
   due_date: 'due_date',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  completed: 'completed'
 };
 
 exports.Prisma.Course_materialsScalarFieldEnum = {
@@ -339,12 +332,31 @@ exports.Prisma.User_classesScalarFieldEnum = {
   enrolled_at: 'enrolled_at'
 };
 
+exports.Prisma.Syllabus_infoScalarFieldEnum = {
+  id: 'id',
+  class_code: 'class_code',
+  professor_name: 'professor_name',
+  professor_email: 'professor_email',
+  office_hours: 'office_hours',
+  office_location: 'office_location',
+  ta_name: 'ta_name',
+  ta_email: 'ta_email',
+  ta_office_hours: 'ta_office_hours',
+  grading_policy: 'grading_policy',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -370,7 +382,6 @@ exports.Prisma.ModelName = {
   chat_history: 'chat_history',
   chat_sessions: 'chat_sessions',
   classes: 'classes',
-  daily_topic_metrics: 'daily_topic_metrics',
   friend_requests: 'friend_requests',
   friends: 'friends',
   topics: 'topics',
@@ -387,7 +398,8 @@ exports.Prisma.ModelName = {
   class_tasks: 'class_tasks',
   course_materials: 'course_materials',
   shared_classes: 'shared_classes',
-  user_classes: 'user_classes'
+  user_classes: 'user_classes',
+  syllabus_info: 'syllabus_info'
 };
 
 /**
