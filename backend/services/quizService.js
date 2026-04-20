@@ -44,17 +44,17 @@ function getQuizGeneratorChain() {
   // Primary
   const primaryLLM = new ChatGoogleGenerativeAI({
     model: TARGET_MODEL,
-    temperature: 0.2, // Low temperature for factual consistency
+    temperature: 0.2,
     apiKey: process.env.GEMINI_API_KEY || process.env.GEMINI_RESPONSE_API,
-    maxRetries: 1,
-  });
+    maxRetries: 2,
+  }).withStructuredOutput(quizOutputSchema);
 
   const fallbackPro = new ChatGoogleGenerativeAI({
     model: "gemini-2.5-pro",
     temperature: 0.2,
     apiKey: process.env.GEMINI_API_KEY || process.env.GEMINI_RESPONSE_API,
-    maxRetries: 1,
-  });
+    maxRetries: 2,
+  }).withStructuredOutput(quizOutputSchema);
 
   const llm = primaryLLM.withFallbacks({
     fallbacks: [fallbackPro]
@@ -83,8 +83,7 @@ function getQuizGeneratorChain() {
     4. Provide the exact text of the correct answer in the correct_answer field.
     5. Provide a concise explanation for the correct answer based on the context.
     6. Do NOT include phrases like "According to the context". State questions as objective facts based on the provided material.
-   7. IMPORTANT: Return ONLY raw JSON. No markdown, no backticks, no extra text.
-    {format_instructions}
+    7. IMPORTANT: Return ONLY raw JSON. No markdown, no backticks, no extra text.
   `);
 
   return {
@@ -95,14 +94,11 @@ function getQuizGeneratorChain() {
         try {
           const formattedPrompt = await prompt.format(input);
           console.log(`[QuizService] 📤 Sending Prompt: "${formattedPrompt.substring(0, 100)}..." (${formattedPrompt.length} chars)`);
-          const response = await llm.invoke(formattedPrompt);
-          const text = response.content || response.text || String(response);
-          console.error(`[QuizService] 📥 Raw LLM response (Attempt ${attempt}):`, text);
-          const parsed = cleanAndParse(text);
-          if (!parsed.questions || !Array.isArray(parsed.questions)) {
-            throw new Error('Response missing questions array');
+          const result = await llm.invoke(formattedPrompt);
+          if (!result.questions || !Array.isArray(result.questions) || result.questions.length === 0) {
+            throw new Error('Structured output missing questions array');
           }
-          return parsed;
+          return result;
         } catch (err) {
           lastError = err;
           console.warn(`[QuizService] Attempt ${attempt}/${MAX_RETRIES} failed: ${err.message}`);

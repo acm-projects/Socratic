@@ -62,7 +62,6 @@ router.post('/generate', async (req, res, next) => {
       numQuestions: count,
       context: context,
       difficultyRequirements: difficultyRequirements,
-      format_instructions: parser.getFormatInstructions()
     });
 
     trace.checkpoints.push(`[3] AI successfully generated raw JSON.`);
@@ -80,6 +79,9 @@ router.post('/generate', async (req, res, next) => {
     trace.checkpoints.push(`[4] Quiz header saved (ID: ${quizId}).`);
 
     const questions = Array.isArray(result) ? result : (result.questions || []);
+    if (!questions || questions.length === 0) {
+      throw new Error('AI returned 0 questions.');
+    }
     await quizModel.saveQuestions(quizId, questions);
     trace.checkpoints.push(`[5] All ${questions.length} questions saved.`);
 
