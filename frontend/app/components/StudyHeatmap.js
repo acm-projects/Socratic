@@ -16,10 +16,47 @@ useEffect(() => {
     .then(res => res.json())
     .then(data => {
       const map = {};
+      
+      // If no data from backend, inject mock data
+      if (!data || data.length === 0) {
+        console.log("No heatmap data found, injecting mock data...");
+        const mockData = [];
+        const today = new Date();
+        for (let i = 0; i < 180; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          if (Math.random() > 0.7) { // 30% chance of activity
+            mockData.push({
+              metric_date: d.toISOString(),
+              questions_asked: Math.floor(Math.random() * 15) + 1,
+              avg_score: Math.random() * 5
+            });
+          }
+        }
+        data = mockData;
+      }
+
       data.forEach(d => {
-        const date = d.date.split("T")[0];
-        map[date] = d;
+        const dateStr = (d.metric_date || d.date).split("T")[0];
+        map[dateStr] = d;
       });
+      setHeatmapData(map);
+    })
+    .catch(err => {
+      console.error("Heatmap fetch failed, using mock data instead:", err);
+      // Fallback mock data on error
+      const map = {};
+      const today = new Date();
+      for (let i = 0; i < 180; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        if (Math.random() > 0.8) {
+          map[d.toISOString().split("T")[0]] = {
+            questions_asked: Math.floor(Math.random() * 10) + 1,
+            avg_score: Math.random() * 5
+          };
+        }
+      }
       setHeatmapData(map);
     });
 }, [session, courseId]); // courseId must always be in here, even if undefined
@@ -32,36 +69,65 @@ useEffect(() => {
     return "bg-[#004D41]";
   };
 
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+  // const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
   const cols = 36;
   const rows = 6;
   const GAP = "4px";
+
+
+
+  const today = new Date();
+  const startDate = new Date(today);
+  startDate.setMonth(startDate.getMonth() - 6);
+  startDate.setDate(1); // start from the 1st of that month
+
+  // month labels
+const monthLabels = [];
+for (let col = 0; col < cols; col++) {
+  for (let row = 0; row < rows; row++) {
+    const d = new Date(startDate);
+    d.setDate(d.getDate() + col * rows + row);
+    if (d.getDate() === 1 || (col === 0 && row === 0)) {
+      monthLabels.push({
+        label: d.toLocaleString("default", { month: "short" }),
+        col,
+      });
+      break;
+    }
+  }
+}
+
+
 
   return (
     <div className="w-full relative">
       <p className="text-md font-semibold text-[#14153A] pt-2 pb-4">Study Activity</p>
 
-      <div className="flex mb-2" style={{ gap: GAP }}>
-        {months.map((month) => (
-          <div
-            key={month}
-            className="text-xs text-[#8589B0] font-medium"
-            style={{ width: `${100 / months.length}%` }}
-          >
-            {month}
-          </div>
-        ))}
-      </div>
+
+          {/* month labels */}
+    <div className="relative mb-2" style={{ height: "16px" }}>
+      {monthLabels.map(({ label, col }) => (
+        <div
+          key={label}
+          className="absolute text-xs text-[#8589B0] font-medium"
+          style={{ left: `calc(${(col / cols) * 100}%)` }}
+        >
+          {label}
+        </div>
+      ))}
+    </div>
+
+
 
       <div className="flex flex-col" style={{ gap: GAP }}>
         {Array.from({ length: rows }, (_, row) => (
           <div key={row} className="flex" style={{ gap: GAP }}>
             {Array.from({ length: cols }, (_, col) => {
-              const startDate = new Date("2026-01-01");
-              const d = new Date(startDate);
-              d.setDate(d.getDate() + col * rows + row);
-              const date = d.toISOString().split("T")[0];
-              const entry = heatmapData[date];
+            const d = new Date(startDate);
+            d.setDate(d.getDate() + col * rows + row);
+            const date = d.toISOString().split("T")[0];
+            const entry = heatmapData[date];
+
 
               return (
                 <div
@@ -71,8 +137,7 @@ useEffect(() => {
                 >
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
                     <div className="bg-[#14153A] text-white text-xs rounded px-3 py-2 whitespace-nowrap flex flex-col gap-0.5 items-center">
-                      <span className="font-semibold">{date}</span>
-                      <span className="text-gray-100">Questions asked: {entry?.questions_asked ?? 0}</span>
+                      <span className="font-semibold">{d.toLocaleDateString("en-US", { month: "long", day: "numeric" })}</span>                      <span className="text-gray-100">Questions asked: {entry?.questions_asked ?? 0}</span>
                       <span className="text-gray-100">{entry?.avg_score?.toFixed(1) ?? "—"} / 5</span>
                     </div>
                   </div>

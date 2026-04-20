@@ -85,15 +85,15 @@ router.post('/generate', async (req, res, next) => {
 
     // 4. Finalizing
     trace.step = 'FINALIZING';
-    quizModel.updateTopicMetrics({ userId, classCode, topicId: topicEntity.id, questionsAsked: questions.length, score: 0 }).catch(() => {});
-    userStatsModel.incrementQuizzesTaken(userId).catch(() => {});
+
+    userStatsModel.incrementQuizzesTaken(userId).catch(() => { });
 
     console.log(`[QuizGen] 🚀 Finalizing response for Quiz: ${quizId}`);
     res.json({ success: true, quizId: quizId, data: result, sources: sources });
   } catch (error) {
     console.error('[QuizGen] ❌ FATAL ERROR:', error.message);
-    res.status(500).json({ 
-      error: error.message, 
+    res.status(500).json({
+      error: error.message,
       stack: error.stack,
       diagnostics: {
         phase: trace.step,
@@ -172,7 +172,7 @@ router.put('/:id', async (req, res, next) => {
         classCode,
         topicId,
         questionsAsked: numQuestions,
-        score,
+        score: score != null ? parseFloat((score / 20).toFixed(2)) : null,
       }).catch(err => console.warn('[QuizGen] ⚠️ Stats update failed (non-critical):', err.message));
     }
 

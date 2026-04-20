@@ -67,7 +67,7 @@ const updateHeatmap = async (userId, topicId, classCode, score) => {
     await db.query(
       `INSERT INTO daily_topic_metrics (user_id, topic_id, class_code, metric_date, questions_asked, avg_score)
        VALUES ($1, $2, $3, $4, 1, $5)
-       ON CONFLICT (user_id, topic_id, metric_date)
+       ON CONFLICT (user_id, class_code, topic_id, metric_date)
        DO UPDATE SET
          questions_asked = daily_topic_metrics.questions_asked + 1,
          avg_score = CASE
