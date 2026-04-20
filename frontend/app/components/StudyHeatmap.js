@@ -9,8 +9,8 @@ export default function StudyHeatmap({ courseId }) {
 useEffect(() => {
   if (!session) return;
   const url = courseId
-    ? `/backend/classes/${courseId}/metrics?user_id=${session.user.id}&days=180`
-    : `/backend/users/${session.user.id}/metrics?days=180`;
+    ? `/backend/classes/${courseId}/metrics?user_id=${session.user.id}&days=243`
+    : `/backend/users/${session.user.id}/metrics?days=243`;
 
   fetch(url)
     .then(res => res.json())
@@ -18,8 +18,11 @@ useEffect(() => {
       const map = {};
       data.forEach(d => {
         const date = d.date.split("T")[0];
+
         map[date] = d;
       });
+        console.log("heatmap keys:", Object.keys(map)) // <-- here
+
       setHeatmapData(map);
     });
 }, [session, courseId]); // courseId must always be in here, even if undefined
@@ -88,16 +91,33 @@ for (let col = 0; col < cols; col++) {
             {Array.from({ length: cols }, (_, col) => {
             const d = new Date(startDate);
             d.setDate(d.getDate() + col * rows + row);
-            const date = d.toISOString().split("T")[0];
+            // const date = d.toISOString().split("T")[0];
+            const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
             const entry = heatmapData[date];
 
 
               return (
-                <div
+                // <div
+                //   key={col}
+                //   className={`flex-1 aspect-square ${getColor(entry?.avg_score)} transition-colors duration-500 cursor-pointer relative group`}
+                //   style={{ borderRadius: "2px" }}
+                // >
+
+                  <div
                   key={col}
-                  className={`flex-1 aspect-square ${getColor(entry?.avg_score)} transition-colors duration-500 cursor-pointer relative group`}
-                  style={{ borderRadius: "2px" }}
+                  className={`flex-1 aspect-square ${getColor(entry?.avg_score)} transition-colors duration-500 cursor-pointer relative group animate-fadeIn`}
+                  style={{ 
+                    borderRadius: "2px",
+                    animationDelay: `${(col * rows + row) * 3}ms`,
+                    animationFillMode: "both"
+                  }}
                 >
+
+          
+  
+
+
+
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none">
                     <div className="bg-[#14153A] text-white text-xs rounded px-3 py-2 whitespace-nowrap flex flex-col gap-0.5 items-center">
                       <span className="font-semibold">{d.toLocaleDateString("en-US", { month: "long", day: "numeric" })}</span>                      <span className="text-gray-100">Questions asked: {entry?.questions_asked ?? 0}</span>

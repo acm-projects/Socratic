@@ -5,14 +5,34 @@ import { useSession } from "next-auth/react"
 
 export default function UpcomingTasks({ tasks, onToggle, classInfo }) {
     const { data: session } = useSession();
+
+
+
   const toggle = async (task) => {
     const newCompleted = !task.completed
+
     
     onToggle?.(task.id, newCompleted)
 
+
+
     try {
-      const res = await fetch(`http://3.128.186.118:5000/api/users/${task.user_id}/tasks/${task.id}`, {
-        method: "PATCH",
+
+                    if (!session?.user?.id) {
+      console.error('No user session');
+      return;
+    }
+    if (!task?.id) {
+      console.error('No task ID');
+      return;
+    }
+
+
+
+
+
+const res = await fetch(`/backend/api/users/${task.user_id}/tasks/${task.id}`, {
+          method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completed: newCompleted })
       })

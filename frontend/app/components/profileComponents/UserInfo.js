@@ -3,7 +3,7 @@ import { useState } from "react"
 import { signOut } from 'next-auth/react'
 import { Pen, LogOut } from 'lucide-react'
 
-export default function UserInfoCard({ name, email, school, major, classStatus }) {
+export default function UserInfoCard({ name, email, school, major, classStatus, profilePic }) {
   const [isEditing, setIsEditing] = useState(false)
 
   return (
@@ -12,7 +12,19 @@ export default function UserInfoCard({ name, email, school, major, classStatus }
       {/* pfp, Name, Edit */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full bg-[#D0E8E4] shrink-0" />
+          {/* <div className="w-12 h-12 rounded-full bg-[#D0E8E4] shrink-0" /> */}
+
+              {profilePic ? (
+              <img 
+                  src={profilePic}
+                  alt={name}
+                  referrerPolicy="no-referrer"
+                  className="w-12 h-12 rounded-full object-cover opacity-80 shrink-0"
+              />
+          ) : (
+              <div className="w-12 h-12 rounded-full bg-[#D0E8E4] shrink-0" />
+          )}
+
           <div className="min-w-0">
             <p className="text-base font-bold text-[#141f1d] truncate">{name}</p>
             <p className="text-sm text-[#90aba7] truncate">{email}</p>

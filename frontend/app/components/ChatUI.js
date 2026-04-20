@@ -25,6 +25,7 @@ useEffect(() => {
         .then(res => res.json())
         .then(data => {
             console.log("raw sessions:", data)
+
             const formatted = data
                 .filter(s => s.class_code === classCode)
                 .map(s => ({
@@ -33,10 +34,13 @@ useEffect(() => {
                 }))
                     .filter((chat, index, self) => 
         index === self.findIndex(c => c.id === chat.id)  // remove duplicates
+
     )
     .reverse()
 
             setChats(formatted)  // just replace entirely, don't append
+                    console.log("duplicate check:", formatted.map(c => c.id))
+
         })
         .catch(err => console.error(err))
 }, [session])
@@ -191,10 +195,17 @@ async function handleSend() {
                 {sidebarOpen && (
                     <div className="flex-1 overflow-y-auto flex flex-col gap-1 px-3 min-h-0">
                         <p className="text-xs text-gray-400 mb-1 flex-shrink-0">Recents</p>
-                        {chats.map(chat => (
-                            <button
-                                key={chat.id}
-                                onClick={() => loadChat(chat.id)}
+
+                        {chats.map((chat, index) => (
+                        <button
+                            key={`${chat.id}-${index}`}
+                            onClick={() => loadChat(chat.id)}
+
+                        
+                        // {chats.map(chat => (
+                        //     <button
+                        //         key={chat.id}
+                        //         onClick={() => loadChat(chat.id)}
                                 className={`
                                     text-left text-xs px-3 py-2 rounded-lg truncate
                                     transition-colors w-full flex-shrink-0

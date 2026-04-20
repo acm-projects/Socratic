@@ -24,16 +24,25 @@ export default function ExperienceChart() {
   fetch(`/backend/users/${session.user.id}/xp-history?group_by=month`)
     .then(res => res.json())
     .then(data => {
-      const months = []
-      for (let i = 5; i >= 0; i--) {
-        const d = new Date()
-        d.setMonth(d.getMonth() - i)
-        const label = d.toLocaleDateString('en-US', { month: 'short' })
-        const found = data.find(c => c.month === label)
-        months.push({ month: label, total_xp: found ? found.total_xp : 0 })
-      }
-      setData(months)
-      console.log("xp history:", months)
+    const months = []
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date()
+      d.setMonth(d.getMonth() - i)
+      const label = d.toLocaleDateString('en-US', { month: 'short' })
+      const found = data.find(c => c.month === label)
+      months.push({ month: label, total_xp: found ? found.total_xp : 0 })
+    }
+
+      // accumulate XP so each month shows running total
+  let cumulative = 0
+  const accumulated = months.map(m => {
+    cumulative += m.total_xp
+    return { ...m, total_xp: cumulative }
+  })
+
+
+      setData(accumulated)
+      console.log("xp history:", accumulated)
     })
     .catch(err => console.error(err))
 }, [session])

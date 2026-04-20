@@ -40,41 +40,10 @@ export default function QuizModal({ onClose, courseId, preselectedTopic }) {
     }, [courseId, preselectedTopic])
 
 
-//   async function handleStartQuiz() {
-//       console.log("handleStartQuiz called", { session: session?.user?.id, topic, courseId })
-
-//     if (!session?.user?.id) return
-//     if (!topic) return
-
-//     const difficulty = []
-//     if (easy) difficulty.push("easy")
-//     if (medium) difficulty.push("medium")
-//     if (hard) difficulty.push("hard") 
-    
-//     const res = await fetch("/backend/api/quizzes/generate",
-//        {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({  
-//         classCode: courseId,
-//         topic: topic,
-//         numQuestions: questions,
-//         easy: easy,
-//         medium: medium,
-//         hard: hard, 
-//         userId : session.user.id
-
-//       })
-//     })
-
-//     const quizData = await res.json()
-//     console.log("quiz:", quizData)
-//     const quizId = quizData.quizId
-//     onClose()
-//     router.push(`/class/${courseId}/quiz/${quizId}`)
-// }
-
+ 
 async function handleStartQuiz() {
+      if (!session?.user?.id) return  // add this
+
  setIsGenerating(true) //start loading
 try {
     const res = await fetch("/backend/api/quizzes/generate", {
@@ -88,8 +57,17 @@ try {
             medium: medium,
             hard: hard, 
             userId: session.user.id
+
         })
     })
+
+    if (!res.ok) {
+    const text = await res.text()
+    console.error("Server error:", res.status, text)  // this will show the actual HTML error
+    setIsGenerating(false)
+    return
+}
+
     const quizData = await res.json()
     console.log("quiz:", quizData)
     const quizId = quizData.quizId
@@ -101,7 +79,40 @@ try {
 }
 }
 
-
+// async function handleStartQuiz() {
+//     if (!session?.user?.id) return
+//     setIsGenerating(true)
+    
+//     const payload = {
+//         classCode: courseId,
+//         topic: topic,
+//         numQuestions: questions,
+//         easy: easy,
+//         medium: medium,
+//         hard: hard,
+//         userId: session.user.id
+//     }
+//     console.log("sending payload:", payload)
+    
+//     try {
+//         const res = await fetch("/backend/api/quizzes/generate", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(payload)
+//         })
+//         console.log("response status:", res.status)
+//         const text = await res.text()
+//         console.log("raw response:", text)
+//         const quizData = JSON.parse(text)
+//         console.log("quiz:", quizData)
+//         const quizId = quizData.quizId
+//         onClose()
+//         router.push(`/class/${courseId}/quiz/${quizId}`)
+//     } catch (err) {
+//         console.error("Quiz error:", err)
+//         setIsGenerating(false)
+//     }
+// }
 
 
 

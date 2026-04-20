@@ -34,6 +34,11 @@ export type chat_sessions = $Result.DefaultSelection<Prisma.$chat_sessionsPayloa
  */
 export type classes = $Result.DefaultSelection<Prisma.$classesPayload>
 /**
+ * Model daily_topic_metrics
+ * 
+ */
+export type daily_topic_metrics = $Result.DefaultSelection<Prisma.$daily_topic_metricsPayload>
+/**
  * Model friend_requests
  * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
  */
@@ -284,6 +289,16 @@ export class PrismaClient<
     * ```
     */
   get classes(): Prisma.classesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.daily_topic_metrics`: Exposes CRUD operations for the **daily_topic_metrics** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Daily_topic_metrics
+    * const daily_topic_metrics = await prisma.daily_topic_metrics.findMany()
+    * ```
+    */
+  get daily_topic_metrics(): Prisma.daily_topic_metricsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.friend_requests`: Exposes CRUD operations for the **friend_requests** model.
@@ -902,6 +917,7 @@ export namespace Prisma {
     chat_history: 'chat_history',
     chat_sessions: 'chat_sessions',
     classes: 'classes',
+    daily_topic_metrics: 'daily_topic_metrics',
     friend_requests: 'friend_requests',
     friends: 'friends',
     topics: 'topics',
@@ -935,7 +951,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "achievements" | "chat_history" | "chat_sessions" | "classes" | "friend_requests" | "friends" | "topics" | "user_achievements" | "xp_system" | "user" | "account" | "chats" | "langchain_chat_messages" | "messages" | "quiz_questions" | "quizzes" | "class_engagement" | "class_tasks" | "course_materials" | "shared_classes" | "user_classes" | "syllabus_info"
+      modelProps: "achievements" | "chat_history" | "chat_sessions" | "classes" | "daily_topic_metrics" | "friend_requests" | "friends" | "topics" | "user_achievements" | "xp_system" | "user" | "account" | "chats" | "langchain_chat_messages" | "messages" | "quiz_questions" | "quizzes" | "class_engagement" | "class_tasks" | "course_materials" | "shared_classes" | "user_classes" | "syllabus_info"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1232,6 +1248,80 @@ export namespace Prisma {
           count: {
             args: Prisma.classesCountArgs<ExtArgs>
             result: $Utils.Optional<ClassesCountAggregateOutputType> | number
+          }
+        }
+      }
+      daily_topic_metrics: {
+        payload: Prisma.$daily_topic_metricsPayload<ExtArgs>
+        fields: Prisma.daily_topic_metricsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.daily_topic_metricsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.daily_topic_metricsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>
+          }
+          findFirst: {
+            args: Prisma.daily_topic_metricsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.daily_topic_metricsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>
+          }
+          findMany: {
+            args: Prisma.daily_topic_metricsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>[]
+          }
+          create: {
+            args: Prisma.daily_topic_metricsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>
+          }
+          createMany: {
+            args: Prisma.daily_topic_metricsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.daily_topic_metricsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>[]
+          }
+          delete: {
+            args: Prisma.daily_topic_metricsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>
+          }
+          update: {
+            args: Prisma.daily_topic_metricsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>
+          }
+          deleteMany: {
+            args: Prisma.daily_topic_metricsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.daily_topic_metricsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.daily_topic_metricsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>[]
+          }
+          upsert: {
+            args: Prisma.daily_topic_metricsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$daily_topic_metricsPayload>
+          }
+          aggregate: {
+            args: Prisma.Daily_topic_metricsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDaily_topic_metrics>
+          }
+          groupBy: {
+            args: Prisma.daily_topic_metricsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Daily_topic_metricsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.daily_topic_metricsCountArgs<ExtArgs>
+            result: $Utils.Optional<Daily_topic_metricsCountAggregateOutputType> | number
           }
         }
       }
@@ -2679,6 +2769,7 @@ export namespace Prisma {
     chat_history?: chat_historyOmit
     chat_sessions?: chat_sessionsOmit
     classes?: classesOmit
+    daily_topic_metrics?: daily_topic_metricsOmit
     friend_requests?: friend_requestsOmit
     friends?: friendsOmit
     topics?: topicsOmit
@@ -2842,6 +2933,7 @@ export namespace Prisma {
     chat_sessions: number
     class_tasks: number
     course_materials: number
+    daily_topic_metrics: number
     topics: number
     user_classes: number
   }
@@ -2850,6 +2942,7 @@ export namespace Prisma {
     chat_sessions?: boolean | ClassesCountOutputTypeCountChat_sessionsArgs
     class_tasks?: boolean | ClassesCountOutputTypeCountClass_tasksArgs
     course_materials?: boolean | ClassesCountOutputTypeCountCourse_materialsArgs
+    daily_topic_metrics?: boolean | ClassesCountOutputTypeCountDaily_topic_metricsArgs
     topics?: boolean | ClassesCountOutputTypeCountTopicsArgs
     user_classes?: boolean | ClassesCountOutputTypeCountUser_classesArgs
   }
@@ -2889,6 +2982,13 @@ export namespace Prisma {
   /**
    * ClassesCountOutputType without action
    */
+  export type ClassesCountOutputTypeCountDaily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: daily_topic_metricsWhereInput
+  }
+
+  /**
+   * ClassesCountOutputType without action
+   */
   export type ClassesCountOutputTypeCountTopicsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: topicsWhereInput
   }
@@ -2907,10 +3007,12 @@ export namespace Prisma {
 
   export type TopicsCountOutputType = {
     chat_sessions: number
+    daily_topic_metrics: number
   }
 
   export type TopicsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_sessions?: boolean | TopicsCountOutputTypeCountChat_sessionsArgs
+    daily_topic_metrics?: boolean | TopicsCountOutputTypeCountDaily_topic_metricsArgs
   }
 
   // Custom InputTypes
@@ -2931,6 +3033,13 @@ export namespace Prisma {
     where?: chat_sessionsWhereInput
   }
 
+  /**
+   * TopicsCountOutputType without action
+   */
+  export type TopicsCountOutputTypeCountDaily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: daily_topic_metricsWhereInput
+  }
+
 
   /**
    * Count Type UserCountOutputType
@@ -2940,6 +3049,7 @@ export namespace Prisma {
     Account: number
     chat_sessions: number
     class_engagement: number
+    daily_topic_metrics: number
     friend_requests_friend_requests_receiver_idTousers: number
     friend_requests_friend_requests_sender_idTousers: number
     friends_friends_friend_idTousers: number
@@ -2953,6 +3063,7 @@ export namespace Prisma {
     Account?: boolean | UserCountOutputTypeCountAccountArgs
     chat_sessions?: boolean | UserCountOutputTypeCountChat_sessionsArgs
     class_engagement?: boolean | UserCountOutputTypeCountClass_engagementArgs
+    daily_topic_metrics?: boolean | UserCountOutputTypeCountDaily_topic_metricsArgs
     friend_requests_friend_requests_receiver_idTousers?: boolean | UserCountOutputTypeCountFriend_requests_friend_requests_receiver_idTousersArgs
     friend_requests_friend_requests_sender_idTousers?: boolean | UserCountOutputTypeCountFriend_requests_friend_requests_sender_idTousersArgs
     friends_friends_friend_idTousers?: boolean | UserCountOutputTypeCountFriends_friends_friend_idTousersArgs
@@ -2992,6 +3103,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountClass_engagementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: class_engagementWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDaily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: daily_topic_metricsWhereInput
   }
 
   /**
@@ -6741,6 +6859,7 @@ export namespace Prisma {
     chat_sessions?: boolean | classes$chat_sessionsArgs<ExtArgs>
     class_tasks?: boolean | classes$class_tasksArgs<ExtArgs>
     course_materials?: boolean | classes$course_materialsArgs<ExtArgs>
+    daily_topic_metrics?: boolean | classes$daily_topic_metricsArgs<ExtArgs>
     syllabus_info?: boolean | classes$syllabus_infoArgs<ExtArgs>
     topics?: boolean | classes$topicsArgs<ExtArgs>
     user_classes?: boolean | classes$user_classesArgs<ExtArgs>
@@ -6785,6 +6904,7 @@ export namespace Prisma {
     chat_sessions?: boolean | classes$chat_sessionsArgs<ExtArgs>
     class_tasks?: boolean | classes$class_tasksArgs<ExtArgs>
     course_materials?: boolean | classes$course_materialsArgs<ExtArgs>
+    daily_topic_metrics?: boolean | classes$daily_topic_metricsArgs<ExtArgs>
     syllabus_info?: boolean | classes$syllabus_infoArgs<ExtArgs>
     topics?: boolean | classes$topicsArgs<ExtArgs>
     user_classes?: boolean | classes$user_classesArgs<ExtArgs>
@@ -6799,6 +6919,7 @@ export namespace Prisma {
       chat_sessions: Prisma.$chat_sessionsPayload<ExtArgs>[]
       class_tasks: Prisma.$class_tasksPayload<ExtArgs>[]
       course_materials: Prisma.$course_materialsPayload<ExtArgs>[]
+      daily_topic_metrics: Prisma.$daily_topic_metricsPayload<ExtArgs>[]
       syllabus_info: Prisma.$syllabus_infoPayload<ExtArgs> | null
       topics: Prisma.$topicsPayload<ExtArgs>[]
       user_classes: Prisma.$user_classesPayload<ExtArgs>[]
@@ -7209,6 +7330,7 @@ export namespace Prisma {
     chat_sessions<T extends classes$chat_sessionsArgs<ExtArgs> = {}>(args?: Subset<T, classes$chat_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_sessionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     class_tasks<T extends classes$class_tasksArgs<ExtArgs> = {}>(args?: Subset<T, classes$class_tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_tasksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     course_materials<T extends classes$course_materialsArgs<ExtArgs> = {}>(args?: Subset<T, classes$course_materialsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_materialsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    daily_topic_metrics<T extends classes$daily_topic_metricsArgs<ExtArgs> = {}>(args?: Subset<T, classes$daily_topic_metricsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     syllabus_info<T extends classes$syllabus_infoArgs<ExtArgs> = {}>(args?: Subset<T, classes$syllabus_infoArgs<ExtArgs>>): Prisma__syllabus_infoClient<$Result.GetResult<Prisma.$syllabus_infoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     topics<T extends classes$topicsArgs<ExtArgs> = {}>(args?: Subset<T, classes$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$topicsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user_classes<T extends classes$user_classesArgs<ExtArgs> = {}>(args?: Subset<T, classes$user_classesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_classesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7714,6 +7836,30 @@ export namespace Prisma {
   }
 
   /**
+   * classes.daily_topic_metrics
+   */
+  export type classes$daily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    where?: daily_topic_metricsWhereInput
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    cursor?: daily_topic_metricsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Daily_topic_metricsScalarFieldEnum | Daily_topic_metricsScalarFieldEnum[]
+  }
+
+  /**
    * classes.syllabus_info
    */
   export type classes$syllabus_infoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7796,6 +7942,1155 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: classesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model daily_topic_metrics
+   */
+
+  export type AggregateDaily_topic_metrics = {
+    _count: Daily_topic_metricsCountAggregateOutputType | null
+    _avg: Daily_topic_metricsAvgAggregateOutputType | null
+    _sum: Daily_topic_metricsSumAggregateOutputType | null
+    _min: Daily_topic_metricsMinAggregateOutputType | null
+    _max: Daily_topic_metricsMaxAggregateOutputType | null
+  }
+
+  export type Daily_topic_metricsAvgAggregateOutputType = {
+    avg_score: Decimal | null
+    questions_asked: number | null
+  }
+
+  export type Daily_topic_metricsSumAggregateOutputType = {
+    avg_score: Decimal | null
+    questions_asked: number | null
+  }
+
+  export type Daily_topic_metricsMinAggregateOutputType = {
+    user_id: string | null
+    class_code: string | null
+    topic_id: string | null
+    metric_date: Date | null
+    avg_score: Decimal | null
+    questions_asked: number | null
+  }
+
+  export type Daily_topic_metricsMaxAggregateOutputType = {
+    user_id: string | null
+    class_code: string | null
+    topic_id: string | null
+    metric_date: Date | null
+    avg_score: Decimal | null
+    questions_asked: number | null
+  }
+
+  export type Daily_topic_metricsCountAggregateOutputType = {
+    user_id: number
+    class_code: number
+    topic_id: number
+    metric_date: number
+    avg_score: number
+    questions_asked: number
+    _all: number
+  }
+
+
+  export type Daily_topic_metricsAvgAggregateInputType = {
+    avg_score?: true
+    questions_asked?: true
+  }
+
+  export type Daily_topic_metricsSumAggregateInputType = {
+    avg_score?: true
+    questions_asked?: true
+  }
+
+  export type Daily_topic_metricsMinAggregateInputType = {
+    user_id?: true
+    class_code?: true
+    topic_id?: true
+    metric_date?: true
+    avg_score?: true
+    questions_asked?: true
+  }
+
+  export type Daily_topic_metricsMaxAggregateInputType = {
+    user_id?: true
+    class_code?: true
+    topic_id?: true
+    metric_date?: true
+    avg_score?: true
+    questions_asked?: true
+  }
+
+  export type Daily_topic_metricsCountAggregateInputType = {
+    user_id?: true
+    class_code?: true
+    topic_id?: true
+    metric_date?: true
+    avg_score?: true
+    questions_asked?: true
+    _all?: true
+  }
+
+  export type Daily_topic_metricsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which daily_topic_metrics to aggregate.
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of daily_topic_metrics to fetch.
+     */
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: daily_topic_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` daily_topic_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` daily_topic_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned daily_topic_metrics
+    **/
+    _count?: true | Daily_topic_metricsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Daily_topic_metricsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Daily_topic_metricsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Daily_topic_metricsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Daily_topic_metricsMaxAggregateInputType
+  }
+
+  export type GetDaily_topic_metricsAggregateType<T extends Daily_topic_metricsAggregateArgs> = {
+        [P in keyof T & keyof AggregateDaily_topic_metrics]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDaily_topic_metrics[P]>
+      : GetScalarType<T[P], AggregateDaily_topic_metrics[P]>
+  }
+
+
+
+
+  export type daily_topic_metricsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: daily_topic_metricsWhereInput
+    orderBy?: daily_topic_metricsOrderByWithAggregationInput | daily_topic_metricsOrderByWithAggregationInput[]
+    by: Daily_topic_metricsScalarFieldEnum[] | Daily_topic_metricsScalarFieldEnum
+    having?: daily_topic_metricsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Daily_topic_metricsCountAggregateInputType | true
+    _avg?: Daily_topic_metricsAvgAggregateInputType
+    _sum?: Daily_topic_metricsSumAggregateInputType
+    _min?: Daily_topic_metricsMinAggregateInputType
+    _max?: Daily_topic_metricsMaxAggregateInputType
+  }
+
+  export type Daily_topic_metricsGroupByOutputType = {
+    user_id: string
+    class_code: string
+    topic_id: string | null
+    metric_date: Date
+    avg_score: Decimal | null
+    questions_asked: number | null
+    _count: Daily_topic_metricsCountAggregateOutputType | null
+    _avg: Daily_topic_metricsAvgAggregateOutputType | null
+    _sum: Daily_topic_metricsSumAggregateOutputType | null
+    _min: Daily_topic_metricsMinAggregateOutputType | null
+    _max: Daily_topic_metricsMaxAggregateOutputType | null
+  }
+
+  type GetDaily_topic_metricsGroupByPayload<T extends daily_topic_metricsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Daily_topic_metricsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Daily_topic_metricsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Daily_topic_metricsGroupByOutputType[P]>
+            : GetScalarType<T[P], Daily_topic_metricsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type daily_topic_metricsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    user_id?: boolean
+    class_code?: boolean
+    topic_id?: boolean
+    metric_date?: boolean
+    avg_score?: boolean
+    questions_asked?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    topics?: boolean | daily_topic_metrics$topicsArgs<ExtArgs>
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["daily_topic_metrics"]>
+
+  export type daily_topic_metricsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    user_id?: boolean
+    class_code?: boolean
+    topic_id?: boolean
+    metric_date?: boolean
+    avg_score?: boolean
+    questions_asked?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    topics?: boolean | daily_topic_metrics$topicsArgs<ExtArgs>
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["daily_topic_metrics"]>
+
+  export type daily_topic_metricsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    user_id?: boolean
+    class_code?: boolean
+    topic_id?: boolean
+    metric_date?: boolean
+    avg_score?: boolean
+    questions_asked?: boolean
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    topics?: boolean | daily_topic_metrics$topicsArgs<ExtArgs>
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["daily_topic_metrics"]>
+
+  export type daily_topic_metricsSelectScalar = {
+    user_id?: boolean
+    class_code?: boolean
+    topic_id?: boolean
+    metric_date?: boolean
+    avg_score?: boolean
+    questions_asked?: boolean
+  }
+
+  export type daily_topic_metricsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "class_code" | "topic_id" | "metric_date" | "avg_score" | "questions_asked", ExtArgs["result"]["daily_topic_metrics"]>
+  export type daily_topic_metricsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    topics?: boolean | daily_topic_metrics$topicsArgs<ExtArgs>
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type daily_topic_metricsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    topics?: boolean | daily_topic_metrics$topicsArgs<ExtArgs>
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type daily_topic_metricsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    classes?: boolean | classesDefaultArgs<ExtArgs>
+    topics?: boolean | daily_topic_metrics$topicsArgs<ExtArgs>
+    users?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $daily_topic_metricsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "daily_topic_metrics"
+    objects: {
+      classes: Prisma.$classesPayload<ExtArgs>
+      topics: Prisma.$topicsPayload<ExtArgs> | null
+      users: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      user_id: string
+      class_code: string
+      topic_id: string | null
+      metric_date: Date
+      avg_score: Prisma.Decimal | null
+      questions_asked: number | null
+    }, ExtArgs["result"]["daily_topic_metrics"]>
+    composites: {}
+  }
+
+  type daily_topic_metricsGetPayload<S extends boolean | null | undefined | daily_topic_metricsDefaultArgs> = $Result.GetResult<Prisma.$daily_topic_metricsPayload, S>
+
+  type daily_topic_metricsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<daily_topic_metricsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Daily_topic_metricsCountAggregateInputType | true
+    }
+
+  export interface daily_topic_metricsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['daily_topic_metrics'], meta: { name: 'daily_topic_metrics' } }
+    /**
+     * Find zero or one Daily_topic_metrics that matches the filter.
+     * @param {daily_topic_metricsFindUniqueArgs} args - Arguments to find a Daily_topic_metrics
+     * @example
+     * // Get one Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends daily_topic_metricsFindUniqueArgs>(args: SelectSubset<T, daily_topic_metricsFindUniqueArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Daily_topic_metrics that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {daily_topic_metricsFindUniqueOrThrowArgs} args - Arguments to find a Daily_topic_metrics
+     * @example
+     * // Get one Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends daily_topic_metricsFindUniqueOrThrowArgs>(args: SelectSubset<T, daily_topic_metricsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Daily_topic_metrics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {daily_topic_metricsFindFirstArgs} args - Arguments to find a Daily_topic_metrics
+     * @example
+     * // Get one Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends daily_topic_metricsFindFirstArgs>(args?: SelectSubset<T, daily_topic_metricsFindFirstArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Daily_topic_metrics that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {daily_topic_metricsFindFirstOrThrowArgs} args - Arguments to find a Daily_topic_metrics
+     * @example
+     * // Get one Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends daily_topic_metricsFindFirstOrThrowArgs>(args?: SelectSubset<T, daily_topic_metricsFindFirstOrThrowArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Daily_topic_metrics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {daily_topic_metricsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.findMany()
+     * 
+     * // Get first 10 Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.findMany({ take: 10 })
+     * 
+     * // Only select the `user_id`
+     * const daily_topic_metricsWithUser_idOnly = await prisma.daily_topic_metrics.findMany({ select: { user_id: true } })
+     * 
+     */
+    findMany<T extends daily_topic_metricsFindManyArgs>(args?: SelectSubset<T, daily_topic_metricsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Daily_topic_metrics.
+     * @param {daily_topic_metricsCreateArgs} args - Arguments to create a Daily_topic_metrics.
+     * @example
+     * // Create one Daily_topic_metrics
+     * const Daily_topic_metrics = await prisma.daily_topic_metrics.create({
+     *   data: {
+     *     // ... data to create a Daily_topic_metrics
+     *   }
+     * })
+     * 
+     */
+    create<T extends daily_topic_metricsCreateArgs>(args: SelectSubset<T, daily_topic_metricsCreateArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Daily_topic_metrics.
+     * @param {daily_topic_metricsCreateManyArgs} args - Arguments to create many Daily_topic_metrics.
+     * @example
+     * // Create many Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends daily_topic_metricsCreateManyArgs>(args?: SelectSubset<T, daily_topic_metricsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Daily_topic_metrics and returns the data saved in the database.
+     * @param {daily_topic_metricsCreateManyAndReturnArgs} args - Arguments to create many Daily_topic_metrics.
+     * @example
+     * // Create many Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Daily_topic_metrics and only return the `user_id`
+     * const daily_topic_metricsWithUser_idOnly = await prisma.daily_topic_metrics.createManyAndReturn({
+     *   select: { user_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends daily_topic_metricsCreateManyAndReturnArgs>(args?: SelectSubset<T, daily_topic_metricsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Daily_topic_metrics.
+     * @param {daily_topic_metricsDeleteArgs} args - Arguments to delete one Daily_topic_metrics.
+     * @example
+     * // Delete one Daily_topic_metrics
+     * const Daily_topic_metrics = await prisma.daily_topic_metrics.delete({
+     *   where: {
+     *     // ... filter to delete one Daily_topic_metrics
+     *   }
+     * })
+     * 
+     */
+    delete<T extends daily_topic_metricsDeleteArgs>(args: SelectSubset<T, daily_topic_metricsDeleteArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Daily_topic_metrics.
+     * @param {daily_topic_metricsUpdateArgs} args - Arguments to update one Daily_topic_metrics.
+     * @example
+     * // Update one Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends daily_topic_metricsUpdateArgs>(args: SelectSubset<T, daily_topic_metricsUpdateArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Daily_topic_metrics.
+     * @param {daily_topic_metricsDeleteManyArgs} args - Arguments to filter Daily_topic_metrics to delete.
+     * @example
+     * // Delete a few Daily_topic_metrics
+     * const { count } = await prisma.daily_topic_metrics.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends daily_topic_metricsDeleteManyArgs>(args?: SelectSubset<T, daily_topic_metricsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Daily_topic_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {daily_topic_metricsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends daily_topic_metricsUpdateManyArgs>(args: SelectSubset<T, daily_topic_metricsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Daily_topic_metrics and returns the data updated in the database.
+     * @param {daily_topic_metricsUpdateManyAndReturnArgs} args - Arguments to update many Daily_topic_metrics.
+     * @example
+     * // Update many Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Daily_topic_metrics and only return the `user_id`
+     * const daily_topic_metricsWithUser_idOnly = await prisma.daily_topic_metrics.updateManyAndReturn({
+     *   select: { user_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends daily_topic_metricsUpdateManyAndReturnArgs>(args: SelectSubset<T, daily_topic_metricsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Daily_topic_metrics.
+     * @param {daily_topic_metricsUpsertArgs} args - Arguments to update or create a Daily_topic_metrics.
+     * @example
+     * // Update or create a Daily_topic_metrics
+     * const daily_topic_metrics = await prisma.daily_topic_metrics.upsert({
+     *   create: {
+     *     // ... data to create a Daily_topic_metrics
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Daily_topic_metrics we want to update
+     *   }
+     * })
+     */
+    upsert<T extends daily_topic_metricsUpsertArgs>(args: SelectSubset<T, daily_topic_metricsUpsertArgs<ExtArgs>>): Prisma__daily_topic_metricsClient<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Daily_topic_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {daily_topic_metricsCountArgs} args - Arguments to filter Daily_topic_metrics to count.
+     * @example
+     * // Count the number of Daily_topic_metrics
+     * const count = await prisma.daily_topic_metrics.count({
+     *   where: {
+     *     // ... the filter for the Daily_topic_metrics we want to count
+     *   }
+     * })
+    **/
+    count<T extends daily_topic_metricsCountArgs>(
+      args?: Subset<T, daily_topic_metricsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Daily_topic_metricsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Daily_topic_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Daily_topic_metricsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Daily_topic_metricsAggregateArgs>(args: Subset<T, Daily_topic_metricsAggregateArgs>): Prisma.PrismaPromise<GetDaily_topic_metricsAggregateType<T>>
+
+    /**
+     * Group by Daily_topic_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {daily_topic_metricsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends daily_topic_metricsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: daily_topic_metricsGroupByArgs['orderBy'] }
+        : { orderBy?: daily_topic_metricsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, daily_topic_metricsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDaily_topic_metricsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the daily_topic_metrics model
+   */
+  readonly fields: daily_topic_metricsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for daily_topic_metrics.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__daily_topic_metricsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    classes<T extends classesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, classesDefaultArgs<ExtArgs>>): Prisma__classesClient<$Result.GetResult<Prisma.$classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    topics<T extends daily_topic_metrics$topicsArgs<ExtArgs> = {}>(args?: Subset<T, daily_topic_metrics$topicsArgs<ExtArgs>>): Prisma__topicsClient<$Result.GetResult<Prisma.$topicsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    users<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the daily_topic_metrics model
+   */
+  interface daily_topic_metricsFieldRefs {
+    readonly user_id: FieldRef<"daily_topic_metrics", 'String'>
+    readonly class_code: FieldRef<"daily_topic_metrics", 'String'>
+    readonly topic_id: FieldRef<"daily_topic_metrics", 'String'>
+    readonly metric_date: FieldRef<"daily_topic_metrics", 'DateTime'>
+    readonly avg_score: FieldRef<"daily_topic_metrics", 'Decimal'>
+    readonly questions_asked: FieldRef<"daily_topic_metrics", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * daily_topic_metrics findUnique
+   */
+  export type daily_topic_metricsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which daily_topic_metrics to fetch.
+     */
+    where: daily_topic_metricsWhereUniqueInput
+  }
+
+  /**
+   * daily_topic_metrics findUniqueOrThrow
+   */
+  export type daily_topic_metricsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which daily_topic_metrics to fetch.
+     */
+    where: daily_topic_metricsWhereUniqueInput
+  }
+
+  /**
+   * daily_topic_metrics findFirst
+   */
+  export type daily_topic_metricsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which daily_topic_metrics to fetch.
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of daily_topic_metrics to fetch.
+     */
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for daily_topic_metrics.
+     */
+    cursor?: daily_topic_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` daily_topic_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` daily_topic_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of daily_topic_metrics.
+     */
+    distinct?: Daily_topic_metricsScalarFieldEnum | Daily_topic_metricsScalarFieldEnum[]
+  }
+
+  /**
+   * daily_topic_metrics findFirstOrThrow
+   */
+  export type daily_topic_metricsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which daily_topic_metrics to fetch.
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of daily_topic_metrics to fetch.
+     */
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for daily_topic_metrics.
+     */
+    cursor?: daily_topic_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` daily_topic_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` daily_topic_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of daily_topic_metrics.
+     */
+    distinct?: Daily_topic_metricsScalarFieldEnum | Daily_topic_metricsScalarFieldEnum[]
+  }
+
+  /**
+   * daily_topic_metrics findMany
+   */
+  export type daily_topic_metricsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which daily_topic_metrics to fetch.
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of daily_topic_metrics to fetch.
+     */
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing daily_topic_metrics.
+     */
+    cursor?: daily_topic_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` daily_topic_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` daily_topic_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of daily_topic_metrics.
+     */
+    distinct?: Daily_topic_metricsScalarFieldEnum | Daily_topic_metricsScalarFieldEnum[]
+  }
+
+  /**
+   * daily_topic_metrics create
+   */
+  export type daily_topic_metricsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a daily_topic_metrics.
+     */
+    data: XOR<daily_topic_metricsCreateInput, daily_topic_metricsUncheckedCreateInput>
+  }
+
+  /**
+   * daily_topic_metrics createMany
+   */
+  export type daily_topic_metricsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many daily_topic_metrics.
+     */
+    data: daily_topic_metricsCreateManyInput | daily_topic_metricsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * daily_topic_metrics createManyAndReturn
+   */
+  export type daily_topic_metricsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * The data used to create many daily_topic_metrics.
+     */
+    data: daily_topic_metricsCreateManyInput | daily_topic_metricsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * daily_topic_metrics update
+   */
+  export type daily_topic_metricsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a daily_topic_metrics.
+     */
+    data: XOR<daily_topic_metricsUpdateInput, daily_topic_metricsUncheckedUpdateInput>
+    /**
+     * Choose, which daily_topic_metrics to update.
+     */
+    where: daily_topic_metricsWhereUniqueInput
+  }
+
+  /**
+   * daily_topic_metrics updateMany
+   */
+  export type daily_topic_metricsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update daily_topic_metrics.
+     */
+    data: XOR<daily_topic_metricsUpdateManyMutationInput, daily_topic_metricsUncheckedUpdateManyInput>
+    /**
+     * Filter which daily_topic_metrics to update
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * Limit how many daily_topic_metrics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * daily_topic_metrics updateManyAndReturn
+   */
+  export type daily_topic_metricsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * The data used to update daily_topic_metrics.
+     */
+    data: XOR<daily_topic_metricsUpdateManyMutationInput, daily_topic_metricsUncheckedUpdateManyInput>
+    /**
+     * Filter which daily_topic_metrics to update
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * Limit how many daily_topic_metrics to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * daily_topic_metrics upsert
+   */
+  export type daily_topic_metricsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the daily_topic_metrics to update in case it exists.
+     */
+    where: daily_topic_metricsWhereUniqueInput
+    /**
+     * In case the daily_topic_metrics found by the `where` argument doesn't exist, create a new daily_topic_metrics with this data.
+     */
+    create: XOR<daily_topic_metricsCreateInput, daily_topic_metricsUncheckedCreateInput>
+    /**
+     * In case the daily_topic_metrics was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<daily_topic_metricsUpdateInput, daily_topic_metricsUncheckedUpdateInput>
+  }
+
+  /**
+   * daily_topic_metrics delete
+   */
+  export type daily_topic_metricsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    /**
+     * Filter which daily_topic_metrics to delete.
+     */
+    where: daily_topic_metricsWhereUniqueInput
+  }
+
+  /**
+   * daily_topic_metrics deleteMany
+   */
+  export type daily_topic_metricsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which daily_topic_metrics to delete
+     */
+    where?: daily_topic_metricsWhereInput
+    /**
+     * Limit how many daily_topic_metrics to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * daily_topic_metrics.topics
+   */
+  export type daily_topic_metrics$topicsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the topics
+     */
+    select?: topicsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the topics
+     */
+    omit?: topicsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: topicsInclude<ExtArgs> | null
+    where?: topicsWhereInput
+  }
+
+  /**
+   * daily_topic_metrics without action
+   */
+  export type daily_topic_metricsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
   }
 
 
@@ -10167,6 +11462,7 @@ export namespace Prisma {
     class_code?: boolean
     name?: boolean
     chat_sessions?: boolean | topics$chat_sessionsArgs<ExtArgs>
+    daily_topic_metrics?: boolean | topics$daily_topic_metricsArgs<ExtArgs>
     classes?: boolean | classesDefaultArgs<ExtArgs>
     _count?: boolean | TopicsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["topics"]>
@@ -10194,6 +11490,7 @@ export namespace Prisma {
   export type topicsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "class_code" | "name", ExtArgs["result"]["topics"]>
   export type topicsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chat_sessions?: boolean | topics$chat_sessionsArgs<ExtArgs>
+    daily_topic_metrics?: boolean | topics$daily_topic_metricsArgs<ExtArgs>
     classes?: boolean | classesDefaultArgs<ExtArgs>
     _count?: boolean | TopicsCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -10208,6 +11505,7 @@ export namespace Prisma {
     name: "topics"
     objects: {
       chat_sessions: Prisma.$chat_sessionsPayload<ExtArgs>[]
+      daily_topic_metrics: Prisma.$daily_topic_metricsPayload<ExtArgs>[]
       classes: Prisma.$classesPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -10609,6 +11907,7 @@ export namespace Prisma {
   export interface Prisma__topicsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chat_sessions<T extends topics$chat_sessionsArgs<ExtArgs> = {}>(args?: Subset<T, topics$chat_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_sessionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    daily_topic_metrics<T extends topics$daily_topic_metricsArgs<ExtArgs> = {}>(args?: Subset<T, topics$daily_topic_metricsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     classes<T extends classesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, classesDefaultArgs<ExtArgs>>): Prisma__classesClient<$Result.GetResult<Prisma.$classesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -11064,6 +12363,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Chat_sessionsScalarFieldEnum | Chat_sessionsScalarFieldEnum[]
+  }
+
+  /**
+   * topics.daily_topic_metrics
+   */
+  export type topics$daily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    where?: daily_topic_metricsWhereInput
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    cursor?: daily_topic_metricsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Daily_topic_metricsScalarFieldEnum | Daily_topic_metricsScalarFieldEnum[]
   }
 
   /**
@@ -13560,6 +14883,7 @@ export namespace Prisma {
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
     class_engagement?: boolean | User$class_engagementArgs<ExtArgs>
+    daily_topic_metrics?: boolean | User$daily_topic_metricsArgs<ExtArgs>
     friend_requests_friend_requests_receiver_idTousers?: boolean | User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs>
     friend_requests_friend_requests_sender_idTousers?: boolean | User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs>
     friends_friends_friend_idTousers?: boolean | User$friends_friends_friend_idTousersArgs<ExtArgs>
@@ -13641,6 +14965,7 @@ export namespace Prisma {
     Account?: boolean | User$AccountArgs<ExtArgs>
     chat_sessions?: boolean | User$chat_sessionsArgs<ExtArgs>
     class_engagement?: boolean | User$class_engagementArgs<ExtArgs>
+    daily_topic_metrics?: boolean | User$daily_topic_metricsArgs<ExtArgs>
     friend_requests_friend_requests_receiver_idTousers?: boolean | User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs>
     friend_requests_friend_requests_sender_idTousers?: boolean | User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs>
     friends_friends_friend_idTousers?: boolean | User$friends_friends_friend_idTousersArgs<ExtArgs>
@@ -13659,6 +14984,7 @@ export namespace Prisma {
       Account: Prisma.$AccountPayload<ExtArgs>[]
       chat_sessions: Prisma.$chat_sessionsPayload<ExtArgs>[]
       class_engagement: Prisma.$class_engagementPayload<ExtArgs>[]
+      daily_topic_metrics: Prisma.$daily_topic_metricsPayload<ExtArgs>[]
       friend_requests_friend_requests_receiver_idTousers: Prisma.$friend_requestsPayload<ExtArgs>[]
       friend_requests_friend_requests_sender_idTousers: Prisma.$friend_requestsPayload<ExtArgs>[]
       friends_friends_friend_idTousers: Prisma.$friendsPayload<ExtArgs>[]
@@ -14084,6 +15410,7 @@ export namespace Prisma {
     Account<T extends User$AccountArgs<ExtArgs> = {}>(args?: Subset<T, User$AccountArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chat_sessions<T extends User$chat_sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chat_sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$chat_sessionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     class_engagement<T extends User$class_engagementArgs<ExtArgs> = {}>(args?: Subset<T, User$class_engagementArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$class_engagementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    daily_topic_metrics<T extends User$daily_topic_metricsArgs<ExtArgs> = {}>(args?: Subset<T, User$daily_topic_metricsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$daily_topic_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friend_requests_friend_requests_receiver_idTousers<T extends User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friend_requests_friend_requests_receiver_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friend_requestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friend_requests_friend_requests_sender_idTousers<T extends User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friend_requests_friend_requests_sender_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friend_requestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     friends_friends_friend_idTousers<T extends User$friends_friends_friend_idTousersArgs<ExtArgs> = {}>(args?: Subset<T, User$friends_friends_friend_idTousersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$friendsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -14601,6 +15928,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Class_engagementScalarFieldEnum | Class_engagementScalarFieldEnum[]
+  }
+
+  /**
+   * User.daily_topic_metrics
+   */
+  export type User$daily_topic_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the daily_topic_metrics
+     */
+    select?: daily_topic_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the daily_topic_metrics
+     */
+    omit?: daily_topic_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: daily_topic_metricsInclude<ExtArgs> | null
+    where?: daily_topic_metricsWhereInput
+    orderBy?: daily_topic_metricsOrderByWithRelationInput | daily_topic_metricsOrderByWithRelationInput[]
+    cursor?: daily_topic_metricsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Daily_topic_metricsScalarFieldEnum | Daily_topic_metricsScalarFieldEnum[]
   }
 
   /**
@@ -19473,7 +20824,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct: boolean | null
     depth_score: number | null
-    options: JsonValue | null
+    options: string[]
     explanation: string | null
     _count: Quiz_questionsCountAggregateOutputType | null
     _avg: Quiz_questionsAvgAggregateOutputType | null
@@ -19571,7 +20922,7 @@ export namespace Prisma {
       correct_answer: string
       is_correct: boolean | null
       depth_score: number | null
-      options: Prisma.JsonValue | null
+      options: string[]
       explanation: string | null
     }, ExtArgs["result"]["quiz_questions"]>
     composites: {}
@@ -20004,7 +21355,7 @@ export namespace Prisma {
     readonly correct_answer: FieldRef<"quiz_questions", 'String'>
     readonly is_correct: FieldRef<"quiz_questions", 'Boolean'>
     readonly depth_score: FieldRef<"quiz_questions", 'Int'>
-    readonly options: FieldRef<"quiz_questions", 'Json'>
+    readonly options: FieldRef<"quiz_questions", 'String[]'>
     readonly explanation: FieldRef<"quiz_questions", 'String'>
   }
     
@@ -28128,6 +29479,18 @@ export namespace Prisma {
   export type ClassesScalarFieldEnum = (typeof ClassesScalarFieldEnum)[keyof typeof ClassesScalarFieldEnum]
 
 
+  export const Daily_topic_metricsScalarFieldEnum: {
+    user_id: 'user_id',
+    class_code: 'class_code',
+    topic_id: 'topic_id',
+    metric_date: 'metric_date',
+    avg_score: 'avg_score',
+    questions_asked: 'questions_asked'
+  };
+
+  export type Daily_topic_metricsScalarFieldEnum = (typeof Daily_topic_metricsScalarFieldEnum)[keyof typeof Daily_topic_metricsScalarFieldEnum]
+
+
   export const Friend_requestsScalarFieldEnum: {
     id: 'id',
     sender_id: 'sender_id',
@@ -28462,6 +29825,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
    * Reference to a field of type 'BigInt'
    */
   export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
@@ -28741,6 +30118,7 @@ export namespace Prisma {
     chat_sessions?: Chat_sessionsListRelationFilter
     class_tasks?: Class_tasksListRelationFilter
     course_materials?: Course_materialsListRelationFilter
+    daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     syllabus_info?: XOR<Syllabus_infoNullableScalarRelationFilter, syllabus_infoWhereInput> | null
     topics?: TopicsListRelationFilter
     user_classes?: User_classesListRelationFilter
@@ -28758,6 +30136,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
     class_tasks?: class_tasksOrderByRelationAggregateInput
     course_materials?: course_materialsOrderByRelationAggregateInput
+    daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
     syllabus_info?: syllabus_infoOrderByWithRelationInput
     topics?: topicsOrderByRelationAggregateInput
     user_classes?: user_classesOrderByRelationAggregateInput
@@ -28778,6 +30157,7 @@ export namespace Prisma {
     chat_sessions?: Chat_sessionsListRelationFilter
     class_tasks?: Class_tasksListRelationFilter
     course_materials?: Course_materialsListRelationFilter
+    daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     syllabus_info?: XOR<Syllabus_infoNullableScalarRelationFilter, syllabus_infoWhereInput> | null
     topics?: TopicsListRelationFilter
     user_classes?: User_classesListRelationFilter
@@ -28811,6 +30191,75 @@ export namespace Prisma {
     syllabus_url?: StringNullableWithAggregatesFilter<"classes"> | string | null
     streak?: IntNullableWithAggregatesFilter<"classes"> | number | null
     last_activity_date?: DateTimeNullableWithAggregatesFilter<"classes"> | Date | string | null
+  }
+
+  export type daily_topic_metricsWhereInput = {
+    AND?: daily_topic_metricsWhereInput | daily_topic_metricsWhereInput[]
+    OR?: daily_topic_metricsWhereInput[]
+    NOT?: daily_topic_metricsWhereInput | daily_topic_metricsWhereInput[]
+    user_id?: StringFilter<"daily_topic_metrics"> | string
+    class_code?: StringFilter<"daily_topic_metrics"> | string
+    topic_id?: StringNullableFilter<"daily_topic_metrics"> | string | null
+    metric_date?: DateTimeFilter<"daily_topic_metrics"> | Date | string
+    avg_score?: DecimalNullableFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableFilter<"daily_topic_metrics"> | number | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+    topics?: XOR<TopicsNullableScalarRelationFilter, topicsWhereInput> | null
+    users?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type daily_topic_metricsOrderByWithRelationInput = {
+    user_id?: SortOrder
+    class_code?: SortOrder
+    topic_id?: SortOrderInput | SortOrder
+    metric_date?: SortOrder
+    avg_score?: SortOrderInput | SortOrder
+    questions_asked?: SortOrderInput | SortOrder
+    classes?: classesOrderByWithRelationInput
+    topics?: topicsOrderByWithRelationInput
+    users?: UserOrderByWithRelationInput
+  }
+
+  export type daily_topic_metricsWhereUniqueInput = Prisma.AtLeast<{
+    user_id_class_code_metric_date?: daily_topic_metricsUser_idClass_codeMetric_dateCompoundUniqueInput
+    AND?: daily_topic_metricsWhereInput | daily_topic_metricsWhereInput[]
+    OR?: daily_topic_metricsWhereInput[]
+    NOT?: daily_topic_metricsWhereInput | daily_topic_metricsWhereInput[]
+    user_id?: StringFilter<"daily_topic_metrics"> | string
+    class_code?: StringFilter<"daily_topic_metrics"> | string
+    topic_id?: StringNullableFilter<"daily_topic_metrics"> | string | null
+    metric_date?: DateTimeFilter<"daily_topic_metrics"> | Date | string
+    avg_score?: DecimalNullableFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableFilter<"daily_topic_metrics"> | number | null
+    classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
+    topics?: XOR<TopicsNullableScalarRelationFilter, topicsWhereInput> | null
+    users?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "user_id_class_code_metric_date">
+
+  export type daily_topic_metricsOrderByWithAggregationInput = {
+    user_id?: SortOrder
+    class_code?: SortOrder
+    topic_id?: SortOrderInput | SortOrder
+    metric_date?: SortOrder
+    avg_score?: SortOrderInput | SortOrder
+    questions_asked?: SortOrderInput | SortOrder
+    _count?: daily_topic_metricsCountOrderByAggregateInput
+    _avg?: daily_topic_metricsAvgOrderByAggregateInput
+    _max?: daily_topic_metricsMaxOrderByAggregateInput
+    _min?: daily_topic_metricsMinOrderByAggregateInput
+    _sum?: daily_topic_metricsSumOrderByAggregateInput
+  }
+
+  export type daily_topic_metricsScalarWhereWithAggregatesInput = {
+    AND?: daily_topic_metricsScalarWhereWithAggregatesInput | daily_topic_metricsScalarWhereWithAggregatesInput[]
+    OR?: daily_topic_metricsScalarWhereWithAggregatesInput[]
+    NOT?: daily_topic_metricsScalarWhereWithAggregatesInput | daily_topic_metricsScalarWhereWithAggregatesInput[]
+    user_id?: StringWithAggregatesFilter<"daily_topic_metrics"> | string
+    class_code?: StringWithAggregatesFilter<"daily_topic_metrics"> | string
+    topic_id?: StringNullableWithAggregatesFilter<"daily_topic_metrics"> | string | null
+    metric_date?: DateTimeWithAggregatesFilter<"daily_topic_metrics"> | Date | string
+    avg_score?: DecimalNullableWithAggregatesFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableWithAggregatesFilter<"daily_topic_metrics"> | number | null
   }
 
   export type friend_requestsWhereInput = {
@@ -28955,6 +30404,7 @@ export namespace Prisma {
     class_code?: StringFilter<"topics"> | string
     name?: StringFilter<"topics"> | string
     chat_sessions?: Chat_sessionsListRelationFilter
+    daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
   }
 
@@ -28963,6 +30413,7 @@ export namespace Prisma {
     class_code?: SortOrder
     name?: SortOrder
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
+    daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
     classes?: classesOrderByWithRelationInput
   }
 
@@ -28974,6 +30425,7 @@ export namespace Prisma {
     class_code?: StringFilter<"topics"> | string
     name?: StringFilter<"topics"> | string
     chat_sessions?: Chat_sessionsListRelationFilter
+    daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     classes?: XOR<ClassesScalarRelationFilter, classesWhereInput>
   }, "id">
 
@@ -29127,6 +30579,7 @@ export namespace Prisma {
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
     class_engagement?: Class_engagementListRelationFilter
+    daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     friend_requests_friend_requests_receiver_idTousers?: Friend_requestsListRelationFilter
     friend_requests_friend_requests_sender_idTousers?: Friend_requestsListRelationFilter
     friends_friends_friend_idTousers?: FriendsListRelationFilter
@@ -29159,6 +30612,7 @@ export namespace Prisma {
     Account?: AccountOrderByRelationAggregateInput
     chat_sessions?: chat_sessionsOrderByRelationAggregateInput
     class_engagement?: class_engagementOrderByRelationAggregateInput
+    daily_topic_metrics?: daily_topic_metricsOrderByRelationAggregateInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsOrderByRelationAggregateInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsOrderByRelationAggregateInput
     friends_friends_friend_idTousers?: friendsOrderByRelationAggregateInput
@@ -29194,6 +30648,7 @@ export namespace Prisma {
     Account?: AccountListRelationFilter
     chat_sessions?: Chat_sessionsListRelationFilter
     class_engagement?: Class_engagementListRelationFilter
+    daily_topic_metrics?: Daily_topic_metricsListRelationFilter
     friend_requests_friend_requests_receiver_idTousers?: Friend_requestsListRelationFilter
     friend_requests_friend_requests_sender_idTousers?: Friend_requestsListRelationFilter
     friends_friends_friend_idTousers?: FriendsListRelationFilter
@@ -29542,7 +30997,7 @@ export namespace Prisma {
     correct_answer?: StringFilter<"quiz_questions"> | string
     is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableFilter<"quiz_questions"> | number | null
-    options?: JsonNullableFilter<"quiz_questions">
+    options?: StringNullableListFilter<"quiz_questions">
     explanation?: StringNullableFilter<"quiz_questions"> | string | null
     quizzes?: XOR<QuizzesScalarRelationFilter, quizzesWhereInput>
   }
@@ -29555,7 +31010,7 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrderInput | SortOrder
     depth_score?: SortOrderInput | SortOrder
-    options?: SortOrderInput | SortOrder
+    options?: SortOrder
     explanation?: SortOrderInput | SortOrder
     quizzes?: quizzesOrderByWithRelationInput
   }
@@ -29571,7 +31026,7 @@ export namespace Prisma {
     correct_answer?: StringFilter<"quiz_questions"> | string
     is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableFilter<"quiz_questions"> | number | null
-    options?: JsonNullableFilter<"quiz_questions">
+    options?: StringNullableListFilter<"quiz_questions">
     explanation?: StringNullableFilter<"quiz_questions"> | string | null
     quizzes?: XOR<QuizzesScalarRelationFilter, quizzesWhereInput>
   }, "id">
@@ -29584,7 +31039,7 @@ export namespace Prisma {
     correct_answer?: SortOrder
     is_correct?: SortOrderInput | SortOrder
     depth_score?: SortOrderInput | SortOrder
-    options?: SortOrderInput | SortOrder
+    options?: SortOrder
     explanation?: SortOrderInput | SortOrder
     _count?: quiz_questionsCountOrderByAggregateInput
     _avg?: quiz_questionsAvgOrderByAggregateInput
@@ -29604,7 +31059,7 @@ export namespace Prisma {
     correct_answer?: StringWithAggregatesFilter<"quiz_questions"> | string
     is_correct?: BoolNullableWithAggregatesFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableWithAggregatesFilter<"quiz_questions"> | number | null
-    options?: JsonNullableWithAggregatesFilter<"quiz_questions">
+    options?: StringNullableListFilter<"quiz_questions">
     explanation?: StringNullableWithAggregatesFilter<"quiz_questions"> | string | null
   }
 
@@ -30298,6 +31753,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
     user_classes?: user_classesCreateNestedManyWithoutClassesInput
@@ -30315,6 +31771,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
     user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
@@ -30332,6 +31789,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUpdateManyWithoutClassesNestedInput
@@ -30349,6 +31807,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
@@ -30385,6 +31844,66 @@ export namespace Prisma {
     syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
     streak?: NullableIntFieldUpdateOperationsInput | number | null
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type daily_topic_metricsCreateInput = {
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+    classes: classesCreateNestedOneWithoutDaily_topic_metricsInput
+    topics?: topicsCreateNestedOneWithoutDaily_topic_metricsInput
+    users: UserCreateNestedOneWithoutDaily_topic_metricsInput
+  }
+
+  export type daily_topic_metricsUncheckedCreateInput = {
+    user_id: string
+    class_code: string
+    topic_id?: string | null
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+  }
+
+  export type daily_topic_metricsUpdateInput = {
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+    classes?: classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
+    topics?: topicsUpdateOneWithoutDaily_topic_metricsNestedInput
+    users?: UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
+  }
+
+  export type daily_topic_metricsUncheckedUpdateInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    topic_id?: NullableStringFieldUpdateOperationsInput | string | null
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type daily_topic_metricsCreateManyInput = {
+    user_id: string
+    class_code: string
+    topic_id?: string | null
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+  }
+
+  export type daily_topic_metricsUpdateManyMutationInput = {
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type daily_topic_metricsUncheckedUpdateManyInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    topic_id?: NullableStringFieldUpdateOperationsInput | string | null
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friend_requestsCreateInput = {
@@ -30520,6 +32039,7 @@ export namespace Prisma {
     id: string
     name: string
     chat_sessions?: chat_sessionsCreateNestedManyWithoutTopicsInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutTopicsInput
     classes: classesCreateNestedOneWithoutTopicsInput
   }
 
@@ -30528,12 +32048,14 @@ export namespace Prisma {
     class_code: string
     name: string
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutTopicsInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutTopicsInput
   }
 
   export type topicsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     chat_sessions?: chat_sessionsUpdateManyWithoutTopicsNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutTopicsNestedInput
     classes?: classesUpdateOneRequiredWithoutTopicsNestedInput
   }
 
@@ -30542,6 +32064,7 @@ export namespace Prisma {
     class_code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutTopicsNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutTopicsNestedInput
   }
 
   export type topicsCreateManyInput = {
@@ -30679,6 +32202,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -30711,6 +32235,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -30743,6 +32268,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -30775,6 +32301,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -31147,7 +32674,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsCreateoptionsInput | string[]
     explanation?: string | null
     quizzes: quizzesCreateNestedOneWithoutQuiz_questionsInput
   }
@@ -31160,7 +32687,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsCreateoptionsInput | string[]
     explanation?: string | null
   }
 
@@ -31171,7 +32698,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     quizzes?: quizzesUpdateOneRequiredWithoutQuiz_questionsNestedInput
   }
@@ -31184,7 +32711,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -31196,7 +32723,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsCreateoptionsInput | string[]
     explanation?: string | null
   }
 
@@ -31207,7 +32734,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -31219,7 +32746,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -31994,6 +33521,12 @@ export namespace Prisma {
     none?: course_materialsWhereInput
   }
 
+  export type Daily_topic_metricsListRelationFilter = {
+    every?: daily_topic_metricsWhereInput
+    some?: daily_topic_metricsWhereInput
+    none?: daily_topic_metricsWhereInput
+  }
+
   export type Syllabus_infoNullableScalarRelationFilter = {
     is?: syllabus_infoWhereInput | null
     isNot?: syllabus_infoWhereInput | null
@@ -32020,6 +33553,10 @@ export namespace Prisma {
   }
 
   export type course_materialsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type daily_topic_metricsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32070,6 +33607,106 @@ export namespace Prisma {
 
   export type classesSumOrderByAggregateInput = {
     streak?: SortOrder
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type TopicsNullableScalarRelationFilter = {
+    is?: topicsWhereInput | null
+    isNot?: topicsWhereInput | null
+  }
+
+  export type daily_topic_metricsUser_idClass_codeMetric_dateCompoundUniqueInput = {
+    user_id: string
+    class_code: string
+    metric_date: Date | string
+  }
+
+  export type daily_topic_metricsCountOrderByAggregateInput = {
+    user_id?: SortOrder
+    class_code?: SortOrder
+    topic_id?: SortOrder
+    metric_date?: SortOrder
+    avg_score?: SortOrder
+    questions_asked?: SortOrder
+  }
+
+  export type daily_topic_metricsAvgOrderByAggregateInput = {
+    avg_score?: SortOrder
+    questions_asked?: SortOrder
+  }
+
+  export type daily_topic_metricsMaxOrderByAggregateInput = {
+    user_id?: SortOrder
+    class_code?: SortOrder
+    topic_id?: SortOrder
+    metric_date?: SortOrder
+    avg_score?: SortOrder
+    questions_asked?: SortOrder
+  }
+
+  export type daily_topic_metricsMinOrderByAggregateInput = {
+    user_id?: SortOrder
+    class_code?: SortOrder
+    topic_id?: SortOrder
+    metric_date?: SortOrder
+    avg_score?: SortOrder
+    questions_asked?: SortOrder
+  }
+
+  export type daily_topic_metricsSumOrderByAggregateInput = {
+    avg_score?: SortOrder
+    questions_asked?: SortOrder
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type friend_requestsCountOrderByAggregateInput = {
@@ -32651,28 +34288,13 @@ export namespace Prisma {
     id?: SortOrder
     score?: SortOrder
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
   }
 
   export type QuizzesScalarRelationFilter = {
@@ -32720,32 +34342,6 @@ export namespace Prisma {
 
   export type quiz_questionsSumOrderByAggregateInput = {
     depth_score?: SortOrder
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type Quiz_questionsListRelationFilter = {
@@ -32798,17 +34394,6 @@ export namespace Prisma {
     retake_count?: SortOrder
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type class_engagementUser_idClass_nameWeek_startCompoundUniqueInput = {
     user_id: string
     class_name: string
@@ -32851,20 +34436,6 @@ export namespace Prisma {
 
   export type class_engagementSumOrderByAggregateInput = {
     question_count?: SortOrder
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -33022,6 +34593,29 @@ export namespace Prisma {
     class_code?: SortOrder
     enrolled_at?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type syllabus_infoCountOrderByAggregateInput = {
     id?: SortOrder
@@ -33061,6 +34655,32 @@ export namespace Prisma {
     ta_email?: SortOrder
     ta_office_hours?: SortOrder
     updated_at?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type user_achievementsCreateNestedManyWithoutAchievementsInput = {
@@ -33244,6 +34864,13 @@ export namespace Prisma {
     connect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
   }
 
+  export type daily_topic_metricsCreateNestedManyWithoutClassesInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput> | daily_topic_metricsCreateWithoutClassesInput[] | daily_topic_metricsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutClassesInput | daily_topic_metricsCreateOrConnectWithoutClassesInput[]
+    createMany?: daily_topic_metricsCreateManyClassesInputEnvelope
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+  }
+
   export type syllabus_infoCreateNestedOneWithoutClassesInput = {
     create?: XOR<syllabus_infoCreateWithoutClassesInput, syllabus_infoUncheckedCreateWithoutClassesInput>
     connectOrCreate?: syllabus_infoCreateOrConnectWithoutClassesInput
@@ -33283,6 +34910,13 @@ export namespace Prisma {
     connectOrCreate?: course_materialsCreateOrConnectWithoutClassesInput | course_materialsCreateOrConnectWithoutClassesInput[]
     createMany?: course_materialsCreateManyClassesInputEnvelope
     connect?: course_materialsWhereUniqueInput | course_materialsWhereUniqueInput[]
+  }
+
+  export type daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput> | daily_topic_metricsCreateWithoutClassesInput[] | daily_topic_metricsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutClassesInput | daily_topic_metricsCreateOrConnectWithoutClassesInput[]
+    createMany?: daily_topic_metricsCreateManyClassesInputEnvelope
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
   }
 
   export type syllabus_infoUncheckedCreateNestedOneWithoutClassesInput = {
@@ -33345,6 +34979,20 @@ export namespace Prisma {
     update?: course_materialsUpdateWithWhereUniqueWithoutClassesInput | course_materialsUpdateWithWhereUniqueWithoutClassesInput[]
     updateMany?: course_materialsUpdateManyWithWhereWithoutClassesInput | course_materialsUpdateManyWithWhereWithoutClassesInput[]
     deleteMany?: course_materialsScalarWhereInput | course_materialsScalarWhereInput[]
+  }
+
+  export type daily_topic_metricsUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput> | daily_topic_metricsCreateWithoutClassesInput[] | daily_topic_metricsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutClassesInput | daily_topic_metricsCreateOrConnectWithoutClassesInput[]
+    upsert?: daily_topic_metricsUpsertWithWhereUniqueWithoutClassesInput | daily_topic_metricsUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: daily_topic_metricsCreateManyClassesInputEnvelope
+    set?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    disconnect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    delete?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    update?: daily_topic_metricsUpdateWithWhereUniqueWithoutClassesInput | daily_topic_metricsUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: daily_topic_metricsUpdateManyWithWhereWithoutClassesInput | daily_topic_metricsUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
   }
 
   export type syllabus_infoUpdateOneWithoutClassesNestedInput = {
@@ -33427,6 +35075,20 @@ export namespace Prisma {
     deleteMany?: course_materialsScalarWhereInput | course_materialsScalarWhereInput[]
   }
 
+  export type daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput> | daily_topic_metricsCreateWithoutClassesInput[] | daily_topic_metricsUncheckedCreateWithoutClassesInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutClassesInput | daily_topic_metricsCreateOrConnectWithoutClassesInput[]
+    upsert?: daily_topic_metricsUpsertWithWhereUniqueWithoutClassesInput | daily_topic_metricsUpsertWithWhereUniqueWithoutClassesInput[]
+    createMany?: daily_topic_metricsCreateManyClassesInputEnvelope
+    set?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    disconnect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    delete?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    update?: daily_topic_metricsUpdateWithWhereUniqueWithoutClassesInput | daily_topic_metricsUpdateWithWhereUniqueWithoutClassesInput[]
+    updateMany?: daily_topic_metricsUpdateManyWithWhereWithoutClassesInput | daily_topic_metricsUpdateManyWithWhereWithoutClassesInput[]
+    deleteMany?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
+  }
+
   export type syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput = {
     create?: XOR<syllabus_infoCreateWithoutClassesInput, syllabus_infoUncheckedCreateWithoutClassesInput>
     connectOrCreate?: syllabus_infoCreateOrConnectWithoutClassesInput
@@ -33463,6 +35125,62 @@ export namespace Prisma {
     update?: user_classesUpdateWithWhereUniqueWithoutClassesInput | user_classesUpdateWithWhereUniqueWithoutClassesInput[]
     updateMany?: user_classesUpdateManyWithWhereWithoutClassesInput | user_classesUpdateManyWithWhereWithoutClassesInput[]
     deleteMany?: user_classesScalarWhereInput | user_classesScalarWhereInput[]
+  }
+
+  export type classesCreateNestedOneWithoutDaily_topic_metricsInput = {
+    create?: XOR<classesCreateWithoutDaily_topic_metricsInput, classesUncheckedCreateWithoutDaily_topic_metricsInput>
+    connectOrCreate?: classesCreateOrConnectWithoutDaily_topic_metricsInput
+    connect?: classesWhereUniqueInput
+  }
+
+  export type topicsCreateNestedOneWithoutDaily_topic_metricsInput = {
+    create?: XOR<topicsCreateWithoutDaily_topic_metricsInput, topicsUncheckedCreateWithoutDaily_topic_metricsInput>
+    connectOrCreate?: topicsCreateOrConnectWithoutDaily_topic_metricsInput
+    connect?: topicsWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDaily_topic_metricsInput = {
+    create?: XOR<UserCreateWithoutDaily_topic_metricsInput, UserUncheckedCreateWithoutDaily_topic_metricsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDaily_topic_metricsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput = {
+    create?: XOR<classesCreateWithoutDaily_topic_metricsInput, classesUncheckedCreateWithoutDaily_topic_metricsInput>
+    connectOrCreate?: classesCreateOrConnectWithoutDaily_topic_metricsInput
+    upsert?: classesUpsertWithoutDaily_topic_metricsInput
+    connect?: classesWhereUniqueInput
+    update?: XOR<XOR<classesUpdateToOneWithWhereWithoutDaily_topic_metricsInput, classesUpdateWithoutDaily_topic_metricsInput>, classesUncheckedUpdateWithoutDaily_topic_metricsInput>
+  }
+
+  export type topicsUpdateOneWithoutDaily_topic_metricsNestedInput = {
+    create?: XOR<topicsCreateWithoutDaily_topic_metricsInput, topicsUncheckedCreateWithoutDaily_topic_metricsInput>
+    connectOrCreate?: topicsCreateOrConnectWithoutDaily_topic_metricsInput
+    upsert?: topicsUpsertWithoutDaily_topic_metricsInput
+    disconnect?: topicsWhereInput | boolean
+    delete?: topicsWhereInput | boolean
+    connect?: topicsWhereUniqueInput
+    update?: XOR<XOR<topicsUpdateToOneWithWhereWithoutDaily_topic_metricsInput, topicsUpdateWithoutDaily_topic_metricsInput>, topicsUncheckedUpdateWithoutDaily_topic_metricsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput = {
+    create?: XOR<UserCreateWithoutDaily_topic_metricsInput, UserUncheckedCreateWithoutDaily_topic_metricsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDaily_topic_metricsInput
+    upsert?: UserUpsertWithoutDaily_topic_metricsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDaily_topic_metricsInput, UserUpdateWithoutDaily_topic_metricsInput>, UserUncheckedUpdateWithoutDaily_topic_metricsInput>
   }
 
   export type UserCreateNestedOneWithoutFriend_requests_friend_requests_receiver_idTousersInput = {
@@ -33528,6 +35246,13 @@ export namespace Prisma {
     connect?: chat_sessionsWhereUniqueInput | chat_sessionsWhereUniqueInput[]
   }
 
+  export type daily_topic_metricsCreateNestedManyWithoutTopicsInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutTopicsInput, daily_topic_metricsUncheckedCreateWithoutTopicsInput> | daily_topic_metricsCreateWithoutTopicsInput[] | daily_topic_metricsUncheckedCreateWithoutTopicsInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutTopicsInput | daily_topic_metricsCreateOrConnectWithoutTopicsInput[]
+    createMany?: daily_topic_metricsCreateManyTopicsInputEnvelope
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+  }
+
   export type classesCreateNestedOneWithoutTopicsInput = {
     create?: XOR<classesCreateWithoutTopicsInput, classesUncheckedCreateWithoutTopicsInput>
     connectOrCreate?: classesCreateOrConnectWithoutTopicsInput
@@ -33539,6 +35264,13 @@ export namespace Prisma {
     connectOrCreate?: chat_sessionsCreateOrConnectWithoutTopicsInput | chat_sessionsCreateOrConnectWithoutTopicsInput[]
     createMany?: chat_sessionsCreateManyTopicsInputEnvelope
     connect?: chat_sessionsWhereUniqueInput | chat_sessionsWhereUniqueInput[]
+  }
+
+  export type daily_topic_metricsUncheckedCreateNestedManyWithoutTopicsInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutTopicsInput, daily_topic_metricsUncheckedCreateWithoutTopicsInput> | daily_topic_metricsCreateWithoutTopicsInput[] | daily_topic_metricsUncheckedCreateWithoutTopicsInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutTopicsInput | daily_topic_metricsCreateOrConnectWithoutTopicsInput[]
+    createMany?: daily_topic_metricsCreateManyTopicsInputEnvelope
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
   }
 
   export type chat_sessionsUpdateManyWithoutTopicsNestedInput = {
@@ -33553,6 +35285,20 @@ export namespace Prisma {
     update?: chat_sessionsUpdateWithWhereUniqueWithoutTopicsInput | chat_sessionsUpdateWithWhereUniqueWithoutTopicsInput[]
     updateMany?: chat_sessionsUpdateManyWithWhereWithoutTopicsInput | chat_sessionsUpdateManyWithWhereWithoutTopicsInput[]
     deleteMany?: chat_sessionsScalarWhereInput | chat_sessionsScalarWhereInput[]
+  }
+
+  export type daily_topic_metricsUpdateManyWithoutTopicsNestedInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutTopicsInput, daily_topic_metricsUncheckedCreateWithoutTopicsInput> | daily_topic_metricsCreateWithoutTopicsInput[] | daily_topic_metricsUncheckedCreateWithoutTopicsInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutTopicsInput | daily_topic_metricsCreateOrConnectWithoutTopicsInput[]
+    upsert?: daily_topic_metricsUpsertWithWhereUniqueWithoutTopicsInput | daily_topic_metricsUpsertWithWhereUniqueWithoutTopicsInput[]
+    createMany?: daily_topic_metricsCreateManyTopicsInputEnvelope
+    set?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    disconnect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    delete?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    update?: daily_topic_metricsUpdateWithWhereUniqueWithoutTopicsInput | daily_topic_metricsUpdateWithWhereUniqueWithoutTopicsInput[]
+    updateMany?: daily_topic_metricsUpdateManyWithWhereWithoutTopicsInput | daily_topic_metricsUpdateManyWithWhereWithoutTopicsInput[]
+    deleteMany?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
   }
 
   export type classesUpdateOneRequiredWithoutTopicsNestedInput = {
@@ -33575,6 +35321,20 @@ export namespace Prisma {
     update?: chat_sessionsUpdateWithWhereUniqueWithoutTopicsInput | chat_sessionsUpdateWithWhereUniqueWithoutTopicsInput[]
     updateMany?: chat_sessionsUpdateManyWithWhereWithoutTopicsInput | chat_sessionsUpdateManyWithWhereWithoutTopicsInput[]
     deleteMany?: chat_sessionsScalarWhereInput | chat_sessionsScalarWhereInput[]
+  }
+
+  export type daily_topic_metricsUncheckedUpdateManyWithoutTopicsNestedInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutTopicsInput, daily_topic_metricsUncheckedCreateWithoutTopicsInput> | daily_topic_metricsCreateWithoutTopicsInput[] | daily_topic_metricsUncheckedCreateWithoutTopicsInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutTopicsInput | daily_topic_metricsCreateOrConnectWithoutTopicsInput[]
+    upsert?: daily_topic_metricsUpsertWithWhereUniqueWithoutTopicsInput | daily_topic_metricsUpsertWithWhereUniqueWithoutTopicsInput[]
+    createMany?: daily_topic_metricsCreateManyTopicsInputEnvelope
+    set?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    disconnect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    delete?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    update?: daily_topic_metricsUpdateWithWhereUniqueWithoutTopicsInput | daily_topic_metricsUpdateWithWhereUniqueWithoutTopicsInput[]
+    updateMany?: daily_topic_metricsUpdateManyWithWhereWithoutTopicsInput | daily_topic_metricsUpdateManyWithWhereWithoutTopicsInput[]
+    deleteMany?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
   }
 
   export type achievementsCreateNestedOneWithoutUser_achievementsInput = {
@@ -33648,6 +35408,13 @@ export namespace Prisma {
     connect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
   }
 
+  export type daily_topic_metricsCreateNestedManyWithoutUsersInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput> | daily_topic_metricsCreateWithoutUsersInput[] | daily_topic_metricsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutUsersInput | daily_topic_metricsCreateOrConnectWithoutUsersInput[]
+    createMany?: daily_topic_metricsCreateManyUsersInputEnvelope
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+  }
+
   export type friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput = {
     create?: XOR<friend_requestsCreateWithoutUsers_friend_requests_receiver_idTousersInput, friend_requestsUncheckedCreateWithoutUsers_friend_requests_receiver_idTousersInput> | friend_requestsCreateWithoutUsers_friend_requests_receiver_idTousersInput[] | friend_requestsUncheckedCreateWithoutUsers_friend_requests_receiver_idTousersInput[]
     connectOrCreate?: friend_requestsCreateOrConnectWithoutUsers_friend_requests_receiver_idTousersInput | friend_requestsCreateOrConnectWithoutUsers_friend_requests_receiver_idTousersInput[]
@@ -33716,6 +35483,13 @@ export namespace Prisma {
     connectOrCreate?: class_engagementCreateOrConnectWithoutUserInput | class_engagementCreateOrConnectWithoutUserInput[]
     createMany?: class_engagementCreateManyUserInputEnvelope
     connect?: class_engagementWhereUniqueInput | class_engagementWhereUniqueInput[]
+  }
+
+  export type daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput> | daily_topic_metricsCreateWithoutUsersInput[] | daily_topic_metricsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutUsersInput | daily_topic_metricsCreateOrConnectWithoutUsersInput[]
+    createMany?: daily_topic_metricsCreateManyUsersInputEnvelope
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
   }
 
   export type friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput = {
@@ -33807,6 +35581,20 @@ export namespace Prisma {
     update?: class_engagementUpdateWithWhereUniqueWithoutUserInput | class_engagementUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: class_engagementUpdateManyWithWhereWithoutUserInput | class_engagementUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: class_engagementScalarWhereInput | class_engagementScalarWhereInput[]
+  }
+
+  export type daily_topic_metricsUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput> | daily_topic_metricsCreateWithoutUsersInput[] | daily_topic_metricsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutUsersInput | daily_topic_metricsCreateOrConnectWithoutUsersInput[]
+    upsert?: daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput | daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: daily_topic_metricsCreateManyUsersInputEnvelope
+    set?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    disconnect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    delete?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    update?: daily_topic_metricsUpdateWithWhereUniqueWithoutUsersInput | daily_topic_metricsUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: daily_topic_metricsUpdateManyWithWhereWithoutUsersInput | daily_topic_metricsUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
   }
 
   export type friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput = {
@@ -33947,6 +35735,20 @@ export namespace Prisma {
     update?: class_engagementUpdateWithWhereUniqueWithoutUserInput | class_engagementUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: class_engagementUpdateManyWithWhereWithoutUserInput | class_engagementUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: class_engagementScalarWhereInput | class_engagementScalarWhereInput[]
+  }
+
+  export type daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput> | daily_topic_metricsCreateWithoutUsersInput[] | daily_topic_metricsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: daily_topic_metricsCreateOrConnectWithoutUsersInput | daily_topic_metricsCreateOrConnectWithoutUsersInput[]
+    upsert?: daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput | daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: daily_topic_metricsCreateManyUsersInputEnvelope
+    set?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    disconnect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    delete?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    connect?: daily_topic_metricsWhereUniqueInput | daily_topic_metricsWhereUniqueInput[]
+    update?: daily_topic_metricsUpdateWithWhereUniqueWithoutUsersInput | daily_topic_metricsUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: daily_topic_metricsUpdateManyWithWhereWithoutUsersInput | daily_topic_metricsUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
   }
 
   export type friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput = {
@@ -34131,10 +35933,19 @@ export namespace Prisma {
     update?: XOR<XOR<chatsUpdateToOneWithWhereWithoutMessagesInput, chatsUpdateWithoutMessagesInput>, chatsUncheckedUpdateWithoutMessagesInput>
   }
 
+  export type quiz_questionsCreateoptionsInput = {
+    set: string[]
+  }
+
   export type quizzesCreateNestedOneWithoutQuiz_questionsInput = {
     create?: XOR<quizzesCreateWithoutQuiz_questionsInput, quizzesUncheckedCreateWithoutQuiz_questionsInput>
     connectOrCreate?: quizzesCreateOrConnectWithoutQuiz_questionsInput
     connect?: quizzesWhereUniqueInput
+  }
+
+  export type quiz_questionsUpdateoptionsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type quizzesUpdateOneRequiredWithoutQuiz_questionsNestedInput = {
@@ -34191,10 +36002,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutClass_engagementInput, UserUncheckedCreateWithoutClass_engagementInput>
     connectOrCreate?: UserCreateOrConnectWithoutClass_engagementInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type UserUpdateOneRequiredWithoutClass_engagementNestedInput = {
@@ -34415,6 +36222,58 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -34504,54 +36363,6 @@ export namespace Prisma {
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
@@ -34589,6 +36400,29 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type user_achievementsCreateWithoutAchievementsInput = {
@@ -34731,6 +36565,7 @@ export namespace Prisma {
     last_activity_date?: Date | string | null
     class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
     user_classes?: user_classesCreateNestedManyWithoutClassesInput
@@ -34747,6 +36582,7 @@ export namespace Prisma {
     last_activity_date?: Date | string | null
     class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
     user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
@@ -34760,6 +36596,7 @@ export namespace Prisma {
   export type topicsCreateWithoutChat_sessionsInput = {
     id: string
     name: string
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutTopicsInput
     classes: classesCreateNestedOneWithoutTopicsInput
   }
 
@@ -34767,6 +36604,7 @@ export namespace Prisma {
     id: string
     class_code: string
     name: string
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutTopicsInput
   }
 
   export type topicsCreateOrConnectWithoutChat_sessionsInput = {
@@ -34796,6 +36634,7 @@ export namespace Prisma {
     last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -34827,6 +36666,7 @@ export namespace Prisma {
     last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -34892,6 +36732,7 @@ export namespace Prisma {
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUpdateManyWithoutClassesNestedInput
@@ -34908,6 +36749,7 @@ export namespace Prisma {
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
@@ -34927,6 +36769,7 @@ export namespace Prisma {
   export type topicsUpdateWithoutChat_sessionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutTopicsNestedInput
     classes?: classesUpdateOneRequiredWithoutTopicsNestedInput
   }
 
@@ -34934,6 +36777,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     class_code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutTopicsNestedInput
   }
 
   export type UserUpsertWithoutChat_sessionsInput = {
@@ -34969,6 +36813,7 @@ export namespace Prisma {
     last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -35000,6 +36845,7 @@ export namespace Prisma {
     last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -35093,6 +36939,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type daily_topic_metricsCreateWithoutClassesInput = {
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+    topics?: topicsCreateNestedOneWithoutDaily_topic_metricsInput
+    users: UserCreateNestedOneWithoutDaily_topic_metricsInput
+  }
+
+  export type daily_topic_metricsUncheckedCreateWithoutClassesInput = {
+    user_id: string
+    topic_id?: string | null
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+  }
+
+  export type daily_topic_metricsCreateOrConnectWithoutClassesInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    create: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput>
+  }
+
+  export type daily_topic_metricsCreateManyClassesInputEnvelope = {
+    data: daily_topic_metricsCreateManyClassesInput | daily_topic_metricsCreateManyClassesInput[]
+    skipDuplicates?: boolean
+  }
+
   export type syllabus_infoCreateWithoutClassesInput = {
     id?: string
     professor_name?: string | null
@@ -35128,12 +37000,14 @@ export namespace Prisma {
     id: string
     name: string
     chat_sessions?: chat_sessionsCreateNestedManyWithoutTopicsInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutTopicsInput
   }
 
   export type topicsUncheckedCreateWithoutClassesInput = {
     id: string
     name: string
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutTopicsInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutTopicsInput
   }
 
   export type topicsCreateOrConnectWithoutClassesInput = {
@@ -35254,6 +37128,34 @@ export namespace Prisma {
     uploaded_at?: DateTimeNullableFilter<"course_materials"> | Date | string | null
   }
 
+  export type daily_topic_metricsUpsertWithWhereUniqueWithoutClassesInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    update: XOR<daily_topic_metricsUpdateWithoutClassesInput, daily_topic_metricsUncheckedUpdateWithoutClassesInput>
+    create: XOR<daily_topic_metricsCreateWithoutClassesInput, daily_topic_metricsUncheckedCreateWithoutClassesInput>
+  }
+
+  export type daily_topic_metricsUpdateWithWhereUniqueWithoutClassesInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    data: XOR<daily_topic_metricsUpdateWithoutClassesInput, daily_topic_metricsUncheckedUpdateWithoutClassesInput>
+  }
+
+  export type daily_topic_metricsUpdateManyWithWhereWithoutClassesInput = {
+    where: daily_topic_metricsScalarWhereInput
+    data: XOR<daily_topic_metricsUpdateManyMutationInput, daily_topic_metricsUncheckedUpdateManyWithoutClassesInput>
+  }
+
+  export type daily_topic_metricsScalarWhereInput = {
+    AND?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
+    OR?: daily_topic_metricsScalarWhereInput[]
+    NOT?: daily_topic_metricsScalarWhereInput | daily_topic_metricsScalarWhereInput[]
+    user_id?: StringFilter<"daily_topic_metrics"> | string
+    class_code?: StringFilter<"daily_topic_metrics"> | string
+    topic_id?: StringNullableFilter<"daily_topic_metrics"> | string | null
+    metric_date?: DateTimeFilter<"daily_topic_metrics"> | Date | string
+    avg_score?: DecimalNullableFilter<"daily_topic_metrics"> | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: IntNullableFilter<"daily_topic_metrics"> | number | null
+  }
+
   export type syllabus_infoUpsertWithoutClassesInput = {
     update: XOR<syllabus_infoUpdateWithoutClassesInput, syllabus_infoUncheckedUpdateWithoutClassesInput>
     create: XOR<syllabus_infoCreateWithoutClassesInput, syllabus_infoUncheckedCreateWithoutClassesInput>
@@ -35342,6 +37244,278 @@ export namespace Prisma {
     enrolled_at?: DateTimeNullableFilter<"user_classes"> | Date | string | null
   }
 
+  export type classesCreateWithoutDaily_topic_metricsInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
+    topics?: topicsCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesUncheckedCreateWithoutDaily_topic_metricsInput = {
+    class_code: string
+    subject: string
+    name: string
+    created_at?: Date | string | null
+    user_id?: string | null
+    syllabus_url?: string | null
+    streak?: number | null
+    last_activity_date?: Date | string | null
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
+    class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
+    topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
+  }
+
+  export type classesCreateOrConnectWithoutDaily_topic_metricsInput = {
+    where: classesWhereUniqueInput
+    create: XOR<classesCreateWithoutDaily_topic_metricsInput, classesUncheckedCreateWithoutDaily_topic_metricsInput>
+  }
+
+  export type topicsCreateWithoutDaily_topic_metricsInput = {
+    id: string
+    name: string
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutTopicsInput
+    classes: classesCreateNestedOneWithoutTopicsInput
+  }
+
+  export type topicsUncheckedCreateWithoutDaily_topic_metricsInput = {
+    id: string
+    class_code: string
+    name: string
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutTopicsInput
+  }
+
+  export type topicsCreateOrConnectWithoutDaily_topic_metricsInput = {
+    where: topicsWhereUniqueInput
+    create: XOR<topicsCreateWithoutDaily_topic_metricsInput, topicsUncheckedCreateWithoutDaily_topic_metricsInput>
+  }
+
+  export type UserCreateWithoutDaily_topic_metricsInput = {
+    id?: string
+    email: string
+    total_xp?: number | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
+    Account?: AccountCreateNestedManyWithoutUserInput
+    chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
+    friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
+    friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_achievements?: user_achievementsCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesCreateNestedManyWithoutUserInput
+    xp_system?: xp_systemCreateNestedManyWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutDaily_topic_metricsInput = {
+    id?: string
+    email: string
+    total_xp?: number | null
+    image?: string | null
+    emailVerified?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    name?: string | null
+    first_name?: string | null
+    last_name?: string | null
+    school?: string | null
+    major?: string | null
+    class_status?: string | null
+    streak?: number | null
+    weekly_xp?: number | null
+    ai_messages?: number
+    quizzes_taken?: number
+    retakes_taken?: number
+    last_active_date?: Date | string | null
+    Account?: AccountUncheckedCreateNestedManyWithoutUserInput
+    chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
+    friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
+    friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
+    user_achievements?: user_achievementsUncheckedCreateNestedManyWithoutUsersInput
+    user_classes?: user_classesUncheckedCreateNestedManyWithoutUserInput
+    xp_system?: xp_systemUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type UserCreateOrConnectWithoutDaily_topic_metricsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDaily_topic_metricsInput, UserUncheckedCreateWithoutDaily_topic_metricsInput>
+  }
+
+  export type classesUpsertWithoutDaily_topic_metricsInput = {
+    update: XOR<classesUpdateWithoutDaily_topic_metricsInput, classesUncheckedUpdateWithoutDaily_topic_metricsInput>
+    create: XOR<classesCreateWithoutDaily_topic_metricsInput, classesUncheckedCreateWithoutDaily_topic_metricsInput>
+    where?: classesWhereInput
+  }
+
+  export type classesUpdateToOneWithWhereWithoutDaily_topic_metricsInput = {
+    where?: classesWhereInput
+    data: XOR<classesUpdateWithoutDaily_topic_metricsInput, classesUncheckedUpdateWithoutDaily_topic_metricsInput>
+  }
+
+  export type classesUpdateWithoutDaily_topic_metricsInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
+    topics?: topicsUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUpdateManyWithoutClassesNestedInput
+  }
+
+  export type classesUncheckedUpdateWithoutDaily_topic_metricsInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+    syllabus_url?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
+    class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
+    topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
+  }
+
+  export type topicsUpsertWithoutDaily_topic_metricsInput = {
+    update: XOR<topicsUpdateWithoutDaily_topic_metricsInput, topicsUncheckedUpdateWithoutDaily_topic_metricsInput>
+    create: XOR<topicsCreateWithoutDaily_topic_metricsInput, topicsUncheckedCreateWithoutDaily_topic_metricsInput>
+    where?: topicsWhereInput
+  }
+
+  export type topicsUpdateToOneWithWhereWithoutDaily_topic_metricsInput = {
+    where?: topicsWhereInput
+    data: XOR<topicsUpdateWithoutDaily_topic_metricsInput, topicsUncheckedUpdateWithoutDaily_topic_metricsInput>
+  }
+
+  export type topicsUpdateWithoutDaily_topic_metricsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    chat_sessions?: chat_sessionsUpdateManyWithoutTopicsNestedInput
+    classes?: classesUpdateOneRequiredWithoutTopicsNestedInput
+  }
+
+  export type topicsUncheckedUpdateWithoutDaily_topic_metricsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutTopicsNestedInput
+  }
+
+  export type UserUpsertWithoutDaily_topic_metricsInput = {
+    update: XOR<UserUpdateWithoutDaily_topic_metricsInput, UserUncheckedUpdateWithoutDaily_topic_metricsInput>
+    create: XOR<UserCreateWithoutDaily_topic_metricsInput, UserUncheckedCreateWithoutDaily_topic_metricsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDaily_topic_metricsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDaily_topic_metricsInput, UserUncheckedUpdateWithoutDaily_topic_metricsInput>
+  }
+
+  export type UserUpdateWithoutDaily_topic_metricsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Account?: AccountUpdateManyWithoutUserNestedInput
+    chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
+    friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
+    friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_achievements?: user_achievementsUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUpdateManyWithoutUserNestedInput
+    xp_system?: xp_systemUpdateManyWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDaily_topic_metricsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    total_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    school?: NullableStringFieldUpdateOperationsInput | string | null
+    major?: NullableStringFieldUpdateOperationsInput | string | null
+    class_status?: NullableStringFieldUpdateOperationsInput | string | null
+    streak?: NullableIntFieldUpdateOperationsInput | number | null
+    weekly_xp?: NullableIntFieldUpdateOperationsInput | number | null
+    ai_messages?: IntFieldUpdateOperationsInput | number
+    quizzes_taken?: IntFieldUpdateOperationsInput | number
+    retakes_taken?: IntFieldUpdateOperationsInput | number
+    last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
+    friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
+    friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
+    friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
+    user_achievements?: user_achievementsUncheckedUpdateManyWithoutUsersNestedInput
+    user_classes?: user_classesUncheckedUpdateManyWithoutUserNestedInput
+    xp_system?: xp_systemUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
   export type UserCreateWithoutFriend_requests_friend_requests_receiver_idTousersInput = {
     id?: string
     email: string
@@ -35365,6 +37539,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
@@ -35396,6 +37571,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
@@ -35432,6 +37608,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
@@ -35463,6 +37640,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
@@ -35510,6 +37688,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
@@ -35541,6 +37720,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
@@ -35583,6 +37763,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
@@ -35614,6 +37795,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
@@ -35645,6 +37827,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_user_idTousers?: friendsCreateNestedManyWithoutUsers_friends_user_idTousersInput
@@ -35676,6 +37859,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_user_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_user_idTousersInput
@@ -35712,6 +37896,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -35743,6 +37928,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -35790,6 +37976,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUpdateManyWithoutUsers_friends_user_idTousersNestedInput
@@ -35821,6 +38008,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_user_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_user_idTousersNestedInput
@@ -35863,6 +38051,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -35894,6 +38083,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -35932,6 +38122,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type daily_topic_metricsCreateWithoutTopicsInput = {
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+    classes: classesCreateNestedOneWithoutDaily_topic_metricsInput
+    users: UserCreateNestedOneWithoutDaily_topic_metricsInput
+  }
+
+  export type daily_topic_metricsUncheckedCreateWithoutTopicsInput = {
+    user_id: string
+    class_code: string
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+  }
+
+  export type daily_topic_metricsCreateOrConnectWithoutTopicsInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    create: XOR<daily_topic_metricsCreateWithoutTopicsInput, daily_topic_metricsUncheckedCreateWithoutTopicsInput>
+  }
+
+  export type daily_topic_metricsCreateManyTopicsInputEnvelope = {
+    data: daily_topic_metricsCreateManyTopicsInput | daily_topic_metricsCreateManyTopicsInput[]
+    skipDuplicates?: boolean
+  }
+
   export type classesCreateWithoutTopicsInput = {
     class_code: string
     subject: string
@@ -35944,6 +38160,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
     user_classes?: user_classesCreateNestedManyWithoutClassesInput
   }
@@ -35960,6 +38177,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
     user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
   }
@@ -35985,6 +38203,22 @@ export namespace Prisma {
     data: XOR<chat_sessionsUpdateManyMutationInput, chat_sessionsUncheckedUpdateManyWithoutTopicsInput>
   }
 
+  export type daily_topic_metricsUpsertWithWhereUniqueWithoutTopicsInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    update: XOR<daily_topic_metricsUpdateWithoutTopicsInput, daily_topic_metricsUncheckedUpdateWithoutTopicsInput>
+    create: XOR<daily_topic_metricsCreateWithoutTopicsInput, daily_topic_metricsUncheckedCreateWithoutTopicsInput>
+  }
+
+  export type daily_topic_metricsUpdateWithWhereUniqueWithoutTopicsInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    data: XOR<daily_topic_metricsUpdateWithoutTopicsInput, daily_topic_metricsUncheckedUpdateWithoutTopicsInput>
+  }
+
+  export type daily_topic_metricsUpdateManyWithWhereWithoutTopicsInput = {
+    where: daily_topic_metricsScalarWhereInput
+    data: XOR<daily_topic_metricsUpdateManyMutationInput, daily_topic_metricsUncheckedUpdateManyWithoutTopicsInput>
+  }
+
   export type classesUpsertWithoutTopicsInput = {
     update: XOR<classesUpdateWithoutTopicsInput, classesUncheckedUpdateWithoutTopicsInput>
     create: XOR<classesCreateWithoutTopicsInput, classesUncheckedCreateWithoutTopicsInput>
@@ -36008,6 +38242,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
     user_classes?: user_classesUpdateManyWithoutClassesNestedInput
   }
@@ -36024,6 +38259,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
     user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
   }
@@ -36078,6 +38314,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -36109,6 +38346,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -36189,6 +38427,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -36220,6 +38459,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -36251,6 +38491,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -36282,6 +38523,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -36329,6 +38571,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -36360,6 +38603,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -36469,6 +38713,32 @@ export namespace Prisma {
 
   export type class_engagementCreateManyUserInputEnvelope = {
     data: class_engagementCreateManyUserInput | class_engagementCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type daily_topic_metricsCreateWithoutUsersInput = {
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+    classes: classesCreateNestedOneWithoutDaily_topic_metricsInput
+    topics?: topicsCreateNestedOneWithoutDaily_topic_metricsInput
+  }
+
+  export type daily_topic_metricsUncheckedCreateWithoutUsersInput = {
+    class_code: string
+    topic_id?: string | null
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+  }
+
+  export type daily_topic_metricsCreateOrConnectWithoutUsersInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    create: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type daily_topic_metricsCreateManyUsersInputEnvelope = {
+    data: daily_topic_metricsCreateManyUsersInput | daily_topic_metricsCreateManyUsersInput[]
     skipDuplicates?: boolean
   }
 
@@ -36729,6 +38999,22 @@ export namespace Prisma {
     light?: StringNullableFilter<"class_engagement"> | string | null
   }
 
+  export type daily_topic_metricsUpsertWithWhereUniqueWithoutUsersInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    update: XOR<daily_topic_metricsUpdateWithoutUsersInput, daily_topic_metricsUncheckedUpdateWithoutUsersInput>
+    create: XOR<daily_topic_metricsCreateWithoutUsersInput, daily_topic_metricsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type daily_topic_metricsUpdateWithWhereUniqueWithoutUsersInput = {
+    where: daily_topic_metricsWhereUniqueInput
+    data: XOR<daily_topic_metricsUpdateWithoutUsersInput, daily_topic_metricsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type daily_topic_metricsUpdateManyWithWhereWithoutUsersInput = {
+    where: daily_topic_metricsScalarWhereInput
+    data: XOR<daily_topic_metricsUpdateManyMutationInput, daily_topic_metricsUncheckedUpdateManyWithoutUsersInput>
+  }
+
   export type friend_requestsUpsertWithWhereUniqueWithoutUsers_friend_requests_receiver_idTousersInput = {
     where: friend_requestsWhereUniqueInput
     update: XOR<friend_requestsUpdateWithoutUsers_friend_requests_receiver_idTousersInput, friend_requestsUncheckedUpdateWithoutUsers_friend_requests_receiver_idTousersInput>
@@ -36899,6 +39185,7 @@ export namespace Prisma {
     last_active_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -36930,6 +39217,7 @@ export namespace Prisma {
     last_active_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -36977,6 +39265,7 @@ export namespace Prisma {
     last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -37008,6 +39297,7 @@ export namespace Prisma {
     last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -37180,7 +39470,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsCreateoptionsInput | string[]
     explanation?: string | null
   }
 
@@ -37191,7 +39481,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsCreateoptionsInput | string[]
     explanation?: string | null
   }
 
@@ -37232,7 +39522,7 @@ export namespace Prisma {
     correct_answer?: StringFilter<"quiz_questions"> | string
     is_correct?: BoolNullableFilter<"quiz_questions"> | boolean | null
     depth_score?: IntNullableFilter<"quiz_questions"> | number | null
-    options?: JsonNullableFilter<"quiz_questions">
+    options?: StringNullableListFilter<"quiz_questions">
     explanation?: StringNullableFilter<"quiz_questions"> | string | null
   }
 
@@ -37258,6 +39548,7 @@ export namespace Prisma {
     last_active_date?: Date | string | null
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -37289,6 +39580,7 @@ export namespace Prisma {
     last_active_date?: Date | string | null
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -37336,6 +39628,7 @@ export namespace Prisma {
     last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -37367,6 +39660,7 @@ export namespace Prisma {
     last_active_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -37387,6 +39681,7 @@ export namespace Prisma {
     last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
     user_classes?: user_classesCreateNestedManyWithoutClassesInput
@@ -37403,6 +39698,7 @@ export namespace Prisma {
     last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
     user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
@@ -37435,6 +39731,7 @@ export namespace Prisma {
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUpdateManyWithoutClassesNestedInput
@@ -37451,6 +39748,7 @@ export namespace Prisma {
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
@@ -37467,6 +39765,7 @@ export namespace Prisma {
     last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
     user_classes?: user_classesCreateNestedManyWithoutClassesInput
@@ -37483,6 +39782,7 @@ export namespace Prisma {
     last_activity_date?: Date | string | null
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
     user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
@@ -37515,6 +39815,7 @@ export namespace Prisma {
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUpdateManyWithoutClassesNestedInput
@@ -37531,6 +39832,7 @@ export namespace Prisma {
     last_activity_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
@@ -37548,6 +39850,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoCreateNestedOneWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
   }
@@ -37564,6 +39867,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     syllabus_info?: syllabus_infoUncheckedCreateNestedOneWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
   }
@@ -37596,6 +39900,7 @@ export namespace Prisma {
     Account?: AccountCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -37627,6 +39932,7 @@ export namespace Prisma {
     Account?: AccountUncheckedCreateNestedManyWithoutUserInput
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutUsersInput
     class_engagement?: class_engagementUncheckedCreateNestedManyWithoutUserInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutUsersInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_receiver_idTousersInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedCreateNestedManyWithoutUsers_friend_requests_sender_idTousersInput
     friends_friends_friend_idTousers?: friendsUncheckedCreateNestedManyWithoutUsers_friends_friend_idTousersInput
@@ -37663,6 +39969,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUpdateOneWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
   }
@@ -37679,6 +39986,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     syllabus_info?: syllabus_infoUncheckedUpdateOneWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
   }
@@ -37717,6 +40025,7 @@ export namespace Prisma {
     Account?: AccountUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -37748,6 +40057,7 @@ export namespace Prisma {
     Account?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutUsersNestedInput
     class_engagement?: class_engagementUncheckedUpdateManyWithoutUserNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutUsersNestedInput
     friend_requests_friend_requests_receiver_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_receiver_idTousersNestedInput
     friend_requests_friend_requests_sender_idTousers?: friend_requestsUncheckedUpdateManyWithoutUsers_friend_requests_sender_idTousersNestedInput
     friends_friends_friend_idTousers?: friendsUncheckedUpdateManyWithoutUsers_friends_friend_idTousersNestedInput
@@ -37768,6 +40078,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsCreateNestedManyWithoutClassesInput
     topics?: topicsCreateNestedManyWithoutClassesInput
     user_classes?: user_classesCreateNestedManyWithoutClassesInput
   }
@@ -37784,6 +40095,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedCreateNestedManyWithoutClassesInput
     class_tasks?: class_tasksUncheckedCreateNestedManyWithoutClassesInput
     course_materials?: course_materialsUncheckedCreateNestedManyWithoutClassesInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedCreateNestedManyWithoutClassesInput
     topics?: topicsUncheckedCreateNestedManyWithoutClassesInput
     user_classes?: user_classesUncheckedCreateNestedManyWithoutClassesInput
   }
@@ -37816,6 +40128,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutClassesNestedInput
     topics?: topicsUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUpdateManyWithoutClassesNestedInput
   }
@@ -37832,6 +40145,7 @@ export namespace Prisma {
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutClassesNestedInput
     class_tasks?: class_tasksUncheckedUpdateManyWithoutClassesNestedInput
     course_materials?: course_materialsUncheckedUpdateManyWithoutClassesNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutClassesNestedInput
     topics?: topicsUncheckedUpdateManyWithoutClassesNestedInput
     user_classes?: user_classesUncheckedUpdateManyWithoutClassesNestedInput
   }
@@ -37916,6 +40230,14 @@ export namespace Prisma {
     file_url?: string | null
     doc_type?: string | null
     uploaded_at?: Date | string | null
+  }
+
+  export type daily_topic_metricsCreateManyClassesInput = {
+    user_id: string
+    topic_id?: string | null
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type topicsCreateManyClassesInput = {
@@ -38009,16 +40331,42 @@ export namespace Prisma {
     uploaded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type daily_topic_metricsUpdateWithoutClassesInput = {
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+    topics?: topicsUpdateOneWithoutDaily_topic_metricsNestedInput
+    users?: UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
+  }
+
+  export type daily_topic_metricsUncheckedUpdateWithoutClassesInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: NullableStringFieldUpdateOperationsInput | string | null
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type daily_topic_metricsUncheckedUpdateManyWithoutClassesInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    topic_id?: NullableStringFieldUpdateOperationsInput | string | null
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type topicsUpdateWithoutClassesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     chat_sessions?: chat_sessionsUpdateManyWithoutTopicsNestedInput
+    daily_topic_metrics?: daily_topic_metricsUpdateManyWithoutTopicsNestedInput
   }
 
   export type topicsUncheckedUpdateWithoutClassesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     chat_sessions?: chat_sessionsUncheckedUpdateManyWithoutTopicsNestedInput
+    daily_topic_metrics?: daily_topic_metricsUncheckedUpdateManyWithoutTopicsNestedInput
   }
 
   export type topicsUncheckedUpdateManyWithoutClassesInput = {
@@ -38053,6 +40401,14 @@ export namespace Prisma {
     title?: string | null
   }
 
+  export type daily_topic_metricsCreateManyTopicsInput = {
+    user_id: string
+    class_code: string
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
+  }
+
   export type chat_sessionsUpdateWithoutTopicsInput = {
     session_id?: StringFieldUpdateOperationsInput | string
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -38080,6 +40436,30 @@ export namespace Prisma {
     started_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     title?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type daily_topic_metricsUpdateWithoutTopicsInput = {
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+    classes?: classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
+    users?: UserUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
+  }
+
+  export type daily_topic_metricsUncheckedUpdateWithoutTopicsInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type daily_topic_metricsUncheckedUpdateManyWithoutTopicsInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    class_code?: StringFieldUpdateOperationsInput | string
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type AccountCreateManyUserInput = {
@@ -38116,6 +40496,14 @@ export namespace Prisma {
     week_start: Date | string
     color?: string | null
     light?: string | null
+  }
+
+  export type daily_topic_metricsCreateManyUsersInput = {
+    class_code: string
+    topic_id?: string | null
+    metric_date: Date | string
+    avg_score?: Decimal | DecimalJsLike | number | string | null
+    questions_asked?: number | null
   }
 
   export type friend_requestsCreateManyUsers_friend_requests_receiver_idTousersInput = {
@@ -38278,6 +40666,30 @@ export namespace Prisma {
     week_start?: DateTimeFieldUpdateOperationsInput | Date | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     light?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type daily_topic_metricsUpdateWithoutUsersInput = {
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+    classes?: classesUpdateOneRequiredWithoutDaily_topic_metricsNestedInput
+    topics?: topicsUpdateOneWithoutDaily_topic_metricsNestedInput
+  }
+
+  export type daily_topic_metricsUncheckedUpdateWithoutUsersInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    topic_id?: NullableStringFieldUpdateOperationsInput | string | null
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type daily_topic_metricsUncheckedUpdateManyWithoutUsersInput = {
+    class_code?: StringFieldUpdateOperationsInput | string
+    topic_id?: NullableStringFieldUpdateOperationsInput | string | null
+    metric_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    avg_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    questions_asked?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type friend_requestsUpdateWithoutUsers_friend_requests_receiver_idTousersInput = {
@@ -38478,7 +40890,7 @@ export namespace Prisma {
     correct_answer: string
     is_correct?: boolean | null
     depth_score?: number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsCreateoptionsInput | string[]
     explanation?: string | null
   }
 
@@ -38489,7 +40901,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -38500,7 +40912,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -38511,7 +40923,7 @@ export namespace Prisma {
     correct_answer?: StringFieldUpdateOperationsInput | string
     is_correct?: NullableBoolFieldUpdateOperationsInput | boolean | null
     depth_score?: NullableIntFieldUpdateOperationsInput | number | null
-    options?: NullableJsonNullValueInput | InputJsonValue
+    options?: quiz_questionsUpdateoptionsInput | string[]
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

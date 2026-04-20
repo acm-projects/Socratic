@@ -12,11 +12,27 @@ import Addfriend from "../components/socialcomponents/Addfriend"
 import Sharedclasses from "../components/socialcomponents/Sharedclasses"
 import Studysessions from "../components/socialcomponents/Studysessions"
 import Friendachievements from "../components/socialcomponents/Friendachievements"
+import { useEffect } from "react"
 
 export default function SocialPage() {
   const { data: session } = useSession()
   const [showScheduleModal, setShowScheduleModal] = useState(false)
   const [showAddFriend, setShowAddFriend] = useState(false)
+
+  const [friendCount, setFriendCount] = useState(0)
+const [meetingCount, setMeetingCount] = useState(0)
+
+useEffect(() => {
+  if (!session?.user?.id) return
+  fetch(`http://3.128.186.118:5000/users/${session.user.id}`)
+    .then(res => res.json())
+    .then(data => setFriendCount(data.friend_count || 0))
+}, [session])
+
+
+
+
+
 
   return (
     <div
@@ -42,11 +58,11 @@ export default function SocialPage() {
           <div className="flex gap-2 shrink-0">
             <button className="px-5 py-3 rounded-full bg-white text-sm font-semibold text-[#141f1d] hover:bg-white transition-all flex items-center gap-2 shadow-xs">
               <Users size={18} className="text-gray-700" />
-              Friends
+                {friendCount} Friends
             </button>
             <button className="px-5 py-3 rounded-full bg-white text-sm font-semibold text-[#141f1d] hover:bg-white transition-all flex items-center gap-2 shadow-xs">
               <Calendar size={18} className="text-gray-700" />
-              Upcoming
+              {meetingCount} Upcoming
             </button>
           </div>
         </div>
@@ -72,7 +88,7 @@ export default function SocialPage() {
             {/* Shared Classes + Upcoming Sessions Grid */}
             <div className="grid grid-cols-2 gap-5 flex-1 min-h-0">
               <Sharedclasses session={session} onShowScheduleModal={() => setShowScheduleModal(true)} />
-              <Studysessions session={session} onShowScheduleModal={() => setShowScheduleModal(true)} />
+              <Studysessions session={session} onShowScheduleModal={() => setShowScheduleModal(true)} onMeetingCount={(count) => setMeetingCount(count)}/>
             </div>
 
             {/* Friend Achievements */}

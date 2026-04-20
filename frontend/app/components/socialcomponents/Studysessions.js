@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { Calendar, Users, Plus } from "lucide-react"
 
-export default function UpcomingSessions({ session, onShowScheduleModal }) {
+export default function UpcomingSessions({ session, onShowScheduleModal, onMeetingCount }) {
   const [upcomingSessions, setUpcomingSessions] = useState([])
 
 
@@ -14,7 +14,11 @@ export default function UpcomingSessions({ session, onShowScheduleModal }) {
       headers: { 'x-user-id': session.user.id }
     })
       .then(res => res.json())
-      .then(data => setUpcomingSessions(Array.isArray(data) ? data.filter(e => e.hangoutLink) : [])) //filter to only meetings (w google meets link)
+      .then(data => {
+          const sessions = Array.isArray(data) ? data.filter(e => e.hangoutLink) : []
+          setUpcomingSessions(sessions)
+          onMeetingCount?.(sessions.length)
+      })
       .catch(err => console.error(err))
   }, [session])
 

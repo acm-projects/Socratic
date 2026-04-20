@@ -21,12 +21,21 @@ export default function EngagementChart() {
   const [activeIndex, setActiveIndex] = useState(null)
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
   const active = activeIndex !== null ? courseData[activeIndex] : null
+  const [mounted, setMounted] = useState(false)  // add this
+
+useEffect(() => {
+  setMounted(true)
+}, [])
+
 
   useEffect(() => {
     if (!session?.user?.id || !session?.accessToken) return
     fetch(`/backend/users/${session.user.id}/engagement/class-distribution`)
       .then(res => res.json())
       .then(data => {
+          console.log("engagement data:", data)  // add this
+  if (!Array.isArray(data)) return       // guard
+
         const formatted = data.map(c => ({
           name: c.class_name,
           class_name: c.class_name,
@@ -84,6 +93,7 @@ export default function EngagementChart() {
           </div>
         )}
 
+      {mounted && (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -104,7 +114,10 @@ export default function EngagementChart() {
             </Pie>
           </PieChart>
         </ResponsiveContainer>
+          )}
       </div>
+      
+
 
       {/* labels */}
       <div className="flex-1 flex flex-col justify-center gap-2">

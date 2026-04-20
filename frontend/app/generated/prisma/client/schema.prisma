@@ -57,13 +57,12 @@ model classes {
   chat_sessions       chat_sessions[]
   class_tasks         class_tasks[]
   course_materials    course_materials[]
-  daily_topic_metrics daily_topic_metrics[] @ignore
+  daily_topic_metrics daily_topic_metrics[]
   syllabus_info       syllabus_info?
   topics              topics[]
   user_classes        user_classes[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model daily_topic_metrics {
   user_id         String   @db.VarChar(50)
   class_code      String   @db.VarChar(50)
@@ -75,8 +74,7 @@ model daily_topic_metrics {
   topics          topics?  @relation(fields: [topic_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_daily_metrics_topic")
   users           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_daily_metrics_user")
 
-  @@unique([user_id, class_code, topic_id, metric_date], map: "uq_daily_topic_metrics")
-  @@ignore
+  @@unique([user_id, class_code, metric_date], map: "uq_daily_topic_metrics")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -111,7 +109,7 @@ model topics {
   class_code          String                @db.VarChar(50)
   name                String                @db.VarChar(50)
   chat_sessions       chat_sessions[]
-  daily_topic_metrics daily_topic_metrics[] @ignore
+  daily_topic_metrics daily_topic_metrics[]
   classes             classes               @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_class")
 }
 
@@ -158,7 +156,7 @@ model User {
   Account                                            Account[]
   chat_sessions                                      chat_sessions[]
   class_engagement                                   class_engagement[]
-  daily_topic_metrics                                daily_topic_metrics[] @ignore
+  daily_topic_metrics                                daily_topic_metrics[]
   friend_requests_friend_requests_receiver_idTousers friend_requests[]     @relation("friend_requests_receiver_idTousers")
   friend_requests_friend_requests_sender_idTousers   friend_requests[]     @relation("friend_requests_sender_idTousers")
   friends_friends_friend_idTousers                   friends[]             @relation("friends_friend_idTousers")
@@ -223,7 +221,7 @@ model quiz_questions {
   correct_answer String
   is_correct     Boolean? @default(false)
   depth_score    Int?     @default(0)
-  options        Json?
+  options        String[]
   explanation    String?
   quizzes        quizzes  @relation(fields: [quiz_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

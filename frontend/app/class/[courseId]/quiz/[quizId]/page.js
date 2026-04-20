@@ -81,6 +81,10 @@ console.log("quizId:", quizId)
   fetchAttempt()
 }, [isReviewMode, attemptId])
 
+
+
+
+
     useEffect(() => {
       if (!courseId) return
       fetch(`http://3.128.186.118:5000/classes/${courseId}`)
