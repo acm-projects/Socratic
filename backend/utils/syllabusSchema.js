@@ -1,6 +1,6 @@
-const { z } = require("zod");
-const { zodToJsonSchema } = require("zod-to-json-schema");
-
+const { z } = require("zod"); //zod is to define the schema of the data which is like a blueprint for gemini to understand the data
+const { zodToJsonSchema } = require("zod-to-json-schema"); //converts the schema to a json schema
+//this is for just the syllabus pdf for other course info like slides, textbooks, we a structuredOutput schema with langchain
 // 1. Define the exact structure you want to extract from the Syllabus PDF
 const syllabusSchema = z.object({
     courseName: z.string().describe("The full name of the course"),

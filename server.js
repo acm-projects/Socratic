@@ -645,7 +645,10 @@ app.get("/users/:id/stats", async (req, res) => {
     let aiMessages = 0
     try {
       const msg = await pool.query(
-        "SELECT COUNT(*) as ai_messages FROM messages WHERE chat_id IN (SELECT id FROM chats WHERE user_id = $1)",
+        `SELECT COUNT(*) as ai_messages 
+         FROM chat_history ch 
+         JOIN chat_sessions cs ON cs.session_id = ch.session_id 
+         WHERE cs.user_id = $1 AND ch.sender = 'ai'`,
         [userId]
       )
       aiMessages = parseInt(msg.rows[0].ai_messages) || 0
