@@ -1,3 +1,4 @@
+const pool = require('../db');
 const syllabusService = require('../services/syllabusService');
 const topicModel = require('../models/topicModel');
 const sessionModel = require('../models/chatSessionModel');
@@ -17,7 +18,7 @@ router.post('/chat', async (req, res, next) => {
   try {
     // Accept either sessionId OR chatId (chatId is legacy, sessionId is the new name)
     const { userId, classCode, topic: topicName, message, chatId: providedChatId, sessionId: providedSessionId } = req.body;
-    
+
     // Normalize sessionId: ignore empty strings or stringified 'null'/'undefined'
     let incomingSessionId = providedSessionId || providedChatId || null;
     if (incomingSessionId === 'null' || incomingSessionId === 'undefined' || incomingSessionId === '') {
@@ -59,7 +60,7 @@ router.post('/chat', async (req, res, next) => {
     }
 
     await classModel.ensureClassExists(classCode, userId);
-    
+
     if (!topic) {
       topic = await topicModel.getTopicByNameAndClass(resolvedTopicName, classCode);
       if (!topic) {
@@ -89,11 +90,11 @@ router.post('/chat', async (req, res, next) => {
     console.log(`[Tutor] ⭐ Evaluating question quality...`);
     let score = 0;
     let reason = "Evaluation skipped.";
-    
+
     try {
-      const evalResult = await evaluateQuestion({ 
-        input: message, 
-        classCode: classCode, 
+      const evalResult = await evaluateQuestion({
+        input: message,
+        classCode: classCode,
         topicName: resolvedTopicName
       });
       score = evalResult.score;
@@ -115,7 +116,7 @@ router.post('/chat', async (req, res, next) => {
 
     // 3. Vector Search (Simultaneous)
     const vectorStore = await getClassVectorStore(classCode);
-    
+
     // --- EARLY DETECTION: Detect Page/Lecture references for Sniper Search ---
     const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
@@ -123,8 +124,8 @@ router.post('/chat', async (req, res, next) => {
     const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
 
     // --- SMART QUERY EXPANSION: Prepend Lecture if detected and topic is generic ---
-    let fullQuery = (resolvedTopicName === "General Discussion") 
-      ? message 
+    let fullQuery = (resolvedTopicName === "General Discussion")
+      ? message
       : `${resolvedTopicName}: ${message}`;
 
     if (targetLecture && resolvedTopicName === "General Discussion") {
@@ -140,7 +141,7 @@ router.post('/chat', async (req, res, next) => {
       const targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
         pageNumber: { "$eq": targetPage }
       });
-      
+
       targetedResults.forEach(doc => {
         const page = doc.metadata.pageNumber || 'N/A';
         const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
@@ -151,9 +152,9 @@ router.post('/chat', async (req, res, next) => {
     // Fetch 100 chunks (Increased to cast a much wider net for implicit references). 
     const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
     console.log(`[Tutor] 📚 Pinecone search returned ${resultsWithScores.length} potential hits for class ${classCode}`);
-    
+
     let broadContext = [];
-    
+
     resultsWithScores.forEach(([doc]) => {
       const page = doc.metadata.pageNumber || 'N/A';
       const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
@@ -175,7 +176,7 @@ router.post('/chat', async (req, res, next) => {
     // Strategy: Take all targeted hits first (up to 25), then fill the remaining budget with broad search.
     const MAX_TOTAL_CHUNKS = 50;
     const MAX_TARGETED = 30; // Prioritize specific matches
-    
+
     const finalTargeted = targetedContext.slice(0, MAX_TARGETED);
     const remainingBudget = Math.max(0, MAX_TOTAL_CHUNKS - finalTargeted.length);
     const finalBroad = broadContext.slice(0, remainingBudget);
@@ -223,20 +224,44 @@ router.post('/chat', async (req, res, next) => {
     );
 
     // 9. Update heatmap (daily_topic_metrics)
-    quizModel.updateTopicMetrics({ 
-        userId, 
-        classCode, 
-        topicId: topic.id, 
-        questionsAsked: 1, 
-        score 
+    quizModel.updateTopicMetrics({
+      userId,
+      classCode,
+      topicId: topic.id,
+      questionsAsked: 1,
+      score
     }).catch(err =>
       console.warn('[Tutor] ⚠️ Failed to update heatmap:', err.message)
     );
 
+    // Update class engagement (fire and forget)
+    pool.query('SELECT name FROM classes WHERE class_code = $1', [classCode])
+      .then(classResult => {
+        if (classResult.rows[0]) {
+          const className = classResult.rows[0].name;
+          const COLORS = ['#10B981', '#8B5CF6', '#3B82F6', '#EC4899', '#F59E0B', '#06B6D4'];
+          const LIGHTS = ['#34D399', '#A78BFA', '#60A5FA', '#F472B6', '#FCD34D', '#22D3EE'];
+          const colorIndex = className.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) % COLORS.length;
+          const color = COLORS[colorIndex];
+          const light = LIGHTS[colorIndex];
+          const weekStart = new Date();
+          weekStart.setHours(0, 0, 0, 0);
+          weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+          return pool.query(
+            `INSERT INTO class_engagement (id, user_id, class_name, question_count, week_start, color, light)
+             VALUES ($1, $2, $3, 1, $4, $5, $6)
+             ON CONFLICT (user_id, class_name, week_start)
+             DO UPDATE SET question_count = class_engagement.question_count + 1`,
+            [require('crypto').randomUUID(), userId, className, weekStart, color, light]
+          );
+        }
+      })
+      .catch(err => console.warn('[Tutor] ⚠️ Failed to update engagement:', err.message));
+
     res.json({
-      sessionId: chatId,   
-      isNewSession,        
-      reply: aiContent,    
+      sessionId: chatId,
+      isNewSession,
+      reply: aiContent,
       score,
       reason
     });
