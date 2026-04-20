@@ -258,6 +258,29 @@ router.post('/chat', async (req, res, next) => {
       })
       .catch(err => console.warn('[Tutor] ⚠️ Failed to update engagement:', err.message));
 
+    // Update class streak (fire and forget)
+    pool.query("SELECT streak, last_activity_date FROM classes WHERE class_code = $1 AND user_id = $2", [classCode, userId])
+      .then(classResult => {
+        if (!classResult.rows[0]) return;
+        const today = new Date().toISOString().split('T')[0];
+        const { streak, last_activity_date } = classResult.rows[0];
+        const lastDate = last_activity_date ? new Date(last_activity_date).toISOString().split('T')[0] : null;
+        if (lastDate === today) return;
+        let newStreak = 1;
+        if (lastDate) {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          if (lastDate === yesterday.toISOString().split('T')[0]) {
+            newStreak = (streak || 0) + 1;
+          }
+        }
+        return pool.query(
+          "UPDATE classes SET streak = $1, last_activity_date = $2 WHERE class_code = $3 AND user_id = $4",
+          [newStreak, today, classCode, userId]
+        );
+      })
+      .catch(err => console.warn('[Tutor] ⚠️ Failed to update streak:', err.message));
+
     res.json({
       sessionId: chatId,
       isNewSession,
