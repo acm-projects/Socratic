@@ -766,14 +766,41 @@ app.get("/classes/:code/metrics", async (req, res) => {
 
 app.get("/users/:id/engagement/class-distribution", async (req, res) => {
   try {
+    const userId = req.params.id
+
+    const enrolledResult = await pool.query(
+      `SELECT c.name FROM classes c
+       JOIN user_classes uc ON uc.class_code = c.class_code
+       WHERE uc.user_id = $1
+       UNION
+       SELECT c.name FROM classes c WHERE c.user_id = $1`,
+      [userId]
+    )
+    const enrolledNames = enrolledResult.rows.map(r => r.name)
+
+    if (enrolledNames.length === 0) {
+      return res.json([])
+    }
+
     const result = await pool.query(
       `SELECT ce.class_name, SUM(ce.question_count) as question_count, MAX(ce.color) as color, MAX(ce.light) as light
        FROM class_engagement ce
-       WHERE ce.user_id = $1
+       WHERE ce.user_id = $1 AND ce.class_name = ANY($2)
        GROUP BY ce.class_name
        ORDER BY question_count DESC`,
-      [req.params.id]
+      [userId, enrolledNames]
     )
+
+    if (result.rows.length === 0) {
+      const COLORS = ['#10B981', '#8B5CF6', '#3B82F6', '#EC4899', '#F59E0B', '#06B6D4']
+      return res.json(enrolledNames.map((name, i) => ({
+        class_name: name,
+        question_count: 0,
+        color: COLORS[i % COLORS.length],
+        light: COLORS[i % COLORS.length]
+      })))
+    }
+
     res.json(result.rows.map(row => ({
       class_name: row.class_name,
       question_count: parseInt(row.question_count),
