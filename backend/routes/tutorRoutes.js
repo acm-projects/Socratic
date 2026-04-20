@@ -114,14 +114,18 @@ router.post('/chat', async (req, res, next) => {
       reason
     });
 
-    // 3. Vector Search (Simultaneous)
-    const vectorStore = await getClassVectorStore(classCode);
-
     // --- EARLY DETECTION: Detect Page/Lecture references for Sniper Search ---
     const pageMatch = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
     const targetPage = pageMatch ? parseInt(pageMatch[1]) : null;
     const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
+
+    let vectorStore = null;
+    try {
+      vectorStore = await getClassVectorStore(classCode);
+    } catch (vecErr) {
+      console.warn('[Tutor] ⚠️ Pinecone unavailable, continuing without context:', vecErr.message);
+    }
 
     // --- SMART QUERY EXPANSION: Prepend Lecture if detected and topic is generic ---
     let fullQuery = (resolvedTopicName === "General Discussion")
@@ -136,7 +140,7 @@ router.post('/chat', async (req, res, next) => {
 
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
     let targetedContext = [];
-    if (targetPage) {
+    if (targetPage && vectorStore) {
       console.log(`[Tutor] 🎯 Sniper Search active for Page ${targetPage}`);
       const targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
         pageNumber: { "$eq": targetPage }
@@ -150,7 +154,12 @@ router.post('/chat', async (req, res, next) => {
     }
 
     // Fetch 100 chunks (Increased to cast a much wider net for implicit references). 
-    const resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+    const resultsWithScores = vectorStore 
+      ? await vectorStore.similaritySearchWithScore(fullQuery, 100).catch(err => {
+          console.warn('[Tutor] ⚠️ Pinecone search failed:', err.message);
+          return [];
+        })
+      : [];
     console.log(`[Tutor] 📚 Pinecone search returned ${resultsWithScores.length} potential hits for class ${classCode}`);
 
     let broadContext = [];
