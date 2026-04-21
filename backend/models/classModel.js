@@ -11,10 +11,34 @@ const getClassByCode = async (code) => {
 
 const createClass = async (data) => {
   const { class_code, subject, name, user_id } = data;
+
+  // Check if this class_code already exists
+  const existing = await db.query(
+    "SELECT * FROM classes WHERE class_code = $1", [class_code]
+  );
+
+  if (existing.rows[0]) {
+    // Belongs to same user — return it
+    if (existing.rows[0].user_id === user_id) return existing.rows[0];
+    // Belongs to different user — create user-scoped version
+    const suffix = user_id ? user_id.slice(-4) : Math.random().toString(36).slice(-4);
+    const scopedCode = `${class_code}-${suffix}`;
+    const result = await db.query(
+      `INSERT INTO classes (class_code, subject, name, user_id)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (class_code)
+       DO UPDATE SET name = EXCLUDED.name, subject = EXCLUDED.subject
+       RETURNING *`,
+      [scopedCode, subject, name || class_code, user_id]
+    );
+    return result.rows[0];
+  }
+
+  // No conflict — insert normally
   const result = await db.query(
-    `INSERT INTO classes (class_code, subject, name, user_id) 
-     VALUES ($1, $2, $3, $4) 
-     ON CONFLICT (class_code) 
+    `INSERT INTO classes (class_code, subject, name, user_id)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (class_code)
      DO UPDATE SET subject = EXCLUDED.subject,
                    name = EXCLUDED.name,
                    user_id = COALESCE(EXCLUDED.user_id, classes.user_id)
