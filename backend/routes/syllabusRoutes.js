@@ -20,7 +20,7 @@ router.post('/extract', upload.any(), async (req, res, next) => {
     const rawTextFallback = req.body ? req.body.pdfText : null;
 
     // Optional metadata from the caller
-    const user_id   = req.body?.user_id   || null;
+    const user_id = req.body?.user_id || null;
     const class_code = req.body?.class_code || null;
 
     if (!fileBuffer && !rawTextFallback) {
@@ -80,7 +80,7 @@ router.post('/save', async (req, res, next) => {
   } catch (error) {
     console.error("Database or service error:", error);
     if (error.code === '23505') {
-       return res.status(409).json({ error: "This class or topic already exists in the database." });
+      return res.status(409).json({ error: "This class or topic already exists in the database." });
     }
     res.status(500).json({ error: error.message || "Failed to save syllabus." });
   }
@@ -197,7 +197,7 @@ router.get('/data/:class_code', async (req, res, next) => {
 
   try {
     console.log(`[Syllabus] 🔍 Fetching unified data for ${normalizedCode}...`);
-    
+
     // Perform queries in parallel for peak performance
     const [classRes, tasksRes, topicsRes] = await Promise.all([
       pool.query("SELECT * FROM classes WHERE class_code = $1", [normalizedCode]),
@@ -239,16 +239,16 @@ router.get('/info/:class_code', async (req, res, next) => {
     const row = result.rows[0];
 
     res.json({
-      class_code:        row.class_code,
-      professor_name:    row.professor_name,
-      professor_email:   row.professor_email,
-      office_hours:      row.office_hours,
-      office_location:   row.office_location,
-      ta_name:           row.ta_name,
-      ta_email:          row.ta_email,
-      ta_office_hours:   row.ta_office_hours,
-      grading_policy:    row.grading_policy,   // JSONB array
-      updated_at:        row.updated_at
+      class_code: row.class_code,
+      professor_name: row.professor_name,
+      professor_email: row.professor_email,
+      office_hours: row.office_hours,
+      office_location: row.office_location,
+      ta_name: row.ta_name,
+      ta_email: row.ta_email,
+      ta_office_hours: row.ta_office_hours,
+      grading_policy: row.grading_policy,   // JSONB array
+      updated_at: row.updated_at
     });
 
   } catch (error) {
@@ -261,15 +261,15 @@ router.get('/info/:class_code', async (req, res, next) => {
 router.put('/info/:class_code', async (req, res, next) => {
   const { class_code } = req.params;
   const normalizedCode = class_code.toUpperCase().trim();
-  const { 
-    professor_name, 
-    professor_email, 
-    office_hours, 
-    office_location, 
-    ta_name, 
-    ta_email, 
-    ta_office_hours, 
-    grading_policy 
+  const {
+    professor_name,
+    professor_email,
+    office_hours,
+    office_location,
+    ta_name,
+    ta_email,
+    ta_office_hours,
+    grading_policy
   } = req.body;
 
   try {

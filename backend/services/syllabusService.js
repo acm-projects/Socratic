@@ -148,7 +148,9 @@ const saveSyllabusData = async (payload) => {
     user_id: user_id || null
   };
   const newClass = await classModel.createClass(classData);
-  console.log(`[Syllabus] 🏫 Class verified/updated: ${classData.class_code}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
+  // Use the actual stored class_code (may be scoped e.g. CS3341-XXXX) for all child records
+  const storedCode = newClass.class_code;
+  console.log(`[Syllabus] 🏫 Class verified/updated: ${storedCode}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
 
   // 2. Upsert syllabus_info (professor, TA, grading)
   try {
@@ -169,7 +171,7 @@ const saveSyllabusData = async (payload) => {
          grading_policy    = EXCLUDED.grading_policy,
          updated_at        = NOW()`,
       [
-        safeCourseCode.substring(0, 50),
+        storedCode,
         instructor?.name || null,
         instructor?.email || null,
         instructor?.officeHours || null,
@@ -180,7 +182,7 @@ const saveSyllabusData = async (payload) => {
         gradingPolicy ? JSON.stringify(gradingPolicy) : null
       ]
     );
-    console.log(`[Syllabus] 📋 syllabus_info upserted for ${safeCourseCode}`);
+    console.log(`[Syllabus] 📋 syllabus_info upserted for ${storedCode}`);
   } catch (err) {
     console.warn(`[Syllabus] ⚠️ Failed to save syllabus_info:`, err.message);
   }
@@ -191,7 +193,7 @@ const saveSyllabusData = async (payload) => {
     for (const topicStr of topics) {
       const topicData = {
         id: crypto.randomUUID(),
-        class_code: safeCourseCode.substring(0, 50),
+        class_code: storedCode,
         name: topicStr.substring(0, 50)
       };
       const newTopic = await topicModel.createTopic(topicData);
@@ -204,8 +206,8 @@ const saveSyllabusData = async (payload) => {
 
   // Clear existing tasks for this class first to avoid duplicates
   try {
-    const deleteResult = await pool.query("DELETE FROM class_tasks WHERE class_code = $1", [safeCourseCode.substring(0, 50)]);
-    console.log(`[Syllabus] 🧹 Cleared ${deleteResult.rowCount} existing tasks for ${safeCourseCode}`);
+    const deleteResult = await pool.query("DELETE FROM class_tasks WHERE class_code = $1", [storedCode]);
+    console.log(`[Syllabus] 🧹 Cleared ${deleteResult.rowCount} existing tasks for ${storedCode}`);
   } catch (err) {
     console.warn(`[Syllabus] ⚠️ Failed to clear existing tasks:`, err.message);
   }
@@ -217,7 +219,7 @@ const saveSyllabusData = async (payload) => {
       try {
         const result = await pool.query(
           "INSERT INTO class_tasks (id, class_code, task_name, due_date) VALUES ($1, $2, $3, $4) RETURNING *",
-          [taskId, safeCourseCode.substring(0, 50), dateObj.eventName, dateObj.date]
+          [taskId, storedCode, dateObj.eventName, dateObj.date]
         );
         savedTasks.push(result.rows[0]);
       } catch (err) {
