@@ -159,16 +159,16 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document')
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
   const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
   const targetIndex = pinecone.Index(indexName).namespace(namespace);
-  
+
   // For Vision Fallback
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
-  
+
   // Vision Fallback Models (Waterfall)
   const VISION_MODELS = [
-    "gemini-2.5-flash", 
-    "gemini-2.5-pro", 
-    "gemini-3.1-flash-lite-preview"
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-3.1-flash-lite"
   ];
 
   let totalIngested = 0;
@@ -196,88 +196,88 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document')
     const taggedPages = [];
 
     for (let i = 0; i < rawPages.length; i++) {
-        const page = rawPages[i];
-        const pageNum = i + 1;
-        let content = page.pageContent.trim();
+      const page = rawPages[i];
+      const pageNum = i + 1;
+      let content = page.pageContent.trim();
 
-        // INCREASED THRESHOLD: If < 200 chars, it's probably a graph/title-only slide
-        if (content.length < 200) {
-            console.log(`[Ingest] 👁️  Page ${pageNum} looks thin (${content.length} chars). Triggering Vision...`);
-            
-            // Lazy-upload the file only if we need vision
-            if (!fileRef) {
-                const uploadResult = await fileManager.uploadFile(filePath, {
-                    mimeType: "application/pdf",
-                    displayName: fileName,
-                });
-                fileRef = uploadResult.file;
-                // Wait for processing
-                let f = await fileManager.getFile(fileRef.name);
-                while (f.state === "PROCESSING") {
-                    await new Promise(r => setTimeout(r, 2000));
-                    f = await fileManager.getFile(fileRef.name);
-                }
-            }
+      // INCREASED THRESHOLD: If < 200 chars, it's probably a graph/title-only slide
+      if (content.length < 200) {
+        console.log(`[Ingest] 👁️  Page ${pageNum} looks thin (${content.length} chars). Triggering Vision...`);
 
-            // VISION WATERFALL SCAN
-            let scanSuccess = false;
-            for (const modelId of VISION_MODELS) {
-                if (scanSuccess) break;
-                try {
-                    console.log(`[Ingest] 🔍 Scanning Page ${pageNum} with ${modelId}...`);
-                    const currentModel = genAI.getGenerativeModel({ model: modelId });
-                    
-                    const prompt = `Describe this slide (Page ${pageNum}). If there is a graph, diagram, or model, explain it in detail. Summarize the main point of the slide.`;
-                    const result = await currentModel.generateContent([
-                        { fileData: { mimeType: fileRef.mimeType, fileUri: fileRef.uri } },
-                        { text: prompt },
-                    ]);
-                    
-                    content = `[AI VISUAL DESCRIPTION OF SLIDE]: ${result.response.text()}`;
-                    console.log(`[Ingest] ✅ Vision captured Page ${pageNum} using ${modelId}`);
-                    scanSuccess = true;
-                } catch (vizErr) {
-                    const isRetryable = vizErr.message.includes('503') || vizErr.message.includes('429');
-                    console.warn(`[Ingest] ⚠️ ${modelId} failed for Page ${pageNum}: ${vizErr.message}`);
-                    
-                    if (isRetryable) {
-                        console.log(`[Ingest] ⏳ Retrying in 2s...`);
-                        await new Promise(r => setTimeout(r, 2000));
-                        // We'll give it one second try with the SAME model before moving to next in waterfall
-                        try {
-                            const currentModel = genAI.getGenerativeModel({ model: modelId });
-                            const promptRetry = `Describe this slide (Page ${pageNum}). If there is a graph, diagram, or model, explain it in detail. Summarize the main point of the slide.`;
-                            const result = await currentModel.generateContent([
-                                { fileData: { mimeType: fileRef.mimeType, fileUri: fileRef.uri } },
-                                { text: promptRetry },
-                            ]);
-                            content = `[AI VISUAL DESCRIPTION OF SLIDE]: ${result.response.text()}`;
-                            console.log(`[Ingest] ✅ Vision captured Page ${pageNum} on retry!`);
-                            scanSuccess = true;
-                        } catch (secondErr) {
-                            console.warn(`[Ingest] ❌ Retry failed, moving to next model in waterfall...`);
-                        }
-                    }
-                }
-            }
-
-            if (!scanSuccess) {
-                console.error(`[Ingest] 💀 ALL vision models failed for Page ${pageNum}.`);
-                content = "[Scanning failed for this slide]";
-            }
+        // Lazy-upload the file only if we need vision
+        if (!fileRef) {
+          const uploadResult = await fileManager.uploadFile(filePath, {
+            mimeType: "application/pdf",
+            displayName: fileName,
+          });
+          fileRef = uploadResult.file;
+          // Wait for processing
+          let f = await fileManager.getFile(fileRef.name);
+          while (f.state === "PROCESSING") {
+            await new Promise(r => setTimeout(r, 2000));
+            f = await fileManager.getFile(fileRef.name);
+          }
         }
 
-        taggedPages.push({
-            pageContent: content,
-            metadata: {
-                ...page.metadata,
-                pageNumber: pageNum,
-                fileName: fileName,
-                source: fileName,
-                docType,
-                classCode
+        // VISION WATERFALL SCAN
+        let scanSuccess = false;
+        for (const modelId of VISION_MODELS) {
+          if (scanSuccess) break;
+          try {
+            console.log(`[Ingest] 🔍 Scanning Page ${pageNum} with ${modelId}...`);
+            const currentModel = genAI.getGenerativeModel({ model: modelId });
+
+            const prompt = `Describe this slide (Page ${pageNum}). If there is a graph, diagram, or model, explain it in detail. Summarize the main point of the slide.`;
+            const result = await currentModel.generateContent([
+              { fileData: { mimeType: fileRef.mimeType, fileUri: fileRef.uri } },
+              { text: prompt },
+            ]);
+
+            content = `[AI VISUAL DESCRIPTION OF SLIDE]: ${result.response.text()}`;
+            console.log(`[Ingest] ✅ Vision captured Page ${pageNum} using ${modelId}`);
+            scanSuccess = true;
+          } catch (vizErr) {
+            const isRetryable = vizErr.message.includes('503') || vizErr.message.includes('429');
+            console.warn(`[Ingest] ⚠️ ${modelId} failed for Page ${pageNum}: ${vizErr.message}`);
+
+            if (isRetryable) {
+              console.log(`[Ingest] ⏳ Retrying in 2s...`);
+              await new Promise(r => setTimeout(r, 2000));
+              // We'll give it one second try with the SAME model before moving to next in waterfall
+              try {
+                const currentModel = genAI.getGenerativeModel({ model: modelId });
+                const promptRetry = `Describe this slide (Page ${pageNum}). If there is a graph, diagram, or model, explain it in detail. Summarize the main point of the slide.`;
+                const result = await currentModel.generateContent([
+                  { fileData: { mimeType: fileRef.mimeType, fileUri: fileRef.uri } },
+                  { text: promptRetry },
+                ]);
+                content = `[AI VISUAL DESCRIPTION OF SLIDE]: ${result.response.text()}`;
+                console.log(`[Ingest] ✅ Vision captured Page ${pageNum} on retry!`);
+                scanSuccess = true;
+              } catch (secondErr) {
+                console.warn(`[Ingest] ❌ Retry failed, moving to next model in waterfall...`);
+              }
             }
-        });
+          }
+        }
+
+        if (!scanSuccess) {
+          console.error(`[Ingest] 💀 ALL vision models failed for Page ${pageNum}.`);
+          content = "[Scanning failed for this slide]";
+        }
+      }
+
+      taggedPages.push({
+        pageContent: content,
+        metadata: {
+          ...page.metadata,
+          pageNumber: pageNum,
+          fileName: fileName,
+          source: fileName,
+          docType,
+          classCode
+        }
+      });
     }
 
     // 4. CHUNKING & EMBEDDINGS
@@ -285,7 +285,7 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document')
       chunkSize: 600, // Slightly larger chunks for better context
       chunkOverlap: 100,
     });
-    
+
     const chunks = await splitter.splitDocuments(taggedPages);
     console.log(`[Ingest] 🧩 Created ${chunks.length} chunks.`);
 
@@ -318,16 +318,13 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document')
 
     // Cleanup Google File
     if (fileRef) {
-        await fileManager.deleteFile(fileRef.name).catch(() => {});
+      await fileManager.deleteFile(fileRef.name).catch(() => { });
     }
   }
 
   return { totalIngested, namespace, classCode };
 }
 
-// Keep both names for backward compatibility with routes
-async function ingestDocumentsWithVision(files, classCode, docType = 'document') {
-    return ingestDocuments(files, classCode, docType);
-}
+
 
 module.exports = { ingestDocuments, ingestDocumentsWithVision, getNamespaceStats, getClassNamespace };
