@@ -232,6 +232,11 @@ router.post('/chat', async (req, res, next) => {
       console.warn('[Tutor] ⚠️ Failed to increment ai_messages:', err.message)
     );
 
+    const xpToAward = userStatsModel.CHAT_XP_MAP[score] || 10;
+    userStatsModel.awardXP(userId, 'chat', xpToAward).catch(err =>
+      console.warn('[Tutor] ⚠️ Failed to award XP:', err.message)
+    );
+
     // 9. Update heatmap (daily_topic_metrics)
     quizModel.updateTopicMetrics({
       userId,

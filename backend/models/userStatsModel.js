@@ -100,6 +100,40 @@ const getUserStats = async (userId) => {
   return result.rows[0] || null;
 };
 
+/**
+ * Map of chat depth scores (0-5) to XP amounts.
+ */
+const CHAT_XP_MAP = {
+  0: 5,
+  1: 10,
+  2: 15,
+  3: 20,
+  4: 25,
+  5: 35
+};
+
+/**
+ * Awards XP to a user — logs to xp_system and increments total_xp and weekly_xp.
+ */
+const awardXP = async (userId, source, amount) => {
+  try {
+    const { randomUUID } = require('crypto');
+    await db.query(
+      `INSERT INTO xp_system (id, user_id, source, amount) VALUES ($1, $2, $3, $4)`,
+      [randomUUID(), userId, source, amount]
+    );
+    await db.query(
+      `UPDATE "User" SET 
+        total_xp = COALESCE(total_xp, 0) + $1,
+        weekly_xp = COALESCE(weekly_xp, 0) + $1
+       WHERE id = $2`,
+      [amount, userId]
+    );
+  } catch (err) {
+    console.warn('[XP] Failed to award XP:', err.message);
+  }
+};
+
 module.exports = {
   getUserXpStats,
   getTopicMetrics,
@@ -108,4 +142,6 @@ module.exports = {
   incrementRetakesTaken,
   updateHeatmap,
   getUserStats,
+  awardXP,
+  CHAT_XP_MAP,
 };
