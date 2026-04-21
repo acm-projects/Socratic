@@ -104,12 +104,12 @@ const getUserStats = async (userId) => {
  * Map of chat depth scores (0-5) to XP amounts.
  */
 const CHAT_XP_MAP = {
-  0: 5,
-  1: 10,
-  2: 15,
-  3: 20,
-  4: 25,
-  5: 35
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5
 };
 
 /**

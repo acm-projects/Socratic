@@ -41,7 +41,25 @@ const updateTaskStatus = async (taskId, completed) => {
   return result.rows[0];
 };
 
+const updateTask = async (taskId, taskData) => {
+  const { task_name, due_date, completed } = taskData;
+  const updates = [];
+  const values = [];
+  let idx = 1;
+  if (task_name !== undefined) { updates.push(`task_name = $${idx++}`); values.push(task_name); }
+  if (due_date !== undefined) { updates.push(`due_date = $${idx++}`); values.push(due_date); }
+  if (completed !== undefined) { updates.push(`completed = $${idx++}`); values.push(completed); }
+  if (updates.length === 0) return null;
+  values.push(taskId);
+  const result = await db.query(
+    `UPDATE class_tasks SET ${updates.join(', ')} WHERE id = $${idx} RETURNING *`,
+    values
+  );
+  return result.rows[0] || null;
+};
+
 module.exports = {
   getUpcomingTasksByUserId,
-  updateTaskStatus
+  updateTaskStatus,
+  updateTask
 };

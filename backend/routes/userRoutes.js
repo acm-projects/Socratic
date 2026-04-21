@@ -166,6 +166,21 @@ router.patch('/:id/tasks/:taskId', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+router.put('/:id/tasks/:taskId', async (req, res, next) => {
+  try {
+    const { taskId } = req.params;
+    const { task_name, due_date, completed } = req.body;
+    if (task_name === undefined && due_date === undefined && completed === undefined) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+    const updatedTask = await taskModel.updateTask(taskId, { task_name, due_date, completed });
+    if (!updatedTask) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    res.json(updatedTask);
+  } catch (error) { next(error); }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const user = await userModel.getUserById(req.params.id);

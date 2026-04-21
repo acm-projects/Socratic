@@ -201,17 +201,34 @@ router.post('/chat', async (req, res, next) => {
     const tutorStartTime = Date.now();
     const tutorChainWithHistory = getTutorChainWithHistory();
 
-    const tutorRes = await tutorChainWithHistory.invoke(
-      {
-        input: message,
-        class: classCode,
-        topic: topic,
-        score,
-        reason,
-        context,
-      },
-      { configurable: { sessionId: chatId } }
-    );
+    let tutorRes;
+    const MAX_TUTOR_RETRIES = 3;
+    for (let attempt = 1; attempt <= MAX_TUTOR_RETRIES; attempt++) {
+      try {
+        tutorRes = await tutorChainWithHistory.invoke(
+          {
+            input: message,
+            class: classCode,
+            topic: topic,
+            score,
+            reason,
+            context,
+          },
+          { configurable: { sessionId: chatId } }
+        );
+        break;
+      } catch (err) {
+        const is503 = err.message?.includes('503') || err.message?.includes('Service Unavailable');
+        const is429 = err.message?.includes('429');
+        if ((is503 || is429) && attempt < MAX_TUTOR_RETRIES) {
+          const delay = attempt * 1500;
+          console.warn(`[Tutor] ⚠️ Attempt ${attempt} failed, retrying in ${delay}ms...`);
+          await new Promise(r => setTimeout(r, delay));
+        } else {
+          throw err;
+        }
+      }
+    }
 
     console.log(`[Tutor] 🧠 AI thinking complete. Response length: ${tutorRes.content?.length || tutorRes.length} chars`);
 
