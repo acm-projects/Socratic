@@ -61,14 +61,26 @@ export default function Leaderboard({ userId, session }) {
                 {i > 2 && <span className="text-sm font-semibold text-gray-400">{i + 1}</span>}
               </div>
 
-
-
-               <img
-                src={user.profile_pic}
+              {/* <img
+                src={user.profile_pic || '/default-avatar.png'}
                 alt={user.name}
                 className="w-8 h-8 opacity-80 rounded-full object-cover bg-gray-200"
                 onError={(e) => e.target.src = '/default-avatar.png'}
-              />
+              /> */}
+
+              {user.profile_pic ? (
+                <img
+                  src={user.profile_pic}
+                  alt={user.name}
+                  className="w-8 h-8 opacity-80 rounded-full object-cover bg-gray-200"
+                  onError={(e) => { e.target.src = '/default-avatar.png' }}
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-[#347A73]/20 flex items-center justify-center">
+                  <span className="text-xs text-[#347A73] font-semibold">{user.name[0].toUpperCase()}</span>
+                </div>
+              )}
+
 
 
               <span className={`text-sm font-medium ${user.isYou ? "text-[#347A73]" : "text-gray-700"}`}>
