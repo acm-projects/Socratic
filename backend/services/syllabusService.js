@@ -51,9 +51,27 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   }
 
   const prompt = `You are a concise academic assistant. Extract the bare essential syllabus details from the attached PDF.
-CRITICAL: Identify course deadlines (Quizzes, Exams, Assignments) from the calendar.
 Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".
 IMPORTANT: For weightPercentage, return ONLY the raw number (no '%' signs).
+
+TASK EXTRACTION RULES for importantDates:
+Only extract items that have a specific due date AND are one of: Homework, Assignment, Quiz, Exam, Final.
+STRICT NAMING FORMAT:
+- Use ONLY these prefixes: "Homework", "Assignment", "Quiz", "Exam", "Final Exam"
+- Never combine prefixes: "Test Exam" → "Exam", "HW" → "Homework"
+- Remove leading zeros: "06" → "6", "02" → "2"
+- Never append "Due" to task names — the date field handles that
+- Capitalize first letter only: "Homework 7" not "HOMEWORK 7"
+
+EXCLUDE these completely — do not add them to importantDates:
+- Grade visibility dates ("grades viewable", "posted on Blackboard")
+- Makeup exam windows or availability windows
+- Office hours, readings, lectures, class sessions
+- Anything without a specific calendar due date
+- Administrative deadlines (drop date, withdrawal date)
+
+VALID examples: "Homework 7", "Exam 2", "Quiz 3", "Final Exam", "Assignment 4"
+INVALID examples: "Homework 7 Due", "Test Exam 2", "Assignment 06", "Exam 2 availability window start", "Grade posted online"
 
 Return ONLY JSON matching this schema:
 {
