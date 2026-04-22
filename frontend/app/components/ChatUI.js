@@ -4,20 +4,14 @@ import { CircleArrowUp, Bookmark, PanelLeftOpen, PanelLeftClose, SquarePen, Chev
 import ChatModal from "./ChatModal";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from 'react-markdown'
-
-
-
-
-
-
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import 'katex/dist/katex.min.css'
 
 
 
 
 export default function ChatUI({ classCode, topic }) {
-
-
-
 
 
 
@@ -349,20 +343,24 @@ async function handleSend() {
                                        ) : (
                                               <div className="flex items-end gap-3">
        {/* Mascot circle */}
-       <div className="flex-shrink-0 w-18 h-18 flex items-center justify-center overflow-hidden">
+       <div className="flex-shrink-0 w-24 h-24 flex items-center justify-center overflow-hidden">
            <img
                src="/icons/mascot-chat.svg"
                alt="Mascot"
-               className="w-18 h-18 object-contain"
+               className="w-24 h-24 object-contain"
            />
        </div>
       
        {/* Message content */}
        <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
        <div className="text-base text-black prose prose-sm max-w-none">
-           <ReactMarkdown>{message.content}</ReactMarkdown>
+          <ReactMarkdown
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+            children={message.content}
+            />
        </div>
-           <button
+           {/* <button
                onClick={() => { handleSave(message.content); setShowModal(true); }}
                className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50"
            >
@@ -371,7 +369,7 @@ async function handleSend() {
                    className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"}
                />
                SAVE FOR REVIEW
-           </button>
+           </button> */}
        </div>
    </div>
                                        )}
@@ -380,7 +378,7 @@ async function handleSend() {
                                 {loading && (
                                <div className="flex justify-start">
                                    <div className="flex items-center gap-3">
-                                       <div className="flex-shrink-0 w-22 h-22 flex items-center justify-center overflow-hidden">
+                                       <div className="flex-shrink-0 w-30 h-30 flex items-center justify-center overflow-hidden">
                                            <img
                                                src="/icons/mascot-thinking.svg"
                                                alt="Thinking"

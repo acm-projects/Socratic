@@ -63,59 +63,38 @@ export default function Achievements() {
   const perPage = 5
   const totalPages = Math.ceil(achievements.length / perPage)
   const visible = achievements.slice(page * perPage, page * perPage + perPage)
-
-  return (
-    <div className="flex flex-col gap-3">
-
-      {/* cards */}
-      <div className="flex gap-3 flex-1">
-        {visible.map((a) => (
-        <div key={a.id} className="bg-white/65 backdrop-blur-sm rounded-2xl flex-1 flex flex-col items-center justify-center px-5 pt-12 pb-12 gap-7">
-            <img
-            src={a.unlocked ? a.colored : a.greyed}
-            alt={a.label}
-            width={90}
-            height={90}
-            />
-            <div className="flex flex-col items-center gap-1" style={{ minHeight: "52px", justifyContent: "flex-start" }}>
-            <span
-                className="text-center leading-snug"
-                style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "#1a2e2b",
-                opacity: a.unlocked ? 1 : 0.4,
-                }}
-            >
-                {a.label}
-            </span>
-            <span style={{ fontSize: "11px", fontWeight: 400, color: "#90aba7" }}>
-                {a.unlocked ? "Completed" : "Locked"}
-            </span>
-            </div>
+return (
+    <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-6 shrink-0">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-md font-semibold text-[#14153A]">Achievements</h2>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setPage(p => Math.max(0, p - 1))}
+            disabled={page === 0}
+            className="w-7 h-7 rounded-full hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center transition-colors"
+          >
+            <ChevronLeft size={14} className="text-[#141f1d]" />
+          </button>
+          <span className="text-xs text-[#90aba7]">{page + 1} / {totalPages}</span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+            disabled={page === totalPages - 1}
+            className="w-7 h-7 rounded-full hover:bg-gray-100 disabled:opacity-30 flex items-center justify-center transition-colors"
+          >
+            <ChevronRight size={14} className="text-[#141f1d]" />
+          </button>
         </div>
+      </div>
+
+      <div className="flex gap-4">
+        {visible.map((a) => (
+          <div key={a.id} className="bg-gradient-to-b from-white/80 to-white/40 rounded-2xl p-6 flex-1 flex flex-col items-center text-center hover:shadow-sm transition-all">
+            <img src={a.unlocked ? a.colored : a.greyed} alt={a.label} className="w-24 h-24 object-contain mb-4" />
+            <p className="text-sm font-bold text-[#141f1d] mb-1" style={{ opacity: a.unlocked ? 1 : 0.4 }}>{a.label}</p>
+            <p className="text-xs font-medium text-[#347A73]">{a.unlocked ? "Completed" : "Locked"}</p>
+          </div>
         ))}
       </div>
-
-      {/* nav — bottom right */}
-      <div className="flex items-center justify-end gap-2 mt-auto">
-        <button
-          onClick={() => setPage(p => Math.max(0, p - 1))}
-          disabled={page === 0}
-          className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-30 flex items-center justify-center transition-colors"
-        >
-          <ChevronLeft size={14} className="text-[#141f1d]" />
-        </button>
-        <span className="text-xs text-[#90aba7]">{page + 1} / {totalPages}</span>
-        <button
-          onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
-          disabled={page === totalPages - 1}
-          className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-30 flex items-center justify-center transition-colors"
-        >
-          <ChevronRight size={14} className="text-[#141f1d]" />
-        </button>
-      </div>
-
     </div>
   )
 }

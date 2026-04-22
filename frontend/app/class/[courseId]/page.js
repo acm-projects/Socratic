@@ -150,10 +150,10 @@ useEffect(() => {
   .then(data => {
     if (Array.isArray(data) && data.length > 0) {
       setUpcomingTasks(data.map(t => ({
-        id: t.id,                                    // ADD THIS
+        id: t.id,                                   
         title: t.task_name,
         due: new Date(t.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-        completed: t.completed || false,              // ADD THIS
+        completed: t.completed || false,              
         user_id: classInfo?.user_id || session?.user?.id  // ADD THIS (get from session)
       })))
     }
@@ -211,7 +211,7 @@ useEffect(() => {
                 <img src="/icons/mascot-chat.svg" className="w-full h-full object-contain scale-125" alt="Mascot" />
               </div>
               <div className="flex-1">
-                <p className="text-lg font-bold text-[#141f1d]">Ask Socratic AI</p>
+                <p className="text-lg font-bold text-[#141f1d]">Ask Sockrates</p>
               </div>
               <div className="w-7 h-7 rounded-full flex items-center justify-center transition-colors group-hover:bg-gray-100 shrink-0">
                 <ChevronRight size={22} className="text-gray-400 group-hover:text-[#141f1d] transition-colors" />
@@ -234,7 +234,7 @@ useEffect(() => {
 
             {/* syllabus class info */}
 
-            <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[1.5] flex flex-col justify-between min-h-0 overflow-hidden">
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl px-6 py-4 flex-[2] flex flex-col justify-between min-h-0 overflow-hidden">
               {syllabusLoading ? (
                 <div className="flex flex-col h-full">
                   {/* Header stays */}

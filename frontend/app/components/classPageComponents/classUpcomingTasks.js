@@ -17,8 +17,7 @@ export default function UpcomingTasks({ tasks, onToggle, classInfo }) {
 
 
     try {
-
-                    if (!session?.user?.id) {
+      if (!session?.user?.id) {
       console.error('No user session');
       return;
     }
@@ -92,12 +91,12 @@ const res = await fetch(`/backend/api/users/${task.user_id}/tasks/${task.id}`, {
     <div className="flex flex-col flex-1 min-h-0">
       <div className="flex items-center justify-between mb-3 shrink-0">
       <h2 className="text-base font-semibold text-[#141f1d]">Upcoming Tasks</h2>
-      <button 
+      {/* <button 
         onClick={syncAllTasksToCalendar}
         className="text-xs text-[#3a9e94] hover:text-[#2d766f] flex items-center gap-1"
       >
         Sync to Calendar
-      </button>
+      </button> */}
     </div>
       <div className="overflow-y-auto scrollbar-hide flex flex-col">
         {tasks.map((task, i, arr) => {

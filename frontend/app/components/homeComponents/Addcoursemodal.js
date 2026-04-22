@@ -1,5 +1,6 @@
 "use client"
-import { X } from "lucide-react";
+import { X, CheckSquare, SquareCheck, Square } from "lucide-react";
+import { FaCheckSquare, FaRegSquare } from "react-icons/fa";
 import { useState } from "react"
 import { useSession } from "next-auth/react"
 
@@ -9,6 +10,39 @@ export default function Addcoursemodal({ onClose, onAdd }) {
   const [courseCode, setCourseCode] = useState("")
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [syncToCalendar, setSyncToCalendar] = useState(true) //default upload tasks
+
+  async function syncTasksToCalendar(tasks, className) {
+    const currentYear = new Date().getFullYear();
+    
+    for (const task of tasks) {
+      const dueDate = new Date(`${task.due} ${currentYear}`);
+      dueDate.setHours(23, 59, 0, 0);
+      
+      const event = {
+        summary: task.title,
+        description: `${className} Deadline`,
+        startDateTime: dueDate.toISOString(),
+        endDateTime: dueDate.toISOString(),
+        createMeet: false,
+        attendeeEmails: []
+      };
+
+      try {
+        await fetch("/backend/api/calendar/create-event", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.accessToken}`,
+            "x-user-id": session?.user?.id
+          },
+          body: JSON.stringify({ ...event, userId: session?.user?.id })
+        });
+      } catch (err) {
+        console.error("Failed to sync individual task:", err);
+      }
+    }
+  }
 
   async function handleAdd() {
     if (!subject.trim() || !courseCode.trim()) return
@@ -91,6 +125,18 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         } else {
           const extractData = await extractRes.json()
           console.log("5. extracted ", extractData.message)
+
+
+          if (syncToCalendar) {
+            console.log("6. Fetching newly created tasks for calendar sync");
+            const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`);
+            const tasksData = await tasksRes.json();
+            
+            if (tasksData && tasksData.length > 0) {
+              await syncTasksToCalendar(tasksData, subject);
+              console.log("7. Calendar sync complete");
+            }
+          }
         }
 
         // restore  name the user entered
@@ -196,6 +242,24 @@ export default function Addcoursemodal({ onClose, onAdd }) {
               <input id="syllabusFileInput" type="file" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
             </div>
           </div>
+          
+          {/* sync option */}
+          <div className="w-full mt-4 flex items-center gap-2 px-1">
+          <button 
+            type="button"
+            onClick={() => setSyncToCalendar(!syncToCalendar)}
+            className="transition-transform active:scale-95"
+          >
+            {syncToCalendar ? (
+              <FaCheckSquare size={20} className="text-[#347A73]" />
+            ) : (
+              <FaRegSquare size={20} className="text-gray-300" />
+            )}
+          </button>
+          <span className="text-sm text-gray-600 select-none cursor-pointer" onClick={() => setSyncToCalendar(!syncToCalendar)}>
+            Automatically sync tasks and exams to Google Calendar
+          </span>
+        </div>
 
           <button
             onClick={handleAdd}

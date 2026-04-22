@@ -109,7 +109,7 @@ export default function ProfilePage() {
             </div>
 
             {/* spacer for achievments navigation height */}
-            <div className="h-4 shrink-0" />
+            {/* <div className="h-4 shrink-0" /> */}
           </div>
 
           {/* Right column */}
