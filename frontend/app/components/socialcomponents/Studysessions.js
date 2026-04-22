@@ -63,7 +63,10 @@ export default function UpcomingSessions({ session, onShowScheduleModal, onMeeti
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Users size={12} className="text-gray-400" />
+                <Users size={12} className="text-gray-400" />
+                <p className="text-xs text-gray-400">
+                    {s.description?.split(" | ")[1] || ""}
+                </p>
                 </div>
                 <button
                   onClick={() => window.open(s.hangoutLink, '_blank')}

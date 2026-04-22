@@ -22,6 +22,9 @@ useEffect(() => {
         map[date] = d;
       });
         console.log("heatmap keys:", Object.keys(map)) // <-- here
+        console.log("today:", today)
+console.log("startDate:", startDate)
+
 
       setHeatmapData(map);
     });

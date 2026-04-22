@@ -69,6 +69,8 @@ useEffect(() => {
 
    const [loading, setLoading] = useState(false)
    const [sessionId, setSessionId] = useState(null)
+   const sessionIdRef = useRef(null)  // add this
+
 
 
    const [showModal, setShowModal] = useState(false);
@@ -113,7 +115,7 @@ async function handleSend() {
                userId: session?.user?.id,
                classCode: classCode,
                topic: topic,
-               sessionId: sessionId ?? undefined,
+                sessionId: sessionIdRef.current ?? undefined,  // change this line
            })
        })
        const data = await res.json()
@@ -125,12 +127,13 @@ async function handleSend() {
 
 
 
-       if (!sessionId && data.chatId) {
-           setSessionId(data.chatId)
-       }
+if (!sessionIdRef.current && data.chatId) {
+    sessionIdRef.current = data.chatId
+    setSessionId(data.chatId)
+}
 
 
-       if (data.isNewSession) {
+       if (data.isNewSession && !sessionId) {
            setChats(prev => [{ id: data.chatId, title: input }, ...prev])
        }
 
@@ -193,6 +196,7 @@ async function handleSend() {
        setMessages([]);
        setActiveChatId(null);
        activeChatIdRef.current = null
+        sessionIdRef.current = null
        setSessionId(null);  //reset so next message starts a fresh session
        setInput("");
    }
@@ -354,11 +358,19 @@ async function handleSend() {
        {/* Message content */}
        <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
        <div className="text-base text-black prose prose-sm max-w-none">
-          <ReactMarkdown
+        
+           {/* <ReactMarkdown>
+            {message.content}
+           </ReactMarkdown> */}
+
+           <ReactMarkdown
             remarkPlugins={[remarkMath]}
             rehypePlugins={[rehypeKatex]}
-            children={message.content}
-            />
+            >
+            {message.content}
+            </ReactMarkdown>
+
+
        </div>
            {/* <button
                onClick={() => { handleSave(message.content); setShowModal(true); }}
@@ -372,8 +384,8 @@ async function handleSend() {
            </button> */}
        </div>
    </div>
-                                       )}
-                                   </div>
+               )}
+              </div>
                                ))}
                                 {loading && (
                                <div className="flex justify-start">
