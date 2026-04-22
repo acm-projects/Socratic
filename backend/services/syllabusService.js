@@ -195,6 +195,10 @@ const saveSyllabusData = async (payload) => {
   console.log(`[Syllabus] 🏫 Class verified/updated: ${storedCode}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
 
   // 2. Upsert syllabus_info (professor, TA, grading)
+  // Log exactly what the AI returned so we can debug extraction issues
+  console.log(`[Syllabus] 👤 Instructor from AI:`, JSON.stringify(instructor));
+  console.log(`[Syllabus] 🎓 TA from AI:`, JSON.stringify(ta));
+  console.log(`[Syllabus] 📊 Grading from AI:`, JSON.stringify(gradingPolicy));
   try {
     await pool.query(
       `INSERT INTO syllabus_info
@@ -203,14 +207,14 @@ const saveSyllabusData = async (payload) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
        ON CONFLICT (class_code)
        DO UPDATE SET
-         professor_name    = EXCLUDED.professor_name,
-         professor_email   = EXCLUDED.professor_email,
-         office_hours      = EXCLUDED.office_hours,
-         office_location   = EXCLUDED.office_location,
-         ta_name           = EXCLUDED.ta_name,
-         ta_email          = EXCLUDED.ta_email,
-         ta_office_hours   = EXCLUDED.ta_office_hours,
-         grading_policy    = EXCLUDED.grading_policy,
+         professor_name    = COALESCE(EXCLUDED.professor_name,  syllabus_info.professor_name),
+         professor_email   = COALESCE(EXCLUDED.professor_email, syllabus_info.professor_email),
+         office_hours      = COALESCE(EXCLUDED.office_hours,    syllabus_info.office_hours),
+         office_location   = COALESCE(EXCLUDED.office_location, syllabus_info.office_location),
+         ta_name           = COALESCE(EXCLUDED.ta_name,         syllabus_info.ta_name),
+         ta_email          = COALESCE(EXCLUDED.ta_email,         syllabus_info.ta_email),
+         ta_office_hours   = COALESCE(EXCLUDED.ta_office_hours, syllabus_info.ta_office_hours),
+         grading_policy    = COALESCE(EXCLUDED.grading_policy,  syllabus_info.grading_policy),
          updated_at        = NOW()`,
       [
         storedCode,
@@ -221,7 +225,7 @@ const saveSyllabusData = async (payload) => {
         ta?.name || null,
         ta?.email || null,
         ta?.officeHours || null,
-        gradingPolicy ? JSON.stringify(gradingPolicy) : null
+        gradingPolicy?.length ? JSON.stringify(gradingPolicy) : null
       ]
     );
     console.log(`[Syllabus] 📋 syllabus_info upserted for ${storedCode}`);
