@@ -65,7 +65,7 @@ async function loadAndChunkPDF(filePath, classCode, docType = 'document', s3Url 
  * @param {string} classCode
  * @param {string} docType
  */
-async function ingestDocuments(files, classCode, docType = 'document') {
+async function ingestDocuments(files, classCode, docType = 'document', userId = null) {
   const namespace = getClassNamespace(classCode);
   console.log(`[Ingest] Target Pinecone namespace: '${namespace}'`);
 
@@ -115,6 +115,7 @@ async function ingestDocuments(files, classCode, docType = 'document') {
         pageNumber: metadatas[i].pageNumber,            // "Check page 4 of the syllabus!"
         classCode: metadatas[i].classCode,
         docType: metadatas[i].docType,
+        userId: userId || 'unknown',
         ingestedAt: new Date().toISOString(),
       },
     }));
@@ -153,7 +154,7 @@ async function getNamespaceStats(classCode) {
  * NEW: Ingest documents using Gemini's Native PDF Vision.
  * This describes every page (including graphs/images) and stores descriptions in Pinecone.
  */
-async function ingestDocumentsWithVision(files, classCode, docType = 'document') {
+async function ingestDocumentsWithVision(files, classCode, docType = 'document', userId = null) {
   const namespace = getClassNamespace(classCode);
   const embeddings = new GeminiEmbeddings();
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
@@ -303,6 +304,7 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document')
         source: friendlyName,
         docType: chunk.metadata.docType,
         classCode: chunk.metadata.classCode,
+        userId: userId || 'unknown',
         ingestedAt: new Date().toISOString(),
       },
     }));

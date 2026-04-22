@@ -72,6 +72,7 @@ async function uploadToS3(filePath, classCode, docType, originalName) {
  */
 router.post('/upload', upload.array('file', 10), async (req, res, next) => {
   const { classCode, docType = 'document' } = req.body;
+  const userId = req.body.user_id || req.body['user-id'] || null;
 
   if (!classCode) {
     return res.status(400).json({ error: 'classCode is required.' });
@@ -108,7 +109,7 @@ router.post('/upload', upload.array('file', 10), async (req, res, next) => {
       originalName: file.originalname, // Add original name for deduplication
     }));
 
-    const { totalIngested, namespace } = await ingestDocumentsWithVision(filesToIngest, classCode, docType);
+    const { totalIngested, namespace } = await ingestDocumentsWithVision(filesToIngest, classCode, docType, userId);
 
     // 4. SYLLABUS-SPECIFIC: Extract tasks and schedule if docType is syllabus
     let syllabusData = null;

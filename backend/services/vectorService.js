@@ -162,8 +162,35 @@ async function getVectorStore(namespace = '') {
   return storeInstance;
 }
 
+/**
+ * Deletes all embeddings in a class namespace that belong to a specific user.
+ * If no userId is provided, logs a warning and aborts to prevent mass deletion.
+ */
+async function deleteUserClassEmbeddings(classCode, userId) {
+  if (!userId) {
+    console.warn(`[VectorStore] ⚠️ Cannot delete user embeddings for class ${classCode} without a userId.`);
+    return;
+  }
+  
+  const namespace = `class-${classCode.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+  const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+  const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
+  
+  try {
+    const pineconeIndex = pinecone.Index(indexName);
+    const targetIndex = pineconeIndex.namespace(namespace);
+    
+    // Pinecone supports deleteMany with metadata filter
+    await targetIndex.deleteMany({ filter: { userId: { '$eq': userId } } });
+    console.log(`[VectorStore] 🗑️ Deleted Pinecone embeddings for user ${userId} in namespace ${namespace}`);
+  } catch (err) {
+    console.error(`[VectorStore] ❌ Failed to delete embeddings for user ${userId} in ${namespace}:`, err.message);
+  }
+}
+
 module.exports = {
   getVectorStore,
   getClassVectorStore,
-  GeminiEmbeddings
+  GeminiEmbeddings,
+  deleteUserClassEmbeddings
 };

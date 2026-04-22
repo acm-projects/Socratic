@@ -141,6 +141,25 @@ TOPIC EXTRACTION RULES for topics:
   }
 };
 
+/**
+ * Normalize a raw AI-extracted course code to a clean CS3341-style format.
+ * Examples:
+ *   "CS/CE/SE 3345.007" → "CS3345"
+ *   "CS 3341"           → "CS3341"
+ *   "MATH 2413"         → "MATH2413"
+ *   "PHYS 2305"         → "PHYS2305"
+ */
+const normalizeCourseCode = (raw = '') => {
+  if (!raw) return '';
+  const deptMatch = raw.match(/[A-Za-z]+/);
+  const numMatch  = raw.match(/\d{4}/);
+  if (deptMatch && numMatch) {
+    return `${deptMatch[0].toUpperCase()}${numMatch[0]}`;
+  }
+  // Fallback: strip everything non-alphanumeric
+  return raw.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+};
+
 const saveSyllabusData = async (payload) => {
   const { courseName, courseCode, topics, importantDates, instructor, ta, gradingPolicy, user_id } = payload;
 
@@ -239,11 +258,13 @@ const saveSyllabusData = async (payload) => {
   return {
     savedClass: newClass,
     savedTopics: savedTopics,
-    savedTasks: savedTasks
+    savedTasks: savedTasks,
+    normalizedCourseCode: normalizeCourseCode(courseCode)
   };
 };
 
 module.exports = {
   extractSyllabusData,
-  saveSyllabusData
+  saveSyllabusData,
+  normalizeCourseCode
 };

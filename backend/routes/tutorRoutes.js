@@ -138,13 +138,27 @@ router.post('/chat', async (req, res, next) => {
       fullQuery = `${resolvedTopicName}: ${message}`;
     }
 
+    // Build user filter
+    const userFilter = userId ? { userId: { "$eq": userId } } : undefined;
+
     // --- NEW: SNIPER SEARCH (Page-Specific Retrieval) ---
     let targetedContext = [];
     if (targetPage && vectorStore) {
       console.log(`[Tutor] 🎯 Sniper Search active for Page ${targetPage}`);
-      const targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
-        pageNumber: { "$eq": targetPage }
-      });
+      
+      let targetedResults = [];
+      if (userFilter) {
+        targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
+          pageNumber: { "$eq": targetPage },
+          ...userFilter
+        });
+      }
+      
+      if (targetedResults.length === 0) {
+        targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
+          pageNumber: { "$eq": targetPage }
+        });
+      }
 
       targetedResults.forEach(doc => {
         const page = doc.metadata.pageNumber || 'N/A';
@@ -154,13 +168,25 @@ router.post('/chat', async (req, res, next) => {
     }
 
     // Fetch 100 chunks (Increased to cast a much wider net for implicit references). 
-    const resultsWithScores = vectorStore 
-      ? await vectorStore.similaritySearchWithScore(fullQuery, 100).catch(err => {
-          console.warn('[Tutor] ⚠️ Pinecone search failed:', err.message);
-          return [];
-        })
-      : [];
-    console.log(`[Tutor] 📚 Pinecone search returned ${resultsWithScores.length} potential hits for class ${classCode}`);
+    let resultsWithScores = [];
+    if (vectorStore) {
+      try {
+        if (userFilter) {
+          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100, userFilter);
+          if (resultsWithScores.length > 0) {
+            console.log(`[Tutor] 📚 Filtered Pinecone search returned ${resultsWithScores.length} hits for user ${userId}`);
+          }
+        }
+        
+        // Fallback to unfiltered if no results found for the user (or if no userFilter)
+        if (resultsWithScores.length === 0) {
+          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+          console.log(`[Tutor] 📚 Unfiltered Pinecone search returned ${resultsWithScores.length} hits for class ${classCode}`);
+        }
+      } catch (err) {
+        console.warn('[Tutor] ⚠️ Pinecone search failed:', err.message);
+      }
+    }
 
     let broadContext = [];
 
