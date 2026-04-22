@@ -61,7 +61,9 @@ const incrementRetakesTaken = async (userId) => {
  */
 const updateHeatmap = async (userId, topicId, classCode, score) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    // Adjust for local timezone offset so it doesn't roll over to tomorrow early (UTC)
+    const date = new Date();
+    const today = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     const numericScore = score !== undefined && score !== null ? parseFloat(score) : null;
 
     await db.query(
