@@ -133,16 +133,30 @@ router.post('/upload', upload.any(), async (req, res, next) => {
     const subject = subjectMatch ? subjectMatch[0].toUpperCase() : "GEN";
     const placeholderName = extractedData?.courseName || `Course ${class_code}`;
 
-    // Use classModel.createClass for user-scoping consistency
-    const savedClass = await classModel.createClass({
-      class_code,
-      subject,
-      name: placeholderName.substring(0, 30),
-      user_id: user_id || null,
-      syllabus_url: syllabusUrl
-    });
-    
-    const actualCode = savedClass.class_code;
+    // LOOK UP the existing class first — NEVER create a scoped version just for an upload.
+    // The user already created the class (with their user_id) in step 1 from the frontend.
+    // Calling createClass here with null user_id causes phantom scoped classes like CS2305-XXXX.
+    let existingClass = await classModel.getClassByCode(class_code);
+    const actualCode = existingClass ? existingClass.class_code : class_code;
+
+    if (!existingClass) {
+      // Class doesn't exist at all — create it now (new class uploaded directly via URL)
+      console.log(`[Syllabus] 🏗️ Class ${class_code} not found — creating placeholder`);
+      existingClass = await classModel.createClass({
+        class_code,
+        subject,
+        name: placeholderName.substring(0, 30),
+        user_id: user_id || null,
+        syllabus_url: syllabusUrl
+      });
+    } else {
+      // Class exists — just update the syllabus_url on it
+      const db = require('../db');
+      await db.query(
+        "UPDATE classes SET syllabus_url = $1 WHERE class_code = $2",
+        [syllabusUrl, actualCode]
+      );
+    }
 
     // AUTOMATED EXTRACTION — use what we already extracted above (if we did), otherwise extract now
     console.log(`[Syllabus] 🤖 Starting automated extraction for ${actualCode}...`);
