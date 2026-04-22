@@ -26,7 +26,7 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
   });
 
   const fallbackLite = new ChatGoogleGenerativeAI({
-    model: "gemini-3.1-flash-lite",
+    model: "gemini-3.0-flash",
     apiKey: process.env.GEMINI_API_KEY,
     temperature,
     maxRetries: 1,
@@ -43,7 +43,7 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
  */
 function getFastLLM() {
   const primary = new ChatGoogleGenerativeAI({
-    model: "gemini-3.1-flash-lite",
+    model: "gemini-2.5-flash-lite",
     apiKey: process.env.GEMINI_API_KEY,
     temperature: 0.1,
     maxRetries: 2, // Non-zero retries for transient 503s
@@ -101,7 +101,7 @@ async function evaluateQuestion({ input, classCode, topicName }) {
   const models = [
     { name: "gemini-2.5-flash", label: "Standard (Primary - Most Stable)" },
     { name: "gemini-2.5-pro", label: "Pro (High Tokens Fallback)" },
-    { name: "gemini-3.1-flash-lite", label: "Lite (Speed Fallback)" }
+    { name: "gemini-3.0-flash", label: "Lite (Speed Fallback)" }
   ];
 
   const scoringPrompt = await evaluatorPrompt.format({

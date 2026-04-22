@@ -38,6 +38,7 @@ useEffect(() => {
 
     const [loading, setLoading] = useState(false)
     const [sessionId, setSessionId] = useState(null)
+    const sessionIdRef = useRef(null)
 
     const [showModal, setShowModal] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -50,7 +51,7 @@ useEffect(() => {
 
 
 async function handleSend() {
-        console.log("sessionId at send time:", sessionId)
+        console.log("sessionId at send time:", sessionIdRef.current)
 
     if (!input || loading) return;
 
@@ -68,7 +69,7 @@ async function handleSend() {
                 userId: session?.user?.id,
                 classCode: classCode,
                 topic: topic,
-                sessionId: sessionId ?? undefined,
+                sessionId: sessionIdRef.current ?? undefined,
             })
         })
         const data = await res.json()
@@ -77,7 +78,8 @@ async function handleSend() {
 
 
 
-        if (!sessionId && data.chatId) {
+        if (!sessionIdRef.current && data.chatId) {
+            sessionIdRef.current = data.chatId
             setSessionId(data.chatId)
         }
 
@@ -104,6 +106,7 @@ async function handleSend() {
   setActiveChatId(chatId);
   activeChatIdRef.current = chatId;
   setSessionId(chatId);
+  sessionIdRef.current = chatId;
   setLoading(true);
 
   try {
@@ -134,7 +137,8 @@ async function handleSend() {
         setMessages([]);
         setActiveChatId(null);
         activeChatIdRef.current = null
-        setSessionId(null);  //reset so next message starts a fresh session
+        setSessionId(null);
+        sessionIdRef.current = null;  //reset so next message starts a fresh session
         setInput("");
     }
 

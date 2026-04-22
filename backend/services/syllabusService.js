@@ -19,6 +19,24 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+const cleanAndParse = (text) => {
+  let cleaned = text
+    .replace(/```json|```/g, '')
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // strip control characters
+    .trim();
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start === -1 || end === -1) throw new Error('No JSON object found in AI response');
+  const jsonStr = cleaned.slice(start, end + 1);
+  try {
+    return JSON.parse(jsonStr);
+  } catch (e) {
+    // Try fixing common JSON issues
+    const fixed = jsonStr.replace(/'/g, '"');
+    return JSON.parse(fixed);
+  }
+};
+
 const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   console.log(`[Syllabus] 🛠️  Processing extraction... (Direct PDF: ${!!fileBuffer})`);
 
@@ -26,31 +44,8 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
     throw new Error("Missing GEMINI_API_KEY in backend/.env file.");
   }
 
-  // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    generationConfig: { responseMimeType: "application/json" }
-  });
-
-  // PREPARE CONTENT (Direct PDF if available, otherwise text)
-  let contentParts = [];
-
-  if (fileBuffer) {
-    console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
-    contentParts.push({
-      inlineData: {
-        data: Buffer.from(fileBuffer).toString("base64"),
-        mimeType: "application/pdf"
-      }
-    });
-  } else if (rawTextFallback) {
-    contentParts.push({ text: `Syllabus Text:\n${rawTextFallback}` });
-  } else {
-    throw new Error("No PDF file or pdfText provided.");
-  }
-
-  const prompt = `You are a concise academic assistant. Extract the bare essential syllabus details from the attached PDF.
+  const prompt = `You are a concise academic assistant. Extract the bare essential syllabus details from the attached content.
 Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".
 IMPORTANT: For weightPercentage, return ONLY the raw number (no '%' signs).
 
@@ -92,53 +87,64 @@ TOPIC EXTRACTION RULES for topics:
 - If a topic is vague (e.g. "Data Structures") but more specific subtopics are listed in the syllabus, extract the subtopics instead.
 - Aim for 5–15 specific topics. Do not include filler or placeholder topics.`;
 
-  contentParts.unshift({ text: prompt });
+  const MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.0-flash"];
+  // i want to go in order from this list, if one fails, try the next one, and if all fail, throw an error
 
-  console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
 
-  let lastError;
-  const maxRetries = 5;
-
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const result = await model.generateContent(contentParts);
-      const response = await result.response;
-      const aiResponseText = response.text();
-      const aiGeneratedData = JSON.parse(aiResponseText);
-
-      console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
-
-      // Validate with Zod
-      console.log("[Syllabus] 🔍 Validating against schema...");
+  // Strategy 1: Attempt Direct PDF Multimodal Extraction
+  if (fileBuffer) {
+    console.log("[Syllabus] 📄 Strategy 1: Direct PDF Multimodal Extraction...");
+    for (const modelId of MODELS) {
       try {
-        const validatedData = syllabusSchema.parse(aiGeneratedData);
-        console.log("[Syllabus] ✅ Validation successful.");
-        return validatedData;
-      } catch (zodErr) {
-        console.error("[Syllabus] ❌ Schema Validation FAILED.");
-        zodErr.rawData = aiGeneratedData;
-        throw zodErr;
+        console.log(`[Syllabus] 🔍 Attempting with ${modelId}...`);
+        const model = genAI.getGenerativeModel({ model: modelId, generationConfig: { responseMimeType: "application/json" } });
+        const result = await model.generateContent([
+          { text: prompt },
+          { inlineData: { data: Buffer.from(fileBuffer).toString("base64"), mimeType: "application/pdf" } }
+        ]);
+        const data = cleanAndParse(result.response.text());
+        const validated = syllabusSchema.parse(data);
+        console.log(`[Syllabus] ✅ Multimodal extraction successful with ${modelId}`);
+        return validated;
+      } catch (err) {
+        console.warn(`[Syllabus] ⚠️  Multimodal ${modelId} failed:`, err.message);
       }
-    } catch (error) {
-      lastError = error;
-      // Handle 503 (Service Unavailable) with wait and retry
-      if (error.message && (error.message.includes("503") || error.message.includes("Service Unavailable"))) {
-        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s, 16s, 32s
-        console.warn(`[Syllabus] ⚠️  503 Error (Attempt ${attempt}/${maxRetries}). Retrying in ${waitTime / 1000}s...`);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        continue;
-      }
-      // If it's a Zod error, don't retry, just throw
-      if (error.name === "ZodError") throw error;
-
-      // Otherwise, log and throw
-      console.error(`[Syllabus] ❌ Native Extraction failed (Attempt ${attempt}):`, error.message);
-      if (attempt === maxRetries) throw error;
-
-      // Small delay for other non-503 errors
-      await new Promise(resolve => setTimeout(resolve, 2000));
     }
   }
+
+  // Strategy 2: Fallback to Text-Based Extraction
+  console.log("[Syllabus] 📄 Strategy 2: Fallback to Text-Based Extraction...");
+  let textContent = rawTextFallback || "";
+  if (!textContent && fileBuffer && PDFParse) {
+    try {
+      console.log("[Syllabus] 📑 Extracting text from PDF via pdf-parse...");
+      const pdfData = await PDFParse(fileBuffer);
+      textContent = pdfData.text;
+    } catch (pdfErr) {
+      console.error("[Syllabus] ❌ pdf-parse failed:", pdfErr.message);
+    }
+  }
+
+  if (textContent) {
+    for (const modelId of MODELS) {
+      try {
+        console.log(`[Syllabus] 🔍 Attempting text extraction with ${modelId}...`);
+        const model = genAI.getGenerativeModel({ model: modelId, generationConfig: { responseMimeType: "application/json" } });
+        const result = await model.generateContent([
+          { text: prompt },
+          { text: `Syllabus Content:\n${textContent}` }
+        ]);
+        const data = cleanAndParse(result.response.text());
+        const validated = syllabusSchema.parse(data);
+        console.log(`[Syllabus] ✅ Text extraction successful with ${modelId}`);
+        return validated;
+      } catch (err) {
+        console.warn(`[Syllabus] ⚠️  Text extraction ${modelId} failed:`, err.message);
+      }
+    }
+  }
+
+  throw new Error("Syllabus extraction failed across all models and strategies.");
 };
 
 /**
@@ -152,7 +158,7 @@ TOPIC EXTRACTION RULES for topics:
 const normalizeCourseCode = (raw = '') => {
   if (!raw) return '';
   const deptMatch = raw.match(/[A-Za-z]+/);
-  const numMatch  = raw.match(/\d{4}/);
+  const numMatch = raw.match(/\d{4}/);
   if (deptMatch && numMatch) {
     return `${deptMatch[0].toUpperCase()}${numMatch[0]}`;
   }

@@ -3,8 +3,8 @@ const { zodToJsonSchema } = require("zod-to-json-schema"); //converts the schema
 //this is for just the syllabus pdf for other course info like slides, textbooks, we a structuredOutput schema with langchain
 // 1. Define the exact structure you want to extract from the Syllabus PDF
 const syllabusSchema = z.object({
-    courseName: z.string().describe("The full name of the course"),
-    courseCode: z.string().describe("The course identifier, e.g., CS101"),
+    courseName: z.string().nullable().optional().describe("The full name of the course"),
+    courseCode: z.string().nullable().optional().describe("The course identifier, e.g., CS101"),
     instructor: z.object({
         name: z.string().nullable().optional(),
         email: z.string().nullable().optional(),

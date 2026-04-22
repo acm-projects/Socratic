@@ -83,7 +83,8 @@ function getQuizGeneratorChain() {
     4. Provide the exact text of the correct answer in the correct_answer field.
     5. Provide a concise explanation for the correct answer based on the context.
     6. Do NOT include phrases like "According to the context". State questions as objective facts based on the provided material.
-    7. IMPORTANT: Return ONLY raw JSON. No markdown, no backticks, no extra text.
+    7. IMPORTANT: Ignore all logistical or administrative information (e.g., course schedules, office hours, due dates, instructor names, exam dates). Focus strictly on academic concepts, theories, and subject matter related to the topic.
+    8. IMPORTANT: Return ONLY raw JSON. No markdown, no backticks, no extra text.
   `);
 
   return {
