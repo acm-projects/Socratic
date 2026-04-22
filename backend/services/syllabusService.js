@@ -82,7 +82,15 @@ Return ONLY JSON matching this schema:
   "gradingPolicy": [ { "category": "category", "weightPercentage": 20 } ],
   "importantDates": [ { "eventName": "Name", "date": "YYYY-MM-DD" } ],
   "topics": ["Topic Name"]
-}`;
+}
+
+TOPIC EXTRACTION RULES for topics:
+- Extract ONLY specific academic concepts, algorithms, data structures, theorems, or techniques that a student would actually study and be tested on.
+- Each topic must be a concrete, teachable unit — not a course section header or administrative description.
+- VALID examples: "Binary Search Trees", "Dijkstra's Algorithm", "Central Limit Theorem", "Recursion", "Hash Tables", "Newton's Second Law", "Linked Lists", "Merge Sort", "Bayes' Theorem"
+- INVALID examples: "Course Overview", "Introduction", "Syllabus Review", "Course Policies", "courseCode", "courseName", "Week 1", "Module 1", "Getting Started", "Review", "Exam Preparation", "TBD", any topic that is just the course name or code
+- If a topic is vague (e.g. "Data Structures") but more specific subtopics are listed in the syllabus, extract the subtopics instead.
+- Aim for 5–15 specific topics. Do not include filler or placeholder topics.`;
 
   contentParts.unshift({ text: prompt });
 
