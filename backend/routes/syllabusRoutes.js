@@ -94,7 +94,7 @@ router.post('/save', async (req, res, next) => {
 // POST /upload — Upload syllabus PDF to S3 and save URL to classes table
 router.post('/upload', upload.any(), async (req, res, next) => {
   try {
-    let { class_code, user_id } = req.body;
+    const { class_code, user_id } = req.body;
 
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
 
@@ -102,23 +102,8 @@ router.post('/upload', upload.any(), async (req, res, next) => {
       return res.status(400).json({ error: "No PDF file provided." });
     }
 
-    // --- AUTO-DETECT class_code from PDF if not supplied ---
-    let extractedData = null;
     if (!class_code) {
-      console.log(`[Syllabus] 🔍 No class_code provided — extracting from PDF...`);
-      try {
-        extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
-        if (extractedData?.courseCode) {
-          class_code = normalizeCourseCode(extractedData.courseCode);
-          console.log(`[Syllabus] ✅ Auto-detected class_code: ${class_code} (from "${extractedData.courseCode}")`);
-        }
-      } catch (detectErr) {
-        console.warn(`[Syllabus] ⚠️ Auto-detection failed:`, detectErr.message);
-      }
-    }
-
-    if (!class_code) {
-      return res.status(400).json({ error: "class_code is required and could not be extracted from the PDF." });
+      return res.status(400).json({ error: "class_code is required." });
     }
 
     let syllabusUrl = null;
@@ -131,53 +116,38 @@ router.post('/upload', upload.any(), async (req, res, next) => {
 
     const subjectMatch = class_code.match(/[a-zA-Z]+/);
     const subject = subjectMatch ? subjectMatch[0].toUpperCase() : "GEN";
-    const placeholderName = extractedData?.courseName || `Course ${class_code}`;
+    const placeholderName = `Course ${class_code}`;
 
-    // LOOK UP the existing class first — NEVER create a scoped version just for an upload.
-    // The user already created the class (with their user_id) in step 1 from the frontend.
-    // Calling createClass here with null user_id causes phantom scoped classes like CS2305-XXXX.
-    let existingClass = await classModel.getClassByCode(class_code);
-    const actualCode = existingClass ? existingClass.class_code : class_code;
+    // Simple UPSERT directly on the provided class_code — no scoping, no phantoms.
+    // Preserves existing user_id if one already exists on the row.
+    const db = require('../db');
+    await db.query(
+      `INSERT INTO classes (class_code, subject, name, syllabus_url, user_id)
+       VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (class_code)
+       DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url,
+                     user_id = COALESCE(classes.user_id, EXCLUDED.user_id)`,
+      [class_code, subject, placeholderName, syllabusUrl, user_id || null]
+    );
 
-    if (!existingClass) {
-      // Class doesn't exist at all — create it now (new class uploaded directly via URL)
-      console.log(`[Syllabus] 🏗️ Class ${class_code} not found — creating placeholder`);
-      existingClass = await classModel.createClass({
-        class_code,
-        subject,
-        name: placeholderName.substring(0, 30),
-        user_id: user_id || null,
-        syllabus_url: syllabusUrl
-      });
-    } else {
-      // Class exists — just update the syllabus_url on it
-      const db = require('../db');
-      await db.query(
-        "UPDATE classes SET syllabus_url = $1 WHERE class_code = $2",
-        [syllabusUrl, actualCode]
-      );
-    }
-
-    // AUTOMATED EXTRACTION — use what we already extracted above (if we did), otherwise extract now
-    console.log(`[Syllabus] 🤖 Starting automated extraction for ${actualCode}...`);
+    // AUTOMATED EXTRACTION
+    console.log(`[Syllabus] 🤖 Starting automated extraction for ${class_code}...`);
+    let extractedData = null;
     try {
-      if (!extractedData) {
-        extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
-      }
+      extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
       if (extractedData) {
-        extractedData.courseCode = actualCode;
+        extractedData.courseCode = class_code;
         extractedData.user_id = user_id || null;
         await syllabusService.saveSyllabusData(extractedData);
-        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${actualCode}${user_id ? ` (user: ${user_id})` : ''}`);
+        console.log(`[Syllabus] ✅ Extraction complete for ${class_code}${user_id ? ` (user: ${user_id})` : ''}`);
       }
     } catch (extractErr) {
-      console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${actualCode}:`, extractErr.message);
+      console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${class_code}:`, extractErr.message);
     }
 
     res.json({
       message: "Syllabus uploaded and saved successfully.",
-      class_code: actualCode,
-      normalized_course_code: actualCode,
+      class_code,
       syllabus_url: syllabusUrl,
       extracted: !!extractedData,
       data: extractedData
