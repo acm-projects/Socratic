@@ -134,34 +134,36 @@ router.post('/upload', upload.any(), async (req, res, next) => {
     const placeholderName = extractedData?.courseName || `Course ${class_code}`;
 
     // Use classModel.createClass for user-scoping consistency
-    await classModel.createClass({
+    const savedClass = await classModel.createClass({
       class_code,
       subject,
       name: placeholderName.substring(0, 30),
       user_id: user_id || null,
       syllabus_url: syllabusUrl
     });
+    
+    const actualCode = savedClass.class_code;
 
     // AUTOMATED EXTRACTION — use what we already extracted above (if we did), otherwise extract now
-    console.log(`[Syllabus] 🤖 Starting automated extraction for ${class_code}...`);
+    console.log(`[Syllabus] 🤖 Starting automated extraction for ${actualCode}...`);
     try {
       if (!extractedData) {
         extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
       }
       if (extractedData) {
-        extractedData.courseCode = class_code;
+        extractedData.courseCode = actualCode;
         extractedData.user_id = user_id || null;
         await syllabusService.saveSyllabusData(extractedData);
-        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${class_code}${user_id ? ` (user: ${user_id})` : ''}`);
+        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${actualCode}${user_id ? ` (user: ${user_id})` : ''}`);
       }
     } catch (extractErr) {
-      console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${class_code}:`, extractErr.message);
+      console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${actualCode}:`, extractErr.message);
     }
 
     res.json({
       message: "Syllabus uploaded and saved successfully.",
-      class_code,
-      normalized_course_code: class_code,
+      class_code: actualCode,
+      normalized_course_code: actualCode,
       syllabus_url: syllabusUrl,
       extracted: !!extractedData,
       data: extractedData
