@@ -15,6 +15,7 @@ const quizModel = require('../models/quizModel');
 // We no longer use chatModel; we use sessionModel and topicModel instead.
 
 router.post('/chat', async (req, res, next) => {
+
   try {
     // Accept either sessionId OR chatId (chatId is legacy, sessionId is the new name)
     const { userId, classCode, topic: topicName, message, chatId: providedChatId, sessionId: providedSessionId } = req.body;
@@ -145,7 +146,7 @@ router.post('/chat', async (req, res, next) => {
     let targetedContext = [];
     if (targetPage && vectorStore) {
       console.log(`[Tutor] 🎯 Sniper Search active for Page ${targetPage}`);
-      
+
       let targetedResults = [];
       if (userFilter) {
         targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
@@ -153,7 +154,7 @@ router.post('/chat', async (req, res, next) => {
           ...userFilter
         });
       }
-      
+
       if (targetedResults.length === 0) {
         targetedResults = await vectorStore.similaritySearch(fullQuery, 3, {
           pageNumber: { "$eq": targetPage }
@@ -177,7 +178,7 @@ router.post('/chat', async (req, res, next) => {
             console.log(`[Tutor] 📚 Filtered Pinecone search returned ${resultsWithScores.length} hits for user ${userId}`);
           }
         }
-        
+
         // Fallback to unfiltered if no results found for the user (or if no userFilter)
         if (resultsWithScores.length === 0) {
           resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
@@ -339,6 +340,7 @@ router.post('/chat', async (req, res, next) => {
       .catch(err => console.warn('[Tutor] ⚠️ Failed to update streak:', err.message));
 
     res.json({
+      chatId,
       sessionId: chatId,
       isNewSession,
       reply: aiContent,
