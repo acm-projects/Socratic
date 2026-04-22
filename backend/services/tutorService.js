@@ -239,8 +239,8 @@ SOURCE CITATION:
   - "syllabus.pdf" → "the course syllabus"
   - When in doubt, strip file extensions, dashes, underscores, and numbers to form a clean name.
 - Always include specific page numbers when available. Format: "pages 6 and 10" or "pages 3–5".
-- Example: "📖 **Source**: You can find more about this in Lecture 15, pages 6 and 10."
-- Example: "📖 **Source**: This is covered in Week 3 slides (pages 2–4) and Chapter 4 of the textbook (page 87)."
+- Example: " **Source**: You can find more about this in Lecture 15, pages 6 and 10."
+- Example: " **Source**: This is covered in Week 3 slides (pages 2–4) and Chapter 4 of the textbook (page 87)."
 - If multiple sources were used, list them concisely in one sentence.
 - **If no relevant context was found in the COURSE CONTEXT, do NOT add a source note.** Just answer from your general knowledge naturally — do not mention that documents were missing or that you're using general knowledge.
 
