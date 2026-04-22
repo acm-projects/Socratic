@@ -19,24 +19,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-const cleanAndParse = (text) => {
-  let cleaned = text
-    .replace(/```json|```/g, '')
-    .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // strip control characters
-    .trim();
-  const start = cleaned.indexOf('{');
-  const end = cleaned.lastIndexOf('}');
-  if (start === -1 || end === -1) throw new Error('No JSON object found in AI response');
-  const jsonStr = cleaned.slice(start, end + 1);
-  try {
-    return JSON.parse(jsonStr);
-  } catch (e) {
-    // Try fixing common JSON issues
-    const fixed = jsonStr.replace(/'/g, '"');
-    return JSON.parse(fixed);
-  }
-};
-
 const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   console.log(`[Syllabus] 🛠️  Processing extraction... (Direct PDF: ${!!fileBuffer})`);
 
@@ -44,8 +26,31 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
     throw new Error("Missing GEMINI_API_KEY in backend/.env file.");
   }
 
+  // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const prompt = `You are a concise academic assistant. Extract the bare essential syllabus details from the attached content.
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    generationConfig: { responseMimeType: "application/json" }
+  });
+
+  // PREPARE CONTENT (Direct PDF if available, otherwise text)
+  let contentParts = [];
+
+  if (fileBuffer) {
+    console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
+    contentParts.push({
+      inlineData: {
+        data: Buffer.from(fileBuffer).toString("base64"),
+        mimeType: "application/pdf"
+      }
+    });
+  } else if (rawTextFallback) {
+    contentParts.push({ text: `Syllabus Text:\n${rawTextFallback}` });
+  } else {
+    throw new Error("No PDF file or pdfText provided.");
+  }
+
+  const prompt = `You are a concise academic assistant. Extract the bare essential syllabus details from the attached PDF.
 Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".
 IMPORTANT: For weightPercentage, return ONLY the raw number (no '%' signs).
 
@@ -77,94 +82,55 @@ Return ONLY JSON matching this schema:
   "gradingPolicy": [ { "category": "category", "weightPercentage": 20 } ],
   "importantDates": [ { "eventName": "Name", "date": "YYYY-MM-DD" } ],
   "topics": ["Topic Name"]
-}
+}`;
 
-TOPIC EXTRACTION RULES for topics:
-- Extract ONLY specific academic concepts, algorithms, data structures, theorems, or techniques that a student would actually study and be tested on.
-- Each topic must be a concrete, teachable unit — not a course section header or administrative description.
-- VALID examples: "Binary Search Trees", "Dijkstra's Algorithm", "Central Limit Theorem", "Recursion", "Hash Tables", "Newton's Second Law", "Linked Lists", "Merge Sort", "Bayes' Theorem"
-- INVALID examples: "Course Overview", "Introduction", "Syllabus Review", "Course Policies", "courseCode", "courseName", "Week 1", "Module 1", "Getting Started", "Review", "Exam Preparation", "TBD", any topic that is just the course name or code
-- If a topic is vague (e.g. "Data Structures") but more specific subtopics are listed in the syllabus, extract the subtopics instead.
-- Aim for 5–15 specific topics. Do not include filler or placeholder topics.`;
+  contentParts.unshift({ text: prompt });
 
-  const MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.0-flash"];
-  // i want to go in order from this list, if one fails, try the next one, and if all fail, throw an error
+  console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
 
+  let lastError;
+  const maxRetries = 5;
 
-  // Strategy 1: Attempt Direct PDF Multimodal Extraction
-  if (fileBuffer) {
-    console.log("[Syllabus] 📄 Strategy 1: Direct PDF Multimodal Extraction...");
-    for (const modelId of MODELS) {
-      try {
-        console.log(`[Syllabus] 🔍 Attempting with ${modelId}...`);
-        const model = genAI.getGenerativeModel({ model: modelId, generationConfig: { responseMimeType: "application/json" } });
-        const result = await model.generateContent([
-          { text: prompt },
-          { inlineData: { data: Buffer.from(fileBuffer).toString("base64"), mimeType: "application/pdf" } }
-        ]);
-        console.log(`[Syllabus] RAW AI RESPONSE:`, result.response.text());
-        const data = cleanAndParse(result.response.text());
-        const validated = syllabusSchema.parse(data);
-        console.log(`[Syllabus] ✅ Multimodal extraction successful with ${modelId}`);
-        return validated;
-      } catch (err) {
-        console.warn(`[Syllabus] ⚠️  Multimodal ${modelId} failed:`, err.message);
-      }
-    }
-  }
-
-  // Strategy 2: Fallback to Text-Based Extraction
-  console.log("[Syllabus] 📄 Strategy 2: Fallback to Text-Based Extraction...");
-  let textContent = rawTextFallback || "";
-  if (!textContent && fileBuffer && PDFParse) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log("[Syllabus] 📑 Extracting text from PDF via pdf-parse...");
-      const pdfData = await PDFParse(fileBuffer);
-      textContent = pdfData.text;
-    } catch (pdfErr) {
-      console.error("[Syllabus] ❌ pdf-parse failed:", pdfErr.message);
-    }
-  }
+      const result = await model.generateContent(contentParts);
+      const response = await result.response;
+      const aiResponseText = response.text();
+      const aiGeneratedData = JSON.parse(aiResponseText);
 
-  if (textContent) {
-    for (const modelId of MODELS) {
+      console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
+
+      // Validate with Zod
+      console.log("[Syllabus] 🔍 Validating against schema...");
       try {
-        console.log(`[Syllabus] 🔍 Attempting text extraction with ${modelId}...`);
-        const model = genAI.getGenerativeModel({ model: modelId, generationConfig: { responseMimeType: "application/json" } });
-        const result = await model.generateContent([
-          { text: prompt },
-          { text: `Syllabus Content:\n${textContent}` }
-        ]);
-        const data = cleanAndParse(result.response.text());
-        const validated = syllabusSchema.parse(data);
-        console.log(`[Syllabus] ✅ Text extraction successful with ${modelId}`);
-        return validated;
-      } catch (err) {
-        console.warn(`[Syllabus] ⚠️  Text extraction ${modelId} failed:`, err.message);
+        const validatedData = syllabusSchema.parse(aiGeneratedData);
+        console.log("[Syllabus] ✅ Validation successful.");
+        return validatedData;
+      } catch (zodErr) {
+        console.error("[Syllabus] ❌ Schema Validation FAILED.");
+        zodErr.rawData = aiGeneratedData;
+        throw zodErr;
       }
+    } catch (error) {
+      lastError = error;
+      // Handle 503 (Service Unavailable) with wait and retry
+      if (error.message && (error.message.includes("503") || error.message.includes("Service Unavailable"))) {
+        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s, 16s, 32s
+        console.warn(`[Syllabus] ⚠️  503 Error (Attempt ${attempt}/${maxRetries}). Retrying in ${waitTime / 1000}s...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+      // If it's a Zod error, don't retry, just throw
+      if (error.name === "ZodError") throw error;
+
+      // Otherwise, log and throw
+      console.error(`[Syllabus] ❌ Native Extraction failed (Attempt ${attempt}):`, error.message);
+      if (attempt === maxRetries) throw error;
+
+      // Small delay for other non-503 errors
+      await new Promise(resolve => setTimeout(resolve, 2000));
     }
   }
-
-  throw new Error("Syllabus extraction failed across all models and strategies.");
-};
-
-/**
- * Normalize a raw AI-extracted course code to a clean CS3341-style format.
- * Examples:
- *   "CS/CE/SE 3345.007" → "CS3345"
- *   "CS 3341"           → "CS3341"
- *   "MATH 2413"         → "MATH2413"
- *   "PHYS 2305"         → "PHYS2305"
- */
-const normalizeCourseCode = (raw = '') => {
-  if (!raw) return '';
-  const deptMatch = raw.match(/[A-Za-z]+/);
-  const numMatch = raw.match(/\d{4}/);
-  if (deptMatch && numMatch) {
-    return `${deptMatch[0].toUpperCase()}${numMatch[0]}`;
-  }
-  // Fallback: strip everything non-alphanumeric
-  return raw.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
 };
 
 const saveSyllabusData = async (payload) => {
@@ -174,31 +140,19 @@ const saveSyllabusData = async (payload) => {
   const subjectMatch = courseCode.match(/[a-zA-Z]+/);
   const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
 
-  // 1. Store Class — look up existing first to avoid creating phantom scoped duplicates.
-  // The frontend may call /upload without user_id, but the class was already created
-  // in step 1 with the user_id. We must reuse that record, not create a new scoped one.
+  // 1. Store Class (include user_id so the class is tied to the user)
   const classData = {
     class_code: safeCourseCode.substring(0, 50),
     subject: subject,
-    name: courseName ? courseName.substring(0, 30) : safeCourseCode,
+    name: courseName.substring(0, 30),
     user_id: user_id || null
   };
-  // The safeCourseCode sanitizes underscores to hyphens. The lookup must use the same form.
-  const lookupCode = safeCourseCode.substring(0, 50);
-  let classRecord = await classModel.getClassByCode(lookupCode);
-  if (!classRecord) {
-    console.log(`[Syllabus] 🏗️ Class not found, creating: ${lookupCode}`);
-    classRecord = await classModel.createClass(classData);
-  }
+  const newClass = await classModel.createClass(classData);
   // Use the actual stored class_code (may be scoped e.g. CS3341-XXXX) for all child records
-  const storedCode = classRecord.class_code;
+  const storedCode = newClass.class_code;
   console.log(`[Syllabus] 🏫 Class verified/updated: ${storedCode}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
 
   // 2. Upsert syllabus_info (professor, TA, grading)
-  // Log exactly what the AI returned so we can debug extraction issues
-  console.log(`[Syllabus] 👤 Instructor from AI:`, JSON.stringify(instructor));
-  console.log(`[Syllabus] 🎓 TA from AI:`, JSON.stringify(ta));
-  console.log(`[Syllabus] 📊 Grading from AI:`, JSON.stringify(gradingPolicy));
   try {
     await pool.query(
       `INSERT INTO syllabus_info
@@ -207,14 +161,14 @@ const saveSyllabusData = async (payload) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
        ON CONFLICT (class_code)
        DO UPDATE SET
-         professor_name    = COALESCE(EXCLUDED.professor_name,  syllabus_info.professor_name),
-         professor_email   = COALESCE(EXCLUDED.professor_email, syllabus_info.professor_email),
-         office_hours      = COALESCE(EXCLUDED.office_hours,    syllabus_info.office_hours),
-         office_location   = COALESCE(EXCLUDED.office_location, syllabus_info.office_location),
-         ta_name           = COALESCE(EXCLUDED.ta_name,         syllabus_info.ta_name),
-         ta_email          = COALESCE(EXCLUDED.ta_email,         syllabus_info.ta_email),
-         ta_office_hours   = COALESCE(EXCLUDED.ta_office_hours, syllabus_info.ta_office_hours),
-         grading_policy    = COALESCE(EXCLUDED.grading_policy,  syllabus_info.grading_policy),
+         professor_name    = EXCLUDED.professor_name,
+         professor_email   = EXCLUDED.professor_email,
+         office_hours      = EXCLUDED.office_hours,
+         office_location   = EXCLUDED.office_location,
+         ta_name           = EXCLUDED.ta_name,
+         ta_email          = EXCLUDED.ta_email,
+         ta_office_hours   = EXCLUDED.ta_office_hours,
+         grading_policy    = EXCLUDED.grading_policy,
          updated_at        = NOW()`,
       [
         storedCode,
@@ -225,7 +179,7 @@ const saveSyllabusData = async (payload) => {
         ta?.name || null,
         ta?.email || null,
         ta?.officeHours || null,
-        gradingPolicy?.length ? JSON.stringify(gradingPolicy) : null
+        gradingPolicy ? JSON.stringify(gradingPolicy) : null
       ]
     );
     console.log(`[Syllabus] 📋 syllabus_info upserted for ${storedCode}`);
@@ -275,15 +229,13 @@ const saveSyllabusData = async (payload) => {
   }
 
   return {
-    savedClass: classRecord,
+    savedClass: newClass,
     savedTopics: savedTopics,
-    savedTasks: savedTasks,
-    normalizedCourseCode: normalizeCourseCode(courseCode)
+    savedTasks: savedTasks
   };
 };
 
 module.exports = {
   extractSyllabusData,
-  saveSyllabusData,
-  normalizeCourseCode
+  saveSyllabusData
 };
