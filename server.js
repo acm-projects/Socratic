@@ -4,12 +4,7 @@ const { randomUUID } = require("crypto")
 
 const express = require("express")
 const cors = require("cors")
-const { Pool } = require("pg")
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-})
+const pool = require('./backend/db');
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -405,7 +400,12 @@ app.post("/classes", async (req, res) => {
   try {
     const { class_code, subject, name, user_id } = req.body
     const result = await pool.query(
-      "INSERT INTO classes (class_code, subject, name, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
+      `INSERT INTO classes (class_code, subject, name, user_id)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (class_code)
+       DO UPDATE SET subject = EXCLUDED.subject, name = EXCLUDED.name,
+                     user_id = COALESCE(EXCLUDED.user_id, classes.user_id)
+       RETURNING *`,
       [class_code, subject, name, user_id]
     )
     res.json(result.rows[0])

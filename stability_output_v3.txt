@@ -1,0 +1,6 @@
+[dotenv@17.3.1] injecting env (9) from backend/.env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+--- Testing suffix conflict stability ---
+Created CONFLICT101 for user-a
+Call 1 (null user) result: CONFLICT101-sgzn
+Call 2 (null user) result: CONFLICT101-1a9s
+FAIL: Suffix changes every time for null user when conflict exists!

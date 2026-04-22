@@ -5,7 +5,8 @@ const vectorService = require('../services/vectorService');
 
 router.get('/', async (req, res, next) => {
   try {
-    const classes = await classModel.getAllClasses();
+    const { userId } = req.query;
+    const classes = await classModel.getAllClasses(userId);
     res.json(classes);
   } catch (error) { next(error); }
 });

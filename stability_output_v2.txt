@@ -1,0 +1,5 @@
+[dotenv@17.3.1] injecting env (9) from backend/.env -- tip: 🛡️ auth for agents: https://vestauth.com
+--- Testing suffix stability ---
+Call 1 result: TEST101
+Call 2 result: TEST101
+PASS: Suffix is stable.

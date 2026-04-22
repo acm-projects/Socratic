@@ -102,6 +102,7 @@ TOPIC EXTRACTION RULES for topics:
           { text: prompt },
           { inlineData: { data: Buffer.from(fileBuffer).toString("base64"), mimeType: "application/pdf" } }
         ]);
+        console.log(`[Syllabus] RAW AI RESPONSE:`, result.response.text());
         const data = cleanAndParse(result.response.text());
         const validated = syllabusSchema.parse(data);
         console.log(`[Syllabus] ✅ Multimodal extraction successful with ${modelId}`);
@@ -173,16 +174,24 @@ const saveSyllabusData = async (payload) => {
   const subjectMatch = courseCode.match(/[a-zA-Z]+/);
   const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
 
-  // 1. Store Class (include user_id so the class is tied to the user)
+  // 1. Store Class — look up existing first to avoid creating phantom scoped duplicates.
+  // The frontend may call /upload without user_id, but the class was already created
+  // in step 1 with the user_id. We must reuse that record, not create a new scoped one.
   const classData = {
     class_code: safeCourseCode.substring(0, 50),
     subject: subject,
-    name: courseName.substring(0, 30),
+    name: courseName ? courseName.substring(0, 30) : safeCourseCode,
     user_id: user_id || null
   };
-  const newClass = await classModel.createClass(classData);
+  // The safeCourseCode sanitizes underscores to hyphens. The lookup must use the same form.
+  const lookupCode = safeCourseCode.substring(0, 50);
+  let classRecord = await classModel.getClassByCode(lookupCode);
+  if (!classRecord) {
+    console.log(`[Syllabus] 🏗️ Class not found, creating: ${lookupCode}`);
+    classRecord = await classModel.createClass(classData);
+  }
   // Use the actual stored class_code (may be scoped e.g. CS3341-XXXX) for all child records
-  const storedCode = newClass.class_code;
+  const storedCode = classRecord.class_code;
   console.log(`[Syllabus] 🏫 Class verified/updated: ${storedCode}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
 
   // 2. Upsert syllabus_info (professor, TA, grading)
@@ -262,7 +271,7 @@ const saveSyllabusData = async (payload) => {
   }
 
   return {
-    savedClass: newClass,
+    savedClass: classRecord,
     savedTopics: savedTopics,
     savedTasks: savedTasks,
     normalizedCourseCode: normalizeCourseCode(courseCode)

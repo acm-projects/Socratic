@@ -1,7 +1,9 @@
 const db = require('../db');
 
-const getAllClasses = async () => {
-  const result = await db.query("SELECT * FROM classes");
+const getAllClasses = async (userId = null) => {
+  const result = userId
+    ? await db.query("SELECT * FROM classes WHERE user_id = $1", [userId])
+    : await db.query("SELECT * FROM classes");
   return result.rows;
 };
 const getClassByCode = async (code) => {
@@ -20,9 +22,28 @@ const createClass = async (data) => {
   if (existing.rows[0]) {
     // Belongs to same user — return it
     if (existing.rows[0].user_id === user_id) return existing.rows[0];
-    // Belongs to different user — create user-scoped version
+
+    // Belongs to different user — need a scoped version.
+    // For null users: first check if ANY anonymous scoped version already exists
+    // (we can't predict the suffix, so we do a prefix search)
+    if (!user_id) {
+      const existingAnon = await db.query(
+        "SELECT * FROM classes WHERE class_code LIKE $1 AND user_id IS NULL ORDER BY created_at ASC LIMIT 1",
+        [`${class_code}-%`]
+      );
+      if (existingAnon.rows[0]) return existingAnon.rows[0];
+    }
+
     const suffix = user_id ? user_id.slice(-4) : Math.random().toString(36).slice(-4);
     const scopedCode = `${class_code}-${suffix}`;
+
+    // Check if scoped version already exists for this user — return it if so
+    const existingScoped = await db.query(
+      "SELECT * FROM classes WHERE class_code = $1 AND user_id IS NOT DISTINCT FROM $2",
+      [scopedCode, user_id || null]
+    );
+    if (existingScoped.rows[0]) return existingScoped.rows[0];
+
     const result = await db.query(
       `INSERT INTO classes (class_code, subject, name, user_id)
        VALUES ($1, $2, $3, $4)
