@@ -71,14 +71,30 @@ async function uploadToS3(filePath, classCode, docType, originalName) {
  *   5. Return ingestion summary
  */
 router.post('/upload', upload.array('file', 10), async (req, res, next) => {
-  const { classCode, docType = 'document' } = req.body;
+  let { classCode, docType = 'document' } = req.body;
   const userId = req.body.user_id || req.body['user-id'] || null;
 
-  if (!classCode) {
-    return res.status(400).json({ error: 'classCode is required.' });
-  }
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ error: 'At least one PDF file is required.' });
+  }
+
+  // --- AUTO-DETECT classCode from PDF if not supplied ---
+  if (!classCode) {
+    console.log(`[Ingest] 🔍 No classCode provided — extracting from PDF...`);
+    try {
+      const fileBuffer = fs.readFileSync(req.files[0].path);
+      const extracted = await syllabusService.extractSyllabusData(fileBuffer);
+      if (extracted?.courseCode) {
+        classCode = syllabusService.normalizeCourseCode(extracted.courseCode);
+        console.log(`[Ingest] ✅ Auto-detected classCode: ${classCode} (from "${extracted.courseCode}")`);
+      }
+    } catch (detectErr) {
+      console.warn(`[Ingest] ⚠️ Auto-detection failed:`, detectErr.message);
+    }
+  }
+
+  if (!classCode) {
+    return res.status(400).json({ error: 'classCode is required and could not be extracted from the PDF.' });
   }
 
   const results = [];
@@ -122,6 +138,10 @@ router.post('/upload', upload.array('file', 10), async (req, res, next) => {
         // Extract via Multimodal AI
         const rawJson = await syllabusService.extractSyllabusData(fileBuffer);
         
+        // Inject user_id and normalized classCode for proper DB linkage
+        rawJson.courseCode = classCode;
+        rawJson.user_id = userId;
+
         // Save to Database (Tasks, Topics, etc.)
         const saved = await syllabusService.saveSyllabusData(rawJson);
         
