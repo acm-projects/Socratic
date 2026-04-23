@@ -158,34 +158,6 @@ router.post('/upload', upload.any(), async (req, res, next) => {
       }
     }
 
-    // --- NEW: AUTOMATED PINECONE INGESTION ---
-    // Every syllabus extraction now also populates the Vector DB for the Tutor
-    try {
-      console.log(`[Syllabus] 🧠 Syncing ${file.originalname} to Pinecone...`);
-      const ingestService = require('../services/ingestService');
-      const fs = require('fs');
-      const path = require('path');
-      const os = require('os');
-
-      // Create a temporary file to ingest
-      const tempDir = os.tmpdir();
-      const tempPath = path.join(tempDir, `socratic_sync_${Date.now()}_${file.originalname}`);
-      fs.writeFileSync(tempPath, file.buffer);
-
-      // Trigger ingestion (Vision-based for high quality)
-      await ingestService.ingestDocumentsWithVision(
-        [{ filePath: tempPath, originalName: file.originalname }],
-        class_code,
-        'syllabus',
-        user_id
-      );
-
-      // Clean up
-      if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
-      console.log(`[Syllabus] ✅ Pinecone sync successful for ${class_code}`);
-    } catch (pineconeErr) {
-      console.error(`[Syllabus] ⚠️ Pinecone sync failed:`, pineconeErr.message);
-    }
     } catch (extractErr) {
       console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${class_code}:`, extractErr.message);
       // We don't fail the whole request since the upload was successful
