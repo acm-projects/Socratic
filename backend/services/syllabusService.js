@@ -88,49 +88,58 @@ Return ONLY JSON matching this schema:
 
   console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
 
+  const modelsToTry = ["gemini-2.5-flash", "gemini-2.5-pro"];
   let lastError;
-  const maxRetries = 5;
 
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const result = await model.generateContent(contentParts);
-      const response = await result.response;
-      const aiResponseText = response.text();
-      const aiGeneratedData = JSON.parse(aiResponseText);
+  for (const modelId of modelsToTry) {
+    console.log(`[Syllabus] 🤖 Attempting extraction with model: ${modelId}...`);
+    const model = genAI.getGenerativeModel({
+      model: modelId,
+      generationConfig: { responseMimeType: "application/json" }
+    });
 
-      console.log("[Syllabus] 📄 Raw AI Output received:", JSON.stringify(aiGeneratedData, null, 2));
-
-      // Validate with Zod
-      console.log("[Syllabus] 🔍 Validating against schema...");
+    const maxRetriesPerModel = 2;
+    for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
       try {
-        const validatedData = syllabusSchema.parse(aiGeneratedData);
-        console.log("[Syllabus] ✅ Validation successful.");
-        return validatedData;
-      } catch (zodErr) {
-        console.error("[Syllabus] ❌ Schema Validation FAILED.");
-        zodErr.rawData = aiGeneratedData;
-        throw zodErr;
-      }
-    } catch (error) {
-      lastError = error;
-      // Handle 503 (Service Unavailable) with wait and retry
-      if (error.message && (error.message.includes("503") || error.message.includes("Service Unavailable"))) {
-        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s, 16s, 32s
-        console.warn(`[Syllabus] ⚠️  503 Error (Attempt ${attempt}/${maxRetries}). Retrying in ${waitTime / 1000}s...`);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        continue;
-      }
-      // If it's a Zod error, don't retry, just throw
-      if (error.name === "ZodError") throw error;
+        const result = await model.generateContent(contentParts);
+        const response = await result.response;
+        const aiResponseText = response.text();
+        const aiGeneratedData = JSON.parse(aiResponseText);
 
-      // Otherwise, log and throw
-      console.error(`[Syllabus] ❌ Native Extraction failed (Attempt ${attempt}):`, error.message);
-      if (attempt === maxRetries) throw error;
+        console.log(`[Syllabus] 📄 Raw AI Output received from ${modelId}:`, JSON.stringify(aiGeneratedData, null, 2));
 
-      // Small delay for other non-503 errors
-      await new Promise(resolve => setTimeout(resolve, 2000));
+        // Validate with Zod
+        console.log("[Syllabus] 🔍 Validating against schema...");
+        try {
+          const validatedData = syllabusSchema.parse(aiGeneratedData);
+          console.log(`[Syllabus] ✅ Validation successful using ${modelId}.`);
+          return validatedData;
+        } catch (zodErr) {
+          console.error(`[Syllabus] ❌ Schema Validation FAILED for ${modelId}.`);
+          zodErr.rawData = aiGeneratedData;
+          throw zodErr;
+        }
+      } catch (error) {
+        lastError = error;
+        // Handle 503 (Service Unavailable) or 429 (Rate Limit) with wait and retry
+        const isRetryable = error.message && (error.message.includes("503") || error.message.includes("Service Unavailable") || error.message.includes("429"));
+
+        if (isRetryable && attempt < maxRetriesPerModel) {
+          const waitTime = Math.pow(2, attempt) * 1000;
+          console.warn(`[Syllabus] ⚠️  Retryable Error (${modelId}, attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
+          await new Promise(resolve => setTimeout(resolve, waitTime));
+          continue; // Try same model again
+        }
+
+        console.error(`[Syllabus] ❌ Extraction failed for ${modelId} (Attempt ${attempt}):`, error.message);
+        break; // Break retry loop, try next model
+      }
     }
   }
+
+  // If we reach here, all models failed
+  console.error("[Syllabus] 🛑 All models failed to extract syllabus data.");
+  throw lastError || new Error("Failed to extract syllabus data after trying multiple models.");
 };
 
 const saveSyllabusData = async (payload) => {
