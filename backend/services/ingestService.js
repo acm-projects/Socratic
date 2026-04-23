@@ -167,9 +167,9 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document',
 
   // Vision Fallback Models (Waterfall)
   const VISION_MODELS = [
-    "gemini-2.0-flash",
-    "gemini-1.5-pro",
-    "gemini-1.5-flash"
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-3.0-flash"
   ];
 
   let totalIngested = 0;
