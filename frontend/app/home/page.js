@@ -24,7 +24,7 @@ export default function HomePage() {
 //  fetching courses for class grid
   useEffect(() => { 
     if (!session) return;
-   fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
+   fetch(`/backend/classes?user_id=${session.user.id}`)
     .then(res => res.json())
     .then(data => {
       setCourses(data)
@@ -38,7 +38,7 @@ const [profile, setProfile] = useState(null);
 
 useEffect(() => {
   if (!session) return;
-  fetch(`http://3.128.186.118:5000/users/${session.user.id}`)
+  fetch(`/backend/users/${session.user.id}`)
     .then(res => res.json())
     .then(data => setProfile(data))
     .catch(err => console.error(err));

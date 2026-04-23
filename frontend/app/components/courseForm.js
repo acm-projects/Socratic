@@ -16,7 +16,7 @@ export default function Home() {
   console.log("courseCode:", courseCode, "subject:", subject)
 
   // get user
-  const usersRes = await fetch("http://3.128.186.118:5000/users")
+  const usersRes = await fetch("/backend/users")
   const users = await usersRes.json()
   const me = users.find(u => u.email === session.user.email)
 
@@ -26,7 +26,7 @@ export default function Home() {
   }
 
   // save class
-  const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+  const courseRes = await fetch("/backend/classes", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -51,7 +51,7 @@ export default function Home() {
     uploadForm.append("syllabusPdf", file)
     uploadForm.append("class_code", courseCode)
 
-    const uploadRes = await fetch("http://3.128.186.118:5000/api/syllabus/upload", {
+    const uploadRes = await fetch("/backend/api/syllabus/upload", {
       method: "POST",
       body: uploadForm
     })
@@ -62,7 +62,7 @@ export default function Home() {
     const extractForm = new FormData()
     extractForm.append("syllabusPdf", file)
 
-    const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
+    const extractRes = await fetch("/backend/api/syllabus/extract", {
       method: "POST",
       body: extractForm
     })
@@ -77,7 +77,7 @@ export default function Home() {
     console.log("Extracted:", extractData.message)
 
     // verify tasks saved
-    const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`)
+    const tasksRes = await fetch(`/backend/api/syllabus/tasks/${courseCode}`)
     const tasksData = await tasksRes.json()
     console.log("Tasks saved:", tasksData)
   }

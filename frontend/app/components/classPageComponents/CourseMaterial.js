@@ -9,7 +9,7 @@ export default function CourseMaterial({ courseId }) {
 
   useEffect(() => {
     if (!courseId) return
-    fetch(`http://3.128.186.118:5000/classes/${courseId}/materials`)
+    fetch(`/backend/classes/${courseId}/materials`)
       .then(res => res.json())
       .then(data => {
         console.log("materials:", data)

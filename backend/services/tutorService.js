@@ -7,7 +7,7 @@ const { BaseChatMessageHistory } = require('@langchain/core/chat_history');
 const pool = require('../db');
 require('dotenv').config({ path: __dirname + '/../.env' });
 
-const TARGET_MODEL = "gemini-2.0-flash";
+const TARGET_MODEL = "gemini-2.5-flash";
 
 // --- Robust LLM Configuration ---
 function getRobustLLM(temperature = 0.2, maxRetries = 1) {
@@ -19,7 +19,14 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
   });
 
   const fallbackPro = new ChatGoogleGenerativeAI({
-    model: "gemini-1.5-pro",
+    model: "gemini-2.5-pro",
+    apiKey: process.env.GEMINI_API_KEY,
+    temperature,
+    maxRetries: 1,
+  });
+
+  const fallbackLite = new ChatGoogleGenerativeAI({
+    model: "gemini-3.0-flash",
     apiKey: process.env.GEMINI_API_KEY,
     temperature,
     maxRetries: 1,

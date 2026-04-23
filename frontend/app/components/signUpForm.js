@@ -36,7 +36,7 @@ export default function Signup() {
   async function handleSubmit() {
     if (!isValid) return //checks if all fields were entered
 
-    const usersRes = await fetch("http://3.128.186.118:5000/users")
+    const usersRes = await fetch("/backend/users")
     const users = await usersRes.json()
     const me = users.find(u => u.email === session.user.email) //change this
 
@@ -45,7 +45,7 @@ export default function Signup() {
       return
     }
 
-    const res = await fetch(`http://3.128.186.118:5000/users/${me.id}`, {
+    const res = await fetch(`/backend/users/${me.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

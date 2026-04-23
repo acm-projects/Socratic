@@ -23,7 +23,7 @@ export default function EditCourseModal({ course, onClose, onUpdate }) {
     }
     
     try {
-      const res = await fetch(`http://3.128.186.118:5000/classes/${course.class_code}`, {
+      const res = await fetch(`/backend/classes/${course.class_code}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

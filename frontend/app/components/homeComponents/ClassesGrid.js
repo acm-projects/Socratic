@@ -33,7 +33,12 @@ export default function ClassesGrid({ courses: initialCourses }) {
     setCourses(prev => prev.filter(c => c.class_code !== class_code))
     
     try {
-      const res = await fetch(`http://3.128.186.118:5000/classes/${class_code}?user_id=${session.user.id}`, { 
+      const encodedCode = encodeURIComponent(class_code || '');
+      if (!encodedCode) {
+        console.error("No class code provided for deletion");
+        return;
+      }
+      const res = await fetch(`/backend/api/classes/${encodedCode}?user_id=${session.user.id}`, { 
         method: "DELETE"
       })
       if (!res.ok) {

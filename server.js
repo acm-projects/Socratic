@@ -2,16 +2,6 @@ require('dotenv').config()
 
 const { randomUUID } = require("crypto")
 
-const sanitizeClassCode = (code) => {
-  if (!code) return code;
-  try {
-    const decoded = decodeURIComponent(code);
-    return decoded.trim().replace(/\s+/g, '-').toUpperCase();
-  } catch (e) {
-    return code.trim().replace(/\s+/g, '-').toUpperCase();
-  }
-};
-
 const express = require("express")
 const cors = require("cors")
 const pool = require('./backend/db');
@@ -399,8 +389,7 @@ app.get("/classes", async (req, res) => {
 
 app.get("/classes/:code", async (req, res) => {
   try {
-    const code = sanitizeClassCode(req.params.code);
-    const result = await pool.query("SELECT * FROM classes WHERE class_code = $1", [code])
+    const result = await pool.query("SELECT * FROM classes WHERE class_code = $1", [req.params.code])
     res.json(result.rows[0])
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -441,30 +430,20 @@ app.put("/classes/:code", async (req, res) => {
 
 app.delete("/classes/:code", async (req, res) => {
   try {
-    const code = sanitizeClassCode(req.params.code);
     const { user_id } = req.query
     if (!user_id) return res.status(400).json({ error: "user_id is required to delete a class" })
-    
-    if (!code) return res.status(400).json({ error: "Class code is required" });
 
-    // 1. Delete Topics
-    await pool.query("DELETE FROM topics WHERE class_code = $1", [code])
-
-    // 2. Delete Syllabus Info (Professor, TA, etc.)
-    await pool.query("DELETE FROM syllabus_info WHERE class_code = $1", [code])
-
-    // 3. Delete Class Tasks
-    await pool.query("DELETE FROM class_tasks WHERE class_code = $1", [code])
+    await pool.query("DELETE FROM topics WHERE class_code = $1", [req.params.code])
 
     // Get class name before deleting so we can clean up engagement
     const classInfo = await pool.query(
       "SELECT name FROM classes WHERE class_code = $1 AND user_id = $2",
-      [code, user_id]
+      [req.params.code, user_id]
     )
 
     const result = await pool.query(
       "DELETE FROM classes WHERE class_code = $1 AND user_id = $2 RETURNING *",
-      [code, user_id]
+      [req.params.code, user_id]
     )
 
     if (result.rows.length === 0) {

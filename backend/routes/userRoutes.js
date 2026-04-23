@@ -209,4 +209,17 @@ router.delete('/:id', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+router.get('/:id/sessions', async (req, res, next) => {
+  try {
+    const result = await db.query(
+      `SELECT session_id, class_code, user_id, topic_id, title, created_at 
+       FROM chat_sessions 
+       WHERE user_id = $1 
+       ORDER BY created_at DESC`,
+      [req.params.id]
+    );
+    res.json(result.rows);
+  } catch (error) { next(error); }
+});
+
 module.exports = router;

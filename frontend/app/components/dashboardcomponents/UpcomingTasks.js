@@ -15,7 +15,7 @@ export default function UpcomingTasks() {
 
 
    useEffect(() => {
-       fetch('http://3.128.186.118:5000/api/calendar/upcoming-events')
+       fetch('/backend/api/calendar/upcoming-events')
            .then(res => res.json())
            .then(data => setMeetings(data))
            .catch(err => console.error(err));

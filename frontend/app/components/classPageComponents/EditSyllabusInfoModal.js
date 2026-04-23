@@ -21,7 +21,7 @@ export default function EditSyllabusModal({ professor, ta, officeHours, courseId
     }
 
     try {
-      const res = await fetch(`http://3.128.186.118:5000/api/syllabus/info/${courseId}`, {
+      const res = await fetch(`/backend/api/syllabus/info/${courseId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedInfo)

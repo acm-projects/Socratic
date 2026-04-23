@@ -31,13 +31,13 @@ router.delete('/:code', async (req, res, next) => {
     if (!deletedClass) {
       return res.status(404).json({ error: "Class not found" });
     }
-    
+
     if (deletedClass.user_id) {
       // Background deletion of Pinecone vectors for this user
       vectorService.deleteUserClassEmbeddings(deletedClass.class_code, deletedClass.user_id)
         .catch(err => console.warn(`[ClassRoute] ⚠️ Failed to delete Pinecone embeddings for class ${deletedClass.class_code}:`, err.message));
     }
-    
+
     res.json({ message: "Successfully deleted class and all associated data.", class: deletedClass });
   } catch (error) { next(error); }
 });

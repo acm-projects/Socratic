@@ -18,7 +18,7 @@ export default function Addcoursemodal({ onClose, onAdd }) {
     try {
       // save class
       console.log("saving class with user_id:", session.user.id)
-      const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+      const courseRes = await fetch("/backend/classes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -44,7 +44,7 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         uploadForm.append("class_code", courseCode)
        
 
-        const uploadRes = await fetch("http://3.128.186.118:5000/api/syllabus/upload", {
+        const uploadRes = await fetch("/backend/api/syllabus/upload", {
           method: "POST",
           body: uploadForm
         })
@@ -59,7 +59,7 @@ export default function Addcoursemodal({ onClose, onAdd }) {
           console.log("4. uploaded", uploadData.syllabus_url)
         }
         // save syllabus to course materials
-        await fetch("http://3.128.186.118:5000/course-materials", {
+        await fetch("/backend/course-materials", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -80,7 +80,7 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         extractForm.append("user_id", session.user.id)      
         extractForm.append("class_code", courseCode)         
 
-        const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
+        const extractRes = await fetch("/backend/api/syllabus/extract", {
           method: "POST",
           body: extractForm
         })
@@ -94,7 +94,7 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         }
 
         // restore  name the user entered
-        await fetch(`http://3.128.186.118:5000/classes/${courseCode}`, {
+        await fetch(`/backend/classes/${courseCode}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -107,13 +107,13 @@ export default function Addcoursemodal({ onClose, onAdd }) {
 
         // verify topics saved
         console.log("6. verifying topics saved")
-        const topicsRes = await fetch(`http://3.128.186.118:5000/classes/${courseCode}/topics`)
+        const topicsRes = await fetch(`/backend/classes/${courseCode}/topics`)
         const topicsData = await topicsRes.json()
         console.log("6. topics:", JSON.stringify(topicsData.topics))
 
         // verify tasks saved
         console.log("7. verifying tasks saved")
-        const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`)
+        const tasksRes = await fetch(`/backend/api/syllabus/tasks/${courseCode}`)
         const tasksData = await tasksRes.json()
         console.log("7. tasks:", JSON.stringify(tasksData))
 

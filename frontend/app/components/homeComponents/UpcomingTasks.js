@@ -16,7 +16,7 @@ export default function UpcomingTasks() {
     const fetchUpcomingTasks = async () => {
       try {
         const res = await fetch(
-          `http://3.128.186.118:5000/api/users/${userId}/upcoming-tasks`
+          `/backend/api/users/${userId}/upcoming-tasks`
         );
         const data = await res.json();
         console.log('tasks:', data);
@@ -38,7 +38,7 @@ export default function UpcomingTasks() {
     ));
 
     try {
-      const res = await fetch(`http://3.128.186.118:5000/api/users/${userId}/tasks/${taskId}`, {
+      const res = await fetch(`/backend/api/users/${userId}/tasks/${taskId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completed: !currentCompleted })

@@ -11,7 +11,7 @@ export default function UpcomingTasks({ tasks, onToggle, classInfo }) {
     onToggle?.(task.id, newCompleted)
 
     try {
-      const res = await fetch(`http://3.128.186.118:5000/api/users/${task.user_id}/tasks/${task.id}`, {
+      const res = await fetch(`/backend/api/users/${task.user_id}/tasks/${task.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ completed: newCompleted })

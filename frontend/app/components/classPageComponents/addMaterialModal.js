@@ -29,7 +29,7 @@ export default function AddMaterialModal({ onClose, onAdd, courseId }) {
       ingestForm.append("classCode", courseId)
       ingestForm.append("docType", "material")
 
-      const ingestRes = await fetch("http://3.128.186.118:5000/api/ingest/upload", {
+      const ingestRes = await fetch("/backend/api/ingest/upload", {
         method: "POST",
         body: ingestForm
       })
@@ -47,7 +47,7 @@ export default function AddMaterialModal({ onClose, onAdd, courseId }) {
 
       // 2. save material record to DB
       console.log("2. saving material record")
-      const saveRes = await fetch("http://3.128.186.118:5000/course-materials", {
+      const saveRes = await fetch("/backend/course-materials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -83,7 +83,7 @@ export default function Page() {
 
   useEffect(() => {
     if (!courseId) return
-    fetch(`http://3.128.186.118:5000/classes/${courseId}`)
+    fetch(`/backend/classes/${courseId}`)
       .then(res => res.json())
       .then(data => setClassInfo(data))
       .catch(err => console.error(err))

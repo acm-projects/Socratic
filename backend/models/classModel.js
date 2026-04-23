@@ -48,7 +48,7 @@ const ensureClassExists = async (classCode, userId = null) => {
 };
 const deleteClass = async (code) => {
   // Cascading deletes to avoid foreign key violations
-  await db.query("DELETE FROM tasks WHERE class_code = $1", [code]);
+  await db.query("DELETE FROM class_tasks WHERE class_code = $1", [code]).catch(() => {});
   await db.query(
     "DELETE FROM chat_history WHERE session_id IN (SELECT session_id FROM chat_sessions WHERE class_code = $1)",
     [code]

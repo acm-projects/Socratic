@@ -24,7 +24,7 @@ export default function Home() {
 
   useEffect(() => {  
     if (!session) return; 
-    fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
+    fetch(`/backend/classes?user_id=${session.user.id}`)
     .then(res => res.json())
     .then(data => {
       setCourses(data)

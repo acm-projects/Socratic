@@ -17,19 +17,19 @@ export default function ConfirmCoursesForm() {
       if (!session?.user?.email) return
 
       // get user id 
-      fetch("http://3.128.186.118:5000/users")
+      fetch("/backend/users")
         .then(r => r.json())
         .then(users => {
           const me = users.find(u => u.email === session.user.email)
           // fetch only their classes
-          return fetch(`http://3.128.186.118:5000/classes?user_id=${me.id}`)
+          return fetch(`/backend/classes?user_id=${me.id}`)
         })
         .then(r => r.json())
         .then(data => setCourses(data))
     }, [session])
 
     async function handleDelete(class_code) {
-      const res = await fetch(`http://3.128.186.118:5000/classes/${class_code}`, {
+      const res = await fetch(`/backend/classes/${class_code}`, {
         method: "DELETE"
       })
 

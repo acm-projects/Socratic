@@ -73,7 +73,7 @@ useEffect(() => {
   if (!courseId) return
 
   const fetchSyllabusInfo = () => {
-    fetch(`http://3.128.186.118:5000/api/syllabus/info/${courseId}`)
+    fetch(`/backend/api/syllabus/info/${courseId}`)
       .then(res => res.json())
       .then(data => {
         console.log("=== SYLLABUS DEBUG ===")
@@ -99,7 +99,7 @@ useEffect(() => {
   }
 
   // Fetch class info first
-  fetch(`http://3.128.186.118:5000/classes/${courseId}`)
+  fetch(`/backend/classes/${courseId}`)
     .then(res => res.json())
     .then(data => {
       console.log("class info:", JSON.stringify(data))
@@ -107,7 +107,7 @@ useEffect(() => {
       
       if (data.syllabus_url) {
         console.log("Triggering syllabus extraction for:", data.syllabus_url)
-        fetch('http://3.128.186.118:5000/api/syllabus/extract', {
+        fetch('/backend/api/syllabus/extract', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -137,7 +137,7 @@ useEffect(() => {
     .catch(err => console.log("class info fetch failed:", err))
 
   // Other fetches...
-  fetch(`http://3.128.186.118:5000/classes/${courseId}/topics`)
+  fetch(`/backend/classes/${courseId}/topics`)
     .then(res => res.json())
     .then(data => {
       if (data.topics?.length > 0) {
@@ -151,7 +151,7 @@ useEffect(() => {
     })
     .catch(err => console.log("topics fetch failed:", err))
 
-  fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseId}`)
+  fetch(`/backend/api/syllabus/tasks/${courseId}`)
   .then(res => res.json())
   .then(data => {
     if (Array.isArray(data) && data.length > 0) {

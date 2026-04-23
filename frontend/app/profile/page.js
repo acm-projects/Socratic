@@ -20,7 +20,7 @@ export default function ProfilePage() {
         console.log(session)
         if (!session?.user?.email) return
     
-        fetch(`http://3.128.186.118:5000/users`) ///${session.user.email} change to this
+        fetch(`/backend/users`) ///${session.user.email} change to this
           .then(res => res.json())
           .then(users => { 
             const me = users.find(u => u.email === session.user.email) //change this when new route is added
