@@ -70,7 +70,7 @@ class MultiNamespaceStore {
   async similaritySearch(query, k = 4, filter = undefined) {
     const results = await Promise.all(this.stores.map(store => store.similaritySearch(query, k, filter)));
     return results.flat()
-      .filter(doc => !doc.metadata.fileName?.toLowerCase().includes('textbook') && !doc.metadata.fileName?.includes('Probability_and_Statistics'))
+      .filter(doc => !doc.metadata.fileName?.toLowerCase().includes('textbook'))
       .slice(0, k);
   }
 
@@ -78,7 +78,7 @@ class MultiNamespaceStore {
     const results = await Promise.all(this.stores.map(store => store.similaritySearchWithScore(query, k, filter)));
     return results.flat()
       .sort((a, b) => b[1] - a[1])
-      .filter(([doc]) => !doc.metadata.fileName?.toLowerCase().includes('textbook') && !doc.metadata.fileName?.includes('Probability_and_Statistics'))
+      .filter(([doc]) => !doc.metadata.fileName?.toLowerCase().includes('textbook'))
       .slice(0, k);
   }
 }
