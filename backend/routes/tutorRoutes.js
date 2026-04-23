@@ -229,7 +229,10 @@ router.post('/chat', async (req, res, next) => {
     console.log(`[Tutor] 📚 RAG Density: ${finalTargeted.length} Targeted, ${finalBroad.length} Broad (Total: ${finalTargeted.length + finalBroad.length} chunks)`);
 
     // Combine targeted and broad context (Targeted first)
-    const context = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
+    let context = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
+    if (!context || context.trim().length === 0) {
+      context = "No specific course documents were found matching this query. Answer using your general knowledge as a Socratic tutor.";
+    }
 
 
     // 4. Run Socratic AI Tutor
@@ -266,12 +269,22 @@ router.post('/chat', async (req, res, next) => {
       }
     }
 
-    console.log(`[Tutor] 🧠 AI thinking complete. Response length: ${tutorRes.content?.length || tutorRes.length} chars`);
+    let aiContent = "";
+    if (typeof tutorRes === 'string') {
+      aiContent = tutorRes;
+    } else if (tutorRes && tutorRes.content) {
+      aiContent = tutorRes.content;
+    }
+
+    if (!aiContent || aiContent.trim().length === 0) {
+      console.warn('[Tutor] ⚠️ AI returned empty content. Using safety fallback.');
+      aiContent = "I'm sorry, I encountered a temporary glitch and couldn't generate a specific response for that. Could you try rephrasing your question?";
+    }
+
+    console.log(`[Tutor] 🧠 AI thinking complete. Response length: ${aiContent.length} chars`);
 
     const tutorDuration = ((Date.now() - tutorStartTime) / 1000).toFixed(1);
     console.log(`[Tutor] ✅ Brainstormed response in ${tutorDuration}s`);
-
-    const aiContent = tutorRes.content || tutorRes;
 
     // 7. Final Save and Response
     await sessionModel.saveChatMessage({

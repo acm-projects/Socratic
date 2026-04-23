@@ -68,14 +68,40 @@ class MultiNamespaceStore {
   }
 
   async similaritySearch(query, k = 4, filter = undefined) {
-    const results = await Promise.all(this.stores.map(store => store.similaritySearch(query, k, filter)));
+    const searchWithTimeout = async (store) => {
+      return Promise.race([
+        store.similaritySearch(query, k, filter),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout (8s)")), 8000))
+      ]);
+    };
+
+    const results = await Promise.all(this.stores.map(store => 
+      searchWithTimeout(store).catch(err => {
+        console.warn(`[VectorStore] ⚠️  Namespace search failed/timed out: ${err.message}`);
+        return [];
+      })
+    ));
+
     return results.flat()
       .filter(doc => !doc.metadata.fileName?.toLowerCase().includes('textbook'))
       .slice(0, k);
   }
 
   async similaritySearchWithScore(query, k = 4, filter = undefined) {
-    const results = await Promise.all(this.stores.map(store => store.similaritySearchWithScore(query, k, filter)));
+    const searchWithTimeout = async (store) => {
+      return Promise.race([
+        store.similaritySearchWithScore(query, k, filter),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout (8s)")), 8000))
+      ]);
+    };
+
+    const results = await Promise.all(this.stores.map(store => 
+      searchWithTimeout(store).catch(err => {
+        console.warn(`[VectorStore] ⚠️  Namespace search failed/timed out: ${err.message}`);
+        return [];
+      })
+    ));
+
     return results.flat()
       .sort((a, b) => b[1] - a[1])
       .filter(([doc]) => !doc.metadata.fileName?.toLowerCase().includes('textbook'))
