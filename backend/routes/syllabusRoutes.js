@@ -23,11 +23,26 @@ router.post('/extract', upload.any(), async (req, res, next) => {
     const user_id = req.body?.user_id || null;
     const class_code = req.body?.class_code || null;
 
-    if (!fileBuffer && !rawTextFallback) {
-      return res.status(400).json({ error: "No PDF file or pdfText provided." });
+    if (!fileBuffer && !rawTextFallback && !req.body?.file_url) {
+      return res.status(400).json({ error: "No PDF file, pdfText, or file_url provided." });
     }
 
-    const validatedData = await syllabusService.extractSyllabusData(fileBuffer, rawTextFallback);
+    let activeBuffer = fileBuffer;
+
+    // Handle file_url if provided (e.g. from frontend auto-extract)
+    if (!activeBuffer && req.body?.file_url) {
+      console.log(`[Syllabus] 🌐 Downloading PDF from URL: ${req.body.file_url}`);
+      try {
+        const response = await fetch(req.body.file_url);
+        if (!response.ok) throw new Error(`Failed to download PDF: ${response.statusText}`);
+        const arrayBuffer = await response.arrayBuffer();
+        activeBuffer = Buffer.from(arrayBuffer);
+      } catch (downloadErr) {
+        return res.status(400).json({ error: `Could not fetch PDF from URL: ${downloadErr.message}` });
+      }
+    }
+
+    const validatedData = await syllabusService.extractSyllabusData(activeBuffer, rawTextFallback);
 
     // If the caller supplied a class_code, override the AI-extracted one to guarantee consistency
     if (class_code) {
@@ -232,10 +247,11 @@ router.get('/data/:class_code', async (req, res, next) => {
     console.log(`[Syllabus] 🔍 Fetching unified data for ${normalizedCode}...`);
 
     // Perform queries in parallel for peak performance
-    const [classRes, tasksRes, topicsRes] = await Promise.all([
+    const [classRes, tasksRes, topicsRes, infoRes] = await Promise.all([
       pool.query("SELECT * FROM classes WHERE class_code = $1", [normalizedCode]),
       pool.query("SELECT * FROM class_tasks WHERE class_code = $1 AND due_date >= CURRENT_DATE ORDER BY due_date ASC", [normalizedCode]),
-      pool.query("SELECT * FROM topics WHERE class_code = $1", [normalizedCode])
+      pool.query("SELECT * FROM topics WHERE class_code = $1", [normalizedCode]),
+      pool.query("SELECT * FROM syllabus_info WHERE class_code = $1", [normalizedCode])
     ]);
 
     if (classRes.rows.length === 0) {
@@ -245,7 +261,8 @@ router.get('/data/:class_code', async (req, res, next) => {
     res.json({
       classInfo: classRes.rows[0],
       tasks: tasksRes.rows,
-      topics: topicsRes.rows
+      topics: topicsRes.rows,
+      syllabusInfo: infoRes.rows[0] || null
     });
 
   } catch (error) {

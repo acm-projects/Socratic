@@ -170,14 +170,14 @@ const saveSyllabusData = async (payload) => {
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
        ON CONFLICT (class_code)
        DO UPDATE SET
-         professor_name    = EXCLUDED.professor_name,
-         professor_email   = EXCLUDED.professor_email,
-         office_hours      = EXCLUDED.office_hours,
-         office_location   = EXCLUDED.office_location,
-         ta_name           = EXCLUDED.ta_name,
-         ta_email          = EXCLUDED.ta_email,
-         ta_office_hours   = EXCLUDED.ta_office_hours,
-         grading_policy    = EXCLUDED.grading_policy,
+         professor_name    = COALESCE(EXCLUDED.professor_name, syllabus_info.professor_name),
+         professor_email   = COALESCE(EXCLUDED.professor_email, syllabus_info.professor_email),
+         office_hours      = COALESCE(EXCLUDED.office_hours, syllabus_info.office_hours),
+         office_location   = COALESCE(EXCLUDED.office_location, syllabus_info.office_location),
+         ta_name           = COALESCE(EXCLUDED.ta_name, syllabus_info.ta_name),
+         ta_email          = COALESCE(EXCLUDED.ta_email, syllabus_info.ta_email),
+         ta_office_hours   = COALESCE(EXCLUDED.ta_office_hours, syllabus_info.ta_office_hours),
+         grading_policy    = COALESCE(EXCLUDED.grading_policy, syllabus_info.grading_policy),
          updated_at        = NOW()`,
       [
         storedCode,
