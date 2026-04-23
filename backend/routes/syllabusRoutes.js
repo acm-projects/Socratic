@@ -13,17 +13,6 @@ const pool = new Pool({
 // POST /extract — Upload PDF and extract syllabus data using Gemini AI
 // Accepts optional user_id and class_code in the multipart body.
 // When class_code is provided it overrides the AI-extracted courseCode for consistency.
-// Utility to sanitize class codes (decodes %20, replaces spaces with dashes, uppercase)
-const sanitizeClassCode = (code) => {
-  if (!code) return code;
-  try {
-    const decoded = decodeURIComponent(code);
-    return decoded.trim().replace(/\s+/g, '-').toUpperCase();
-  } catch (e) {
-    return code.trim().replace(/\s+/g, '-').toUpperCase();
-  }
-};
-
 router.post('/extract', upload.any(), async (req, res, next) => {
   try {
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
@@ -32,7 +21,7 @@ router.post('/extract', upload.any(), async (req, res, next) => {
 
     // Optional metadata from the caller
     const user_id = req.body?.user_id || null;
-    const class_code = sanitizeClassCode(req.body?.class_code || null);
+    const class_code = normalizeCode(req.body?.class_code);
 
     if (!fileBuffer && !rawTextFallback && !req.body?.file_url) {
       return res.status(400).json({ error: "No PDF file, pdfText, or file_url provided." });
@@ -112,13 +101,27 @@ router.post('/save', async (req, res, next) => {
   }
 });
 
-
+// Helper to normalize class codes (CS/CE/SE3345 -> CS3345, CS-3341.001 -> CS3341)
+const normalizeCode = (code) => {
+  if (!code) return null;
+  
+  const alphaMatch = code.match(/[a-zA-Z]+/);
+  const numericMatch = code.match(/\d+/);
+  
+  if (alphaMatch && numericMatch) {
+    return (alphaMatch[0] + numericMatch[0]).toUpperCase().trim();
+  }
+  
+  // Fallback to basic cleaning if matches fail
+  return code.split('.')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
+};
 
 // POST /upload — Upload syllabus PDF to S3 and save URL to classes table
 router.post('/upload', upload.any(), async (req, res, next) => {
   try {
-    const { user_id } = req.body;  // <-- also read user_id
-    const class_code = sanitizeClassCode(req.body.class_code);
+    const { user_id } = req.body;
+    let { class_code } = req.body;
+    class_code = normalizeCode(class_code);
 
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
 
@@ -126,64 +129,78 @@ router.post('/upload', upload.any(), async (req, res, next) => {
       return res.status(400).json({ error: "No PDF file provided." });
     }
 
-    if (!class_code) {
-      return res.status(400).json({ error: "class_code is required." });
-    }
-
     let syllabusUrl = null;
     try {
       syllabusUrl = await s3Service.uploadSyllabus(file.buffer, file.originalname);
     } catch (s3Err) {
       console.warn(`[Syllabus] ⚠️ S3 Upload failed (proceeding without URL):`, s3Err.message);
-      // Use a local placeholder if S3 is down/misconfigured
       syllabusUrl = `local-fallback://${file.originalname}`;
     }
 
-    // Extract a basic subject from class_code (e.g. CS-SE from CS-SE-3377)
-    const subjectMatch = class_code.match(/[a-zA-Z]+/);
-    const subject = subjectMatch ? subjectMatch[0].toUpperCase() : "GEN";
-    const placeholderName = `Course ${class_code}`;
-
-    // UPSERT: Create class if it doesn't exist, otherwise update the syllabus_url
-    // Also set user_id so the row is correctly tied to the uploading user
-    await pool.query(
-      `INSERT INTO classes (class_code, subject, name, syllabus_url, user_id) 
-       VALUES ($1, $2, $3, $4, $5) 
-       ON CONFLICT (class_code) 
-       DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url,
-                     user_id = COALESCE(classes.user_id, EXCLUDED.user_id)`,
-      [class_code, subject, placeholderName, syllabusUrl, user_id || null]
-    );
-
-    // AUTOMATED EXTRACTION (New Unified Workflow)
-    console.log(`[Syllabus] 🤖 Starting automated extraction for ${class_code}...`);
+    // AUTOMATED EXTRACTION
+    console.log(`[Syllabus] 🤖 Starting automated extraction...`);
     let extractedData = null;
     try {
       extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
-      if (extractedData) {
-      try {
-        // Override the courseCode from AI and inject user_id for proper DB linkage
-        extractedData.courseCode = class_code;
-        extractedData.user_id = user_id || null;
-        await syllabusService.saveSyllabusData(extractedData);
-        console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${class_code}${user_id ? ` (user: ${user_id})` : ''}`);
-      } catch (saveErr) {
-        console.error(`[Syllabus] ❌ Failed to save extracted data for ${class_code}:`, saveErr.message);
+      
+      // If class_code wasn't provided, use the one from AI
+      const finalClassCode = class_code || extractedData?.courseCode;
+
+      if (!finalClassCode) {
+        throw new Error("Could not determine class_code from request or syllabus content.");
       }
-    }
+
+      // Extract subject
+      const subjectMatch = finalClassCode.match(/[a-zA-Z]+/);
+      const subject = subjectMatch ? subjectMatch[0].toUpperCase() : "GEN";
+      const placeholderName = `Course ${finalClassCode}`;
+
+      // UPSERT Class
+      await pool.query(
+        `INSERT INTO classes (class_code, subject, name, syllabus_url, user_id) 
+         VALUES ($1, $2, $3, $4, $5) 
+         ON CONFLICT (class_code) 
+         DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url,
+                       user_id = COALESCE(classes.user_id, EXCLUDED.user_id)`,
+        [finalClassCode, subject, placeholderName, syllabusUrl, user_id || null]
+      );
+
+      if (extractedData) {
+        try {
+          // Sync code and save
+          extractedData.courseCode = finalClassCode;
+          extractedData.user_id = user_id || null;
+          await syllabusService.saveSyllabusData(extractedData);
+          console.log(`[Syllabus] ✅ Automated extraction and saving completed for ${finalClassCode}`);
+        } catch (saveErr) {
+          console.error(`[Syllabus] ❌ Failed to save extracted data:`, saveErr.message);
+        }
+      }
+
+      res.json({
+        message: "Syllabus uploaded and processed successfully.",
+        class_code: finalClassCode,
+        data: extractedData
+      });
 
     } catch (extractErr) {
-      console.warn(`[Syllabus] ⚠️ Automated extraction failed for ${class_code}:`, extractErr.message);
-      // We don't fail the whole request since the upload was successful
+      console.warn(`[Syllabus] ⚠️ Automated extraction failed:`, extractErr.message);
+      
+      // If extraction failed but we have a class_code, we at least save the URL
+      if (class_code) {
+        const subjectMatch = class_code.match(/[a-zA-Z]+/);
+        const subject = subjectMatch ? subjectMatch[0].toUpperCase() : "GEN";
+        await pool.query(
+          `INSERT INTO classes (class_code, subject, name, syllabus_url, user_id) 
+           VALUES ($1, $2, $3, $4, $5) 
+           ON CONFLICT (class_code) DO UPDATE SET syllabus_url = EXCLUDED.syllabus_url`,
+          [class_code, subject, `Course ${class_code}`, syllabusUrl, user_id || null]
+        );
+        return res.json({ message: "Syllabus uploaded, but extraction failed.", class_code });
+      }
+      
+      res.status(400).json({ error: "Syllabus upload failed: Could not determine class code." });
     }
-
-    res.json({
-      message: "Syllabus uploaded and saved successfully.",
-      syllabus_url: syllabusUrl,
-      extracted: !!extractedData,
-      data: extractedData
-    });
-
   } catch (error) {
     console.error("S3 upload error:", error);
     next(error);
@@ -193,10 +210,9 @@ router.post('/upload', upload.any(), async (req, res, next) => {
 // GET /:class_code — Get syllabus URL for a class
 router.get('/:class_code', async (req, res, next) => {
   try {
-    const code = sanitizeClassCode(req.params.class_code);
     const result = await pool.query(
       "SELECT syllabus_url FROM classes WHERE class_code = $1",
-      [code]
+      [req.params.class_code]
     );
 
     if (!result.rows[0] || !result.rows[0].syllabus_url) {
@@ -212,11 +228,10 @@ router.get('/:class_code', async (req, res, next) => {
 
 // GET /tasks/:class_code — Get all extracted tasks (quizzes, tests, etc.) for a class
 router.get('/tasks/:class_code', async (req, res, next) => {
-  const class_code = sanitizeClassCode(req.params.class_code);
   try {
     const result = await pool.query(
       "SELECT * FROM class_tasks WHERE class_code = $1 AND due_date >= CURRENT_DATE ORDER BY due_date ASC",
-      [class_code]
+      [req.params.class_code]
     );
 
     res.json(result.rows);
@@ -228,8 +243,8 @@ router.get('/tasks/:class_code', async (req, res, next) => {
 
 // GET /data/:class_code — Unified endpoint for Class Info, Tasks, and Topics
 router.get('/data/:class_code', async (req, res, next) => {
-  const class_code = sanitizeClassCode(req.params.class_code);
-  const normalizedCode = class_code;
+  const { class_code } = req.params;
+  const normalizedCode = class_code.toUpperCase().trim();
 
   try {
     console.log(`[Syllabus] 🔍 Fetching unified data for ${normalizedCode}...`);
@@ -261,8 +276,8 @@ router.get('/data/:class_code', async (req, res, next) => {
 
 // GET /info/:class_code — Professor, TA, office hours, and grading policy
 router.get('/info/:class_code', async (req, res, next) => {
-  const class_code = sanitizeClassCode(req.params.class_code);
-  const normalizedCode = class_code;
+  const { class_code } = req.params;
+  const normalizedCode = class_code.toUpperCase().trim();
 
   try {
     const result = await pool.query(
@@ -297,8 +312,8 @@ router.get('/info/:class_code', async (req, res, next) => {
 
 // PUT /info/:class_code — Update Professor, TA, office hours, and grading policy
 router.put('/info/:class_code', async (req, res, next) => {
-  const class_code = sanitizeClassCode(req.params.class_code);
-  const normalizedCode = class_code;
+  const { class_code } = req.params;
+  const normalizedCode = class_code.toUpperCase().trim();
   const {
     professor_name,
     professor_email,

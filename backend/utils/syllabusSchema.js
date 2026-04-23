@@ -4,7 +4,17 @@ const { zodToJsonSchema } = require("zod-to-json-schema"); //converts the schema
 // 1. Define the exact structure you want to extract from the Syllabus PDF
 const syllabusSchema = z.object({
     courseName: z.string().nullable().optional().describe("The full name of the course"),
-    courseCode: z.string().nullable().optional().describe("The course identifier, e.g., CS101"),
+    courseCode: z.string().nullable().optional()
+        .describe("The course identifier, e.g., CS101")
+        .transform((val) => {
+            if (!val) return val;
+            const alphaMatch = val.match(/[a-zA-Z]+/);
+            const numericMatch = val.match(/\d+/);
+            if (alphaMatch && numericMatch) {
+                return (alphaMatch[0] + numericMatch[0]).toUpperCase().trim();
+            }
+            return val.split('.')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
+        }),
     instructor: z.object({
         name: z.string().nullable().optional(),
         email: z.string().nullable().optional(),

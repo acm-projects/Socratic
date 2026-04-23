@@ -145,8 +145,13 @@ Return ONLY JSON matching this schema:
 const saveSyllabusData = async (payload) => {
   const { courseName, courseCode, topics, importantDates, instructor, ta, gradingPolicy, user_id } = payload;
 
-  const safeCourseCode = courseCode.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
-  const subjectMatch = courseCode.match(/[a-zA-Z]+/);
+  const alphaMatch = courseCode.match(/[a-zA-Z]+/);
+  const numericMatch = courseCode.match(/\d+/);
+  const safeCourseCode = (alphaMatch && numericMatch) 
+    ? (alphaMatch[0] + numericMatch[0]).toUpperCase().trim()
+    : courseCode.split('.')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
+
+  const subjectMatch = safeCourseCode.match(/[a-zA-Z]+/);
   const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
 
   // 1. Store Class (include user_id so the class is tied to the user)
