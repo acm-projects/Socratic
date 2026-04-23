@@ -12,7 +12,7 @@ router.post('/generate', async (req, res, next) => {
   const trace = { step: 'INIT', checkpoints: [], contextCount: 0 };
   try {
     const { classCode: rawClassCode, topic, numQuestions = 5, difficulty, easy, medium, hard, userId } = req.body;
-    const classCode = decodeURIComponent(rawClassCode || '');
+    const classCode = decodeURIComponent(rawClassCode || '').trim().replace(/\s+/g, '-');
     trace.checkpoints.push(`[1] Start: ${classCode} | User: ${userId}`);
 
     if (!classCode || !topic) return res.status(400).json({ error: "Missing required fields" });

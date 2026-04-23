@@ -34,14 +34,15 @@ const createClass = async (data) => {
  */
 const ensureClassExists = async (classCode, userId = null) => {
   const decoded = decodeURIComponent(classCode || '');
-  const existing = await getClassByCode(decoded);
+  const sanitized = decoded.trim().replace(/\s+/g, '-');
+  const existing = await getClassByCode(sanitized);
   if (existing) return existing;
 
-  console.log(`[ClassModel] 🛠️ Auto-provisioning placeholder class: ${decoded}`);
+  console.log(`[ClassModel] 🛠️ Auto-provisioning placeholder class: ${sanitized}`);
   return await createClass({
-    class_code: decoded,
+    class_code: sanitized,
     subject: 'General Study',
-    name: decoded,
+    name: sanitized,
     user_id: userId
   });
 };
