@@ -60,48 +60,75 @@ class GeminiEmbeddings {
 const vectorStoreInstances = {};
 
 /**
- * Returns the shared class-level Pinecone store (namespace: class-cs1436).
- * This is populated by the PDF ingestion pipeline and is read-only from the tutor.
+ * A wrapper for multiple PineconeStore instances that allows searching across several namespaces.
  */
+class MultiNamespaceStore {
+  constructor(stores) {
+    this.stores = stores;
+  }
+
+  async similaritySearch(query, k = 4, filter = undefined) {
+    const results = await Promise.all(this.stores.map(store => store.similaritySearch(query, k, filter)));
+    return results.flat()
+      .filter(doc => !doc.metadata.fileName?.toLowerCase().includes('textbook') && !doc.metadata.fileName?.includes('Probability_and_Statistics'))
+      .slice(0, k);
+  }
+
+  async similaritySearchWithScore(query, k = 4, filter = undefined) {
+    const results = await Promise.all(this.stores.map(store => store.similaritySearchWithScore(query, k, filter)));
+    return results.flat()
+      .sort((a, b) => b[1] - a[1])
+      .filter(([doc]) => !doc.metadata.fileName?.toLowerCase().includes('textbook') && !doc.metadata.fileName?.includes('Probability_and_Statistics'))
+      .slice(0, k);
+  }
+}
+
 async function getClassVectorStore(classCode) {
-  const namespace = `class-${classCode.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
-  if (vectorStoreInstances[namespace]) return vectorStoreInstances[namespace];
+  const base = classCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  // Generate candidate namespaces to try in order
+  const candidates = [
+    `class-${base}`,                                    // exact match
+    `class-${base.replace(/0w\d+$/, '')}`,              // strip section (0w1)
+    `class-${base.replace(/[a-z]{2,4}(\d+).*/, '$1')}`, // just numbers
+    `class-cs${base.match(/\d{4}/)?.[0] || base}`,      // cs + 4 digits
+  ].filter((v, i, a) => a.indexOf(v) === i); // deduplicate
 
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
   const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
-
-  // Wait for index readiness
-  let ready = false;
-  for (let i = 0; i < 10; i++) {
-    const desc = await pinecone.describeIndex(indexName);
-    if (desc.status && desc.status.ready) { ready = true; break; }
-    await new Promise(res => setTimeout(res, 3000));
-  }
-  if (!ready) {
-    console.warn('[VectorStore] Pinecone index not ready after wait — proceeding anyway');
-  }
-
   const pineconeIndex = pinecone.Index(indexName);
-  const embeddings = new GeminiEmbeddings();
-
-  const storeInstance = await PineconeStore.fromExistingIndex(embeddings, {
-    pineconeIndex,
-    namespace,
-  });
-
-  vectorStoreInstances[namespace] = storeInstance;
-
-  // Check how many vectors exist — for the class store we never auto-seed
   const stats = await pineconeIndex.describeIndexStats();
-  const nsStats = stats.namespaces && stats.namespaces[namespace];
-  const count = nsStats ? nsStats.recordCount : 0;
-  if (count === 0) {
-    console.log(`[VectorStore] ⚠️  Class namespace '${namespace}' is empty. Upload PDFs via /api/ingest/upload to populate it.`);
-  } else {
-    console.log(`[VectorStore] Class namespace '${namespace}' ready with ${count} vectors.`);
+
+  // Find ALL namespaces with actual data
+  const activeNamespaces = [];
+  for (const ns of candidates) {
+    const nsStats = stats.namespaces?.[ns];
+    if (nsStats && nsStats.recordCount > 0) {
+      activeNamespaces.push(ns);
+      console.log(`[VectorStore] Found active namespace '${ns}' (${nsStats.recordCount} vectors) for ${classCode}`);
+    }
   }
 
-  return storeInstance;
+  if (activeNamespaces.length === 0) {
+    console.log(`[VectorStore] ⚠️ No data found for ${classCode} in any namespace variant. Using default: ${candidates[0]}`);
+    activeNamespaces.push(candidates[0]);
+  }
+
+  const embeddings = new GeminiEmbeddings();
+  const stores = await Promise.all(activeNamespaces.map(async (ns) => {
+    if (vectorStoreInstances[ns]) return vectorStoreInstances[ns];
+    const store = await PineconeStore.fromExistingIndex(embeddings, {
+      pineconeIndex,
+      namespace: ns,
+    });
+    vectorStoreInstances[ns] = store;
+    return store;
+  }));
+
+  if (stores.length === 1) return stores[0];
+  
+  console.log(`[VectorStore] 🌐 Multi-search active across ${activeNamespaces.length} namespaces: ${activeNamespaces.join(', ')}`);
+  return new MultiNamespaceStore(stores);
 }
 
 async function getVectorStore(namespace = '') {
