@@ -19,7 +19,7 @@ export default function ProfileCard({ name, school, major, streak, friends, achi
 
   return (
     
-    <div className="rounded-2xl p-6 flex flex-col items-center justify-center w-full">  {/* w-80 h-100 removed */}
+    <div className="rounded-2xl p-4 flex flex-col items-center justify-center w-full">  {/* w-80 h-100 removed */}
       
         {profilePic ? (
           <img 
@@ -27,16 +27,16 @@ export default function ProfileCard({ name, school, major, streak, friends, achi
             alt={name}
               referrerPolicy="no-referrer"
 
-            className="w-20 h-20 opacity-80 rounded-full object-cover mb-2" 
+            className="w-22 h-22 opacity-80 rounded-full object-cover mb-2" 
           />
         ) : (
-          <div className="w-20 h-20 rounded-full bg-[#D0E8E4] mb-2" />  
+          <div className="w-22 h-22 rounded-full bg-[#D0E8E4] mb-2" />  
         )}
 
 
 
 
-      <p className="text-lg font-bold text-[#141f1d] py-3">{name}</p>
+      <p className="text-xl font-bold text-[#141f1d] py-3">{name}</p>
       
       <p className="text-sm text-[#90aba7] pb-1">{school}</p>
       <p className="text-sm text-[#90aba7]">{major}</p>

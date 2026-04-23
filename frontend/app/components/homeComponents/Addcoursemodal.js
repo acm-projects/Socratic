@@ -13,36 +13,34 @@ export default function Addcoursemodal({ onClose, onAdd }) {
   const [syncToCalendar, setSyncToCalendar] = useState(true) //default upload tasks
 
   async function syncTasksToCalendar(tasks, className) {
-    const currentYear = new Date().getFullYear();
-    
     for (const task of tasks) {
-      const dueDate = new Date(`${task.due} ${currentYear}`);
-      dueDate.setHours(23, 59, 0, 0);
-      
-      const event = {
-        summary: task.title,
-        description: `${className} Deadline`,
-        startDateTime: dueDate.toISOString(),
-        endDateTime: dueDate.toISOString(),
-        createMeet: false,
-        attendeeEmails: []
-      };
+        const dueDate = new Date(task.due_date) 
+        dueDate.setHours(23, 59, 0, 0)
 
-      try {
-        await fetch("/backend/api/calendar/create-event", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session?.accessToken}`,
-            "x-user-id": session?.user?.id
-          },
-          body: JSON.stringify({ ...event, userId: session?.user?.id })
-        });
-      } catch (err) {
-        console.error("Failed to sync individual task:", err);
-      }
+        const event = {
+            summary: task.task_name, 
+            description: `${className} Deadline`,
+            startDateTime: dueDate.toISOString(),
+            endDateTime: dueDate.toISOString(),
+            createMeet: false,
+            attendeeEmails: []
+        }
+
+        try {
+            await fetch("/backend/api/calendar/create-event", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${session?.accessToken}`,
+                    "x-user-id": session?.user?.id
+                },
+                body: JSON.stringify({ ...event, userId: session?.user?.id })
+            })
+        } catch (err) {
+            console.error("Failed to sync individual task:", err)
+        }
     }
-  }
+}
 
   async function handleAdd() {
     if (!subject.trim() || !courseCode.trim()) return

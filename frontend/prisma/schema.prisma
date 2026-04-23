@@ -57,7 +57,7 @@ model classes {
   chat_sessions       chat_sessions[]
   class_tasks         class_tasks[]
   course_materials    course_materials[]
-  daily_topic_metrics daily_topic_metrics[] @ignore
+  daily_topic_metrics daily_topic_metrics[]  @ignore
   syllabus_info       syllabus_info?
   topics              topics[]
   user_classes        user_classes[]
@@ -111,7 +111,7 @@ model topics {
   class_code          String                @db.VarChar(50)
   name                String                @db.VarChar(50)
   chat_sessions       chat_sessions[]
-  daily_topic_metrics daily_topic_metrics[] @ignore
+  daily_topic_metrics daily_topic_metrics[]  @ignore
   classes             classes               @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_class")
 }
 

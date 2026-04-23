@@ -302,7 +302,7 @@ useEffect(() => {
         background: "linear-gradient(to bottom, transparent, #E0E5E4 20%, #E0E5E4 80%, transparent)"
       }} />
 
-      <div className="p-9 w-1/4 flex flex-col gap-8 h-screen sticky top-0 overflow-hidden">
+      <div className="p-7 w-1/4 flex flex-col gap-8 h-screen sticky top-0 overflow-hidden">
         <div className="flex flex-col flex-1 min-h-0">
          <UpcomingTasks tasks={upcomingTasks} onToggle={handleTaskToggle} classInfo={classInfo} />
         </div>
