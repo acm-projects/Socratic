@@ -173,16 +173,25 @@ router.post('/chat', async (req, res, next) => {
     if (vectorStore) {
       try {
         if (userFilter) {
-          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100, userFilter);
-          if (resultsWithScores.length > 0) {
-            console.log(`[Tutor] 📚 Filtered Pinecone search returned ${resultsWithScores.length} hits for user ${userId}`);
-          }
-        }
+          // FIRST PASS: Search specifically for THIS user's uploaded documents (slides, notes, etc.)
+          const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 100, userFilter);
+          
+          // RELEVANCE THRESHOLD: If the user has high-quality hits in their own data, use THEM ONLY.
+          const HIGH_RELEVANCE = 0.7; 
+          const relevantUserHits = userHits.filter(([doc, score]) => score >= HIGH_RELEVANCE);
 
-        // Fallback to unfiltered if no results found for the user (or if no userFilter)
-        if (resultsWithScores.length === 0) {
+          if (relevantUserHits.length > 0) {
+            console.log(`[Tutor] 🎯 Found ${relevantUserHits.length} high-relevance chunks from User ${userId}'s own uploads.`);
+            resultsWithScores = relevantUserHits;
+          } else if (userHits.length > 0) {
+            console.log(`[Tutor] ⚠️ User ${userId} has docs, but they aren't highly relevant (Best: ${userHits[0][1].toFixed(2)}). Falling back to class search.`);
+            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+          } else {
+            console.log(`[Tutor] 📚 User ${userId} has no personal uploads. Searching class-wide documents...`);
+            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+          }
+        } else {
           resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
-          console.log(`[Tutor] 📚 Unfiltered Pinecone search returned ${resultsWithScores.length} hits for class ${classCode}`);
         }
       } catch (err) {
         console.warn('[Tutor] ⚠️ Pinecone search failed:', err.message);

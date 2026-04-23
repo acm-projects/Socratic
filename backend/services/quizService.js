@@ -6,7 +6,7 @@ const { z } = require('zod');
 
 require('dotenv').config({ path: __dirname + '/../.env' });
 
-const TARGET_MODEL = "gemini-2.5-flash";
+const TARGET_MODEL = "gemini-2.0-flash";
 
 const quizOutputSchema = z.object({
   questions: z.array(z.object({
