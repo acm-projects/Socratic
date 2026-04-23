@@ -12,13 +12,25 @@ const { evaluateQuestion, parser, getTutorChainWithHistory } = require('../servi
 const classModel = require('../models/classModel');
 const userStatsModel = require('../models/userStatsModel');
 const quizModel = require('../models/quizModel');
+
+// Utility to sanitize class codes (decodes %20, replaces spaces with dashes, uppercase)
+const sanitizeClassCode = (code) => {
+  if (!code) return code;
+  try {
+    const decoded = decodeURIComponent(code);
+    return decoded.trim().replace(/\s+/g, '-').toUpperCase();
+  } catch (e) {
+    return code.trim().replace(/\s+/g, '-').toUpperCase();
+  }
+};
 // We no longer use chatModel; we use sessionModel and topicModel instead.
 
 router.post('/chat', async (req, res, next) => {
 
   try {
     // Accept either sessionId OR chatId (chatId is legacy, sessionId is the new name)
-    const { userId, classCode, topic: topicName, message, chatId: providedChatId, sessionId: providedSessionId } = req.body;
+    const { userId, topic: topicName, message, chatId: providedChatId, sessionId: providedSessionId } = req.body;
+    const classCode = sanitizeClassCode(req.body.classCode);
 
     // Normalize sessionId: ignore empty strings or stringified 'null'/'undefined'
     let incomingSessionId = providedSessionId || providedChatId || null;
@@ -293,7 +305,7 @@ router.post('/chat', async (req, res, next) => {
     // 9. Update heatmap (daily_topic_metrics)
     quizModel.updateTopicMetrics({
       userId,
-      classCode,
+      classCode: sanitizeClassCode(classCode),
       topicId: topic.id,
       questionsAsked: 1,
       score
@@ -302,7 +314,7 @@ router.post('/chat', async (req, res, next) => {
     );
 
     // Update class engagement (fire and forget)
-    pool.query('SELECT name FROM classes WHERE class_code = $1', [classCode])
+    pool.query('SELECT name FROM classes WHERE class_code = $1', [sanitizeClassCode(classCode)])
       .then(classResult => {
         if (classResult.rows[0]) {
           const className = classResult.rows[0].name;

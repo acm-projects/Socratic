@@ -13,6 +13,17 @@ const pool = new Pool({
 // POST /extract — Upload PDF and extract syllabus data using Gemini AI
 // Accepts optional user_id and class_code in the multipart body.
 // When class_code is provided it overrides the AI-extracted courseCode for consistency.
+// Utility to sanitize class codes (decodes %20, replaces spaces with dashes, uppercase)
+const sanitizeClassCode = (code) => {
+  if (!code) return code;
+  try {
+    const decoded = decodeURIComponent(code);
+    return decoded.trim().replace(/\s+/g, '-').toUpperCase();
+  } catch (e) {
+    return code.trim().replace(/\s+/g, '-').toUpperCase();
+  }
+};
+
 router.post('/extract', upload.any(), async (req, res, next) => {
   try {
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
@@ -21,7 +32,7 @@ router.post('/extract', upload.any(), async (req, res, next) => {
 
     // Optional metadata from the caller
     const user_id = req.body?.user_id || null;
-    const class_code = req.body?.class_code || null;
+    const class_code = sanitizeClassCode(req.body?.class_code || null);
 
     if (!fileBuffer && !rawTextFallback && !req.body?.file_url) {
       return res.status(400).json({ error: "No PDF file, pdfText, or file_url provided." });
@@ -101,10 +112,13 @@ router.post('/save', async (req, res, next) => {
   }
 });
 
+
+
 // POST /upload — Upload syllabus PDF to S3 and save URL to classes table
 router.post('/upload', upload.any(), async (req, res, next) => {
   try {
-    const { class_code, user_id } = req.body;  // <-- also read user_id
+    const { user_id } = req.body;  // <-- also read user_id
+    const class_code = sanitizeClassCode(req.body.class_code);
 
     const file = req.files && req.files.length > 0 ? req.files[0] : null;
 
@@ -179,9 +193,10 @@ router.post('/upload', upload.any(), async (req, res, next) => {
 // GET /:class_code — Get syllabus URL for a class
 router.get('/:class_code', async (req, res, next) => {
   try {
+    const code = sanitizeClassCode(req.params.class_code);
     const result = await pool.query(
       "SELECT syllabus_url FROM classes WHERE class_code = $1",
-      [req.params.class_code]
+      [code]
     );
 
     if (!result.rows[0] || !result.rows[0].syllabus_url) {
@@ -197,10 +212,11 @@ router.get('/:class_code', async (req, res, next) => {
 
 // GET /tasks/:class_code — Get all extracted tasks (quizzes, tests, etc.) for a class
 router.get('/tasks/:class_code', async (req, res, next) => {
+  const class_code = sanitizeClassCode(req.params.class_code);
   try {
     const result = await pool.query(
       "SELECT * FROM class_tasks WHERE class_code = $1 AND due_date >= CURRENT_DATE ORDER BY due_date ASC",
-      [req.params.class_code]
+      [class_code]
     );
 
     res.json(result.rows);
@@ -212,8 +228,8 @@ router.get('/tasks/:class_code', async (req, res, next) => {
 
 // GET /data/:class_code — Unified endpoint for Class Info, Tasks, and Topics
 router.get('/data/:class_code', async (req, res, next) => {
-  const { class_code } = req.params;
-  const normalizedCode = class_code.toUpperCase().trim();
+  const class_code = sanitizeClassCode(req.params.class_code);
+  const normalizedCode = class_code;
 
   try {
     console.log(`[Syllabus] 🔍 Fetching unified data for ${normalizedCode}...`);
@@ -245,8 +261,8 @@ router.get('/data/:class_code', async (req, res, next) => {
 
 // GET /info/:class_code — Professor, TA, office hours, and grading policy
 router.get('/info/:class_code', async (req, res, next) => {
-  const { class_code } = req.params;
-  const normalizedCode = class_code.toUpperCase().trim();
+  const class_code = sanitizeClassCode(req.params.class_code);
+  const normalizedCode = class_code;
 
   try {
     const result = await pool.query(
@@ -281,8 +297,8 @@ router.get('/info/:class_code', async (req, res, next) => {
 
 // PUT /info/:class_code — Update Professor, TA, office hours, and grading policy
 router.put('/info/:class_code', async (req, res, next) => {
-  const { class_code } = req.params;
-  const normalizedCode = class_code.toUpperCase().trim();
+  const class_code = sanitizeClassCode(req.params.class_code);
+  const normalizedCode = class_code;
   const {
     professor_name,
     professor_email,
