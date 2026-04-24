@@ -765,6 +765,50 @@
         }
       }
     },
+    "/api/tutor/chat/stream": {
+      "post": {
+        "summary": "Chat with Socratic AI Tutor (Streaming)",
+        "description": "Same as POST /api/tutor/chat but returns a **Server-Sent Events (SSE)** stream instead of a single JSON object. The response Content-Type is `text/event-stream`. The existing /api/tutor/chat endpoint is completely unchanged.\n\n**Event sequence:**\n1. `metadata` — sent immediately before the first token; contains `chatId`, `sessionId`, `isNewSession`, `score`, `reason`\n2. `chunk` — one event per LLM token batch; contains `content` string\n3. `done` — signals the stream has ended (no body fields)\n4. `error` — only emitted on failure after headers are sent; contains `message`\n\n**Frontend consumption example:**\n```js\nconst res = await fetch('/backend/api/tutor/chat/stream', { method: 'POST', ... });\nconst reader = res.body.getReader();\nconst decoder = new TextDecoder();\nlet buffer = '';\nwhile (true) {\n  const { value, done } = await reader.read();\n  if (done) break;\n  buffer += decoder.decode(value);\n  const lines = buffer.split('\\n\\n');\n  buffer = lines.pop(); // keep incomplete line\n  for (const line of lines) {\n    if (!line.startsWith('data: ')) continue;\n    const event = JSON.parse(line.slice(6));\n    if (event.type === 'metadata') { /* set chatId, score, etc. */ }\n    if (event.type === 'chunk')    { /* append event.content to message */ }\n    if (event.type === 'done')     { /* finalise message */ }\n    if (event.type === 'error')    { /* show error to user */ }\n  }\n}\n```",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId", "classCode", "message"],
+                "properties": {
+                  "userId":    { "type": "string", "example": "user_abc" },
+                  "classCode": { "type": "string", "example": "CS3345" },
+                  "topic":     { "type": "string", "example": "Binary Search Trees" },
+                  "message":   { "type": "string", "example": "What is a BST?" },
+                  "sessionId": {
+                    "type": "string",
+                    "description": "Optional — pass to continue an existing session.",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSE stream of AI tokens",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "Newline-delimited SSE events. Each event is `data: <JSON>\\n\\n`."
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing required fields" },
+          "429": { "description": "API quota exceeded" },
+          "500": { "description": "Server error (only returned if headers have not yet been sent)" }
+        }
+      }
+    },
     "/api/classes": {
       "get": {
         "summary": "Get All Classes",
