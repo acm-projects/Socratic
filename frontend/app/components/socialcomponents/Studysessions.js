@@ -50,7 +50,7 @@ export default function UpcomingSessions({ session, onShowScheduleModal, onMeeti
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <p className="font-semibold text-sm text-[#141f1d]">{s.summary}</p>
-                  <p className="text-xs text-gray-500">{s.description}</p>
+                <p className="text-xs text-gray-500">{s.description?.split(" | ")[0] || ""}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-gray-600">

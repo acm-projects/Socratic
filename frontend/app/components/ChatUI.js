@@ -81,15 +81,16 @@ useEffect(() => {
    const [chats, setChats] = useState([]);
    const [activeChatId, setActiveChatId] = useState(null);
    const activeChatIdRef = useRef(null)
-   const bottomRef = useRef(null)  // add this
+   const chatContainerRef = useRef(null)
 
 
 
 
-   useEffect(() => {
- bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+useEffect(() => {
+    if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
 }, [messages])
-
 
 
 
@@ -323,7 +324,7 @@ if (!sessionIdRef.current && data.chatId) {
                    /* ── Active chat ── */
                    <>
                        {/* Messages — scrollable, takes remaining space */}
-                       <div className="flex-1 overflow-y-auto min-h-0">
+                       <div ref={chatContainerRef} className="flex-1 overflow-y-auto min-h-0">
                            <div className="flex flex-col gap-8 p-4 sm:p-10 max-w-5xl w-full mx-auto">
                                {messages.map
                                ((message, i) => (
@@ -401,7 +402,6 @@ if (!sessionIdRef.current && data.chatId) {
                                    </div>
                                </div>
                            )}
-                           <div ref={bottomRef} />  {/* add here */}
 
 
                            </div>

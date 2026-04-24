@@ -10,15 +10,13 @@ export default function Addcoursemodal({ onClose, onAdd }) {
   const [courseCode, setCourseCode] = useState("")
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [syncToCalendar, setSyncToCalendar] = useState(true) //default upload tasks
+  const [syncToCalendar, setSyncToCalendar] = useState(true)
 
   async function syncTasksToCalendar(tasks, className) {
     const currentYear = new Date().getFullYear();
-    
     for (const task of tasks) {
       const dueDate = new Date(`${task.due} ${currentYear}`);
       dueDate.setHours(23, 59, 0, 0);
-      
       const event = {
         summary: task.title,
         description: `${className} Deadline`,
@@ -27,7 +25,6 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         createMeet: false,
         attendeeEmails: []
       };
-
       try {
         await fetch("/backend/api/calendar/create-event", {
           method: "POST",
@@ -45,59 +42,78 @@ export default function Addcoursemodal({ onClose, onAdd }) {
   }
 
   async function handleAdd() {
-    if (!subject.trim() || !courseCode.trim()) return
+    if (!subject.trim() || !file) return
     console.log("full session object:", JSON.stringify(session))
     setLoading(true)
 
     try {
-      // save class
-      console.log("saving class with user_id:", session.user.id)
-      const courseRes = await fetch("http://3.128.186.118:5000/classes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          class_code: courseCode,
-          subject: subject,
-          name: subject,
-          user_id: session.user.id,
-        })
-      })
-
-      if (!courseRes.ok) {
-        const err = await courseRes.text()
-        console.error("3. FAILED to save class:", courseRes.status, err)
-        return
-      }
-      console.log("3. class saved")
-
       if (file) {
         // upload to s3
-        console.log("4. uploading syllabus to S3")
+        console.log("1. uploading syllabus to S3")
         const uploadForm = new FormData()
         uploadForm.append("syllabusPdf", file)
-        uploadForm.append("class_code", courseCode)
-       
 
         const uploadRes = await fetch("http://3.128.186.118:5000/api/syllabus/upload", {
           method: "POST",
           body: uploadForm
         })
 
-        let uploadData = { syllabus_url: "" }  // declare outside
-
+        let uploadData = { syllabus_url: "" }
         if (!uploadRes.ok) {
-          console.error("4. failed upload:", uploadRes.status)
+          console.error("1. failed upload:", uploadRes.status)
         } else {
           uploadData = await uploadRes.json()
           console.log("full uploadData:", uploadData)
-          console.log("4. uploaded", uploadData.syllabus_url)
+          console.log("1. uploaded", uploadData.syllabus_url)
         }
+
+        // extract
+        console.log("2. extracting syllabus")
+        const extractForm = new FormData()
+        extractForm.append("syllabusPdf", file)
+        extractForm.append("user_id", session.user.id)
+
+        const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
+          method: "POST",
+          body: extractForm
+        })
+
+        const extractData = await extractRes.json()
+        console.log("extract response:", extractData)
+        const extractedCode = extractData.class_code
+        setCourseCode(extractedCode)
+
+        if (!extractRes.ok) {
+          console.error("2. FAILED extract:", extractRes.status)
+          return
+        }
+
+        // save class with extracted code
+        console.log("3. saving class with user_id:", session.user.id)
+        const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            class_code: extractedCode,
+            subject: subject,
+            name: subject,
+            user_id: session.user.id,
+          })
+        })
+
+        if (!courseRes.ok) {
+          const err = await courseRes.text()
+          console.error("3. FAILED to save class:", courseRes.status, err)
+          return
+        }
+        console.log("3. class saved")
+
         // save syllabus to course materials
         await fetch("http://3.128.186.118:5000/course-materials", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            class_code: courseCode,
+            class_code: extractedCode,
             user_id: session.user.id,
             file_name: "Syllabus",
             file_url: uploadData.syllabus_url || "",
@@ -107,40 +123,18 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         })
         console.log("4. syllabus saved to course materials")
 
-        // extract
-        console.log("5. extracting syllabus")
-        const extractForm = new FormData()
-        extractForm.append("syllabusPdf", file)
-        extractForm.append("user_id", session.user.id)      
-        extractForm.append("class_code", courseCode)         
-
-        const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
-          method: "POST",
-          body: extractForm
-        })
-
-        if (!extractRes.ok) {
-          const err = await extractRes.text()
-          console.error("5. FAILED extract:", extractRes.status, err)
-        } else {
-          const extractData = await extractRes.json()
-          console.log("5. extracted ", extractData.message)
-
-
-          if (syncToCalendar) {
-            console.log("6. Fetching newly created tasks for calendar sync");
-            const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`);
-            const tasksData = await tasksRes.json();
-            
-            if (tasksData && tasksData.length > 0) {
-              await syncTasksToCalendar(tasksData, subject);
-              console.log("7. Calendar sync complete");
-            }
+        if (syncToCalendar) {
+          console.log("5. Fetching newly created tasks for calendar sync")
+          const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${extractedCode}`)
+          const tasksData = await tasksRes.json()
+          if (tasksData && tasksData.length > 0) {
+            await syncTasksToCalendar(tasksData, subject)
+            console.log("6. Calendar sync complete")
           }
         }
 
-        // restore  name the user entered
-        await fetch(`http://3.128.186.118:5000/classes/${courseCode}`, {
+        // restore name
+        await fetch(`http://3.128.186.118:5000/classes/${extractedCode}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -149,33 +143,33 @@ export default function Addcoursemodal({ onClose, onAdd }) {
             user_id: session.user.id,
           })
         })
-        console.log("5. name restored to:", subject)
+        console.log("7. name restored to:", subject)
 
         // verify topics saved
-        console.log("6. verifying topics saved")
-        const topicsRes = await fetch(`http://3.128.186.118:5000/classes/${courseCode}/topics`)
+        console.log("8. verifying topics saved")
+        const topicsRes = await fetch(`http://3.128.186.118:5000/classes/${extractedCode}/topics`)
         const topicsData = await topicsRes.json()
-        console.log("6. topics:", JSON.stringify(topicsData.topics))
+        console.log("8. topics:", JSON.stringify(topicsData.topics))
 
         // verify tasks saved
-        console.log("7. verifying tasks saved")
-        const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`)
-        const tasksData = await tasksRes.json()
-        console.log("7. tasks:", JSON.stringify(tasksData))
+        console.log("9. verifying tasks saved")
+        const tasksRes2 = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${extractedCode}`)
+        const tasksData2 = await tasksRes2.json()
+        console.log("9. tasks:", JSON.stringify(tasksData2))
+
+        console.log("10. adding course to grid")
+        onAdd({
+          class_code: extractedCode,
+          name: subject,
+          subject: subject,
+          syllabus_url: null,
+          streak: 0,
+        })
+        onClose()
 
       } else {
-        console.log("4. no file uploaded, skipping syllabus extraction")
+        console.log("no file uploaded, skipping syllabus extraction")
       }
-
-      console.log("8. adding course to grid")
-      onAdd({
-        class_code: courseCode,
-        name: subject,
-        subject: subject,
-        syllabus_url: null,
-        streak: 0,
-      })
-      onClose()
 
     } catch (err) {
       console.error("FAILED:", err.message)
@@ -206,16 +200,6 @@ export default function Addcoursemodal({ onClose, onAdd }) {
           </div>
 
           <div>
-            <label className="text-sm font-normal text-gray-900 ml-1">Course code</label>
-            <input
-              value={courseCode}
-              onChange={(e) => setCourseCode(e.target.value)}
-              className="w-full bg-gray-50 rounded-lg p-3 text-sm text-slate-400"
-              placeholder="e.g., MATH2414"
-            />
-          </div>
-
-          <div>
             <div className="w-full bg-gray-50 rounded-lg px-6 py-8 border border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 mt-3">
               <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_141_412)">
@@ -242,28 +226,27 @@ export default function Addcoursemodal({ onClose, onAdd }) {
               <input id="syllabusFileInput" type="file" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
             </div>
           </div>
-          
-          {/* sync option */}
+
           <div className="w-full mt-4 flex items-center gap-2 px-1">
-          <button 
-            type="button"
-            onClick={() => setSyncToCalendar(!syncToCalendar)}
-            className="transition-transform active:scale-95"
-          >
-            {syncToCalendar ? (
-              <FaCheckSquare size={20} className="text-[#347A73]" />
-            ) : (
-              <FaRegSquare size={20} className="text-gray-300" />
-            )}
-          </button>
-          <span className="text-sm text-gray-600 select-none cursor-pointer" onClick={() => setSyncToCalendar(!syncToCalendar)}>
-            Automatically sync tasks and exams to Google Calendar
-          </span>
-        </div>
+            <button
+              type="button"
+              onClick={() => setSyncToCalendar(!syncToCalendar)}
+              className="transition-transform active:scale-95"
+            >
+              {syncToCalendar ? (
+                <FaCheckSquare size={20} className="text-[#347A73]" />
+              ) : (
+                <FaRegSquare size={20} className="text-gray-300" />
+              )}
+            </button>
+            <span className="text-sm text-gray-600 select-none cursor-pointer" onClick={() => setSyncToCalendar(!syncToCalendar)}>
+              Automatically sync tasks and exams to Google Calendar
+            </span>
+          </div>
 
           <button
             onClick={handleAdd}
-            disabled={loading || !subject.trim() || !courseCode.trim() || !file}
+            disabled={loading || !subject.trim() || !file}
             className="bg-[#347A73] hover:bg-[#1F5C57] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2 disabled:opacity-50"
           >
             {loading ? "Adding..." : "Add Course"}

@@ -23,6 +23,8 @@
 
 body {
   background: var(--background);
+      overflow: hidden;
+
   color: var(--foreground);
   font-family: var(--font-sans);
 }

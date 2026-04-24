@@ -115,14 +115,20 @@ useEffect(() => {
                         officeHours: { time: info.office_hours || "Not available", location: info.office_location || "" }
                     })
                     setSyllabusLoading(false)
+                // } else {
+                //     // first time: run extraction then fetch info
+                //     fetch('http://3.128.186.118:5000/api/syllabus/extract', {
+                //         method: 'POST',
+                //         headers: { 'Content-Type': 'application/json' },
+                //         body: JSON.stringify({ file_url: data.syllabus_url, class_code: courseId })
+                //     }).then(() => fetchSyllabusInfo())
+                // }
+
+
                 } else {
-                    // first time: run extraction then fetch info
-                    fetch('http://3.128.186.118:5000/api/syllabus/extract', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ file_url: data.syllabus_url, class_code: courseId })
-                    }).then(() => fetchSyllabusInfo())
-                }
+    fetchSyllabusInfo()
+}
+
             })
     } else {
         fetchSyllabusInfo()
