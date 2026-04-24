@@ -154,15 +154,50 @@ const saveSyllabusData = async (payload) => {
   const subjectMatch = safeCourseCode.match(/[a-zA-Z]+/);
   const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
 
-  // 1. Store Class (include user_id so the class is tied to the user)
+  // 1. Resolve the canonical class_code for this user.
+  // If the user already has a scoped variant of this class (e.g. CS2305-a-tgpj),
+  // we must save tasks/topics against THAT code so the upcoming-tasks JOIN works.
+  let resolvedCode = safeCourseCode.substring(0, 50);
+  if (user_id) {
+    try {
+      // Check user-owned classes first (exact or scoped variant)
+      const existingRes = await pool.query(
+        `SELECT class_code FROM classes
+         WHERE user_id = $1 AND class_code LIKE $2
+         ORDER BY created_at DESC LIMIT 1`,
+        [user_id, `${safeCourseCode}%`]
+      );
+      if (existingRes.rows.length > 0) {
+        resolvedCode = existingRes.rows[0].class_code;
+        console.log(`[Syllabus] 🔗 Using existing scoped class code: ${resolvedCode} (user: ${user_id})`);
+      } else {
+        // Fall back: check user_classes for an enrolled variant
+        const enrolledRes = await pool.query(
+          `SELECT uc.class_code FROM user_classes uc
+           JOIN classes c ON c.class_code = uc.class_code
+           WHERE uc.user_id = $1 AND uc.class_code LIKE $2
+           ORDER BY uc.enrolled_at DESC LIMIT 1`,
+          [user_id, `${safeCourseCode}%`]
+        );
+        if (enrolledRes.rows.length > 0) {
+          resolvedCode = enrolledRes.rows[0].class_code;
+          console.log(`[Syllabus] 🔗 Using enrolled scoped class code: ${resolvedCode} (user: ${user_id})`);
+        }
+      }
+    } catch (err) {
+      console.warn(`[Syllabus] ⚠️ Could not resolve scoped class code, falling back to ${resolvedCode}:`, err.message);
+    }
+  }
+
+  // Store/update the class row with the resolved code
   const classData = {
-    class_code: safeCourseCode.substring(0, 50),
+    class_code: resolvedCode,
     subject: subject,
     name: courseName.substring(0, 30),
     user_id: user_id || null
   };
   const newClass = await classModel.createClass(classData);
-  // Use the actual stored class_code (may be scoped e.g. CS3341-XXXX) for all child records
+  // storedCode is what was actually persisted (resolvedCode confirmed by DB RETURNING)
   const storedCode = newClass.class_code;
   console.log(`[Syllabus] 🏫 Class verified/updated: ${storedCode}${user_id ? ` (user: ${user_id})` : ' (no user_id)'}`);
 
