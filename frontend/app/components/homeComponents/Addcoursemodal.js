@@ -10,92 +10,133 @@ export default function Addcoursemodal({ onClose, onAdd }) {
   const [courseCode, setCourseCode] = useState("")
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [syncToCalendar, setSyncToCalendar] = useState(true) //default upload tasks
+  const [syncToCalendar, setSyncToCalendar] = useState(true)
+  const [isDragging, setIsDragging] = useState(false)
+
+  // Drag handlers
+  const handleDrag = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDragEnter = (e) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    const droppedFile = e.dataTransfer.files[0]
+    if (droppedFile) {
+      setFile(droppedFile)
+    }
+  }
 
   async function syncTasksToCalendar(tasks, className) {
+    const currentYear = new Date().getFullYear();
     for (const task of tasks) {
-        const dueDate = new Date(task.due_date) 
-        dueDate.setHours(23, 59, 0, 0)
-
-        const event = {
-            summary: task.task_name, 
-            description: `${className} Deadline`,
-            startDateTime: dueDate.toISOString(),
-            endDateTime: dueDate.toISOString(),
-            createMeet: false,
-            attendeeEmails: []
-        }
-
-        try {
-            await fetch("/backend/api/calendar/create-event", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session?.accessToken}`,
-                    "x-user-id": session?.user?.id
-                },
-                body: JSON.stringify({ ...event, userId: session?.user?.id })
-            })
-        } catch (err) {
-            console.error("Failed to sync individual task:", err)
-        }
+      const dueDate = new Date(`${task.due} ${currentYear}`);
+      dueDate.setHours(23, 59, 0, 0);
+      const event = {
+        summary: task.title,
+        description: `${className} Deadline`,
+        startDateTime: dueDate.toISOString(),
+        endDateTime: dueDate.toISOString(),
+        createMeet: false,
+        attendeeEmails: []
+      };
+      try {
+        await fetch("/backend/api/calendar/create-event", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.accessToken}`,
+            "x-user-id": session?.user?.id
+          },
+          body: JSON.stringify({ ...event, userId: session?.user?.id })
+        });
+      } catch (err) {
+        console.error("Failed to sync individual task:", err);
+      }
     }
-}
+  }
 
   async function handleAdd() {
-    if (!subject.trim() || !courseCode.trim()) return
+    if (!subject.trim() || !file) return
     console.log("full session object:", JSON.stringify(session))
     setLoading(true)
 
     try {
-      // save class
-      console.log("saving class with user_id:", session.user.id)
-      const courseRes = await fetch("http://3.128.186.118:5000/classes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          class_code: courseCode,
-          subject: subject,
-          name: subject,
-          user_id: session.user.id,
-        })
-      })
-
-      if (!courseRes.ok) {
-        const err = await courseRes.text()
-        console.error("3. FAILED to save class:", courseRes.status, err)
-        return
-      }
-      console.log("3. class saved")
-
       if (file) {
-        // upload to s3
-        console.log("4. uploading syllabus to S3")
+        console.log("1. uploading syllabus to S3")
         const uploadForm = new FormData()
         uploadForm.append("syllabusPdf", file)
-        uploadForm.append("class_code", courseCode)
-       
 
         const uploadRes = await fetch("http://3.128.186.118:5000/api/syllabus/upload", {
           method: "POST",
           body: uploadForm
         })
 
-        let uploadData = { syllabus_url: "" }  // declare outside
-
+        let uploadData = { syllabus_url: "" }
         if (!uploadRes.ok) {
-          console.error("4. failed upload:", uploadRes.status)
+          console.error("1. failed upload:", uploadRes.status)
         } else {
           uploadData = await uploadRes.json()
           console.log("full uploadData:", uploadData)
-          console.log("4. uploaded", uploadData.syllabus_url)
+          console.log("1. uploaded", uploadData.syllabus_url)
         }
-        // save syllabus to course materials
+
+        console.log("2. extracting syllabus")
+        const extractForm = new FormData()
+        extractForm.append("syllabusPdf", file)
+        extractForm.append("user_id", session.user.id)
+
+        const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
+          method: "POST",
+          body: extractForm
+        })
+
+        const extractData = await extractRes.json()
+        console.log("extract response:", extractData)
+        const extractedCode = extractData.class_code
+        setCourseCode(extractedCode)
+
+        if (!extractRes.ok) {
+          console.error("2. FAILED extract:", extractRes.status)
+          return
+        }
+
+        console.log("3. saving class with user_id:", session.user.id)
+        const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            class_code: extractedCode,
+            subject: subject,
+            name: subject,
+            user_id: session.user.id,
+          })
+        })
+
+        if (!courseRes.ok) {
+          const err = await courseRes.text()
+          console.error("3. FAILED to save class:", courseRes.status, err)
+          return
+        }
+        console.log("3. class saved")
+
         await fetch("http://3.128.186.118:5000/course-materials", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            class_code: courseCode,
+            class_code: extractedCode,
             user_id: session.user.id,
             file_name: "Syllabus",
             file_url: uploadData.syllabus_url || "",
@@ -105,40 +146,17 @@ export default function Addcoursemodal({ onClose, onAdd }) {
         })
         console.log("4. syllabus saved to course materials")
 
-        // extract
-        console.log("5. extracting syllabus")
-        const extractForm = new FormData()
-        extractForm.append("syllabusPdf", file)
-        extractForm.append("user_id", session.user.id)      
-        extractForm.append("class_code", courseCode)         
-
-        const extractRes = await fetch("http://3.128.186.118:5000/api/syllabus/extract", {
-          method: "POST",
-          body: extractForm
-        })
-
-        if (!extractRes.ok) {
-          const err = await extractRes.text()
-          console.error("5. FAILED extract:", extractRes.status, err)
-        } else {
-          const extractData = await extractRes.json()
-          console.log("5. extracted ", extractData.message)
-
-
-          if (syncToCalendar) {
-            console.log("6. Fetching newly created tasks for calendar sync");
-            const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`);
-            const tasksData = await tasksRes.json();
-            
-            if (tasksData && tasksData.length > 0) {
-              await syncTasksToCalendar(tasksData, subject);
-              console.log("7. Calendar sync complete");
-            }
+        if (syncToCalendar) {
+          console.log("5. Fetching newly created tasks for calendar sync")
+          const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${extractedCode}`)
+          const tasksData = await tasksRes.json()
+          if (tasksData && tasksData.length > 0) {
+            await syncTasksToCalendar(tasksData, subject)
+            console.log("6. Calendar sync complete")
           }
         }
 
-        // restore  name the user entered
-        await fetch(`http://3.128.186.118:5000/classes/${courseCode}`, {
+        await fetch(`http://3.128.186.118:5000/classes/${extractedCode}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -147,33 +165,31 @@ export default function Addcoursemodal({ onClose, onAdd }) {
             user_id: session.user.id,
           })
         })
-        console.log("5. name restored to:", subject)
+        console.log("7. name restored to:", subject)
 
-        // verify topics saved
-        console.log("6. verifying topics saved")
-        const topicsRes = await fetch(`http://3.128.186.118:5000/classes/${courseCode}/topics`)
+        console.log("8. verifying topics saved")
+        const topicsRes = await fetch(`http://3.128.186.118:5000/classes/${extractedCode}/topics`)
         const topicsData = await topicsRes.json()
-        console.log("6. topics:", JSON.stringify(topicsData.topics))
+        console.log("8. topics:", JSON.stringify(topicsData.topics))
 
-        // verify tasks saved
-        console.log("7. verifying tasks saved")
-        const tasksRes = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${courseCode}`)
-        const tasksData = await tasksRes.json()
-        console.log("7. tasks:", JSON.stringify(tasksData))
+        console.log("9. verifying tasks saved")
+        const tasksRes2 = await fetch(`http://3.128.186.118:5000/api/syllabus/tasks/${extractedCode}`)
+        const tasksData2 = await tasksRes2.json()
+        console.log("9. tasks:", JSON.stringify(tasksData2))
+
+        console.log("10. adding course to grid")
+        onAdd({
+          class_code: extractedCode,
+          name: subject,
+          subject: subject,
+          syllabus_url: null,
+          streak: 0,
+        })
+        onClose()
 
       } else {
-        console.log("4. no file uploaded, skipping syllabus extraction")
+        console.log("no file uploaded, skipping syllabus extraction")
       }
-
-      console.log("8. adding course to grid")
-      onAdd({
-        class_code: courseCode,
-        name: subject,
-        subject: subject,
-        syllabus_url: null,
-        streak: 0,
-      })
-      onClose()
 
     } catch (err) {
       console.error("FAILED:", err.message)
@@ -204,21 +220,18 @@ export default function Addcoursemodal({ onClose, onAdd }) {
           </div>
 
           <div>
-            <label className="text-sm font-normal text-gray-900 ml-1">Course code</label>
-            <input
-              value={courseCode}
-              onChange={(e) => setCourseCode(e.target.value)}
-              className="w-full bg-gray-50 rounded-lg p-3 text-sm text-slate-400"
-              placeholder="e.g., MATH2414"
-            />
-          </div>
-
-          <div>
-            <div className="w-full bg-gray-50 rounded-lg px-6 py-8 border border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 mt-3">
+            <div
+              onDragOver={handleDrag}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`w-full rounded-lg px-6 py-8 border border-dashed flex flex-col items-center justify-center gap-2 mt-3 transition-colors ${
+                isDragging ? "bg-[#D0EFE9] border-[#4DB5AC]" : "bg-gray-50 border-gray-300"
+              }`}
+            >
               <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_141_412)">
-                <path d="M19.4817 19.4813C19.4817 19.8042 19.3534 20.1139 19.125 20.3423C18.8967 20.5706 18.587 20.6989 18.2641 20.6989H15.8289V23.134C15.8289 23.457 15.7006 23.7667 15.4723 23.995C15.244 24.2233 14.9343 24.3516 14.6113 24.3516C14.2884 24.3516 13.9787 24.2233 13.7504 23.995C13.522 23.7667 13.3938 23.457 13.3938 23.134V20.6989H10.9586C10.6357 20.6989 10.326 20.5706 10.0976 20.3423C9.8693 20.1139 9.74102 19.8042 9.74102 19.4813C9.74102 19.1584 9.8693 18.8487 10.0976 18.6203C10.326 18.392 10.6357 18.2637 10.9586 18.2637H13.3938V15.8286C13.3938 15.5056 13.522 15.1959 13.7504 14.9676C13.9787 14.7393 14.2884 14.611 14.6113 14.611C14.9343 14.611 15.244 14.7393 15.4723 14.9676C15.7006 15.1959 15.8289 15.5056 15.8289 15.8286V18.2637H18.2641C18.587 18.2637 18.8967 18.392 19.125 18.6203
-        19.3534 18.8487 19.4817 19.1584 19.4817 19.4813ZM26.7871 12.7663V23.134C26.7852 24.7481 26.1432 26.2954 25.0019 27.4367C23.8606 28.578 22.3133 29.22 20.6992 29.2219H8.52344C6.90943 29.22 5.36207 28.578 4.22079 27.4367C3.0795 26.2954 2.43748 24.7481 2.43555 23.134V6.08793C2.43748 4.47391 3.0795 2.92655 4.22079 1.78527C5.36207 0.643984 6.90943 0.00196141 8.52344 2.80636e-05H14.0208C15.1405 -0.00285386 16.2497 0.216255 17.2842 0.644687C18.3187 1.07312 19.258 1.70237 20.0478 2.49607L24.2899 6.74055C25.084 7.52983 25.7137 8.46885 26.1423 9.5032C26.571 10.5376 26.7902 11.6467 26.7871 12.7663ZM18.3262 4.21772C17.943 3.84656 17.5128 3.52726 17.0465 3.26801V8.52308C17.0465 8.84601 17.1748 9.1557 17.4031 9.38404C17.6315 9.61238 17.9412 9.74066 18.2641 9.74066H23.5192C23.2598 9.27456 22.94 8.8447 22.5682 8.4622L18.3262 4.21772ZM24.352 12.7663C24.352 12.5654 24.313 12.3731 24.2948 12.1758H18.2641C17.2953 12.1758 16.3662 11.791 15.6812 11.106C14.9962 10.4209 14.6113 9.49185 14.6113 8.52308V2.49241C14.4141 2.47415 14.2205 2.43519 14.0208 2.43519H8.52344C7.55468 2.43519 6.62559 2.82003 5.94057 3.50505C5.25555 4.19007 4.87071 5.11916 4.87071 6.08793V23.134C4.87071 24.1028 5.25555 25.0319 5.94057 25.7169C6.62559 26.4019 7.55468 26.7868 8.52344 26.7868H20.6992C21.668 26.7868 22.5971 26.4019 23.2821 25.7169C23.9671 25.0319 24.352 24.1028 24.352 23.134V12.7663Z" fill="#374957"/>
+                <path d="M19.4817 19.4813C19.4817 19.8042 19.3534 20.1139 19.125 20.3423C18.8967 20.5706 18.587 20.6989 18.2641 20.6989H15.8289V23.134C15.8289 23.457 15.7006 23.7667 15.4723 23.995C15.244 24.2233 14.9343 24.3516 14.6113 24.3516C14.2884 24.3516 13.9787 24.2233 13.7504 23.995C13.522 23.7667 13.3938 23.457 13.3938 23.134V20.6989H10.9586C10.6357 20.6989 10.326 20.5706 10.0976 20.3423C9.8693 20.1139 9.74102 19.8042 9.74102 19.4813C9.74102 19.1584 9.8693 18.8487 10.0976 18.6203C10.326 18.392 10.6357 18.2637 10.9586 18.2637H13.3938V15.8286C13.3938 15.5056 13.522 15.1959 13.7504 14.9676C13.9787 14.7393 14.2884 14.611 14.6113 14.611C14.9343 14.611 15.244 14.7393 15.4723 14.9676C15.7006 15.1959 15.8289 15.5056 15.8289 15.8286V18.2637H18.2641C18.587 18.2637 18.8967 18.392 19.125 18.6203 19.3534 18.8487 19.4817 19.1584 19.4817 19.4813ZM26.7871 12.7663V23.134C26.7852 24.7481 26.1432 26.2954 25.0019 27.4367C23.8606 28.578 22.3133 29.22 20.6992 29.2219H8.52344C6.90943 29.22 5.36207 28.578 4.22079 27.4367C3.0795 26.2954 2.43748 24.7481 2.43555 23.134V6.08793C2.43748 4.47391 3.0795 2.92655 4.22079 1.78527C5.36207 0.643984 6.90943 0.00196141 8.52344 2.80636e-05H14.0208C15.1405 -0.00285386 16.2497 0.216255 17.2842 0.644687C18.3187 1.07312 19.258 1.70237 20.0478 2.49607L24.2899 6.74055C25.084 7.52983 25.7137 8.46885 26.1423 9.5032C26.571 10.5376 26.7902 11.6467 26.7871 12.7663ZM18.3262 4.21772C17.943 3.84656 17.5128 3.52726 17.0465 3.26801V8.52308C17.0465 8.84601 17.1748 9.1557 17.4031 9.38404C17.6315 9.61238 17.9412 9.74066 18.2641 9.74066H23.5192C23.2598 9.27456 22.94 8.8447 22.5682 8.4622L18.3262 4.21772ZM24.352 12.7663C24.352 12.5654 24.313 12.3731 24.2948 12.1758H18.2641C17.2953 12.1758 16.3662 11.791 15.6812 11.106C14.9962 10.4209 14.6113 9.49185 14.6113 8.52308V2.49241C14.4141 2.47415 14.2205 2.43519 14.0208 2.43519H8.52344C7.55468 2.43519 6.62559 2.82003 5.94057 3.50505C5.25555 4.19007 4.87071 5.11916 4.87071 6.08793V23.134C4.87071 24.1028 5.25555 25.0319 5.94057 25.7169C6.62559 26.4019 7.55468 26.7868 8.52344 26.7868H20.6992C21.668 26.7868 22.5971 26.4019 23.2821 25.7169C23.9671 25.0319 24.352 24.1028 24.352 23.134V12.7663Z" fill="#374957"/>
                 </g>
                 <defs>
                 <clipPath id="clip0_141_412">
@@ -240,28 +253,27 @@ export default function Addcoursemodal({ onClose, onAdd }) {
               <input id="syllabusFileInput" type="file" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
             </div>
           </div>
-          
-          {/* sync option */}
+
           <div className="w-full mt-4 flex items-center gap-2 px-1">
-          <button 
-            type="button"
-            onClick={() => setSyncToCalendar(!syncToCalendar)}
-            className="transition-transform active:scale-95"
-          >
-            {syncToCalendar ? (
-              <FaCheckSquare size={20} className="text-[#347A73]" />
-            ) : (
-              <FaRegSquare size={20} className="text-gray-300" />
-            )}
-          </button>
-          <span className="text-sm text-gray-600 select-none cursor-pointer" onClick={() => setSyncToCalendar(!syncToCalendar)}>
-            Automatically sync tasks and exams to Google Calendar
-          </span>
-        </div>
+            <button
+              type="button"
+              onClick={() => setSyncToCalendar(!syncToCalendar)}
+              className="transition-transform active:scale-95"
+            >
+              {syncToCalendar ? (
+                <FaCheckSquare size={20} className="text-[#347A73]" />
+              ) : (
+                <FaRegSquare size={20} className="text-gray-300" />
+              )}
+            </button>
+            <span className="text-sm text-gray-600 select-none cursor-pointer" onClick={() => setSyncToCalendar(!syncToCalendar)}>
+              Automatically sync tasks and exams to Google Calendar
+            </span>
+          </div>
 
           <button
             onClick={handleAdd}
-            disabled={loading || !subject.trim() || !courseCode.trim() || !file}
+            disabled={loading || !subject.trim() || !file}
             className="bg-[#347A73] hover:bg-[#1F5C57] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2 disabled:opacity-50"
           >
             {loading ? "Adding..." : "Add Course"}

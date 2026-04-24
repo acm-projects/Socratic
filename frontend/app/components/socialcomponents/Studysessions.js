@@ -2,11 +2,8 @@
 import { useState, useEffect } from "react"
 import { Calendar, Users, Plus } from "lucide-react"
 
-export default function UpcomingSessions({ session, onShowScheduleModal, onMeetingCount, refreshKey }) {
+export default function UpcomingSessions({ session, onShowScheduleModal, onMeetingCount, refreshKey  }) {
   const [upcomingSessions, setUpcomingSessions] = useState([])
-
-
-
 
   useEffect(() => {
     if (!session?.user?.id) return
