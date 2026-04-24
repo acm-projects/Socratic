@@ -166,7 +166,32 @@ router.patch('/:id/tasks/:taskId', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+/**
+ * PUT /api/users/:id/tasks/:taskId
+ * Full Task Update
+ * Updates any combination of task_name, due_date, and completed status for a specific task.
+ */
 router.put('/:id/tasks/:taskId', async (req, res, next) => {
+  try {
+    const { taskId } = req.params;
+    const { task_name, due_date, completed } = req.body;
+    if (task_name === undefined && due_date === undefined && completed === undefined) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+    const updatedTask = await taskModel.updateTask(taskId, { task_name, due_date, completed });
+    if (!updatedTask) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    res.json(updatedTask);
+  } catch (error) { next(error); }
+});
+
+/**
+ * POST /api/users/:id/tasks/:taskId
+ * Full Task Update (POST alias)
+ * Functions exactly like the PUT route to allow for POST-based updates.
+ */
+router.post('/:id/tasks/:taskId', async (req, res, next) => {
   try {
     const { taskId } = req.params;
     const { task_name, due_date, completed } = req.body;

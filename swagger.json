@@ -2344,6 +2344,66 @@
             "description": "Task not found"
           }
         }
+      },
+      "post": {
+        "summary": "Full Task Update (POST alias)",
+        "description": "Updates any combination of task_name, due_date, and completed status for a specific task. Identical to PUT.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User ID"
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task ID (UUID)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "task_name": {
+                    "type": "string",
+                    "example": "Midterm Exam Updated"
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-05-20"
+                  },
+                  "completed": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated task object"
+          },
+          "400": {
+            "description": "No fields to update"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
       }
     },
     "/api/history/{chatId}/messages": {
