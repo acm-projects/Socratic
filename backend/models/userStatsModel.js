@@ -10,23 +10,25 @@ const getTopicMetrics = async (topicId) => {
   return result.rows;
 };
 
+const { getCentralDate } = require('../utils/dateUtils');
+
 /**
  * Increments ai_messages by 1 and updates the daily streak.
  * Uses COALESCE to ensure math works even if initial value is NULL.
  */
-const incrementAiMessages = async (userId) => {
+const incrementAiMessages = async (userId, today = getCentralDate()) => {
   await db.query(
     `UPDATE "User"
      SET
        ai_messages = COALESCE(ai_messages, 0) + 1,
        streak = CASE
-         WHEN last_active_date = CURRENT_DATE THEN COALESCE(streak, 0)
-         WHEN last_active_date = CURRENT_DATE - INTERVAL '1 day' THEN COALESCE(streak, 0) + 1
+         WHEN last_active_date = $2::date THEN COALESCE(streak, 0)
+         WHEN last_active_date = $2::date - INTERVAL '1 day' THEN COALESCE(streak, 0) + 1
          ELSE 1
        END,
-       last_active_date = CURRENT_DATE
+       last_active_date = $2::date
      WHERE id = $1`,
-    [userId]
+    [userId, today]
   );
 };
 
@@ -61,9 +63,7 @@ const incrementRetakesTaken = async (userId) => {
  */
 const updateHeatmap = async (userId, topicId, classCode, score) => {
   try {
-    // Adjust for local timezone offset so it doesn't roll over to tomorrow early (UTC)
-    const date = new Date();
-    const today = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const today = getCentralDate();
     const numericScore = score !== undefined && score !== null ? parseFloat(score) : null;
 
     await db.query(

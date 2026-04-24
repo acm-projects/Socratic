@@ -94,12 +94,14 @@ const getQuizzesByUser = async (userId) => {
   }));
 };
 
+const { getCentralDate } = require('../utils/dateUtils');
+
 /**
  * Updates daily_topic_metrics after a quiz is taken.
  * Increments questions_asked and recomputes avg_score for that day.
  */
 const updateTopicMetrics = async ({ userId, classCode, topicId, questionsAsked, score }) => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getCentralDate();
   await db.query(
     `INSERT INTO daily_topic_metrics (user_id, class_code, topic_id, metric_date, questions_asked, avg_score)
      VALUES ($1, $2, $3, $4, $5, $6)

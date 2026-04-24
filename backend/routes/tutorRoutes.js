@@ -342,15 +342,15 @@ router.post('/chat', async (req, res, next) => {
     pool.query("SELECT streak, last_activity_date FROM classes WHERE class_code = $1 AND user_id = $2", [classCode, userId])
       .then(classResult => {
         if (!classResult.rows[0]) return;
-        const today = new Date().toISOString().split('T')[0];
+        const { getCentralDate, getYesterdayCentralDate } = require('../utils/dateUtils');
+        const today = getCentralDate();
         const { streak, last_activity_date } = classResult.rows[0];
         const lastDate = last_activity_date ? new Date(last_activity_date).toISOString().split('T')[0] : null;
         if (lastDate === today) return;
         let newStreak = 1;
         if (lastDate) {
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
-          if (lastDate === yesterday.toISOString().split('T')[0]) {
+          const yesterday = getYesterdayCentralDate();
+          if (lastDate === yesterday) {
             newStreak = (streak || 0) + 1;
           }
         }
