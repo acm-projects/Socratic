@@ -187,6 +187,24 @@ router.put('/:id/tasks/:taskId', async (req, res, next) => {
 });
 
 /**
+ * POST /api/users/:id/tasks
+ * Create a new task for a specific user/class.
+ */
+router.post('/:id/tasks', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { class_code, task_name, due_date } = req.body;
+
+    if (!class_code || !task_name || !due_date) {
+      return res.status(400).json({ error: "Missing required fields: class_code, task_name, due_date" });
+    }
+
+    const newTask = await taskModel.createTask({ class_code, task_name, due_date });
+    res.status(201).json(newTask);
+  } catch (error) { next(error); }
+});
+
+/**
  * POST /api/users/:id/tasks/:taskId
  * Full Task Update (POST alias)
  * Functions exactly like the PUT route to allow for POST-based updates.

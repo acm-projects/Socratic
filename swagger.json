@@ -518,6 +518,57 @@
         }
       }
     },
+    "/api/users/{id}/tasks": {
+      "post": {
+        "summary": "Create a New Task",
+        "description": "Manually adds a new academic task for a specific class.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["class_code", "task_name", "due_date"],
+                "properties": {
+                  "class_code": {
+                    "type": "string",
+                    "example": "CS2305"
+                  },
+                  "task_name": {
+                    "type": "string",
+                    "example": "Extra Credit Assignment"
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-05-15"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task created successfully"
+          },
+          "400": {
+            "description": "Missing required fields"
+          }
+        }
+      }
+    },
     "/api/users/{id}/upcoming-tasks": {
       "get": {
         "summary": "Get All Upcoming Tasks for User",

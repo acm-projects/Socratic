@@ -58,8 +58,24 @@ const updateTask = async (taskId, taskData) => {
   return result.rows[0] || null;
 };
 
+/**
+ * Creates a new task for a specific class.
+ */
+const createTask = async (taskData) => {
+  const { id, class_code, task_name, due_date } = taskData;
+  const taskId = id || require('crypto').randomUUID();
+  const query = `
+    INSERT INTO class_tasks (id, class_code, task_name, due_date)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *;
+  `;
+  const result = await db.query(query, [taskId, class_code, task_name, due_date]);
+  return result.rows[0];
+};
+
 module.exports = {
   getUpcomingTasksByUserId,
   updateTaskStatus,
-  updateTask
+  updateTask,
+  createTask
 };
