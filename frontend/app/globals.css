@@ -33,6 +33,23 @@ body {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.9s ease-out;
 }
 
+
+/* testing dots animation  */
+
+@keyframes chase-fade {
+  0%, 80%, 100% {
+    /* default opacity  */
+    opacity: 0.5; 
+  }
+  /* full brightness */
+  40% {
+    opacity: 1;
+  }
+}
+
+.animate-chase-fade {
+  animation: chase-fade 1.5s infinite ease-in-out both;
+}

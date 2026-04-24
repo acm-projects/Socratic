@@ -129,7 +129,7 @@ useEffect(() => {
         background: "linear-gradient(to bottom, transparent, #E0E5E4 20%, #E0E5E4 80%, transparent)"
         }} />
 
-        <div className="p-9 w-1/4 flex flex-col gap-8 overflow-hidden h-screen sticky top-0">
+        <div className="p-9 pl-6 w-1/4 flex flex-col gap-8 overflow-hidden h-screen sticky top-0">
         <UpcomingTasks/>
         <UpcomingMeetings />
         </div>

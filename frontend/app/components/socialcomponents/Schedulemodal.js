@@ -1,12 +1,14 @@
 "use client"
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Check} from "lucide-react";
 import { User } from 'lucide-react';
 import { Calendar } from 'lucide-react';
 import { Clock } from 'lucide-react';
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
-export default function Schedulemodal({onClose}){
+
+export default function Schedulemodal({onClose, onSessionCreated}){
     const { data: session } = useSession();  // add here
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [sessionName, setSessionName] = useState("");
@@ -18,6 +20,32 @@ export default function Schedulemodal({onClose}){
     const [recurring, setRecurring] = useState(false);
     const [selectedDays, setSelectedDays] = useState([]);
     const [endsOn, setEndsOn] = useState("");
+    const [courses, setCourses] = useState([])
+    const [friends, setFriends] = useState([])
+    const [selectedFriends, setSelectedFriends] = useState([])
+
+//dropdown friends
+useEffect(() => {
+    if (!session?.user?.id) return
+    fetch(`http://3.128.186.118:5000/users/${session.user.id}/friends`)
+        .then(res => res.json())
+        .then(data => {
+            console.log("friends:", data)
+            setFriends(data)
+        })
+        .catch(err => console.error(err))
+}, [session])
+
+
+    // getting list of classes for modal dropdown
+useEffect(() => {
+    if (!session?.user?.id) return
+    fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
+        .then(res => res.json())
+        .then(data => setCourses(data))
+        .catch(err => console.error(err))
+}, [session])
+
 
     const days = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -33,7 +61,8 @@ export default function Schedulemodal({onClose}){
     }
 
     async function handleSendInvite() {
-        const startDateTime = `${date}T${time}:00`;
+        const localDate = new Date(`${date}T${time}:00`);
+        const startDateTime = localDate.toISOString();
         const [hours, minutes] = duration.match(/(\d+)h\s*(\d+)m/)
             ? duration.match(/(\d+)h\s*(\d+)m/).slice(1).map(Number)
             : [1, 0];
@@ -44,12 +73,12 @@ export default function Schedulemodal({onClose}){
 
         const body = {
             summary: sessionName,
-            description: course,
+            description: `${course} | ${selectedFriends.map(f => `${f.first_name} ${f.last_name}`).join(", ")}`,
             location: "",
             startDateTime,
             endDateTime,
             createMeet: true,
-            attendeeEmails: [friend],
+            attendeeEmails: selectedFriends.map(f => f.email),
         };
 
         console.log("Sending body:", JSON.stringify(body));
@@ -78,6 +107,7 @@ export default function Schedulemodal({onClose}){
 
             if (res.ok) {
                 setShowConfirmation(true);
+                onSessionCreated?.() 
             } else {
                 const errorText = await text();
                 console.log("Error response:", errorText);
@@ -98,7 +128,9 @@ export default function Schedulemodal({onClose}){
                     </div>
                     <div className="flex flex-col items-center gap-2">
                         <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">✓</div>
+                            <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
+                                <Check size={16} strokeWidth={3} />
+                            </div>
                             <h2 className="text-lg font-semibold">Meeting invitation sent</h2>
                         </div>
                         <p className="text-sm text-gray-400 text-center">A calendar invitation has been sent to your friend's email address.</p>
@@ -107,16 +139,18 @@ export default function Schedulemodal({onClose}){
                         <p className="font-semibold text-black">{sessionName || "Study Session"}</p>
                         <div className="flex gap-2">
                             <User size={16} className="text-gray-500"/>
-                            <p className="text-sm text-gray-500">{friend || "No friend selected"}</p>
-                        </div>
+                        <p className="text-sm text-gray-500">{selectedFriends.length > 0 ? selectedFriends.map(f => `${f.first_name} ${f.last_name}`).join(", ") : "No friend selected"}</p>                       
+                         </div>
                         <div className="flex gap-2">
                             <Calendar size={16} className="text-gray-500"/>
                             <p className="text-sm text-gray-500">{date}</p>
                         </div>
                         <div className="flex gap-2">
                             <Clock size={16} className="text-gray-500"/>
-                            <p className="text-sm text-gray-500">{time} - {duration}</p>
-                        </div>
+                <p className="text-sm text-gray-500">
+                    {new Date(`2000-01-01T${time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>                       
+                </div>
                     </div>
                 </div>
             </div>
@@ -147,11 +181,10 @@ export default function Schedulemodal({onClose}){
                         value={course}
                         onChange={(e) => setCourse(e.target.value)}
                         className="border border-gray-200 rounded-xl p-3 text-sm bg-gray-50">
-                        <option value="">e.g., Discrete Math</option>
-                        <option>Discrete Math</option>
-                        <option>Calculus II</option>
-                        <option>Physics I</option>
-                        <option>Computer Science</option>
+                        <option value="">Select a course</option>
+                        {courses.map(c => (
+                            <option key={c.class_code} value={c.name}>{c.name}</option>
+                        ))}
                     </select>
                 </div>
 
@@ -174,7 +207,8 @@ export default function Schedulemodal({onClose}){
                             className="border border-gray-200 rounded-xl p-3 text-sm bg-gray-50"
                         />
                     </div>
-                    <div className="flex flex-col gap-1 flex-1">
+
+                    {/* <div className="flex flex-col gap-1 flex-1">
                         <label className="text-sm font-medium">Duration</label>
                         <input
                             value={duration}
@@ -182,19 +216,44 @@ export default function Schedulemodal({onClose}){
                             className="border border-gray-200 rounded-xl p-3 text-sm bg-gray-50"
                             placeholder="3h 45m"
                         />
-                    </div>
+                    </div> */}
+
+
                 </div>
 
-                <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium">Friend's Email</label>
-                    <input
-                        value={friend}
-                        onChange={(e) => setFriend(e.target.value)}
-                        className="border border-gray-200 rounded-xl p-3 text-sm bg-gray-50"
-                        placeholder="Enter friend's email"
-                    />
-                </div>
 
+
+                    {/* friend */}
+            <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Friends</label>
+                <div className="border border-gray-200 rounded-xl p-3 text-sm bg-gray-50 flex flex-wrap gap-1 min-h-[46px]">
+                    {selectedFriends.map(f => (
+                        <div key={f.friend_id} className="flex items-center gap-1 bg-[#ddeaed] text-gray-600 text-xs px-2 py-1 rounded-full">
+                            {f.first_name} {f.last_name}
+                            <X size={10} className="cursor-pointer" onClick={() => setSelectedFriends(prev => prev.filter(sf => sf.friend_id !== f.friend_id))} />
+                        </div>
+                    ))}
+                    <select
+                        value=""
+                        onChange={async (e) => {
+                            const f = friends.find(f => f.friend_id === e.target.value)
+                            if (!f || selectedFriends.some(sf => sf.friend_id === f.friend_id)) return
+                            const res = await fetch(`http://3.128.186.118:5000/users/${f.friend_id}`)
+                            const fullUser = await res.json()
+                            setSelectedFriends(prev => [...prev, { ...f, email: fullUser.email }])
+                        }}
+                        className="bg-transparent outline-none text-gray-400 flex-1 min-w-[120px]">
+                        <option value="">Select a friend</option>
+                        {friends.map(f => (
+                            <option key={f.friend_id} value={f.friend_id}>{f.first_name} {f.last_name}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
+
+
+                {/* recurring */}
                 <div className="flex items-center gap-2">
                     <label className="text-sm font-medium">Recurring</label>
                     <div

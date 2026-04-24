@@ -8,38 +8,11 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 
-
 export default function ChatUI({ classCode, topic }) {
     const { data: session } = useSession()
-
-    useEffect(() => {
-        if (!session) return
-        console.log("fetching chats for user:", session.user.id, session.user.email)
-
-        fetch(`/backend/users/${session.user.id}/sessions`)
-            .then(res => res.json())
-            .then(data => {
-                console.log("raw sessions:", data)
-
-                const formatted = data
-                    .filter(s => s.class_code === classCode)
-                    .map(s => ({
-                        id: s.session_id,
-                        title: s.title || "Untitled Chat"
-                    }))
-                    .filter((chat, index, self) =>
-                        index === self.findIndex(c => c.id === chat.id)
-                    )
-                    .reverse()
-
-                setChats(formatted)
-                console.log("duplicate check:", formatted.map(c => c.id))
-            })
-            .catch(err => console.error(err))
-    }, [session])
-
     const [loading, setLoading] = useState(false)
     const [sessionId, setSessionId] = useState(null)
+    const sessionIdRef = useRef(null)
     const [showModal, setShowModal] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [input, setInput] = useState("");
@@ -51,12 +24,34 @@ export default function ChatUI({ classCode, topic }) {
     const bottomRef = useRef(null)
 
     useEffect(() => {
+        if (!session) return
+        console.log("fetching chats for user:", session.user.id, session.user.email)
+        fetch(`/backend/users/${session.user.id}/sessions`)
+            .then(res => res.json())
+            .then(data => {
+                console.log("raw sessions:", data)
+                const formatted = data
+                    .filter(s => s.class_code === classCode)
+                    .map(s => ({
+                        id: s.session_id,
+                        title: s.title || "Untitled Chat"
+                    }))
+                    .filter((chat, index, self) =>
+                        index === self.findIndex(c => c.id === chat.id)
+                    )
+                    .reverse()
+                setChats(formatted)
+                console.log("duplicate check:", formatted.map(c => c.id))
+            })
+            .catch(err => console.error(err))
+    }, [session])
+
+    useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [messages])
 
     async function handleSend() {
         console.log("sessionId at send time:", sessionId)
-
         if (!input || loading) return;
 
         const userMessage = { role: "user", content: input, score: null }
@@ -73,17 +68,18 @@ export default function ChatUI({ classCode, topic }) {
                     userId: session?.user?.id,
                     classCode: classCode,
                     topic: topic,
-                    sessionId: sessionId ?? undefined,
+                    sessionId: sessionIdRef.current ?? undefined,
                 })
             })
             const data = await res.json()
             console.log("backend response:", data)
 
-            if (!sessionId && data.chatId) {
+            if (!sessionIdRef.current && data.chatId) {
+                sessionIdRef.current = data.chatId
                 setSessionId(data.chatId)
             }
 
-            if (data.isNewSession) {
+            if (data.isNewSession && !sessionId) {
                 setChats(prev => [{ id: data.chatId, title: input }, ...prev])
             }
 
@@ -101,7 +97,6 @@ export default function ChatUI({ classCode, topic }) {
 
     async function loadChat(chatId) {
         console.log("loadChat called with:", chatId)
-
         setActiveChatId(chatId);
         activeChatIdRef.current = chatId;
         setSessionId(chatId);
@@ -112,7 +107,6 @@ export default function ChatUI({ classCode, topic }) {
             console.log("fetch status:", res.status)
             const data = await res.json();
             console.log("loaded messages:", data)
-            console.log("roles:", data.map(m => m.role))
 
             const formatted = data.map(m => ({
                 role: m.role === "user" ? "user" : "ai",
@@ -131,6 +125,7 @@ export default function ChatUI({ classCode, topic }) {
         setMessages([]);
         setActiveChatId(null);
         activeChatIdRef.current = null
+        sessionIdRef.current = null
         setSessionId(null);
         setInput("");
     }
@@ -138,7 +133,7 @@ export default function ChatUI({ classCode, topic }) {
     return (
         <div className="flex h-screen w-screen overflow-hidden">
 
-            {/* ── Sidebar ── */}
+            {/* Sidebar */}
             <div
                 className={`
                     transition-all duration-300 flex-shrink-0 flex flex-col
@@ -147,7 +142,6 @@ export default function ChatUI({ classCode, topic }) {
                 `}
                 style={{ height: '100%' }}
             >
-                {/* Sidebar header */}
                 <div className="flex items-center justify-between p-3 pt-4 border-b border-gray-200 flex-shrink-0">
                     {sidebarOpen && (
                         <a href={`/class/${classCode}`} className="flex items-center gap-1.5 text-md text-gray-500 hover:text-gray-800 transition-colors">
@@ -165,7 +159,6 @@ export default function ChatUI({ classCode, topic }) {
                     </div>
                 </div>
 
-                {/* New chat button */}
                 {sidebarOpen && (
                     <div className="p-3 flex-shrink-0 my-1">
                         <button
@@ -178,11 +171,9 @@ export default function ChatUI({ classCode, topic }) {
                     </div>
                 )}
 
-                {/* Chat history — scrollable */}
                 {sidebarOpen && (
                     <div className="flex-1 overflow-y-auto flex flex-col gap-1 px-3 min-h-0">
                         <p className="text-xs text-gray-400 mb-1 flex-shrink-0">Recents</p>
-
                         {chats.map((chat, index) => (
                             <button
                                 key={`${chat.id}-${index}`}
@@ -202,26 +193,16 @@ export default function ChatUI({ classCode, topic }) {
                 )}
             </div>
 
-            {/* ── Main chat area ── */}
+            {/* Main chat area */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white/10 rounded-xl py-4 sm:p-6 w-full">
 
                 {messages.length === 0 ? (
-                    /* ── Welcome screen ── */
                     <div className="flex-1 flex flex-col items-center justify-center gap-2 min-h-0">
                         <div className="w-32 h-32 mb-1">
-                            <img
-                                src="/icons/mascot-chat.svg"
-                                alt="Socratic Mascot"
-                                className="w-full h-full object-contain"
-                            />
+                            <img src="/icons/mascot-chat.svg" alt="Socratic Mascot" className="w-full h-full object-contain" />
                         </div>
-                        <p className="text-4xl font-bold text-black mb-2">
-                            Welcome back!
-                        </p>
-                        <p className="text-gray-400 text-xl mb-6">
-                            How can I help you today?
-                        </p>
-
+                        <p className="text-4xl font-bold text-black mb-2">Welcome back!</p>
+                        <p className="text-gray-400 text-xl mb-6">How can I help you today?</p>
                         <div className="flex items-center w-full max-w-2xl justify-between rounded-xl px-6 py-5 bg-white shadow-sm">
                             <input
                                 value={input}
@@ -238,9 +219,7 @@ export default function ChatUI({ classCode, topic }) {
                     </div>
 
                 ) : (
-                    /* ── Active chat ── */
                     <>
-                        {/* Messages — scrollable */}
                         <div className="flex-1 overflow-y-auto min-h-0">
                             <div className="flex flex-col gap-8 p-4 sm:p-10 max-w-5xl w-full mx-auto">
                                 {messages.map((message, i) => (
@@ -250,20 +229,22 @@ export default function ChatUI({ classCode, topic }) {
                                                 <div className="bg-[#ddeaed] rounded-xl px-4 py-4 text-base text-black break-words">
                                                     <div className="flex flex-col gap-3">
                                                         <span>{message.content}</span>
-                                                        <div className="flex gap-1">
-                                                            {[1, 2, 3, 4, 5].map(dot => (
+                                                      <div className="flex gap-1.5 py-1">
+                                                            {[1, 2, 3, 4, 5].map((dot, index) => (
                                                                 <div
                                                                     key={dot}
-                                                                    className={`w-3 h-3 rounded-full ${
+                                                                    className={`w-3 h-3 rounded-full transition-opacity duration-300 ${
                                                                         message.score === null
-                                                                            ? "bg-white animate-pulse"
+                                                                            ? "bg-white animate-chase-fade" 
                                                                             : dot <= message.score
-                                                                            ? "bg-[#4DB5AC]"
-                                                                            : "bg-white"
+                                                                            ? "bg-[#4DB5AC] opacity-100"
+                                                                            : "bg-white opacity-50"
                                                                     }`}
-                                                                    style={message.score === null ? {
-                                                                        animationDelay: `${dot * 150}ms`
-                                                                    } : {}}
+                                                                    style={
+                                                                        message.score === null 
+                                                                        ? { animationDelay: `${index * 150}ms` } 
+                                                                        : {}
+                                                                    }
                                                                 />
                                                             ))}
                                                         </div>
@@ -273,19 +254,16 @@ export default function ChatUI({ classCode, topic }) {
                                         ) : (
                                             <div className="flex items-end gap-3">
                                                 <div className="flex-shrink-0 w-24 h-24 flex items-center justify-center overflow-hidden">
-                                                    <img
-                                                        src="/icons/mascot-chat.svg"
-                                                        alt="Mascot"
-                                                        className="w-24 h-24 object-contain"
-                                                    />
+                                                    <img src="/icons/mascot-chat.svg" alt="Mascot" className="w-24 h-24 object-contain" />
                                                 </div>
                                                 <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
                                                     <div className="text-base text-black prose prose-sm max-w-none">
                                                         <ReactMarkdown
                                                             remarkPlugins={[remarkMath]}
                                                             rehypePlugins={[rehypeKatex]}
-                                                            children={message.content}
-                                                        />
+                                                        >
+                                                            {message.content}
+                                                        </ReactMarkdown>
                                                     </div>
                                                 </div>
                                             </div>
@@ -297,11 +275,7 @@ export default function ChatUI({ classCode, topic }) {
                                     <div className="flex justify-start">
                                         <div className="flex items-center gap-3">
                                             <div className="flex-shrink-0 w-30 h-30 flex items-center justify-center overflow-hidden">
-                                                <img
-                                                    src="/icons/mascot-thinking.svg"
-                                                    alt="Thinking"
-                                                    className="w-full h-full object-contain animate-pulse"
-                                                />
+                                                <img src="/icons/mascot-thinking.svg" alt="Thinking" className="w-full h-full object-contain animate-pulse" />
                                             </div>
                                             <div className="text-md text-gray-400 px-4 py-2 animate-pulse">Thinking...</div>
                                         </div>
@@ -311,7 +285,6 @@ export default function ChatUI({ classCode, topic }) {
                             </div>
                         </div>
 
-                        {/* Input bar */}
                         <div className="flex-shrink-0 flex flex-col items-center gap-2 pt-2">
                             <div className="flex items-center w-full max-w-2xl justify-between rounded-3xl px-6 py-4 bg-white shadow-sm">
                                 <input

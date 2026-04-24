@@ -10,7 +10,12 @@ export default function Page() {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat"
         }}>
-    
+
+          <div className="absolute top-6 left-8 flex items-center gap-1">
+            <img src="/icons/mascot-chat.svg" className="w-14 h-14 object-contain" />
+            <span className="text-xl font-semibold text-[#141f1d]">Socratic</span>
+          </div>
+        
           {/* Left side */}
           <div className="flex flex-col gap-6 w-1/2 pl-10">
             <h1 className="text-6xl font-bold text-[#141f1d] leading-tight">

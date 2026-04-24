@@ -57,13 +57,13 @@ export default function TopicsPanel({ onQuizClick }) {
         {/* scrollable area */}
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide pb-2">
           {view === "topics" && (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               {Topics.map((t, i) => {
                 const stats = quizData.find(q => q.topic_id === t.id)
                 const count = stats?.quiz_count ?? 0
                 const avg = stats?.avg_score ?? 0
                 return (
-                  <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-2 shrink-0">
+                  <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-0.5 shrink-0">
                     <div className="flex flex-col flex-1 min-w-0">
                       <p className="text-sm font-medium text-[#14153A]">{t.name}</p>
                       <p className="text-xs text-gray-400 mt-0.5">{count} quizzes</p>

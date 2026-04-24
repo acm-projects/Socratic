@@ -2,7 +2,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { Users, Calendar, ChevronLeft } from "lucide-react"
+import { Users, Calendar, ChevronLeft, User} from "lucide-react"
 import Schedulemodal from "../components/socialcomponents/Schedulemodal"
 import Sendrequestmodal from "../components/socialcomponents/Sendrequestmodal"
 import Leaderboard from "../components/socialcomponents/Leaderboard"
@@ -20,7 +20,8 @@ export default function SocialPage() {
   const [showAddFriend, setShowAddFriend] = useState(false)
 
   const [friendCount, setFriendCount] = useState(0)
-const [meetingCount, setMeetingCount] = useState(0)
+  const [meetingCount, setMeetingCount] = useState(0)
+  const [refreshKey, setRefreshKey] = useState(0) // refresh after scheduling
 
 useEffect(() => {
   if (!session?.user?.id) return
@@ -28,10 +29,6 @@ useEffect(() => {
     .then(res => res.json())
     .then(data => setFriendCount(data.friend_count || 0))
 }, [session])
-
-
-
-
 
 
   return (
@@ -64,6 +61,13 @@ useEffect(() => {
               <Calendar size={18} className="text-gray-700" />
               {meetingCount} Upcoming
             </button>
+
+            <Link 
+              href="/profile" 
+              className="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-xs hover:scale-110 transition-all"
+            >
+              <Users size={18} className="text-gray-700 group-hover:text-white transition-colors" />
+            </Link>
           </div>
         </div>
 
@@ -88,7 +92,12 @@ useEffect(() => {
             {/* Shared Classes + Upcoming Sessions Grid */}
             <div className="grid grid-cols-2 gap-5 flex-1 min-h-0">
               <Sharedclasses session={session} onShowScheduleModal={() => setShowScheduleModal(true)} />
-              <Studysessions session={session} onShowScheduleModal={() => setShowScheduleModal(true)} onMeetingCount={(count) => setMeetingCount(count)}/>
+              <Studysessions 
+                  session={session} 
+                  onShowScheduleModal={() => setShowScheduleModal(true)} 
+                  onMeetingCount={(count) => setMeetingCount(count)}
+                  refreshKey={refreshKey}
+              />
             </div>
 
             {/* Friend Achievements */}
@@ -97,7 +106,12 @@ useEffect(() => {
         </div>
       </div>
 
-      {showScheduleModal && <Schedulemodal onClose={() => setShowScheduleModal(false)} />}
+      {showScheduleModal && (
+          <Schedulemodal 
+              onClose={() => setShowScheduleModal(false)} 
+              onSessionCreated={() => setRefreshKey(prev => prev + 1)}
+          />
+      )}
       {showAddFriend && <Sendrequestmodal onClose={() => setShowAddFriend(false)} />}
     </div>
   )

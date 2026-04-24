@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { Calendar, Users, Plus } from "lucide-react"
 
-export default function UpcomingSessions({ session, onShowScheduleModal, onMeetingCount }) {
+export default function UpcomingSessions({ session, onShowScheduleModal, onMeetingCount, refreshKey }) {
   const [upcomingSessions, setUpcomingSessions] = useState([])
 
 
@@ -20,7 +20,7 @@ export default function UpcomingSessions({ session, onShowScheduleModal, onMeeti
           onMeetingCount?.(sessions.length)
       })
       .catch(err => console.error(err))
-  }, [session])
+  }, [session, refreshKey])
 
   return (
     <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex flex-col min-h-0">
@@ -50,7 +50,7 @@ export default function UpcomingSessions({ session, onShowScheduleModal, onMeeti
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <p className="font-semibold text-sm text-[#141f1d]">{s.summary}</p>
-                  <p className="text-xs text-gray-500">{s.description}</p>
+                   <p className="text-xs text-gray-500">{s.description?.split(" | ")[0] || ""}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-gray-600">
@@ -63,7 +63,10 @@ export default function UpcomingSessions({ session, onShowScheduleModal, onMeeti
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <Users size={12} className="text-gray-400" />
+                <Users size={12} className="text-gray-400" />
+                <p className="text-xs text-gray-400">
+                    {s.description?.split(" | ")[1] || ""}
+                </p>
                 </div>
                 <button
                   onClick={() => window.open(s.hangoutLink, '_blank')}

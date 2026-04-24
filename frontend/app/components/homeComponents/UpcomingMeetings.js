@@ -23,7 +23,7 @@ useEffect(() => {
   return (
   <div className="flex flex-col flex-1 min-h-0">
     <h2 className="text-base font-semibold text-[#141f1d] mb-3 shrink-0">Upcoming Meetings</h2>
-    <div className="overflow-y-auto scrollbar-hide flex flex-col">
+    <div className="overflow-y-auto scrollbar-hide flex flex-col pl-6">
         {meetings.map((meeting, i, arr) => (
         <div key={i} className={`flex items-center gap-4 py-4 ${i !== arr.length - 1 ? "border-b border-[#EAEEED]" : ""}`}>            <div className="w-28 pr-6">
               <p className="text-sm text-[#90aba7] pb-1">
@@ -36,7 +36,11 @@ useEffect(() => {
             </div>
             <div className="flex-1">
             <p className="text-sm font-semibold text-[#141f1d] pb-1">{meeting.summary}</p>
-            <p className="text-xs text-[#90aba7] mt-0.5">{meeting.description}</p>
+            <p className="text-xs text-[#90aba7] mt-0.5">{meeting.description?.split(" | ")[0] || ""}</p>
+            
+
+             {/* <p className="text-xs text-gray-500">{s.description?.split(" | ")[0] || ""}</p> */}
+              
             </div>
           <button
             onClick={() => window.open(meeting.hangoutLink, '_blank')}

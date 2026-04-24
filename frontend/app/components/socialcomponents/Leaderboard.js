@@ -10,7 +10,7 @@ export default function Leaderboard({ userId, session }) {
     fetch(`/backend/users/${session.user.id}/friends`)
       .then(res => res.json())
       .then(async (data) => {
-          console.log("friends data:", data)  // 👈 check if image is in here
+          console.log("friends data:", data)  // check if image is in here
 
         const friendDetails = data.map(f => ({
           id: f.friend_id,
@@ -27,7 +27,7 @@ export default function Leaderboard({ userId, session }) {
           name: "You",
           pts: me.total_xp,
           streak: me.streak,
-          profile_pic: session.user.image,  // 👈 add this (from Google session)
+          profile_pic: session.user.image,  //  add this (from Google session)
           isYou: true
         }])
       })
@@ -72,7 +72,7 @@ export default function Leaderboard({ userId, session }) {
                 <img
                   src={user.profile_pic}
                   alt={user.name}
-                  className="w-8 h-8 opacity-80 rounded-full object-cover bg-gray-200"
+                  className="w-12 h-12 opacity-80 rounded-full object-cover bg-gray-200"
                   onError={(e) => { e.target.src = '/default-avatar.png' }}
                 />
               ) : (

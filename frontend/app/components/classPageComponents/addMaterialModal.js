@@ -8,6 +8,37 @@ export default function AddMaterialModal({ onClose, onAdd, courseId }) {
   const [fileName, setFileName] = useState("")
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isDragging, setIsDragging] = useState(false) //drag hover effect
+
+  //prevent default of opening the file in the browser when dragged in
+  const handleDrag = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+  }
+
+  // drag hover effect
+  const handleDragEnter = (e) => {
+      e.preventDefault()
+      setIsDragging(true)
+  }
+
+  // reset hover effect when leaving drag area
+  const handleDragLeave = (e) => {
+      e.preventDefault()
+      setIsDragging(false)
+  }
+
+  // set file to state when dropped in area
+  const handleDrop = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setIsDragging(false)
+      const droppedFile = e.dataTransfer.files[0] //  single file upload
+      if (droppedFile) {
+          setFile(droppedFile)
+          if (!fileName) setFileName(droppedFile.name) //auto fill file name if not already set
+      }
+  }
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
@@ -100,7 +131,15 @@ export default function AddMaterialModal({ onClose, onAdd, courseId }) {
           </div>
 
           <div>
-            <div className="w-full bg-gray-50 rounded-lg px-6 py-8 border border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 mt-3">
+            <div
+              onDragOver={handleDrag}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`w-full rounded-lg px-6 py-8 border border-dashed flex flex-col items-center justify-center gap-2 mt-3 transition-colors ${
+                isDragging ? "bg-[#D0EFE9] border-[#4DB5AC]" : "bg-gray-50 border-gray-300"
+              }`}
+            >
               <FilePlus size={30} color="#374957" />
               {file ? (
                 <p className="text-sm font-semibold text-gray-700">{file.name}</p>
@@ -119,7 +158,7 @@ export default function AddMaterialModal({ onClose, onAdd, courseId }) {
           <button
             onClick={handleSubmit}
             disabled={!file || loading}
-            className="bg-[#2C2C2C] hover:bg-[#444444] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2 disabled:opacity-50 transition-colors"
+            className="bg-[#347A73] hover:bg-[#1F5C57] text-white border px-8 py-3 rounded-xl font-medium flex items-center justify-center mt-2 disabled:opacity-50 transition-colors"
           >
             {loading ? "Uploading..." : "Add Material"}
           </button>
