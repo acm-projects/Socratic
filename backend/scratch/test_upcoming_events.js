@@ -140,6 +140,59 @@ async function run() {
       `IDs mismatch: ${JSON.stringify(ids)}`);
   });
 
+  // ── CRITICAL BUG REGRESSION TESTS (the self:true filter bug) ─────────────
+  // These mirror exactly what Google Calendar API returns for invited events:
+  // the authenticated user's own attendee entry has `self: true`.
+  // The OLD broken filter was: a.email === userEmail && a.self !== true
+  //   → This excluded ALL invited events because a.self IS true for Snigdha's entry.
+  // The NEW correct filter is: a.self === true && e.organizer?.self !== true
+  //   → This correctly INCLUDES invited events.
+
+  await test('[Unit] REGRESSION: invited event (attendees[].self=true) is INCLUDED', () => {
+    // Simulate what Google returns when Snigdha is invited by Mariam:
+    // Snigdha's copy of the event has her attendee entry with self:true
+    const googleEvent = {
+      id: 'mariam-invite',
+      summary: "Study Session",
+      start: { dateTime: '2030-06-01T10:00:00Z' },
+      end:   { dateTime: '2030-06-01T11:00:00Z' },
+      organizer: { email: 'mariam@example.com', self: false },
+      attendees: [
+        { email: 'mariam@example.com', self: false },  // Mariam (organizer)
+        { email: 'snigdha@example.com', self: true },  // Snigdha (invited) — self:true
+      ]
+    };
+
+    // Apply the FIXED filter logic
+    const isAttendeeEvent = (
+      googleEvent.organizer?.self !== true &&
+      Array.isArray(googleEvent.attendees) &&
+      googleEvent.attendees.some(a => a.self === true)
+    );
+    assert(isAttendeeEvent === true,
+      `REGRESSION: invited event with self:true was excluded by filter. ` +
+      `Old code condition (a.self !== true) would have returned false here.`);
+  });
+
+  await test('[Unit] REGRESSION: old broken filter (a.self !== true) would have EXCLUDED invited events', () => {
+    // Prove the OLD filter was wrong
+    const attendees = [
+      { email: 'mariam@example.com', self: false },
+      { email: 'snigdha@example.com', self: true },  // self:true = Google marks as "you"
+    ];
+    const userEmail = 'snigdha@example.com';
+
+    // Old (broken) condition: a.email === userEmail && a.self !== true
+    const oldFilterResult = attendees.some(a => a.email === userEmail && a.self !== true);
+    assert(oldFilterResult === false,
+      `Expected old filter to return false (it was broken), but got true`);
+
+    // New (correct) condition: a.self === true
+    const newFilterResult = attendees.some(a => a.self === true);
+    assert(newFilterResult === true,
+      `Expected new filter to return true (it's correct), but got false`);
+  });
+
   // ════════════════════════════════════════════════════════════════════════════
   // SECTION B: HTTP INTEGRATION TESTS — Live server (auth + shape checks)
   // These tests call the actual endpoint. The KEY new assertion that would have

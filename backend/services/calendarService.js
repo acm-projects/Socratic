@@ -153,12 +153,14 @@ const getUpcomingMeetings = async (userId) => {
     q: userEmail,  // Google searches attendees, summary, description, etc.
   });
 
-  // Filter down to events where the user is explicitly listed as an attendee
-  // (not just events that happen to mention their email in description text)
+  // Filter down to events where:
+  //  - The user is explicitly listed as an attendee (Google marks their entry with self:true)
+  //  - AND they are NOT the organizer (organizer events are already covered by query 1)
   const attendeeEvents = (attendeeRes.data.items || [])
     .filter(e =>
+      e.organizer?.self !== true &&          // not the organizer (avoid dup with query 1)
       Array.isArray(e.attendees) &&
-      e.attendees.some(a => a.email === userEmail && a.self !== true)
+      e.attendees.some(a => a.self === true) // self:true = the authenticated user's own attendee entry
     )
     .map(e => ({
       ...formatEvent(e),
