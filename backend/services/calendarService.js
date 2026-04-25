@@ -119,16 +119,72 @@ const formatEvent = (event) => ({
 const getUpcomingMeetings = async (userId) => {
   const auth = await getClientForUser(userId);
   const calendar = google.calendar({ version: 'v3', auth });
-  const response = await calendar.events.list({
+
+  // Get the user's own email address to use for attendee filtering
+  const oauth2 = google.oauth2({ version: 'v2', auth });
+  const { data: profile } = await oauth2.userinfo.get();
+  const userEmail = profile.email;
+
+  const timeMin = new Date().toISOString();
+  const sharedParams = {
     calendarId: 'primary',
-    timeMin: new Date().toISOString(),
-    maxResults: 10,
+    timeMin,
+    maxResults: 20,
     singleEvents: true,
     orderBy: 'startTime',
-    privateExtendedProperty: 'createdBy=socraticApp'
+  };
+
+  // ── Query 1: Events this user ORGANIZED (Socratic-created) ──────────────
+  const organizedRes = await calendar.events.list({
+    ...sharedParams,
+    privateExtendedProperty: 'createdBy=socraticApp',
+  });
+  const organizedEvents = (organizedRes.data.items || []).map(e => ({
+    ...formatEvent(e),
+    source: 'organizer',
+  }));
+
+  // ── Query 2: Events this user is an ATTENDEE of ──────────────────────────
+  // Google Calendar API supports filtering by attendee email via the `q` param.
+  // We also filter for events that have conference data (meetings) to match the
+  // same spirit as the original organizer query (Socratic meetings).
+  const attendeeRes = await calendar.events.list({
+    ...sharedParams,
+    q: userEmail,  // Google searches attendees, summary, description, etc.
   });
 
-  return (response.data.items || []).map(formatEvent);
+  // Filter down to events where the user is explicitly listed as an attendee
+  // (not just events that happen to mention their email in description text)
+  const attendeeEvents = (attendeeRes.data.items || [])
+    .filter(e =>
+      Array.isArray(e.attendees) &&
+      e.attendees.some(a => a.email === userEmail && a.self !== true)
+    )
+    .map(e => ({
+      ...formatEvent(e),
+      source: 'attendee',
+    }));
+
+  // ── Merge & deduplicate by event ID ─────────────────────────────────────
+  // Organizer events take priority (they have the fullest metadata)
+  const seen = new Set(organizedEvents.map(e => e.id));
+  const merged = [...organizedEvents];
+  for (const event of attendeeEvents) {
+    if (!seen.has(event.id)) {
+      seen.add(event.id);
+      merged.push(event);
+    }
+  }
+
+  // Re-sort by start time after merge (both queries returned sorted, but merged order may drift)
+  merged.sort((a, b) => {
+    const aTime = a.start?.dateTime || a.start?.date || '';
+    const bTime = b.start?.dateTime || b.start?.date || '';
+    return aTime.localeCompare(bTime);
+  });
+
+  // Trim to 10 most upcoming after merge
+  return merged.slice(0, 10);
 };
 
 const getEvents = async (userId, timeMin, timeMax, maxResults = 100) => {
