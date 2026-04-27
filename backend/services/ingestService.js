@@ -3,7 +3,7 @@ const { RecursiveCharacterTextSplitter } = require('@langchain/textsplitters');
 const { Pinecone } = require('@pinecone-database/pinecone');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { GoogleAIFileManager } = require("@google/generative-ai/server");
-const { GeminiEmbeddings } = require('./vectorService');
+const { GeminiEmbeddings, invalidateClassCache } = require('./vectorService');
 const path = require('path');
 const crypto = require('crypto');
 require('dotenv').config({ path: __dirname + '/../.env' });
@@ -129,6 +129,9 @@ async function ingestDocuments(files, classCode, docType = 'document', userId = 
     console.log(`[Ingest] ✅ Upserted ${records.length} vectors for ${path.basename(filePath)}`);
     totalIngested += records.length;
   }
+
+  // Clear the cache so the new content is immediately searchable
+  invalidateClassCache(classCode);
 
   return { totalIngested, namespace, classCode };
 }
@@ -323,6 +326,9 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document',
       await fileManager.deleteFile(fileRef.name).catch(() => { });
     }
   }
+
+  // Clear the cache so the new content is immediately searchable
+  invalidateClassCache(classCode);
 
   return { totalIngested, namespace, classCode };
 }

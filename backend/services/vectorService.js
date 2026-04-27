@@ -59,6 +59,10 @@ class GeminiEmbeddings {
 // Cache instances per namespace to avoid re-initializing
 const vectorStoreInstances = {};
 
+// Cache resolved namespaces per classCode to skip describeIndexStats() on repeat calls.
+// This persists for the lifetime of the server process — namespaces change only on uploads.
+const resolvedNamespaceCache = {};
+
 /**
  * A wrapper for multiple PineconeStore instances that allows searching across several namespaces.
  */
@@ -111,8 +115,25 @@ class MultiNamespaceStore {
 
 async function getClassVectorStore(classCode) {
   const base = classCode.toLowerCase().replace(/[^a-z0-9]/g, '');
-  
-  // Generate candidate namespaces to try in order
+  const cacheKey = base;
+
+  const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+  const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
+  const pineconeIndex = pinecone.Index(indexName);
+  const embeddings = new GeminiEmbeddings();
+
+  // ── Fast path: namespace already resolved, store instances already cached ──
+  if (resolvedNamespaceCache[cacheKey]) {
+    const activeNamespaces = resolvedNamespaceCache[cacheKey];
+    const stores = activeNamespaces.map(ns => vectorStoreInstances[ns]).filter(Boolean);
+    if (stores.length === activeNamespaces.length) {
+      // All store instances are cached too — return immediately, zero network calls
+      if (stores.length === 1) return stores[0];
+      return new MultiNamespaceStore(stores);
+    }
+  }
+
+  // ── Slow path: first call for this class, resolve namespaces via Pinecone API ──
   const candidates = [
     `class-${base}`,                                    // exact match
     `class-${base.replace(/0w\d+$/, '')}`,              // strip section (0w1)
@@ -120,9 +141,6 @@ async function getClassVectorStore(classCode) {
     `class-cs${base.match(/\d{4}/)?.[0] || base}`,      // cs + 4 digits
   ].filter((v, i, a) => a.indexOf(v) === i); // deduplicate
 
-  const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-  const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
-  const pineconeIndex = pinecone.Index(indexName);
   const stats = await pineconeIndex.describeIndexStats();
 
   // Find ALL namespaces with actual data
@@ -140,7 +158,9 @@ async function getClassVectorStore(classCode) {
     activeNamespaces.push(candidates[0]);
   }
 
-  const embeddings = new GeminiEmbeddings();
+  // Cache the resolved namespaces so future calls skip describeIndexStats()
+  resolvedNamespaceCache[cacheKey] = activeNamespaces;
+
   const stores = await Promise.all(activeNamespaces.map(async (ns) => {
     if (vectorStoreInstances[ns]) return vectorStoreInstances[ns];
     const store = await PineconeStore.fromExistingIndex(embeddings, {
@@ -216,6 +236,16 @@ async function getVectorStore(namespace = '') {
 }
 
 /**
+ * Clears the namespace resolution cache for a specific class code.
+ * Call this when new documents are uploaded to a class.
+ */
+function invalidateClassCache(classCode) {
+  const base = classCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+  delete resolvedNamespaceCache[base];
+  console.log(`[VectorStore] 🧹 Cache invalidated for class: ${classCode}`);
+}
+
+/**
  * Deletes all embeddings in a class namespace that belong to a specific user.
  * If no userId is provided, logs a warning and aborts to prevent mass deletion.
  */
@@ -245,5 +275,6 @@ module.exports = {
   getVectorStore,
   getClassVectorStore,
   GeminiEmbeddings,
-  deleteUserClassEmbeddings
+  deleteUserClassEmbeddings,
+  invalidateClassCache
 };

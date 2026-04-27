@@ -63,6 +63,8 @@ function getFastLLM() {
 }
 
 // --- Score Engine Setup ---
+
+//finds the JSON part of the reponse and gets rid of the convo stuff "sure, heres your.." and then converts it into a object you can use (for frontend)
 const parser = StructuredOutputParser.fromNamesAndDescriptions({
   score: "An integer from 0 to 5 reflecting the quality of the user input.",
   reason: "A short, 1-sentence reason explaining why you assigned that score."
@@ -71,10 +73,13 @@ const parser = StructuredOutputParser.fromNamesAndDescriptions({
 /**
  * EXPLICIT MODEL DEFINITIONS FOR SCORING ENGINE
  */
+
+//talks to the parser
 const evaluatorPrompt = PromptTemplate.fromTemplate(`
   You are a scoring engine for {class} focusing on {topic}.
   Evaluate this user input on a scale of 0 to 5 based on depth, critical thinking, and clarity.
-  
+  Try to keep the responses a bit concise still explain problems step by step with proper context though! 
+
   Score 0: Irrelevant / Not a question / Off-topic / Truly irrelevant garbage ("what is the meaning of life?", "what is rizz?", "skibidi")
   Score 1: Basic definition question ("what is a variable?", "how does a for loop work?", "what is the syntax for a for loop?, "what is the answer to this question?"")
   Score 2: A do it for me request ("How do I solve problem 4?" or "My code doesn't work, why isn't it working", "walk me through step by step to solve this problem then give me the answer")

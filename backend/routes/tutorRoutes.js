@@ -467,43 +467,13 @@ router.post('/chat/stream', async (req, res, next) => {
       title: sessionTitle
     });
 
-    // ── 2. Score the question (identical to /chat) ──────────────────────────
-    let score = 0;
-    let reason = 'Evaluation skipped.';
-    try {
-      const evalResult = await evaluateQuestion({
-        input: message,
-        classCode,
-        topicName: resolvedTopicName
-      });
-      score = evalResult.score;
-      reason = evalResult.reason;
-    } catch (err) {
-      console.error('[Tutor/Stream] ❌ Scoring failed:', err.message);
-    }
-
-    // ── 3. Save user message ────────────────────────────────────────────────
-    await sessionModel.saveChatMessage({
-      id: randomUUID(),
-      session_id: chatId,
-      sender: 'user',
-      content: message,
-      score,
-      reason
-    });
-
-    // ── 4. Vector search (identical to /chat) ───────────────────────────────
-    const pageMatch   = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
+    // ── 2 & 4. Score (fire-and-forget) + Vector search ───────────────────────
+    // Scoring fires immediately but we do NOT block on it.
+    // We only block on Pinecone (needed for context). Score is backfilled after stream.
+    const pageMatch    = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
-    const targetPage    = pageMatch   ? parseInt(pageMatch[1])   : null;
+    const targetPage    = pageMatch    ? parseInt(pageMatch[1])    : null;
     const targetLecture = lectureMatch ? parseInt(lectureMatch[1]) : null;
-
-    let vectorStore = null;
-    try {
-      vectorStore = await getClassVectorStore(classCode);
-    } catch (vecErr) {
-      console.warn('[Tutor/Stream] ⚠️ Pinecone unavailable:', vecErr.message);
-    }
 
     let fullQuery = resolvedTopicName === 'General Discussion'
       ? message
@@ -516,6 +486,35 @@ router.post('/chat/stream', async (req, res, next) => {
 
     const userFilter = userId ? { userId: { $eq: userId } } : undefined;
 
+    let currentScore = 0;
+    let currentReason = 'Evaluating...';
+
+    // 🔥 Fire scoring immediately — no await (fire-and-forget)
+    const scoringPromise = evaluateQuestion({ input: message, classCode, topicName: resolvedTopicName })
+      .catch(err => {
+        console.error('[Tutor/Stream] ❌ Scoring failed:', err.message);
+        return { score: 0, reason: 'Evaluation skipped.' };
+      });
+
+    // Only block on Pinecone — it's needed for context before we can stream
+    const vectorStore = await getClassVectorStore(classCode)
+      .catch(vecErr => {
+        console.warn('[Tutor/Stream] ⚠️ Pinecone unavailable:', vecErr.message);
+        return null;
+      });
+
+    // Save user message with placeholder score=0. Backfilled after stream ends.
+    const userMsgId = randomUUID();
+    await sessionModel.saveChatMessage({
+      id: userMsgId,
+      session_id: chatId,
+      sender: 'user',
+      content: message,
+      score: currentScore,
+      reason: currentReason
+    });
+
+    // ── 4b. Build context from vector results ───────────────────────────────
     let targetedContext = [];
     if (targetPage && vectorStore) {
       let targeted = userFilter
@@ -530,17 +529,18 @@ router.post('/chat/stream', async (req, res, next) => {
       });
     }
 
+    // Cap at 20 results (was 100) — top-20 by cosine score is plenty and faster
     let resultsWithScores = [];
     if (vectorStore) {
       try {
         if (userFilter) {
-          const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 100, userFilter);
+          const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 20, userFilter);
           const highRelevance = userHits.filter(([, s]) => s >= 0.7);
           resultsWithScores = highRelevance.length > 0
             ? highRelevance
-            : await vectorStore.similaritySearchWithScore(fullQuery, 100);
+            : await vectorStore.similaritySearchWithScore(fullQuery, 20);
         } else {
-          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 20);
         }
       } catch (err) {
         console.warn('[Tutor/Stream] ⚠️ Pinecone search failed:', err.message);
@@ -565,16 +565,16 @@ router.post('/chat/stream', async (req, res, next) => {
     if (!context || context.trim().length === 0)
       context = 'No specific course documents were found matching this query. Answer using your general knowledge as a Socratic tutor.';
 
-    // ── 5. Open SSE stream — headers must be sent BEFORE first LLM token ───
+    // ── 5. Open SSE stream ──────────────────────────────────────────────────
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.setHeader('X-Accel-Buffering', 'no'); // disable Nginx/Next.js buffering
+    res.setHeader('X-Accel-Buffering', 'no');
     res.flushHeaders();
     sseStarted = true;
 
-    // Send metadata immediately so the frontend knows chatId / score before tokens arrive
-    sendEvent({ type: 'metadata', chatId, sessionId: chatId, isNewSession, score, reason });
+    // Metadata sent immediately with placeholder score — score_update event follows after stream
+    sendEvent({ type: 'metadata', chatId, sessionId: chatId, isNewSession, score: currentScore, reason: currentReason });
 
     // ── 6. Stream LLM tokens ────────────────────────────────────────────────
     console.log(`[Tutor/Stream] 🌊 Starting stream (Topic: ${resolvedTopicName})`);
@@ -587,9 +587,9 @@ router.post('/chat/stream', async (req, res, next) => {
         {
           input:   message,
           class:   classCode,
-          topic,
-          score,
-          reason,
+          topic:   resolvedTopicName,
+          score:   currentScore,
+          reason:  currentReason,
           context
         },
         { configurable: { sessionId: chatId } }
@@ -630,18 +630,28 @@ router.post('/chat/stream', async (req, res, next) => {
       content: aiContent
     });
 
+    // ── 7b. Backfill real score now that scoring has had time to complete ───
+    const evalResult = await scoringPromise;
+    const finalScore  = evalResult.score;
+    const finalReason = evalResult.reason;
+    sessionModel.updateChatMessageScore(userMsgId, finalScore, finalReason)
+      .catch(err => console.warn('[Tutor/Stream] ⚠️ Failed to backfill score:', err.message));
+
+    // Send score_update so the frontend can display the real score
+    sendEvent({ type: 'score_update', score: finalScore, reason: finalReason });
+
     // ── 8. Side effects (fire and forget — identical to /chat) ──────────────
     userStatsModel.incrementAiMessages(userId).catch(err =>
       console.warn('[Tutor/Stream] ⚠️ Failed to increment ai_messages:', err.message)
     );
 
-    const xpToAward = userStatsModel.CHAT_XP_MAP[score] || 10;
+    const xpToAward = userStatsModel.CHAT_XP_MAP[finalScore] || 10;
     userStatsModel.awardXP(userId, 'chat', xpToAward).catch(err =>
       console.warn('[Tutor/Stream] ⚠️ Failed to award XP:', err.message)
     );
 
     quizModel.updateTopicMetrics({
-      userId, classCode, topicId: topic.id, questionsAsked: 1, score
+      userId, classCode, topicId: topic.id, questionsAsked: 1, score: finalScore
     }).catch(err => console.warn('[Tutor/Stream] ⚠️ Failed to update heatmap:', err.message));
 
     pool.query('SELECT name FROM classes WHERE class_code = $1', [classCode])

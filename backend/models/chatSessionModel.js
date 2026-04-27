@@ -62,11 +62,23 @@ const getMessagesBySessionId = async (sessionId) => {
   return result.rows;
 };
 
+/**
+ * Patches the score and reason on an already-saved chat_history row.
+ * Used by the fire-and-forget scoring path to backfill after streaming completes.
+ */
+const updateChatMessageScore = async (id, score, reason) => {
+  await db.query(
+    'UPDATE chat_history SET score = $1, reason = $2 WHERE id = $3',
+    [score, reason, id]
+  );
+};
+
 module.exports = {
   getSessionsByUserId,
   getSessionById,
   createSession,
   upsertTutorSession,
   saveChatMessage,
+  updateChatMessageScore,
   getMessagesBySessionId
 };
