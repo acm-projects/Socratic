@@ -12,6 +12,8 @@ export default function Addcoursemodal({ onClose, onAdd }) {
   const [loading, setLoading] = useState(false)
   const [syncToCalendar, setSyncToCalendar] = useState(true)
   const [isDragging, setIsDragging] = useState(false)
+  const [showFallback, setShowFallback] = useState(false)
+
 
   // Drag handlers
   const handleDrag = (e) => {
@@ -103,15 +105,21 @@ export default function Addcoursemodal({ onClose, onAdd }) {
           body: extractForm
         })
 
+          if (!extractRes.ok) {
+          console.error("2. FAILED extract:", extractRes.status)
+            setLoading(false)
+          setShowFallback(true)
+
+          return
+        }
+
         const extractData = await extractRes.json()
+        console.log("extract status:", extractRes.status)  // add this
+        console.log("extract ok:", extractRes.ok)  // add this
         console.log("extract response:", extractData)
         const extractedCode = extractData.class_code
         setCourseCode(extractedCode)
 
-        if (!extractRes.ok) {
-          console.error("2. FAILED extract:", extractRes.status)
-          return
-        }
 
         console.log("3. saving class with user_id:", session.user.id)
         const courseRes = await fetch("http://3.128.186.118:5000/classes", {
@@ -198,6 +206,59 @@ export default function Addcoursemodal({ onClose, onAdd }) {
     }
   }
 
+
+
+
+
+
+  if (showFallback) {
+  return (
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div className="bg-white px-10 py-10 rounded-[20px] w-1/3 border border-gray-100 flex flex-col items-center">
+        <div className="flex items-center w-full mb-6">
+          <h1 className="text-2xl font-semibold text-slate-900 text-center flex-1">Extraction Failed</h1>
+          <X size={18} className="text-gray-400 ml-auto cursor-pointer" onClick={onClose} />
+        </div>
+        <p className="text-sm text-gray-500 mb-6 text-center">We couldn't extract your syllabus automatically. Enter your course details manually to continue.</p>
+        <div className="flex flex-col gap-3 w-full">
+          <div>
+            <label className="text-sm text-gray-900 ml-1">Course Name</label>
+            <input value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full bg-gray-50 rounded-lg p-3 text-sm text-slate-400" placeholder="e.g., Calculus I" />
+          </div>
+          <div>
+            <label className="text-sm text-gray-900 ml-1">Course Code</label>
+            <input value={courseCode} onChange={(e) => setCourseCode(e.target.value)} className="w-full bg-gray-50 rounded-lg p-3 text-sm text-slate-400" placeholder="e.g., MATH2413" />
+          </div>
+          <button
+            onClick={async () => {
+              if (!subject.trim() || !courseCode.trim()) return
+              setLoading(true)
+              try {
+                const courseRes = await fetch("http://3.128.186.118:5000/classes", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ class_code: courseCode, subject: subject, name: subject, user_id: session.user.id })
+                })
+                if (!courseRes.ok) { console.error("failed to save class manually"); return }
+                onAdd({ class_code: courseCode, name: subject, subject: subject, syllabus_url: null, streak: 0 })
+                onClose()
+              } catch (err) {
+                console.error("manual add failed:", err)
+              } finally {
+                setLoading(false)
+              }
+            }}
+            disabled={loading || !subject.trim() || !courseCode.trim()}
+            className="bg-[#347A73] hover:bg-[#1F5C57] text-white px-8 py-3 rounded-xl font-medium mt-2 disabled:opacity-50"
+          >
+            {loading ? "Adding..." : "Add Course"}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
       <div className="bg-white px-10 py-10 rounded-[20px] w-1/3 border border-gray-100 flex flex-col items-center">
@@ -281,6 +342,8 @@ export default function Addcoursemodal({ onClose, onAdd }) {
 
         </div>
       </div>
+
+
     </div>
   )
 }

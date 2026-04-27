@@ -49,46 +49,105 @@ export default function UpcomingTasks({ tasks, onToggle, classInfo }) {
       }
     }
 
+// const handleAddTask = async (newTask) => {
+//   try {
+//     if (!session?.user?.id) {
+//       console.error('No user session');
+//       return;
+//     }
+
+//     // Format the date for display 
+//     const formattedDate = new Date(newTask.due + "T00:00:00").toLocaleDateString("en-US", { 
+//       month: "short", 
+//       day: "numeric" 
+//     });
+
+//     const res = await fetch(`/backend/api/users/${session.user.id}/tasks`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         class_code: classInfo.class_code, // Changed from classInfo.code to classInfo.class_code
+//         task_name: newTask.title,
+//         due_date: newTask.due 
+//       })
+//     });
+
+//     if (!res.ok) {
+//       console.error("Failed to create task");
+//       return;
+//     }
+
+//     const createdTask = await res.json();
+    
+//     // Add formatted task to local state
+//     setLocalTasks(prev => [...prev, {
+//       ...createdTask,
+//       due: formattedDate // Use formatted date for display
+//     }]);
+    
+//   } catch (err) {
+//     console.error("Failed to add task:", err);
+//   }
+// }
+
 const handleAddTask = async (newTask) => {
   try {
-    if (!session?.user?.id) {
-      console.error('No user session');
-      return;
-    }
+    if (!session?.user?.id) { console.error('No user session'); return; }
 
-    // Format the date for display 
     const formattedDate = new Date(newTask.due + "T00:00:00").toLocaleDateString("en-US", { 
-      month: "short", 
-      day: "numeric" 
+      month: "short", day: "numeric" 
     });
 
     const res = await fetch(`/backend/api/users/${session.user.id}/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        class_code: classInfo.class_code, // Changed from classInfo.code to classInfo.class_code
+        class_code: classInfo.class_code,
         task_name: newTask.title,
         due_date: newTask.due 
       })
     });
 
-    if (!res.ok) {
-      console.error("Failed to create task");
-      return;
-    }
+    if (!res.ok) { console.error("Failed to create task"); return; }
 
     const createdTask = await res.json();
-    
-    // Add formatted task to local state
-    setLocalTasks(prev => [...prev, {
-      ...createdTask,
-      due: formattedDate // Use formatted date for display
-    }]);
-    
+    console.log("createdTask:", createdTask)
+
+    setLocalTasks(prev => [...prev, { ...createdTask, due: formattedDate }]);
+
+    try {
+      const dueDate = new Date(newTask.due)
+      dueDate.setHours(23, 59, 0, 0)
+      console.log("posting to calendar now")
+      const calRes = await fetch("/backend/api/calendar/create-event", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.accessToken}`,
+          "x-user-id": session?.user?.id
+        },
+        body: JSON.stringify({
+          summary: newTask.title,
+          description: `${classInfo.name} Deadline`,
+          startDateTime: dueDate.toISOString(),
+          endDateTime: dueDate.toISOString(),
+          createMeet: false,
+          attendeeEmails: [],
+          userId: session?.user?.id
+        })
+      });
+      console.log("calendar response:", calRes.status)
+    } catch (calErr) {
+      console.error("calendar error:", calErr)
+    }
+
   } catch (err) {
     console.error("Failed to add task:", err);
   }
 }
+
+
+
 
     const syncAllTasksToCalendar = async () => {
       for (const task of localTasks) {

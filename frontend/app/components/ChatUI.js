@@ -28,7 +28,7 @@ useEffect(() => {
        console.log("fetching chats for user:", session.user.id, session.user.email)
 
 
-   fetch(`http://3.128.186.118:5000/users/${session.user.id}/sessions`)
+   fetch(`/backend/users/${session.user.id}/sessions`)
        .then(res => res.json())
        .then(data => {
            console.log("raw sessions:", data)
@@ -72,14 +72,10 @@ useEffect(() => {
    const [loading, setLoading] = useState(false)
    const [sessionId, setSessionId] = useState(null)
    const sessionIdRef = useRef(null)  // add this
-const [isStreaming, setIsStreaming] = useState(false)
 const [showScoringModal, setShowScoringModal] = useState(false)
 
-
-
-
    const [showModal, setShowModal] = useState(false);
-   const [sidebarOpen, setSidebarOpen] = useState(true);
+   const [sidebarOpen, setSidebarOpen] = useState(false);
    const [input, setInput] = useState("");
    const [messages, setMessages] = useState([]);
    const [saved, setSaved] = useState([]);
@@ -100,98 +96,62 @@ useEffect(() => {
 
 
 async function handleSend() {
-    console.log("sessionId at send time:", sessionId)
-    if (!input || loading) return;
-
-    const userMessage = { role: "user", content: input, score: null }
-    setMessages(prev => [...prev, userMessage])
-    setInput("")
-    setLoading(true)
-
-    try {
-const res = await fetch("http://3.128.186.118:5000/api/tutor/chat/stream", {
-    method: "POST",
-    headers: { 
-        "Content-Type": "application/json",
-        "Accept": "text/event-stream",
-    },
-    body: JSON.stringify({
-        message: input,
-        userId: session?.user?.id,
-        classCode: classCode,
-        topic: topic,
-        sessionId: sessionIdRef.current ?? undefined,
-    })
-})
-console.log("content-type:", res.headers.get("content-type"))  // ← just this
+       console.log("sessionId at send time:", sessionId)
 
 
-// NO res.text() or any other res.body read before this
-setMessages(prev => [...prev, { role: "ai", content: "" }])
-setLoading(false)
-setIsStreaming(true)  // ← add this
+   if (!input || loading) return;
 
 
-const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
+   const userMessage = { role: "user", content: input, score: null }
+   setMessages(prev => [...prev, userMessage])
+   setInput("")
+   setLoading(true)
 
-        while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
 
-            for (const line of value.split("\n")) {
-                if (!line.startsWith("data: ")) continue
-                const json = line.slice(6).trim()
-                if (!json) continue
-                try {
-                    const chunk = JSON.parse(json)
+   try {
+       const res = await fetch("/backend/api/tutor/chat", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({
+               message: input,
+               userId: session?.user?.id,
+               classCode: classCode,
+               topic: topic,
+                sessionId: sessionIdRef.current ?? undefined,  // change this line
+           })
+       })
+       const data = await res.json()
+       console.log("backend response:", data)
+       console.log("loaded messages:", data)  // ← add this
 
-                    if (chunk.type === "metadata") {
-                            console.log("metadata chunk received:", chunk)  // ← add this
 
-                        if (chunk.chatId && !sessionIdRef.current) {
-                            sessionIdRef.current = chunk.chatId
-                            setSessionId(chunk.chatId)
-                            if (chunk.isNewSession) {
-                                setChats(prev => [{ id: chunk.chatId, title: input }, ...prev])
-                            }
-                        }
-                        if (chunk.score) {
-                            setMessages(prev => prev.map((m, i) =>
-                                i === prev.length - 2 ? { ...m, score: parseInt(chunk.score) } : m
-                            ))
-                        }
-                    }
 
-                   if (chunk.type === "chunk" && chunk.content) {
-    const chars = chunk.content.split("")
-    for (const char of chars) {
-        await new Promise(resolve => setTimeout(resolve, 15)) // 15ms per char
-        setMessages(prev => {
-            const updated = [...prev]
-            updated[updated.length - 1] = {
-                ...updated[updated.length - 1],
-                content: updated[updated.length - 1].content + char
-            }
-            return updated
-        })
-    }
+
+
+
+if (!sessionIdRef.current && data.chatId) {
+    sessionIdRef.current = data.chatId
+    setSessionId(data.chatId)
 }
-        setIsStreaming(false)  // ← add this
-
-                } catch {}
-            }
-        }
-
-    } catch (err) {
-        console.error("Chat error:", err)
-    } finally {
-        setLoading(false)  // ← always runs, even if stream errors
-    }
-}  // ← this closes handleSend — loadChat and handleNewChat go AFTER this
 
 
+       if (data.isNewSession && !sessionId) {
+           setChats(prev => [{ id: data.chatId, title: input }, ...prev])
+       }
 
- 
+
+       setMessages(prev => prev.map((m, i) =>
+           i === prev.length - 1 ? { ...m, score: parseInt(data.score) } : m
+       ))
+       setMessages(prev => [...prev, { role: "ai", content: data.reply }])
+
+
+   } catch (err) {
+       console.error("Chat error:", err)
+   } finally {
+       setLoading(false)
+   }
+}
 
 
 
@@ -203,12 +163,11 @@ const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
  setActiveChatId(chatId);
  activeChatIdRef.current = chatId;
  setSessionId(chatId);
-sessionIdRef.current = chatId  // ← add this
  setLoading(true);
 
 
  try {
-   const res = await fetch(`http://3.128.186.118:5000/api/history/${chatId}`);
+   const res = await fetch(`/backend/api/history/${chatId}`);
        console.log("fetch status:", res.status)
    const data = await res.json();
        console.log("loaded messages:", data)
@@ -356,13 +315,13 @@ sessionIdRef.current = chatId  // ← add this
                            />
                            <CircleArrowUp size={20} color="black" onClick={handleSend} className="cursor-pointer flex-shrink-0 ml-2" />
                        </div>
-                            <span
-                            onClick={() => setShowScoringModal(true)}
-                           className="text-center text-xs text-gray-500 mb-2 hover:text-blue-400 cursor-pointer"
-                           >
-                               Ask deeper questions to improve depth scoring. Learn more about Socratic's question scoring.
-                           </span>                   
-                           </div>
+                        <span
+                        onClick={() => setShowScoringModal(true)}
+                        className="text-center text-xs text-gray-500 mb-2 hover:text-blue-400 cursor-pointer"
+                        >
+                        Ask deeper questions to improve depth scoring. Learn more about Socratic's question scoring.
+                        </span>                   
+                        </div>
 
 
                ) : (
@@ -379,26 +338,25 @@ sessionIdRef.current = chatId  // ← add this
                                                <div className="bg-[#ddeaed] rounded-xl px-4 py-4 text-base text-black break-words">
                                                    <div className="flex flex-col gap-3">
                                                        <span>{message.content}</span>
-                                        <div className="flex gap-1.5 py-1">
-                                            {[1, 2, 3, 4, 5].map((dot, index) => (
-                                                <div
-                                                    key={dot}
-                                                    className={`w-3 h-3 rounded-full transition-opacity duration-300 ${
-                                                        message.score === null
+                                                       <div className="flex gap-1.5 py-1">
+                                                    {[1, 2, 3, 4, 5].map((dot, index) => (
+                                                        <div
+                                                        key={dot}
+                                                        className={`w-3 h-3 rounded-full transition-opacity duration-300 ${
+                                                            message.score === null
                                                             ? "bg-white animate-chase-fade"
                                                             : dot <= message.score
                                                             ? "bg-[#4DB5AC] opacity-100"
                                                             : "bg-white opacity-70"
-                                                    }`}
-                                                    style={message.score === null ? { animationDelay: `${index * 150}ms` } : {}}
-                                                />
-                                            ))}
-                                        </div>
+                                                        }`}
+                                                        style={message.score === null ? { animationDelay: `${index * 150}ms` } : {}}
+                                                        />
+                                                    ))}
+                                                    </div>
                                                    </div>
                                                </div>
                                            </div>
                                        ) : (
-
                                               <div className="flex items-end gap-3">
        {/* Mascot circle */}
        <div className="flex-shrink-0 w-24 h-24 flex items-center justify-center overflow-hidden">
@@ -409,30 +367,24 @@ sessionIdRef.current = chatId  // ← add this
            />
        </div>
       
-            {/* Message content */}
-            <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
-            <div className="text-base text-black prose prose-sm max-w-none">
-            {isStreaming && i === messages.length - 1
-                ? <span style={{ whiteSpace: "pre-wrap" }}>{message.content}</span>
-                : <ReactMarkdown
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                >
-                    {message.content}
-                </ReactMarkdown>
-    }
-</div>
+       {/* Message content */}
+       <div className="flex flex-col gap-3 rounded-xl px-4 py-4 max-w-lg w-full break-words">
+       <div className="text-base text-black prose prose-sm max-w-none">
+        
+           {/* <ReactMarkdown>
+            {message.content}
+           </ReactMarkdown> */}
 
-           {/* <button
-               onClick={() => { handleSave(message.content); setShowModal(true); }}
-               className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold w-fit hover:bg-gray-50"
-           >
-               <Bookmark
-                   size={14}
-                   className={saved.includes(message.content) ? "text-black fill-black" : "text-gray-500"}
-               />
-               SAVE FOR REVIEW
-           </button> */}
+           <ReactMarkdown
+            remarkPlugins={[remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+            >
+            {message.content}
+            </ReactMarkdown>
+
+
+       </div>
+           
        </div>
    </div>
                )}
@@ -470,17 +422,18 @@ sessionIdRef.current = chatId  // ← add this
                                />
                                <CircleArrowUp size={20} color="black" onClick={handleSend} className="cursor-pointer flex-shrink-0 ml-2" />
                            </div>
-                           <span
+                            <span
                             onClick={() => setShowScoringModal(true)}
-                           className="text-center text-xs text-gray-500 mb-2 hover:text-blue-400 cursor-pointer"
-                           >
-                               Ask deeper questions to improve depth scoring. Learn more about Socratic's question scoring.
-                           </span>
-                       </div>
+                            className="text-center text-xs text-gray-500 mb-2 hover:text-blue-400 cursor-pointer"
+                            >
+                            Ask deeper questions to improve depth scoring. Learn more about Socratic's question scoring.
+                            </span>                       
+                            </div>
                    </>
                )}
 
-                {showScoringModal && <ChatScoringModal onClose={() => setShowScoringModal(false)} />}
+            {showScoringModal && <ChatScoringModal onClose={() => setShowScoringModal(false)} />}
+
                {showModal && <ChatModal onClose={() => setShowModal(false)} />}
            </div>
        </div>

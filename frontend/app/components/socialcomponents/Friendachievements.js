@@ -18,7 +18,7 @@ export default function FriendAchievements({ session }) {
         const formatted = data.map(f => ({
           friend: `${f.first_name} ${f.last_name}`,
           achievement: f.achievement_title,
-          icon: "/icons/medal-green.png"
+          icon: f.icon_colored || "/icons/medal-green.png"  // use backend field, fallback to default
         }))
         setAchievements(formatted)
       })
