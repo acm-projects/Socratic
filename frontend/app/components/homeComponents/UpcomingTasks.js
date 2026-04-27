@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { Check } from "lucide-react"
+import { Check, CircleAlert } from "lucide-react"
 import { useSession } from "next-auth/react";
 
 export default function UpcomingTasks() {
@@ -10,10 +10,10 @@ export default function UpcomingTasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
- const isExam = (name) => {
+  const isExam = (name) => {
     const keywords = ["exam", "final", "midterm", "test", "quiz"]
     return keywords.some(k => new RegExp(`\\b${k}\\b`, "i").test(name))
-}
+  }
 
   useEffect(() => {
     if (!userId) return;
@@ -37,7 +37,6 @@ export default function UpcomingTasks() {
   }, [userId]);
 
   const toggle = async (taskId, currentCompleted) => {
-    // Optimistic update
     setTasks(prev => prev.map(t => 
       t.id === taskId ? { ...t, completed: !currentCompleted } : t
     ));
@@ -50,7 +49,6 @@ export default function UpcomingTasks() {
       });
       
       if (!res.ok) {
-        // Revert on failure
         setTasks(prev => prev.map(t => 
           t.id === taskId ? { ...t, completed: currentCompleted } : t
         ));
@@ -58,7 +56,6 @@ export default function UpcomingTasks() {
       }
     } catch (err) {
       console.error("Failed to update task:", err);
-      // Revert on failure
       setTasks(prev => prev.map(t => 
         t.id === taskId ? { ...t, completed: currentCompleted } : t
       ));
@@ -77,32 +74,32 @@ export default function UpcomingTasks() {
           const done = task.completed;
           return (
             <div key={task.id} className={`flex items-center gap-4 py-4 ${i !== arr.length - 1 ? "border-b border-[#EAEEED]" : ""}`}>
-            <div className="w-2 shrink-0 flex items-center justify-center">
-              {isExam(task.task_name) && (
-                <span className="text-red-600/70 text-sm font-extrabold">!</span>
-              )}
-            </div>
-            <div className={`flex items-center gap-4 flex-1 transition-opacity ${done ? "opacity-40" : "opacity-100"}`}>
-              <div className="w-28 pr-6 flex-shrink-0">
-                <p className="text-sm text-[#90aba7] pb-1">Due</p>
-                <p className="text-sm font-bold text-[#141f1d]">
-                  {new Date(task.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                </p>
+              <div className="w-4 shrink-0 flex items-center justify-center">
+                {isExam(task.task_name) && (
+                  <CircleAlert size={18} className="text-red-600" strokeWidth={2} />
+                )}
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-[#141f1d]">{task.task_name}</p>
-                <p className="text-xs text-[#90aba7] mt-0.5">{task.class_name}</p>
+              <div className={`flex items-center gap-4 flex-1 transition-opacity ${done ? "opacity-40" : "opacity-100"}`}>
+                <div className="w-28 pr-6 flex-shrink-0">
+                  <p className="text-sm text-[#90aba7] pb-1">Due</p>
+                  <p className="text-sm font-bold text-[#141f1d]">
+                    {new Date(task.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </p>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-[#141f1d]">{task.task_name}</p>
+                  <p className="text-xs text-[#90aba7] mt-0.5">{task.class_name}</p>
+                </div>
               </div>
+              <button
+                onClick={() => toggle(task.id, task.completed)}
+                className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
+                  done ? "bg-[#3a9e94] border-[#3a9e94]" : "border-[#c4c7c7] hover:border-[#3a9e94]"
+                }`}
+              >
+                {done && <Check size={12} className="text-white" strokeWidth={3} />}
+              </button>
             </div>
-            <button
-              onClick={() => toggle(task.id, task.completed)}
-              className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-all ${
-                done ? "bg-[#3a9e94] border-[#3a9e94]" : "border-[#c4c7c7] hover:border-[#3a9e94]"
-              }`}
-            >
-              {done && <Check size={12} className="text-white" strokeWidth={3} />}
-            </button>
-          </div>
           );
         })}
       </div>

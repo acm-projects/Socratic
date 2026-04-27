@@ -37,7 +37,7 @@ export default function CourseMaterial({ courseId }) {
             <div 
               key={i} 
               onClick={() => handleFileClick(file)}
-              className="flex items-center gap-3 py-4 border-b border-[#EAEEED] last:border-none cursor-pointer hover:bg-[#FAFAFA]/60 rounded-lg px-2 transition-colors duration-150 group"
+              className="flex items-center gap-3 py-4 border-b border-[#EAEEED] last:border-none cursor-pointer hover:bg-[#FAFAFA]/60 rounded-lg px-3 transition-colors duration-150 group"
             >
               <div className="w-9 h-9 rounded-lg bg-[#F5EEFF] flex items-center justify-center shrink-0">
                 <FileText size={16} color="#9B43EA" />

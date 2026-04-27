@@ -57,7 +57,11 @@ model classes {
   chat_sessions       chat_sessions[]
   class_tasks         class_tasks[]
   course_materials    course_materials[]
+<<<<<<< Updated upstream
   daily_topic_metrics daily_topic_metrics[] @ignore
+=======
+  daily_topic_metrics daily_topic_metrics[]
+>>>>>>> Stashed changes
   syllabus_info       syllabus_info?
   topics              topics[]
   user_classes        user_classes[]
@@ -111,7 +115,11 @@ model topics {
   class_code          String                @db.VarChar(50)
   name                String                @db.VarChar(50)
   chat_sessions       chat_sessions[]
+<<<<<<< Updated upstream
   daily_topic_metrics daily_topic_metrics[] @ignore
+=======
+  daily_topic_metrics daily_topic_metrics[]
+>>>>>>> Stashed changes
   classes             classes               @relation(fields: [class_code], references: [class_code], onDelete: Cascade, onUpdate: NoAction, map: "fk_topics_class")
 }
 
@@ -158,7 +166,7 @@ model User {
   Account                                            Account[]
   chat_sessions                                      chat_sessions[]
   class_engagement                                   class_engagement[]
-  daily_topic_metrics                                daily_topic_metrics[] @ignore
+  daily_topic_metrics                                daily_topic_metrics[]
   friend_requests_friend_requests_receiver_idTousers friend_requests[]     @relation("friend_requests_receiver_idTousers")
   friend_requests_friend_requests_sender_idTousers   friend_requests[]     @relation("friend_requests_sender_idTousers")
   friends_friends_friend_idTousers                   friends[]             @relation("friends_friend_idTousers")

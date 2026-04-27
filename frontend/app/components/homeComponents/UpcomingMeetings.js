@@ -23,7 +23,7 @@ useEffect(() => {
   return (
   <div className="flex flex-col flex-1 min-h-0">
     <h2 className="text-base font-semibold text-[#141f1d] mb-3 shrink-0">Upcoming Meetings</h2>
-    <div className="overflow-y-auto scrollbar-hide flex flex-col pl-6">
+    <div className="overflow-y-auto scrollbar-hide flex flex-col pl-7">
         {meetings.map((meeting, i, arr) => (
         <div key={i} className={`flex items-center gap-4 py-4 ${i !== arr.length - 1 ? "border-b border-[#EAEEED]" : ""}`}>            <div className="w-28 pr-6">
               <p className="text-sm text-[#90aba7] pb-1">

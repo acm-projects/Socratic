@@ -17,21 +17,19 @@ export default function HomePage() {
   // fetch data for classes grid
     const [courses, setCourses] = useState([]);
     const { data: session } = useSession();
-    // const profilePic = session?.user?.image
-
- 
 
 //  fetching courses for class grid
-  useEffect(() => { 
-    if (!session) return;
-   fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
+useEffect(() => { 
+  if (!session) return;
+  fetch(`http://3.128.186.118:5000/classes?user_id=${session.user.id}`)
     .then(res => res.json())
     .then(data => {
+      // Sort most recent first
+      data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
       setCourses(data)
-      console.log("courses:", data)
     })
     .catch(err => console.error(err));
-   }, [session]);
+}, [session]);
 
   //  fetch data for profile card
 const [profile, setProfile] = useState(null);
@@ -50,7 +48,6 @@ useEffect(() => {
       className={`flex`}
       style={{
         backgroundImage: "linear-gradient(135deg, rgba(240,245,244,0.7) 0%, rgba(245,248,247,0.7) 60%, rgba(247,245,251,0.7) 100%), url('/gridbackground.svg')",
-        // backgroundImage: "linear-gradient(to right, rgba(234,244,242,0.85) 0%, rgba(245,248,247,0.45) 100%), url('/gridbackground.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -91,7 +88,7 @@ useEffect(() => {
                 <User size={18} className="text-gray-700" />
                 Profile
             </Link>
-            <Link href="/social2" className="px-5 py-3 rounded-full bg-white text-sm font-semibold text-[#141f1d] hover:bg-white transition-all flex items-center gap-2 shadow-sm">
+            <Link href="/social" className="px-5 py-3 rounded-full bg-white text-sm font-semibold text-[#141f1d] hover:bg-white transition-all flex items-center gap-2 shadow-sm">
                 <Users size={18} className="text-gray-700" />
                 Social
             </Link>
@@ -129,7 +126,7 @@ useEffect(() => {
         background: "linear-gradient(to bottom, transparent, #E0E5E4 20%, #E0E5E4 80%, transparent)"
         }} />
 
-        <div className="p-9 pl-6 w-1/4 flex flex-col gap-8 overflow-hidden h-screen sticky top-0">
+        <div className="p-9 pl-4 w-1/4 flex flex-col gap-8 overflow-hidden h-screen sticky top-0">
         <UpcomingTasks/>
         <UpcomingMeetings />
         </div>

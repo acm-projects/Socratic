@@ -1,394 +1,522 @@
-// 'use client';
-// import { useState, useEffect } from 'react';
-// import { useSession } from "next-auth/react"
-// import { HiFire } from "react-icons/hi";
-// import { CircleCheck, CircleX } from "lucide-react";
-// import Schedulemodal from "../components/socialcomponents/Schedulemodal";
-// import Sendrequestmodal from "../components/socialcomponents/Sendrequestmodal";
+"use client"
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { useSession } from "next-auth/react"
+import { Users, Calendar, ChevronLeft, User, Search, UserPlus, Trophy, Activity as ActivityIcon, Flame, Plus, ArrowUpRight } from "lucide-react"
+import Schedulemodal from "../components/socialcomponents/Schedulemodal"
+import Sendrequestmodal from "../components/socialcomponents/Sendrequestmodal"
 
 
 
-// function StatsTopBar() {
-//     return (
-//         <div className="bg-white/70 rounded-xl p-4 flex flex-col gap-4">
-//             <div className="flex justify-around">
-//                 <div className="flex flex-col items-center gap-1">
-//                     <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>5</span>
-//                     <span className="text-xs text-gray-400">Study Sessions</span>
-//                 </div>
-//                 <div className="flex flex-col items-center gap-1">
-//                     <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>20</span>
-//                     <span className="text-xs text-gray-400">Day Streak</span>
-//                 </div>
-//                 <div className="flex flex-col items-center gap-1">
-//                     <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>6</span>
-//                     <span className="text-xs text-gray-400">Friends</span>
-//                 </div>
-//                 <div className="flex flex-col items-center gap-1">
-//                     <span className="text-2xl font-bold" style={{color: '#0F6E56'}}>2</span>
-//                     <span className="text-xs text-gray-400">Pending Requests</span>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
+export default function SocialPage() {
+ const { data: session } = useSession()
+ const [activeTab, setActiveTab] = useState("friends")
+ const [showScheduleModal, setShowScheduleModal] = useState(false)
+ const [showAddFriend, setShowAddFriend] = useState(false)
+ const [refreshKey, setRefreshKey] = useState(0)
+ const [searchQuery, setSearchQuery] = useState("")
 
 
-// function Podium() {
-//     const [friends, setFriends] = useState([])
-//     const { data: session, status } = useSession()
+ const [friendCount, setFriendCount] = useState(0)
+ const [meetingCount, setMeetingCount] = useState(0)
+ const [leaderboard, setLeaderboard] = useState([])
+ const [friends, setFriends] = useState([])
+ const [upcomingSessions, setUpcomingSessions] = useState([])
+ const [sharedClasses, setSharedClasses] = useState([])
+ const [achievements, setAchievements] = useState([])
+ const [requests, setRequests] = useState([])
 
-// useEffect(() => {
-//     if (!session) return
-//     fetch(`/backend/users/${session.user.id}/friends`)
-//         .then(res => res.json())
-//         .then(async (data) => {
-//             const friendDetails = data.map(f => ({
-//                 id: f.friend_id,
-//                 name: `${f.first_name} ${f.last_name}`,
-//                 pts: f.total_xp,
-//                 streak: f.streak
-//             }))
-//             const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
-//             setFriends([...friendDetails, {
-//                 id: session.user.id,
-//                 name: "You",
-//                 pts: me.total_xp,
-//                 streak: me.streak
-//             }])
-//         })
-// }, [session])
-
-//     const sorted = friends.sort((a, b) => b.streak - a.streak);
-//     const podium = sorted.slice(0, 3);
-//     const top5 = sorted.slice(0, 5);
-//     const you = friends.find(f => f.name === "You")
-//     const youInTop5 = top5.some(f => f.name === "You")
-//     const rest = youInTop5 ? top5.slice(3) : [...top5.slice(3), you].filter(Boolean)
-//     const [searchQuery, setSearchQuery] = useState("");
-//     const searchResults = searchQuery ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
-
-//     if (status === "loading") return <div>Loading...</div>
-//     if (friends.length < 3) return <div>Loading...</div>
-
-//     return (
-//         <div className="bg-white/70 w-[500px] h-[700px] rounded-2xl p-5 items-center flex flex-col gap-7">
-//             <div className="flex gap-5 w-full">
-//                 <h2 className="text-l self-start items-center font-semibold text-[#198788] border-b border-bg-[#198788]">
-//                     Podium
-//                 </h2>
-//                 <h2 className="text-l self-start items-center font-semibold text-black">
-//                     All Friends
-//                 </h2>
-//             </div>
-
-//             <div className="flex gap-3 items-end">
-//                 <div className="flex flex-col items-center gap-3">
-//                     <div className="relative">
-//                         <div className="w-15 h-15 bg-gray-300 rounded-full"/>
-//                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
-//                             <p className="text-black text-xs font-bold">2</p>
-//                         </div>
-//                     </div>
-//                     <div className="w-27 h-20 bg-gradient-to-b from-[#4DB5AC]/70 to-[#6cd6e0]/70 rounded-md flex flex-col items-center justify-between py-3 px-3">
-//                         <p className="text-black font-semibold text-xs text-center">{podium[1].name}</p>
-//                         <div className="flex items-center gap-1">
-//                             <HiFire className="text-black" size={16}/>
-//                             <p className="text-black text-xs font-semibold">{podium[1].streak}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-
-//                 <div className="flex flex-col items-center gap-3">
-//                     <div className="relative">
-//                         <div className="w-15 h-15 bg-gray-300 rounded-full"/>
-//                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
-//                             <p className="text-black text-xs font-bold">1</p>
-//                         </div>
-//                     </div>
-//                     <div className="w-27 h-35 bg-gradient-to-b from-[#4DB5AC]/70 to-[#6cd6e0]/70 rounded-md flex flex-col items-center justify-between py-3 px-3">
-//                         <p className="text-black font-semibold text-xs text-center">{podium[0].name}</p>
-//                         <div className="flex items-center gap-1">
-//                             <HiFire className="text-black" size={16}/>
-//                             <p className="text-black text-xs font-semibold">{podium[0].streak}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-
-//                 <div className="flex flex-col items-center gap-3">
-//                     <div className="relative">
-//                         <div className="w-15 h-15 bg-gray-300 rounded-full"/>
-//                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E1FDF6] rounded-full flex items-center justify-center">
-//                             <p className="text-black text-xs font-bold">3</p>
-//                         </div>
-//                     </div>
-//                     <div className="w-27 h-20 bg-gradient-to-b from-[#4DB5AC]/70 to-[#6cd6e0]/70 rounded-md flex flex-col items-center justify-between py-3 px-3">
-//                         <p className="text-black font-semibold text-xs text-center">{podium[2].name}</p>
-//                         <div className="flex items-center gap-1">
-//                             <HiFire className="text-black" size={16}/>
-//                             <p className="text-black text-xs font-semibold">{podium[2].streak}</p>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <div className="flex flex-col gap-1 w-full">
-//                 {rest.map((friend, i) => (
-//                     <div key={friend.name} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#F9FAFB]" : ""}`}>
-//                         <div className="flex items-center gap-3">
-//                             <p className="text-gray-400 font-semibold text-sm">{i + 4}</p>
-//                             <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-//                             <p className={`text-sm ${friend.name === "You" ? "font-bold" : "font-semibold"}`}>{friend.name}</p>
-//                         </div>
-//                         <p className={`text-sm ${friend.name === "You" ? "font-bold text-black" : "text-gray-400"}`}>{friend.pts} pts</p>
-//                     </div>
-//                 ))}
-
-//                 <div className="w-full mt-4">
-//                     <div className="flex items-center rounded-xl bg-[#ededed] px-4 py-2 gap-2">
-//                         <input
-//                             className="w-full outline-none text-sm text-gray-500"
-//                             placeholder="Search friends"
-//                             value={searchQuery}
-//                             onChange={(e) => setSearchQuery(e.target.value)}
-//                         />
-//                     </div>
-//                     <div className="flex flex-col gap-2 mt-2">
-//                         {searchResults.map(friend => (
-//                             <div key={friend.id} className={`flex items-center justify-between px-4 py-3 rounded-2xl ${friend.name === "You" ? "bg-[#D3E4FD]" : "bg-gray-50"}`}>
-//                                 <div className="flex items-center gap-3">
-//                                     <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-//                                     <p className="text-sm font-semibold">{friend.name}</p>
-//                                 </div>
-//                                 <p className="text-sm text-gray-400">{friend.pts} pts</p>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
+const placeholderXP = [320, 280, 245, 230, 195, 180, 150, 120, 980]
 
 
-// function UpcomingStudySessions() {
-//     const [showModal, setShowModal] = useState(false);
-//     const [meetings, setMeetings] = useState([]);
-//     const { data: session } = useSession();
-
-//     useEffect(() => {
-//     if (!session?.user?.id) return
-//     fetch(`/backend/api/calendar/upcoming-events?userId=${session.user.id}`, {
-//         headers: { 'x-user-id': session.user.id }
-//     })
-//     .then(res => res.json())
-//     .then(data => setMeetings(Array.isArray(data) ? data : []))
-//     .catch(err => console.error(err))
-//         }, []);
-
-//     return (
-//         <>
-//             <div className="bg-white/70 rounded-xl p-5 h-[320px] flex flex-col">
-//                 <h2 className="text-l font-semibold text-black mb-4">Upcoming Study Sessions</h2>
-//                 <div className="flex-1 overflow-y-auto flex flex-col gap-3 pr-2">
-//                     {meetings.map((meeting) => (
-//                         <div key={meeting.id} className="border-b border-gray-100 flex items-center justify-between p-3 shrink-0">
-//                             <div className="flex items-center gap-4">
-//                                 <div className="text-center min-w-[36px]">
-//                                     <p className="text-xs font-semibold" style={{color: '#0F6E56'}}>
-//                                         {new Date(meeting.start.dateTime).toLocaleDateString([], { month: 'short' }).toUpperCase()}
-//                                     </p>
-//                                     <p className="text-xl font-semibold text-black leading-tight">
-//                                         {new Date(meeting.start.dateTime).getDate()}
-//                                     </p>
-//                                 </div>
-//                                 <div className="w-px bg-gray-200 h-9" />
-//                                 <div className="flex flex-col">
-//                                     <p className="text-sm font-semibold text-black">{meeting.summary}</p>
-//                                     <p className="text-xs text-gray-400">{meeting.description} · {new Date(meeting.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-//                                 </div>
-//                             </div>
-//                             <span className="text-xs bg-[#DCFCE7] text-[#198788] font-light uppercase px-4 py-1.5 rounded-full">
-//                                 Juanita
-//                             </span>
-//                         </div>
-//                     ))}
-//                 </div>
-//                 <div className="flex justify-end mt-1">
-//                     <button
-//                         onClick={() => setShowModal(true)}
-//                         className="flex items-center gap-2 text-[#198788] text-sm font-medium px-4 py-0.5 rounded-xl cursor-pointer">
-//                         Schedule Meeting
-//                     </button>
-//                 </div>
-//             </div>
-//             {showModal && <Schedulemodal onClose={() => setShowModal(false)} />}
-//         </>
-//     );
-// }
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/users/${session.user.id}`)
+     .then(res => res.json())
+     .then(data => setFriendCount(data.friend_count || 0))
+ }, [session])
 
 
-// function SharedClasses() {
-//     const sharedFriends = [
-//         { id: 1, name: "Juanita", classes: ["CS 3345", "MATH 2305", "PHYS 2325"], color: "#F5EEFF" },
-//         { id: 2, name: "Marcus", classes: ["PHYS 2325", "CS 3340"], color: "#C2E7FF" },
-//         { id: 3, name: "Sanya", classes: ["CS 3345", "MATH 2418", "CS 3340"], color: "#DCFCE7" },
-//         { id: 4, name: "Leo", classes: ["MATH 2418", "MATH 2305"], color: "#D3E4FD" },
-//         { id: 5, name: "Elena", classes: ["CS 3340", "PHYS 2325", "CS 3345"], color: "#E3E4F8" }
-//     ];
-
-//     return (
-//         <div className="bg-white/70 rounded-xl p-4 flex-1 min-h-[390px] flex flex-col gap-4">
-//             <h2 className="text-l font-semibold text-black mb-1">Shared Classes</h2>
-//             <div className="flex flex-col">
-//                 {sharedFriends.map((friend) => (
-//                     <div key={friend.id} className="flex items-center justify-between p-3 mb-1 border-b border-gray-100 transition-colors">
-//                         <div className="flex items-center gap-3">
-//                             <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0" />
-//                             <p className="text-sm font-bold text-black leading-tight">{friend.name}</p>
-//                         </div>
-//                         <div className="flex gap-1.5 flex-wrap justify-end max-w-[220px]">
-//                             {friend.classes.map((cls) => (
-//                                 <span
-//                                     key={cls}
-//                                     className="text-[10px] px-2.5 py-1 rounded-lg font-medium text-black/80 whitespace-nowrap"
-//                                     style={{ backgroundColor: friend.color }}
-//                                 >
-//                                     {cls}
-//                                 </span>
-//                             ))}
-//                         </div>
-//                     </div>
-//                 ))}
-//             </div>
-//         </div>
-//     );
-// }
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/users/${session.user.id}/friends`)
+     .then(res => res.json())
+     .then(async (data) => {
+       const friendDetails = data.map((f, i) => ({
+         id: f.friend_id,
+         name: `${f.first_name} ${f.last_name}`,
+         xp: placeholderXP[i] || 500,
+         profile_pic: f.image,
+         isYou: false
+       }))
+       const me = await fetch(`/backend/users/${session.user.id}`).then(r => r.json())
+       const meEntry = {
+         id: session.user.id,
+         name: "You",
+         xp: placeholderXP[friendDetails.length] || 980,
+         profile_pic: session.user.image,
+         isYou: true
+       }
+       setLeaderboard([...friendDetails, meEntry].sort((a, b) => b.xp - a.xp))
+     })
+     .catch(err => console.error(err))
+ }, [session])
 
 
-// function RightSidebar() {
-//     const { data: session, status } = useSession()
-//     const [requests, setRequests] = useState([]);
-//     const [showAddFriend, setShowAddFriend] = useState(false);
-
-//     useEffect(() => {
-//         if (!session) return
-//         fetch(`/backend/users/${session.user.id}/friend-requests`)
-//             .then(res => res.json())
-//             .then(async (data) => {
-//                 const pending = data.filter(req => req.status === "pending")
-//                 const requestDetails = await Promise.all(
-//                     pending.map(async (req) => {
-//                         const sender = await fetch(`/backend/users/${req.sender_id}`).then(r => r.json())
-//                         return { id: req.id, name: sender.name, email: sender.email }
-//                     })
-//                 )
-//                 setRequests(requestDetails)
-//             })
-//     }, [session])
-
-//     function acceptRequest(id) {
-//         setRequests(requests.filter(r => r.id !== id));
-//     }
-
-//     function declineRequest(id) {
-//         setRequests(requests.filter(r => r.id !== id));
-//     }
-
-//     // Hardcoded friend achievements with icons
-//     const friendAchievements = [
-//         { id: 1, friend: "Juanita", title: "5 Day Study Streak",           icon: "/icons/streak-blue.png",   date: "Apr 3" },
-//         { id: 2, friend: "Marcus",  title: "10 Quizzes Completed",          icon: "/icons/pen-blue.png",      date: "Apr 4" },
-//         { id: 3, friend: "Sanya",   title: "Perfect Score on a Quiz",       icon: "/icons/medal-green.png",   date: "Apr 5" },
-//         { id: 4, friend: "Leo",     title: "First Study Session Scheduled", icon: "/icons/chat-green.png",    date: "Apr 6" },
-//         { id: 5, friend: "Elena",   title: "20 Chat Messages Sent",         icon: "/icons/chat-purple.png",   date: "Apr 7" },
-//     ];
-
-//     return (
-//         <>
-//             {/* Matches the home page right sidebar: fixed width, no card boxes, plain sections */}
-//             <div className="w-[300px] shrink-0 pt-10 pr-8 pl-4 flex flex-col gap-8 sticky top-0 h-screen overflow-y-auto">
-
-//                 {/* Friend Requests — same style as "Upcoming Tasks" on home */}
-//                 <div className="flex flex-col gap-3">
-//                     <h2 className="text-sm font-semibold text-black">Friend Requests</h2>
-
-//                     {requests.length === 0 && (
-//                         <p className="text-xs text-gray-400">No pending requests</p>
-//                     )}
-
-//                     {requests.map((request) => (
-//                         <div key={request.id} className="flex items-center justify-between py-2 border-b border-gray-100">
-//                             <div className="flex flex-col">
-//                                 <p className="text-sm font-semibold text-black">{request.name}</p>
-//                                 <p className="text-xs text-gray-400">{request.email}</p>
-//                             </div>
-//                             <div className="flex gap-2">
-//                                 <button onClick={() => acceptRequest(request.id)} className="cursor-pointer text-gray-400 hover:text-[#198788] transition-colors">
-//                                     <CircleCheck size={24} strokeWidth={1}/>
-//                                 </button>
-//                                 <button onClick={() => declineRequest(request.id)} className="cursor-pointer text-gray-400 hover:text-red-400 transition-colors">
-//                                     <CircleX size={24} strokeWidth={1}/>
-//                                 </button>
-//                             </div>
-//                         </div>
-//                     ))}
-//                     <button
-//                         onClick={() => setShowAddFriend(true)}
-//                         className="text-[#198788] text-xs font-medium self-end cursor-pointer">
-//                         Add Friend
-//                     </button>
-//                 </div>
-
-//                 {/* Friend Achievements */}
-//                 <div className="flex flex-col gap-3">
-//                     <h2 className="text-sm font-semibold text-black">Friend Achievements</h2>
-
-//                     {friendAchievements.map((a) => (
-//                         <div key={a.id} className="flex items-center gap-3 py-2 border-b border-gray-100">
-//                             <img src={a.icon} alt={a.title} width={60} height={60} className="shrink-0" />
-//                             <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-//                                 <p className="text-xs font-semibold text-black leading-snug truncate">{a.title}</p>
-//                                 <p className="text-xs text-gray-400">{a.friend} · {a.date}</p>
-//                             </div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-
-//             {showAddFriend && <Sendrequestmodal onClose={() => setShowAddFriend(false)} />}
-//         </>
-//     );
-// }
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/users/${session.user.id}/friends`)
+     .then(res => res.json())
+     .then(data => {
+       setFriends(data.map(f => ({
+         id: f.friend_id,
+         name: `${f.first_name} ${f.last_name}`,
+         days: f.streak || 0,
+         profile_pic: f.image,
+       })))
+     })
+     .catch(err => console.error(err))
+ }, [session])
 
 
-// export default function Social4() {
-//     return (
-//        <div
-//       className={`h-screen flex`}
-//       style={{
-//         backgroundImage: "linear-gradient(135deg, rgba(240,245,244,0.7) 0%, rgba(245,248,247,0.7) 60%, rgba(247,245,251,0.7) 100%), url('/gridbackground.svg')",
-//         // backgroundImage: "linear-gradient(to right, rgba(234,244,242,0.85) 0%, rgba(245,248,247,0.45) 100%), url('/gridbackground.svg')",
-//         backgroundSize: "cover",
-//         backgroundPosition: "center",
-//         backgroundRepeat: "no-repeat"
-//         }}
-//          >
-//             <div className="flex flex-col gap-5 w-full p-5">
-//                 <StatsTopBar />
-//                 <div className="flex gap-4 flex-1 items-start">
-//                     <Podium />
-//                     <div className="flex flex-col gap-4 flex-1 min-h-0">
-//                         <UpcomingStudySessions />
-//                         <SharedClasses />
-//                     </div>
-//                 </div>
-//             </div>
-//             {/* Vertical divider matching Mariam's home page */}
-//              <div className="w-px self-stretch my-2" style={{
-//             background: "linear-gradient(to bottom, transparent, #E0E5E4 20%, #E0E5E4 80%, transparent)"
-//             }} />
-//             <RightSidebar />
-//         </div>
-//     );
-// }
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/api/calendar/upcoming-events?userId=${session.user.id}`, {
+     headers: { 'x-user-id': session.user.id }
+   })
+     .then(res => res.json())
+     .then(data => {
+       const sessions = Array.isArray(data) ? data.filter(e => e.hangoutLink) : []
+       setUpcomingSessions(sessions)
+       setMeetingCount(sessions.length)
+     })
+     .catch(err => console.error(err))
+ }, [session, refreshKey])
+
+
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/users/${session.user.id}/friend-requests`)
+     .then(res => res.json())
+     .then(async (data) => {
+       const pending = data.filter(req => req.status === "pending")
+       const requestDetails = await Promise.all(
+         pending.map(async (req) => {
+           const sender = await fetch(`/backend/users/${req.sender_id}`).then(r => r.json())
+           return { id: req.id, name: sender.name, email: sender.email, image: sender.image }
+         })
+       )
+       setRequests(requestDetails)
+     })
+     .catch(err => console.error(err))
+ }, [session])
+
+
+ function acceptRequest(id) {
+   fetch(`/backend/friend-requests/${id}/accept`, {
+     method: "POST",
+     headers: { "Content-Type": "application/json" }
+   })
+     .then(res => {
+       if (res.ok) {
+         setRequests(requests.filter(r => r.id !== id))
+         setRefreshKey(prev => prev + 1)
+       }
+     })
+     .catch(err => console.error(err))
+ }
+
+ function declineRequest(id) {
+   fetch(`/backend/friend-requests/${id}/decline`, {
+     method: "POST",
+     headers: { "Content-Type": "application/json" }
+   })
+     .then(res => {
+       if (res.ok) {
+         setRequests(requests.filter(r => r.id !== id))
+       }
+     })
+     .catch(err => console.error(err))
+ }
+
+
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/users/${session.user.id}/friends/shared-classes`)
+     .then(res => res.json())
+     .then(data => {
+       const formatted = data.map(f => ({
+         id: f.friend_id,
+         name: `${f.first_name} ${f.last_name}`,
+         classes: f.shared_classes.map(c => c.name),
+         image: f.image
+       }))
+       const grouped = {}
+       formatted.forEach(friend => {
+         friend.classes.forEach(cls => {
+           if (!grouped[cls]) grouped[cls] = []
+           grouped[cls].push(friend)
+         })
+       })
+       setSharedClasses(grouped)
+     })
+     .catch(err => console.error(err))
+ }, [session])
+
+
+ useEffect(() => {
+   if (!session?.user?.id) return
+   fetch(`/backend/users/${session.user.id}/friends/achievements`)
+     .then(res => res.json())
+     .then(data => {
+       setAchievements(data.map(f => ({
+         friend: `${f.first_name} ${f.last_name}`,
+         achievement: f.achievement_title,
+          icon: f.icon_colored
+       })))
+     })
+     .catch(err => console.error(err))
+ }, [session])
+
+
+ const formatXP = (xp) => xp.toLocaleString() + " XP"
+
+ // Filter logic
+ const filteredFriends = searchQuery
+   ? friends.filter(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
+   : friends
+
+ const filteredRequests = searchQuery
+   ? requests.filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()))
+   : requests
+
+
+
+ return (
+   <div
+     className="h-screen flex"
+     style={{
+       backgroundImage: "linear-gradient(135deg, rgba(240,245,244,0.7) 0%, rgba(245,248,247,0.7) 60%, rgba(247,245,251,0.7) 100%), url('/gridbackground.svg')",
+       backgroundSize: "cover",
+       backgroundPosition: "center",
+       backgroundRepeat: "no-repeat"
+     }}
+   >
+     <div className="p-7 flex flex-col flex-1 gap-5 min-h-0">
+
+
+       {/* Header */}
+       <div className="flex items-start justify-between shrink-0">
+         <div className="flex items-center gap-3">
+           <Link href="/home" className="flex items-center gap-1.5 px-4 h-12 rounded-full bg-white/80 hover:bg-white transition-all mr-1">
+             <ChevronLeft size={18} className="text-[#141f1d]" />
+             <span className="text-sm font-semibold text-[#141f1d]">Home</span>
+           </Link>
+           <h1 className="text-xl font-medium text-[#141f1d] tracking-tight leading-tight">Social</h1>
+         </div>
+         <div className="flex gap-2 shrink-0">
+           <button className="px-5 py-3 rounded-full bg-white text-sm font-semibold text-[#141f1d] hover:bg-white transition-all flex items-center gap-2 shadow-xs">
+             <Users size={18} className="text-gray-700" />
+             {friendCount} Friends
+           </button>
+           <button className="px-5 py-3 rounded-full bg-white text-sm font-semibold text-[#141f1d] hover:bg-white transition-all flex items-center gap-2 shadow-xs">
+             <Calendar size={18} className="text-gray-700" />
+             {meetingCount} Upcoming
+           </button>
+           <Link href="/profile" className="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-xs hover:scale-110 transition-all">
+             <User size={18} className="text-gray-700" />
+           </Link>
+         </div>
+       </div>
+
+
+       {/* 3-Column Grid */}
+       <div className="flex gap-5 flex-1 min-h-0">
+
+
+         {/* LEFT - Leaderboard */}
+         <div className="w-1/4 min-h-0">
+           <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex flex-col h-full">
+             <h2 className="text-md font-semibold text-[#14153A] mb-4 shrink-0">Weekly Leaderboard</h2>
+             <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+               {leaderboard.length === 0 ? (
+                 <div className="flex flex-col items-center justify-center py-12 text-center">
+                   <Trophy size={40} className="text-gray-300 mb-3" />
+                   <p className="text-sm font-medium text-gray-600">No data yet</p>
+                 </div>
+               ) : (
+                 leaderboard.slice(0, 10).map((user, i) => (
+                   <div
+                     key={user.id}
+                     className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
+                       user.isYou ? "bg-[#347A73]/10 " : i === 0 ? "bg-amber-50/50" : "hover:bg-gray-50"
+                     }`}
+                   >
+                     <div className="flex items-center gap-3">
+                       <div className="w-5 text-center">
+                         {i === 0 && <img src="/icons/gold-medal.svg" className="w-6 h-6 object-contain" alt="Gold" />}
+                         {i === 1 && <img src="/icons/silver-medal.svg" className="w-6 h-6 object-contain" alt="Silver" />}
+                         {i === 2 && <img src="/icons/bronze-medal.svg" className="w-6 h-6 object-contain" alt="Bronze" />}
+                         {i > 2 && <span className="text-sm font-semibold text-gray-400">{i + 1}</span>}
+                       </div>
+                       {user.profile_pic ? (
+                         <img src={user.profile_pic} alt={user.name} className="w-10 h-10 rounded-full object-cover bg-gray-200" onError={(e) => { e.target.src = '/default-avatar.png' }} />
+                       ) : (
+                         <div className={`w-10 h-10 rounded-full ${user.isYou ? "bg-[#347A73]/40" : "bg-[#7fbcb5]/40"}`} />
+                       )}
+                       <span className={`text-sm font-medium ${user.isYou ? "text-[#347A73]" : "text-gray-700"}`}>{user.name}</span>
+                     </div>
+                     <span className="text-sm font-bold text-[#141f1d]">{formatXP(user.xp)}</span>
+                   </div>
+                 ))
+               )}
+             </div>
+           </div>
+         </div>
+
+
+         {/* MIDDLE  */}
+         <div className="w-1/2 min-h-0 flex flex-col gap-5">
+
+
+          {/* TOP - Upcoming Meetings */}
+            <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex flex-col flex-1 min-h-0">
+            <div className="flex items-center justify-between mb-4 shrink-0">
+                <h2 className="text-md font-semibold text-[#14153A]">Meetings</h2>
+                <button onClick={() => setShowScheduleModal(true)} className="text-sm font-medium text-[#3a9e94] hover:text-[#2d766f] transition-colors flex items-center gap-1">
+                <Plus size={14} />
+                Schedule Meeting
+                </button>
+            </div>
+            <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
+                {upcomingSessions.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <Calendar size={40} className="text-gray-300 mb-3" />
+                    <p className="text-sm font-medium text-gray-600">No upcoming sessions</p>
+                </div>
+                ) : (
+                upcomingSessions.map((s) => {
+                    // Build a color map from sharedClasses
+                    const classColorMap = {}
+                    Object.entries(sharedClasses).forEach(([cls]) => {
+                    // We don't have color from meetings directly, so use a hash-based color
+                    classColorMap[cls] = getClassColor(cls)
+                    })
+
+                    const meetingClass = s.description?.split(" | ")[0]
+                    const classColor = meetingClass ? classColorMap[meetingClass] : null
+
+                    return (
+                    <div key={s.id} className="bg-white/50 rounded-2xl p-4 hover:bg-white/70 transition-colors">
+                        <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-semibold text-sm text-[#141f1d]">{s.summary}</h3>
+                            {meetingClass && (
+                                <span 
+                                className="text-xs px-2 py-0.5 rounded-full font-medium"
+                                style={classColor ? {
+                                    color: classColor,
+                                    backgroundColor: classColor + "18"
+                                } : {
+                                    color: '#3a9e94',
+                                    backgroundColor: '#3a9e94' + '18'
+                                }}
+                                >
+                                {meetingClass}
+                                </span>
+                            )}
+                            </div>
+                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-1.5">
+                                <Calendar size={13} className="text-gray-400" />
+                                <span className="text-xs text-gray-500">
+                                {new Date(s.start.dateTime).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-1 h-1 rounded-full bg-gray-300" />
+                                <span className="text-xs text-gray-500">
+                                {new Date(s.start.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                            </div>
+                            {s.description?.split(" | ")[1] && (
+                                <div className="flex items-center gap-1.5">
+                                <div className="w-1 h-1 rounded-full bg-gray-300" />
+                                <Users size={13} className="text-gray-400" />
+                                <span className="text-xs text-gray-400 truncate">{s.description.split(" | ")[1]}</span>
+                                </div>
+                            )}
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => window.open(s.hangoutLink, '_blank')}
+                            disabled={!s.hangoutLink}
+                            className="ml-4 px-3 py-2 rounded-full bg-[#3a9e94] text-white text-sm font-bold flex items-center gap-0.5 hover:bg-[#2d766f] transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                            <span>Join</span>
+                            <ArrowUpRight size={17} strokeWidth={2.5}/>
+                        </button>
+                        </div>
+                    </div>
+                    )
+                })
+                )}
+            </div>
+            </div>
+
+
+           {/* BOTTOM - Friends List */}
+           <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex flex-col flex-1 min-h-0">
+             <div className="flex items-center justify-between mb-3 shrink-0">
+               <h2 className="text-md font-semibold text-[#14153A]">Friends</h2>
+               <button onClick={() => setShowAddFriend(true)} className="text-sm font-medium text-[#3a9e94] hover:text-[#2d766f] transition-colors flex items-center gap-1">
+                 <Plus size={14} />
+                 Add Friend
+               </button>
+             </div>
+             <div className="relative mb-3 shrink-0">
+               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+               <input
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+                 placeholder="Search by name or email..."
+                 className="w-full pl-9 pr-3 py-2 rounded-xl border border-gray-200/60 bg-white/50 text-xs focus:outline-none focus:border-[#3a9e94]/30 placeholder:text-gray-400"
+               />
+             </div>
+             <div className="flex gap-2 mb-3 shrink-0">
+               <button onClick={() => setActiveTab("friends")} className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${activeTab === "friends" ? "bg-[#7fbcb5] text-white" : "bg-white/50 text-gray-500 hover:text-gray-700"}`}>
+                 Friends List
+               </button>
+               <button onClick={() => setActiveTab("shared")} className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${activeTab === "shared" ? "bg-[#7fbcb5] text-white" : "bg-white/50 text-gray-500 hover:text-gray-700"}`}>
+                 Shared Classes
+               </button>
+             </div>
+             <div className="flex-1 overflow-y-auto">
+               {activeTab === "friends" ? (
+                 <div className="flex flex-col gap-1">
+                   {/* Friend Requests */}
+                   {filteredRequests.map((request) => (
+                     <div key={request.id} className="flex items-center justify-between p-2.5 rounded-xl bg-[#347A73]/10 transition-colors">
+                       <div className="flex items-center gap-3">
+                         <img
+                           src={request.image}
+                           alt={request.name}
+                           className="w-9 h-9 rounded-full object-cover bg-gray-200"
+                           onError={(e) => e.target.src = '/default-avatar.png'}
+                         />
+                         <p className="text-sm font-medium text-[#141f1d]">{request.name}</p>
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <button onClick={() => acceptRequest(request.id)} className="text-xs font-medium text-white bg-[#3a9e94] px-2.5 py-1 rounded-lg hover:bg-[#2d766f]">Accept</button>
+                         <button onClick={() => declineRequest(request.id)} className="text-xs font-medium text-gray-500 bg-gray-200 px-2.5 py-1 rounded-lg hover:bg-gray-300">Decline</button>
+                       </div>
+                     </div>
+                   ))}
+                   {filteredFriends.length === 0 && filteredRequests.length === 0 ? (
+                     <div className="flex flex-col items-center justify-center py-12 text-center">
+                       <Users size={40} className="text-gray-300 mb-3" />
+                       <p className="text-sm font-medium text-gray-600">
+                         {searchQuery ? "No results found" : "No friends yet"}
+                       </p>
+                       {!searchQuery && <p className="text-xs text-gray-400 mt-1">Add friends to see them here</p>}
+                     </div>
+                   ) : (
+                     filteredFriends.map((friend) => (
+                       <div key={friend.id} className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/50 transition-colors">
+                         <div className="flex items-center gap-3">
+                           {friend.profile_pic ? (
+                             <img src={friend.profile_pic} alt={friend.name} className="w-9 h-9 rounded-full object-cover bg-gray-200" onError={(e) => { e.target.src = '/default-avatar.png' }} />
+                           ) : (
+                             <div className="w-9 h-9 rounded-full bg-[#7fbcb5]/40" />
+                           )}
+                           <p className="text-sm font-medium text-[#141f1d]">{friend.name}</p>
+                         </div>
+                         <div className="flex items-center gap-1.5 min-w-[80px] justify-end">
+                           <Flame size={16} strokeWidth={3} className="text-[#ea9607]" />
+                           <span className="text-xs font-bold text-[#ea9607]">{friend.days} days</span>
+                         </div>
+                       </div>
+                     ))
+                   )}
+                 </div>
+               ) : (
+                 <div className="flex flex-col gap-2 overflow-y-auto">
+                   {Object.keys(sharedClasses).length === 0 ? (
+                     <div className="flex flex-col items-center justify-center py-12 text-center">
+                       <Users size={40} className="text-gray-300 mb-3" />
+                       <p className="text-sm font-medium text-gray-600">No shared classes</p>
+                       <p className="text-xs text-gray-400 mt-1">Connect with classmates!</p>
+                     </div>
+                   ) : (
+                     Object.entries(sharedClasses).map(([cls, friendsInClass]) => (
+                       <div key={cls} className="rounded-xl border border-white/60 bg-white/40 p-3">
+                         <p className="text-sm font-semibold text-[#141f1d]">{cls}</p>
+                         <p className="text-xs text-gray-500 mt-0.5 mb-2">{friendsInClass.length} {friendsInClass.length === 1 ? "friend" : "friends"} enrolled</p>
+                         <div className="flex flex-col gap-1">
+                           {friendsInClass.map((friend, idx) => (
+                             <div key={idx} className="flex items-center justify-between py-1">
+                               <div className="flex items-center gap-2">
+                                 {friend.image ? (
+                                   <img src={friend.image} alt={friend.name} className="w-6 h-6 rounded-full object-cover bg-gray-200" onError={(e) => { e.target.src = '/default-avatar.png' }} />
+                                 ) : (
+                                   <div className="w-6 h-6 rounded-full bg-[#7fbcb5]/40" />
+                                 )}
+                                 <span className="text-xs font-medium text-[#141f1d]">{friend.name}</span>
+                               </div>
+                               <button onClick={() => setShowScheduleModal(true)} className="text-xs font-medium text-[#3a9e94] hover:text-[#2d766f] transition-colors">Meet</button>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                     ))
+                   )}
+                 </div>
+               )}
+             </div>
+           </div>
+         </div>
+
+
+         {/* RIGHT - Friend Activity */}
+         <div className="w-1/4 min-h-0">
+           <div className="bg-white/65 backdrop-blur-sm rounded-2xl p-5 flex flex-col h-full">
+             <h2 className="text-md font-semibold text-[#14153A] mb-4 shrink-0">Friend Activity</h2>
+             <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
+               {achievements.length === 0 ? (
+                 <div className="flex flex-col items-center justify-center py-12 text-center">
+                   <ActivityIcon size={40} className="text-gray-300 mb-3" />
+                   <p className="text-sm font-medium text-gray-600">No recent activity</p>
+                 </div>
+               ) : (
+                 achievements.map((a, i) => (
+                   <div key={i} className="flex items-center gap-2.5 px-2 py-2.5 rounded-xl hover:bg-white/50 transition-colors">
+                     <img src={a.icon} className="w-16 h-16 object-contain shrink-0" />
+                     <div className="flex-1 min-w-0">
+                       <p className="text-sm text-[#141f1d]">
+                         <span className="font-semibold">{a.friend}</span>
+                         <span className="text-gray-500"> earned </span>
+                         <span className="font-medium text-[#347A73]">{a.achievement}</span>
+                       </p>
+                     </div>
+                   </div>
+                 ))
+               )}
+             </div>
+           </div>
+         </div>
+
+
+       </div>
+     </div>
+
+
+     {showScheduleModal && (
+       <Schedulemodal onClose={() => setShowScheduleModal(false)} onSessionCreated={() => setRefreshKey(prev => prev + 1)} />
+     )}
+     {showAddFriend && (
+       <Sendrequestmodal onClose={() => setShowAddFriend(false)} />
+     )}
+   </div>
+ )
+}

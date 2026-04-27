@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"  
-import { Check, Plus } from "lucide-react"
+import { Check, Plus, CircleAlert } from "lucide-react"
 import { useSession } from "next-auth/react"
 import AddTaskModal from "./addTaskModal"
 
@@ -201,9 +201,9 @@ const handleAddTask = async (newTask) => {
             const key = task.id || `${task.title}-${i}`
             return (
               <div key={key} className={`flex items-center gap-4 py-4 ${i !== arr.length - 1 ? "border-b border-[#EAEEED]" : ""}`}>
-                <div className="w-2 shrink-0 flex items-center justify-center">
+                <div className="w-4 shrink-0 flex items-center justify-center">
                   {isExam(task.title) && (
-                    <span className="text-red-600/70 text-sm font-extrabold">!</span>
+                    <CircleAlert size={18} className="text-red-600" strokeWidth={2.5} />
                   )}
                 </div>
                 <div className={`flex items-center gap-4 flex-1 transition-opacity ${done ? "opacity-40" : "opacity-100"}`}>

@@ -11,7 +11,7 @@ const accents = ["corner-teal", "corner-magenta", "corner-blue", "corner-purple"
 
 export default function ClassesGrid({ courses: initialCourses }) {
   const { data: session } = useSession()
-  const [courses, setCourses] = useState(initialCourses || [])
+  const [courses, setCourses] = useState([])
   const [page, setPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [hoveredCode, setHoveredCode] = useState(null)
@@ -19,7 +19,13 @@ export default function ClassesGrid({ courses: initialCourses }) {
   const [courseToEdit, setCourseToEdit] = useState(null)
  
   useEffect(() => {
-    if (initialCourses?.length > 0) setCourses(initialCourses)
+    if (initialCourses?.length > 0) {
+      const sorted = [...initialCourses].sort((a, b) => 
+        new Date(b.created_at || 0) - new Date(a.created_at || 0)
+      )
+      setCourses(sorted)
+      setPage(0)
+    }
   }, [initialCourses])
 
   const visible = courses.slice(page * 6, page * 6 + 6)
@@ -45,9 +51,13 @@ export default function ClassesGrid({ courses: initialCourses }) {
   }
 
   const updateCourse = (updatedCourse) => {
-    setCourses(prev => prev.map(c => 
-      c.class_code === updatedCourse.class_code ? updatedCourse : c
-    ))
+    setCourses(prev => {
+      const updated = prev.map(c => 
+        c.class_code === updatedCourse.class_code ? updatedCourse : c
+      )
+      updated.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+      return updated
+    })
   }
 
   return (
@@ -115,8 +125,11 @@ export default function ClassesGrid({ courses: initialCourses }) {
           onAdd={(course) => { 
             setCourses(prev => {
               const filtered = prev.filter(c => c.class_code !== course.class_code)
-              return [...filtered, course]
+              const updated = [...filtered, { ...course, created_at: new Date().toISOString() }]
+              updated.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+              return updated
             })
+            setPage(0)
             setShowModal(false) 
           }}
         />

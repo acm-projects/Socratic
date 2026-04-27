@@ -98,7 +98,7 @@ export default function Sendrequestmodal({ onClose }) {
 
         <button
           onClick={handleSendRequest}
-          className="w-full bg-[#3959E9] hover:bg-[#2039AF] text-white text-sm font-medium py-3 rounded-xl">
+          className="w-full bg-[#3a9e94] hover:bg-[#2d766f] text-white text-sm font-medium py-3 rounded-xl">
           Send Friend Request
         </button>
       </div>
