@@ -50,8 +50,27 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
     throw new Error("No PDF file or pdfText provided.");
   }
 
-  const prompt = `Extract all relevant course information into the requested JSON format. For topics, be exhaustive — scan every section of the document including weekly schedules, learning outcomes, and module breakdowns. Prefer specific concept names over broad category headings. When a schedule table is present, treat it as the authoritative topic source — read each row verbatim before consulting other sections. Never split a single schedule cell into multiple topic entries. Do NOT include exams, quizzes, midterms, or any assessment events as topics. After extracting all schedule rows, you MUST also extract every distinct topic from the course description and learning outcomes sections, even if conceptually similar entries exist from the schedule. If a topic appears in the course description or learning outcomes as a standalone item, extract it separately even if a similar phrase already exists as part of a compound schedule entry — e.g. 'Parameter estimation' and 'Hypothesis testing' should appear on their own if listed independently elsewhere. When learning outcomes list items as separate bullet points, keep them as separate entries — do not merge them into one string (e.g. 'Common discrete probability distributions' and 'Common continuous probability distributions' are two entries, not one). Capitalize all topic entries consistently — use title case for every entry regardless of source section. When extracting from learning outcomes, extract the topic noun phrase only — not the full sentence or verb phrase. For example, 'Construct confidence intervals' should be extracted as 'Confidence intervals', not the full instructional phrase. When a schedule entry ends with '+ practice questions' or similar variants, omit that portion — extract only the core topic name (e.g. 'Expectations and Variance', not 'Expectations and Variance + practice questions'). Every topic entry must be at least 2 words — never extract single-word topics. If trimming a phrase would result in a single word (e.g. 'Calculus', 'Concepts'), keep enough context to make it meaningful (e.g. 'Calculus in Probability', 'Fundamental Probability Concepts').
-  Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".
+  const prompt = `Extract all relevant course information into the requested JSON format.
+
+TOPIC EXTRACTION RULES (apply in strict order):
+1. NEVER use the "+" symbol in any topic entry, under any circumstances.
+2. ONE CONCEPT PER ENTRY: If a source document lists two concepts together (joined by "+", "and", ",", or any conjunction), split them into two separate topic entries UNLESS the combined phrase is an inseparable named concept (e.g. "Mean and Variance" is fine because they are always taught together, but "Bayes Theorem + Monty Hall Problem" must become two entries: "Bayes Theorem" and "Monty Hall Problem").
+3. LOWERCASE CONJUNCTIONS: When the word "and" appears inside a topic name, it must always be fully lowercase (e.g. "Poisson, Exponential, and Gamma Distributions" — not "And").
+4. STRIP FILLER OPENERS: Remove vague academic prefixes that add no meaning. Strip phrases like "Introduction to", "Basics of", "Overview of", "Typical Questions", "Course Review", "An Introduction To", or any variant. Extract only the core noun phrase (e.g. "Discrete Random Variables" not "Introduction to Discrete Random Variables", "Distributions" not "An Introduction To Distributions").
+5. BE SPECIFIC: Prefer the precise mathematical or statistical concept over broad headings. "Binary Search Trees" not "Data Structures". "Bayes Theorem" not "Probability Concepts".
+6. SEPARATE WHEN POSSIBLE: If trimming a compound phrase yields two valid standalone topics (each ≥ 2 words), emit them as two entries. Only merge if the concepts are truly inseparable and always co-taught.
+7. Every topic entry must be at least 2 words — never extract single-word topics.
+8. Do NOT include exams, quizzes, midterms, labs, or any assessment events as topics.
+9. Scan ALL sections — weekly schedule, learning outcomes, module list, course description — and deduplicate.
+10. A well-structured course should yield 15–40 distinct topic entries.
+11. Capitalize all topic entries in Title Case. The word "and" inside a topic remains lowercase per rule 3.
+12. The Greek letter χ² must be preserved as-is, not converted to x².
+13. When extracting from learning outcomes, extract only the topic noun phrase — not the full sentence. "Construct confidence intervals" → "Confidence Intervals".
+14. When a schedule entry ends with "+ practice questions", "+ examples", or similar, omit that trailing portion.
+15. Do not include vague or redundant-only entries like "Course Overview", "Probability Basics", "Typical Questions", or "Course Review" — these are not teachable concepts.
+16. CONTEXT-BARE TOPICS: If a topic is a single mathematical or statistical term that sounds incomplete on its own, add the minimal necessary qualifier. Examples: "Correlation" → "Statistical Correlation", "Independence" → "Statistical Independence", "Expectation" → "Expected Value", "Regression" → "Linear Regression". Only do this when the word alone is ambiguous — do NOT add qualifiers to already-clear compound phrases.
+
+Use null for missing data (e.g. email, office hours). DO NOT use placeholders like "TBA".
 IMPORTANT: For weightPercentage, return ONLY the raw number (no '%' signs).
 
 TASK EXTRACTION RULES for importantDates:
@@ -81,7 +100,7 @@ Return ONLY JSON matching this schema:
   "ta": { "name": "TA Name", "email": "ta@email.edu", "officeHours": "hours" },
   "gradingPolicy": [ { "category": "category", "weightPercentage": 20 } ],
   "importantDates": [ { "eventName": "Task Name", "date": "YYYY-MM-DD" } ],
-  "topics": ["every distinct topic, concept, unit, module, and subtopic covered in this course. Extract from ALL sections — course schedule, week-by-week outline, learning objectives, module list, and any numbered or bulleted content lists. Do NOT summarize or merge related items. A well-structured course should yield 15–40 topics minimum. Include specific concepts (e.g. 'Binary search trees') not vague headings (e.g. 'Data structures'). ADDITIONALLY: When a course schedule table exists, scan it row by row and preserve compound entries exactly as written — do not split entries joined by '+', 'and', or ','. Prefer the schedule's exact phrasing over paraphrased versions from the course description. The Greek letter χ² should be preserved as-is, not converted to x². Do NOT include exams, quizzes, midterms, or any assessment events as topics. After extracting all schedule rows, you MUST also extract every distinct topic from the course description and learning outcomes sections, even if conceptually similar entries exist from the schedule. If a topic appears in the course description or learning outcomes as a standalone item, extract it separately even if a similar phrase already exists as part of a compound schedule entry — e.g. 'Parameter estimation' and 'Hypothesis testing' should appear on their own if listed independently elsewhere. When learning outcomes list items as separate bullet points, keep them as separate entries — do not merge them into one string (e.g. 'Common discrete probability distributions' and 'Common continuous probability distributions' are two entries, not one). Capitalize all topic entries consistently — use title case for every entry regardless of source section. When extracting from learning outcomes, extract the topic noun phrase only — not the full sentence or verb phrase. For example, 'Construct confidence intervals' should be extracted as 'Confidence intervals', not the full instructional phrase. When a schedule entry ends with '+ practice questions' or similar variants, omit that portion — extract only the core topic name (e.g. 'Expectations and Variance', not 'Expectations and Variance + practice questions'). Every topic entry must be at least 2 words — never extract single-word topics. If trimming a phrase would result in a single word (e.g. 'Calculus', 'Concepts'), keep enough context to make it meaningful (e.g. 'Calculus in Probability', 'Fundamental Probability Concepts')."]
+  "topics": ["Apply all topic extraction rules above. Each entry is one clean, specific concept in Title Case. The word 'and' inside a topic is always lowercase. Never use '+'. Split compound entries unless inseparable. Strip filler openers. Minimum 15 entries for a full course."]
 }`;
 
   contentParts.unshift({ text: prompt });
@@ -145,14 +164,30 @@ Return ONLY JSON matching this schema:
 const saveSyllabusData = async (payload) => {
   const { courseName, courseCode, topics, importantDates, instructor, ta, gradingPolicy, user_id } = payload;
 
-  const alphaMatch = courseCode.match(/[a-zA-Z]+/);
+  // Priority-ordered subject prefixes — CS beats STAT/SE when multiple appear (e.g. "STAT/CS/SE 385")
+  const SUBJECT_PRIORITY = ['CS', 'SE', 'ECE', 'EE', 'CE', 'IE', 'MATH', 'STAT', 'PHYS', 'CHEM'];
+
+  // Extract the numeric portion from the raw course code string
   const numericMatch = courseCode.match(/\d+/);
-  const safeCourseCode = (alphaMatch && numericMatch) 
-    ? (alphaMatch[0] + numericMatch[0]).toUpperCase().trim()
+
+  // Split on '/' or whitespace to find all candidate subject prefixes
+  const candidatePrefixes = courseCode
+    .split(/[\/\s]+/)
+    .map(p => p.replace(/[^a-zA-Z]/g, '').toUpperCase())
+    .filter(p => p.length > 0 && /^[a-zA-Z]+$/.test(p)); // letters-only segments
+
+  // Pick the highest-priority prefix by iterating SUBJECT_PRIORITY order (not candidate order).
+  // e.g. for ["STAT","CS","SE"], SUBJECT_PRIORITY.find(...) returns "CS" because CS comes first in the list.
+  let chosenPrefix = SUBJECT_PRIORITY.find(p => candidatePrefixes.includes(p))
+    || candidatePrefixes[0]
+    || courseCode.match(/[a-zA-Z]+/)?.[0]?.toUpperCase()
+    || '';
+
+  const safeCourseCode = (chosenPrefix && numericMatch)
+    ? (chosenPrefix + numericMatch[0]).toUpperCase().trim()
     : courseCode.split('.')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
 
-  const subjectMatch = safeCourseCode.match(/[a-zA-Z]+/);
-  const subject = subjectMatch ? subjectMatch[0].toUpperCase() : courseName.split(' ')[0];
+  const subject = chosenPrefix || courseName.split(' ')[0].toUpperCase();
 
   // 1. Resolve the canonical class_code for this user.
   // If the user already has a scoped variant of this class (e.g. CS2305-a-tgpj),

@@ -120,7 +120,7 @@ async function run() {
     }
     console.log(`   → Re-upload still goes to ${TEST_CODE}, no duplicates ✓`);
   });
-
+  
   // Cleanup
   await db.query("DELETE FROM topics WHERE class_code LIKE $1", [`${TEST_CODE}%`]);
   await db.query("DELETE FROM syllabus_info WHERE class_code LIKE $1", [`${TEST_CODE}%`]);
