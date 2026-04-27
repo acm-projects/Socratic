@@ -95,13 +95,15 @@ const getScoringModel = (modelName) => new ChatGoogleGenerativeAI({
   model: modelName,
   apiKey: process.env.GEMINI_API_KEY,
   temperature: 0.1,
-  maxRetries: 0 // We handle retries manually for better logging
+  maxRetries: 0 // retry if model fails for some reason
 });
 
 /**
  * HIGH-RELIABILITY SCORING ENGINE
  * Explicitly tries Lite, Pro, and then Flash with manual retries and logging.
  */
+
+
 async function evaluateQuestion({ input, classCode, topicName }) {
   const models = [
     { name: "gemini-2.5-flash", label: "Standard (Primary - Most Stable)" },

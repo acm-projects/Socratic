@@ -467,9 +467,9 @@ router.post('/chat/stream', async (req, res, next) => {
       title: sessionTitle
     });
 
-    // ── 2 & 4. Score (fire-and-forget) + Vector search ───────────────────────
-    // Scoring fires immediately but we do NOT block on it.
-    // We only block on Pinecone (needed for context). Score is backfilled after stream.
+    // ── 2 & 4. Score + Vector search IN PARALLEL ──────────────────────────
+    // We run both simultaneously to cut TTFT. We wait for both so the real 
+    // score is available for the initial metadata and the AI prompt.
     const pageMatch    = message.match(/(?:page|slide|p\.|s\.)\s*(\d+)/i);
     const lectureMatch = message.match(/(?:lecture|lec|l\.)\s*(\d+)/i);
     const targetPage    = pageMatch    ? parseInt(pageMatch[1])    : null;
@@ -486,84 +486,83 @@ router.post('/chat/stream', async (req, res, next) => {
 
     const userFilter = userId ? { userId: { $eq: userId } } : undefined;
 
-    let currentScore = 0;
-    let currentReason = 'Evaluating...';
+    // ── 2, 3 & 4. Score + Context Building IN PARALLEL ───────────────────
+    // We run the LLM scoring and the Vector Search simultaneously.
+    // This ensures the stream starts as soon as the slowest of the two is done.
+    const [evalResult, context] = await Promise.all([
+      evaluateQuestion({ input: message, classCode, topicName: resolvedTopicName })
+        .catch(err => {
+          console.error('[Tutor/Stream] ❌ Scoring failed:', err.message);
+          return { score: 0, reason: 'Evaluation skipped.' };
+        }),
+      (async () => {
+        const vectorStore = await getClassVectorStore(classCode).catch(() => null);
+        if (!vectorStore) return 'No course documents found.';
 
-    // 🔥 Fire scoring immediately — no await (fire-and-forget)
-    const scoringPromise = evaluateQuestion({ input: message, classCode, topicName: resolvedTopicName })
-      .catch(err => {
-        console.error('[Tutor/Stream] ❌ Scoring failed:', err.message);
-        return { score: 0, reason: 'Evaluation skipped.' };
-      });
+        const userFilter = userId ? { userId: { $eq: userId } } : undefined;
+        let targetedContext = [];
 
-    // Only block on Pinecone — it's needed for context before we can stream
-    const vectorStore = await getClassVectorStore(classCode)
-      .catch(vecErr => {
-        console.warn('[Tutor/Stream] ⚠️ Pinecone unavailable:', vecErr.message);
-        return null;
-      });
+        // 1. Targeted search (if page/lecture specified)
+        if (targetPage) {
+          let targeted = userFilter
+            ? await vectorStore.similaritySearch(fullQuery, 3, { pageNumber: { $eq: targetPage }, ...userFilter })
+            : [];
+          if (targeted.length === 0)
+            targeted = await vectorStore.similaritySearch(fullQuery, 3, { pageNumber: { $eq: targetPage } });
+          
+          targeted.forEach(doc => {
+            const page   = doc.metadata.pageNumber || 'N/A';
+            const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
+            targetedContext.push(`[[PRIORITY DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`);
+          });
+        }
 
-    // Save user message with placeholder score=0. Backfilled after stream ends.
+        // 2. Broad search
+        let resultsWithScores = [];
+        try {
+          if (userFilter) {
+            const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 20, userFilter);
+            const highRelevance = userHits.filter(([, s]) => s >= 0.7);
+            resultsWithScores = highRelevance.length > 0 ? highRelevance : await vectorStore.similaritySearchWithScore(fullQuery, 20);
+          } else {
+            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 20);
+          }
+        } catch (err) {
+          console.warn('[Tutor/Stream] ⚠️ Pinecone search failed:', err.message);
+        }
+
+        let broadContext = [];
+        resultsWithScores.forEach(([doc]) => {
+          const page   = doc.metadata.pageNumber || 'N/A';
+          const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
+          const chunkStr = `[[DOCUMENT DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
+          if (targetLecture) {
+            const sourceRegex = new RegExp(`lecture[^a-zA-Z0-9]*0*${targetLecture}\\b`, 'i');
+            if (sourceRegex.test(source)) { targetedContext.push(chunkStr); return; }
+          }
+          broadContext.push(chunkStr);
+        });
+
+        const finalTargeted = targetedContext.slice(0, 30);
+        const finalBroad    = broadContext.slice(0, Math.max(0, 50 - finalTargeted.length));
+        const combined = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
+        return combined || 'No specific course documents were found matching this query.';
+      })()
+    ]);
+
+    const score  = evalResult.score;
+    const reason = evalResult.reason;
+
+    // ── 3. Save user message (Post-parallel) ───────────────────────────────
     const userMsgId = randomUUID();
     await sessionModel.saveChatMessage({
       id: userMsgId,
       session_id: chatId,
       sender: 'user',
       content: message,
-      score: currentScore,
-      reason: currentReason
+      score,
+      reason
     });
-
-    // ── 4b. Build context from vector results ───────────────────────────────
-    let targetedContext = [];
-    if (targetPage && vectorStore) {
-      let targeted = userFilter
-        ? await vectorStore.similaritySearch(fullQuery, 3, { pageNumber: { $eq: targetPage }, ...userFilter })
-        : [];
-      if (targeted.length === 0)
-        targeted = await vectorStore.similaritySearch(fullQuery, 3, { pageNumber: { $eq: targetPage } });
-      targeted.forEach(doc => {
-        const page   = doc.metadata.pageNumber || 'N/A';
-        const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
-        targetedContext.push(`[[PRIORITY DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`);
-      });
-    }
-
-    // Cap at 20 results (was 100) — top-20 by cosine score is plenty and faster
-    let resultsWithScores = [];
-    if (vectorStore) {
-      try {
-        if (userFilter) {
-          const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 20, userFilter);
-          const highRelevance = userHits.filter(([, s]) => s >= 0.7);
-          resultsWithScores = highRelevance.length > 0
-            ? highRelevance
-            : await vectorStore.similaritySearchWithScore(fullQuery, 20);
-        } else {
-          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 20);
-        }
-      } catch (err) {
-        console.warn('[Tutor/Stream] ⚠️ Pinecone search failed:', err.message);
-      }
-    }
-
-    let broadContext = [];
-    resultsWithScores.forEach(([doc]) => {
-      const page   = doc.metadata.pageNumber || 'N/A';
-      const source = doc.metadata.fileName || doc.metadata.source || 'Unknown Source';
-      const chunkStr = `[[DOCUMENT DATA >> SOURCE: ${source} | PAGE: ${page}]]\nCONTENT: ${doc.pageContent}`;
-      if (targetLecture) {
-        const sourceRegex = new RegExp(`lecture[^a-zA-Z0-9]*0*${targetLecture}\\b`, 'i');
-        if (sourceRegex.test(source)) { targetedContext.push(chunkStr); return; }
-      }
-      broadContext.push(chunkStr);
-    });
-
-    const finalTargeted = targetedContext.slice(0, 30);
-    const finalBroad    = broadContext.slice(0, Math.max(0, 50 - finalTargeted.length));
-    let context = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
-    if (!context || context.trim().length === 0)
-      context = 'No specific course documents were found matching this query. Answer using your general knowledge as a Socratic tutor.';
 
     // ── 5. Open SSE stream ──────────────────────────────────────────────────
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
@@ -573,8 +572,8 @@ router.post('/chat/stream', async (req, res, next) => {
     res.flushHeaders();
     sseStarted = true;
 
-    // Metadata sent immediately with placeholder score — score_update event follows after stream
-    sendEvent({ type: 'metadata', chatId, sessionId: chatId, isNewSession, score: currentScore, reason: currentReason });
+    // Send metadata with the real score immediately
+    sendEvent({ type: 'metadata', chatId, sessionId: chatId, isNewSession, score, reason });
 
     // ── 6. Stream LLM tokens ────────────────────────────────────────────────
     console.log(`[Tutor/Stream] 🌊 Starting stream (Topic: ${resolvedTopicName})`);
@@ -588,19 +587,15 @@ router.post('/chat/stream', async (req, res, next) => {
           input:   message,
           class:   classCode,
           topic:   resolvedTopicName,
-          score:   currentScore,
-          reason:  currentReason,
+          score,
+          reason,
           context
         },
         { configurable: { sessionId: chatId } }
       );
 
       for await (const chunk of langchainStream) {
-        // LangChain yields AIMessageChunk objects; extract text content
-        const text =
-          typeof chunk === 'string'
-            ? chunk
-            : (chunk?.content ?? '');
+        const text = typeof chunk === 'string' ? chunk : (chunk?.content ?? '');
         if (text) {
           aiContent += text;
           sendEvent({ type: 'chunk', content: text });
@@ -630,28 +625,18 @@ router.post('/chat/stream', async (req, res, next) => {
       content: aiContent
     });
 
-    // ── 7b. Backfill real score now that scoring has had time to complete ───
-    const evalResult = await scoringPromise;
-    const finalScore  = evalResult.score;
-    const finalReason = evalResult.reason;
-    sessionModel.updateChatMessageScore(userMsgId, finalScore, finalReason)
-      .catch(err => console.warn('[Tutor/Stream] ⚠️ Failed to backfill score:', err.message));
-
-    // Send score_update so the frontend can display the real score
-    sendEvent({ type: 'score_update', score: finalScore, reason: finalReason });
-
-    // ── 8. Side effects (fire and forget — identical to /chat) ──────────────
+    // ── 8. Side effects (fire and forget) ──────────────────────────────────
     userStatsModel.incrementAiMessages(userId).catch(err =>
       console.warn('[Tutor/Stream] ⚠️ Failed to increment ai_messages:', err.message)
     );
 
-    const xpToAward = userStatsModel.CHAT_XP_MAP[finalScore] || 10;
+    const xpToAward = userStatsModel.CHAT_XP_MAP[score] || 10;
     userStatsModel.awardXP(userId, 'chat', xpToAward).catch(err =>
       console.warn('[Tutor/Stream] ⚠️ Failed to award XP:', err.message)
     );
 
     quizModel.updateTopicMetrics({
-      userId, classCode, topicId: topic.id, questionsAsked: 1, score: finalScore
+      userId, classCode, topicId: topic.id, questionsAsked: 1, score
     }).catch(err => console.warn('[Tutor/Stream] ⚠️ Failed to update heatmap:', err.message));
 
     pool.query('SELECT name FROM classes WHERE class_code = $1', [classCode])
