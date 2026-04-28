@@ -43,7 +43,7 @@ class GeminiEmbeddings {
   constructor() {
     this.model = new GoogleGenerativeAIEmbeddings({
       apiKey: process.env.GEMINI_API_KEY,
-      modelName: "gemini-embedding-001",
+      modelName: "gemini-embedding-002",
     });
   }
 
@@ -79,7 +79,7 @@ class MultiNamespaceStore {
       ]);
     };
 
-    const results = await Promise.all(this.stores.map(store => 
+    const results = await Promise.all(this.stores.map(store =>
       searchWithTimeout(store).catch(err => {
         console.warn(`[VectorStore] ⚠️  Namespace search failed/timed out: ${err.message}`);
         return [];
@@ -99,7 +99,7 @@ class MultiNamespaceStore {
       ]);
     };
 
-    const results = await Promise.all(this.stores.map(store => 
+    const results = await Promise.all(this.stores.map(store =>
       searchWithTimeout(store).catch(err => {
         console.warn(`[VectorStore] ⚠️  Namespace search failed/timed out: ${err.message}`);
         return [];
@@ -172,7 +172,7 @@ async function getClassVectorStore(classCode) {
   }));
 
   if (stores.length === 1) return stores[0];
-  
+
   console.log(`[VectorStore] 🌐 Multi-search active across ${activeNamespaces.length} namespaces: ${activeNamespaces.join(', ')}`);
   return new MultiNamespaceStore(stores);
 }
@@ -199,11 +199,11 @@ async function getVectorStore(namespace = '') {
   const embeddings = new GeminiEmbeddings();
 
   // Create the store instance attached to the specific namespace
-  const storeInstance = await PineconeStore.fromExistingIndex(embeddings, { 
+  const storeInstance = await PineconeStore.fromExistingIndex(embeddings, {
     pineconeIndex,
-    namespace: namespace || undefined 
+    namespace: namespace || undefined
   });
-  
+
   vectorStoreInstances[namespace] = storeInstance;
 
   // Seed index if this specific namespace is empty
@@ -213,19 +213,54 @@ async function getVectorStore(namespace = '') {
 
   if (totalVectors === 0 && process.env.FORCE_RESEED !== 'true') {
     console.log(`[VectorStore] Namespace '${namespace || 'default'}' is empty — seeding course data...`);
-    const vectors = await embeddings.embedDocuments(courseData);
+    // Embed with retry for Gemini rate limits
+    let vectors;
+    const maxEmbedRetries = 3;
+    for (let attempt = 1; attempt <= maxEmbedRetries; attempt++) {
+      try {
+        vectors = await embeddings.embedDocuments(courseData);
+        break;
+      } catch (embedErr) {
+        const isRetryable = embedErr.message && (
+          embedErr.message.includes("429") ||
+          embedErr.message.includes("RESOURCE_EXHAUSTED") ||
+          embedErr.message.includes("quota") ||
+          embedErr.message.includes("503")
+        );
+        if (isRetryable && attempt < maxEmbedRetries) {
+          const waitTime = attempt === 1 ? 5000 : 15000;
+          console.warn(`[VectorStore] ⚠️ Embed rate limited (attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
+          await new Promise(res => setTimeout(res, waitTime));
+        } else {
+          console.error(`[VectorStore] ❌ Embed failed after ${attempt} attempts:`, embedErr.message);
+          throw embedErr;
+        }
+      }
+    }
+
     const records = courseData.map((text, i) => ({
       id: `course-${i}`,
       values: vectors[i],
       metadata: { text, source: 'course-data', chunk: i },
     }));
-    
-    // Upsert directly into the given namespace
+
+    // Upsert with retry
     const targetIndex = namespace ? pineconeIndex.namespace(namespace) : pineconeIndex;
-    
     const batchSize = 100;
     for (let i = 0; i < records.length; i += batchSize) {
-      await targetIndex.upsert({ records: records.slice(i, i + batchSize) });
+      let upserted = false;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          await targetIndex.upsert({ records: records.slice(i, i + batchSize) });
+          upserted = true;
+          break;
+        } catch (upsertErr) {
+          const waitTime = attempt === 1 ? 3000 : 10000;
+          console.warn(`[VectorStore] ⚠️ Upsert batch ${i} failed (attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
+          await new Promise(res => setTimeout(res, waitTime));
+          if (attempt === 3) throw upsertErr;
+        }
+      }
     }
     console.log(`[VectorStore] Seeded ${courseData.length} vectors into Pinecone namespace: '${namespace || 'default'}'.`);
   } else {
@@ -254,15 +289,15 @@ async function deleteUserClassEmbeddings(classCode, userId) {
     console.warn(`[VectorStore] ⚠️ Cannot delete user embeddings for class ${classCode} without a userId.`);
     return;
   }
-  
+
   const namespace = `class-${classCode.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
   const indexName = process.env.PINECONE_INDEX || 'socratic-tutor';
-  
+
   try {
     const pineconeIndex = pinecone.Index(indexName);
     const targetIndex = pineconeIndex.namespace(namespace);
-    
+
     // Pinecone supports deleteMany with metadata filter
     await targetIndex.deleteMany({ filter: { userId: { '$eq': userId } } });
     console.log(`[VectorStore] 🗑️ Deleted Pinecone embeddings for user ${userId} in namespace ${namespace}`);
