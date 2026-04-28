@@ -172,7 +172,7 @@ async function ingestDocumentsWithVision(files, classCode, docType = 'document',
   const VISION_MODELS = [
     "gemini-2.5-flash",
     "gemini-2.5-pro",
-    "gemini-3.0-flash"
+    "gemini-3-flash-preview"
   ];
 
   let totalIngested = 0;

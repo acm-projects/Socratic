@@ -115,7 +115,7 @@ async function evaluateQuestion({ input, classCode, topicName }) {
   const models = [
     { name: "gemini-2.5-flash", label: "Standard (Primary - Most Stable)" },
     { name: "gemini-2.5-pro", label: "Pro (High Tokens Fallback)" },
-    { name: "gemini-3.0-flash", label: "Lite (Speed Fallback)" }
+    { name: "gemini-3-flash-preview", label: "Lite (Speed Fallback)" }
   ];
 
   const scoringPrompt = await evaluatorPrompt.format({
