@@ -174,10 +174,10 @@ router.post('/chat', async (req, res, next) => {
       try {
         if (userFilter) {
           // FIRST PASS: Search specifically for THIS user's uploaded documents (slides, notes, etc.)
-          const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 100, userFilter);
-          
+          const userHits = await vectorStore.similaritySearchWithScore(fullQuery, 30, userFilter);
+
           // RELEVANCE THRESHOLD: If the user has high-quality hits in their own data, use THEM ONLY.
-          const HIGH_RELEVANCE = 0.7; 
+          const HIGH_RELEVANCE = 0.7;
           const relevantUserHits = userHits.filter(([doc, score]) => score >= HIGH_RELEVANCE);
 
           if (relevantUserHits.length > 0) {
@@ -185,13 +185,13 @@ router.post('/chat', async (req, res, next) => {
             resultsWithScores = relevantUserHits;
           } else if (userHits.length > 0) {
             console.log(`[Tutor] ⚠️ User ${userId} has docs, but they aren't highly relevant (Best: ${userHits[0][1].toFixed(2)}). Falling back to class search.`);
-            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 30);
           } else {
             console.log(`[Tutor] 📚 User ${userId} has no personal uploads. Searching class-wide documents...`);
-            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+            resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 30);
           }
         } else {
-          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 100);
+          resultsWithScores = await vectorStore.similaritySearchWithScore(fullQuery, 30);
         }
       } catch (err) {
         console.warn('[Tutor] ⚠️ Pinecone search failed:', err.message);
@@ -219,7 +219,7 @@ router.post('/chat', async (req, res, next) => {
     // --- ADAPTIVE CONTEXT SLICING ---
     // Gemini has huge context; we want to be as aggressive as possible (top 50 chunks total).
     // Strategy: Take all targeted hits first (up to 25), then fill the remaining budget with broad search.
-    const MAX_TOTAL_CHUNKS = 50;
+    const MAX_TOTAL_CHUNKS = 30;
     const MAX_TARGETED = 30; // Prioritize specific matches
 
     const finalTargeted = targetedContext.slice(0, MAX_TARGETED);
@@ -262,7 +262,7 @@ router.post('/chat', async (req, res, next) => {
         const is503 = err.message?.includes('503') || err.message?.includes('Service Unavailable');
         const is429 = err.message?.includes('429');
         if ((is503 || is429) && attempt < MAX_TUTOR_RETRIES) {
-          const delay = attempt * 1500;
+          const delay = attempt === 1 ? 5000 : 12000;
           console.warn(`[Tutor] ⚠️ Attempt ${attempt} failed, retrying in ${delay}ms...`);
           await new Promise(r => setTimeout(r, delay));
         } else {
