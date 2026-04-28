@@ -107,7 +107,7 @@ Return ONLY JSON matching this schema:
 
   console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
 
-  const modelsToTry = ["gemini-2.5-flash", "gemini-2.5-pro"];
+  const modelsToTry = ["gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.5-pro"];
   let lastError;
 
   for (const modelId of modelsToTry) {

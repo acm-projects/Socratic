@@ -41,18 +41,32 @@ const courseData = [
 
 class GeminiEmbeddings {
   constructor() {
-    this.model = new GoogleGenerativeAIEmbeddings({
+    this.primary = new GoogleGenerativeAIEmbeddings({
       apiKey: process.env.GEMINI_API_KEY,
-      modelName: "gemini-embedding-002",
+      modelName: "gemini-embedding-001",
+    });
+    this.fallback = new GoogleGenerativeAIEmbeddings({
+      apiKey: process.env.GEMINI_API_KEY,
+      modelName: "gemini-embedding-2",
     });
   }
 
   async embedDocuments(documents) {
-    return this.model.embedDocuments(documents);
+    try {
+      return await this.primary.embedDocuments(documents);
+    } catch (err) {
+      console.warn(`[VectorStore] Primary embedding failed, trying fallback:`, err.message);
+      return await this.fallback.embedDocuments(documents);
+    }
   }
 
   async embedQuery(document) {
-    return this.model.embedQuery(document);
+    try {
+      return await this.primary.embedQuery(document);
+    } catch (err) {
+      console.warn(`[VectorStore] Primary embedding failed, trying fallback:`, err.message);
+      return await this.fallback.embedQuery(document);
+    }
   }
 }
 
@@ -213,54 +227,19 @@ async function getVectorStore(namespace = '') {
 
   if (totalVectors === 0 && process.env.FORCE_RESEED !== 'true') {
     console.log(`[VectorStore] Namespace '${namespace || 'default'}' is empty — seeding course data...`);
-    // Embed with retry for Gemini rate limits
-    let vectors;
-    const maxEmbedRetries = 3;
-    for (let attempt = 1; attempt <= maxEmbedRetries; attempt++) {
-      try {
-        vectors = await embeddings.embedDocuments(courseData);
-        break;
-      } catch (embedErr) {
-        const isRetryable = embedErr.message && (
-          embedErr.message.includes("429") ||
-          embedErr.message.includes("RESOURCE_EXHAUSTED") ||
-          embedErr.message.includes("quota") ||
-          embedErr.message.includes("503")
-        );
-        if (isRetryable && attempt < maxEmbedRetries) {
-          const waitTime = attempt === 1 ? 5000 : 15000;
-          console.warn(`[VectorStore] ⚠️ Embed rate limited (attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
-          await new Promise(res => setTimeout(res, waitTime));
-        } else {
-          console.error(`[VectorStore] ❌ Embed failed after ${attempt} attempts:`, embedErr.message);
-          throw embedErr;
-        }
-      }
-    }
-
+    const vectors = await embeddings.embedDocuments(courseData);
     const records = courseData.map((text, i) => ({
       id: `course-${i}`,
       values: vectors[i],
       metadata: { text, source: 'course-data', chunk: i },
     }));
 
-    // Upsert with retry
+    // Upsert directly into the given namespace
     const targetIndex = namespace ? pineconeIndex.namespace(namespace) : pineconeIndex;
+
     const batchSize = 100;
     for (let i = 0; i < records.length; i += batchSize) {
-      let upserted = false;
-      for (let attempt = 1; attempt <= 3; attempt++) {
-        try {
-          await targetIndex.upsert({ records: records.slice(i, i + batchSize) });
-          upserted = true;
-          break;
-        } catch (upsertErr) {
-          const waitTime = attempt === 1 ? 3000 : 10000;
-          console.warn(`[VectorStore] ⚠️ Upsert batch ${i} failed (attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
-          await new Promise(res => setTimeout(res, waitTime));
-          if (attempt === 3) throw upsertErr;
-        }
-      }
+      await targetIndex.upsert({ records: records.slice(i, i + batchSize) });
     }
     console.log(`[VectorStore] Seeded ${courseData.length} vectors into Pinecone namespace: '${namespace || 'default'}'.`);
   } else {

@@ -231,16 +231,6 @@ router.post('/chat', async (req, res, next) => {
     // Combine targeted and broad context (Targeted first)
     let context = [...finalTargeted, ...finalBroad].join('\n--- NEXT CHUNK ---\n');
 
-    // --- ENHANCEMENT: Inject Structured Syllabus Data (Database-driven) ---
-    try {
-      const syllabusContext = await syllabusService.getSyllabusContext(classCode);
-      if (syllabusContext) {
-        context = syllabusContext + "\n" + context;
-        console.log(`[Tutor] 📋 Injected structured syllabus context for ${classCode}`);
-      }
-    } catch (syllErr) {
-      console.warn(`[Tutor] ⚠️ Syllabus context injection failed:`, syllErr.message);
-    }
 
     if (!context || context.trim().length === 0) {
       context = "No specific course documents were found matching this query. Answer using your general knowledge as a Socratic tutor.";
