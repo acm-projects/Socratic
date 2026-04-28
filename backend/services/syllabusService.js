@@ -37,13 +37,38 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   let contentParts = [];
 
   if (fileBuffer) {
-    console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
-    contentParts.push({
-      inlineData: {
-        data: Buffer.from(fileBuffer).toString("base64"),
-        mimeType: "application/pdf"
+    // Parse PDF to text first — text payloads are ~10x smaller than binary blobs
+    // and are far less likely to be throttled by the Gemini API under high load.
+    if (PDFParse) {
+      try {
+        console.log("[Syllabus] 📄 Parsing PDF to text for lighter Gemini payload...");
+        const parsed = await PDFParse(fileBuffer);
+        const extractedText = parsed.text?.trim();
+        if (extractedText && extractedText.length > 100) {
+          contentParts.push({ text: `Syllabus Text:\n${extractedText}` });
+          console.log(`[Syllabus] 📄 PDF parsed to text (${extractedText.length} chars). Sending as text.`);
+        } else {
+          throw new Error("Parsed text too short, falling back to binary.");
+        }
+      } catch (parseErr) {
+        console.warn("[Syllabus] ⚠️ PDF text parse failed, falling back to binary blob:", parseErr.message);
+        contentParts.push({
+          inlineData: {
+            data: Buffer.from(fileBuffer).toString("base64"),
+            mimeType: "application/pdf"
+          }
+        });
       }
-    });
+    } else {
+      // pdf-parse not available, send binary blob directly
+      console.log("[Syllabus] 📄 Preparing raw PDF for Gemini (pdf-parse unavailable)...");
+      contentParts.push({
+        inlineData: {
+          data: Buffer.from(fileBuffer).toString("base64"),
+          mimeType: "application/pdf"
+        }
+      });
+    }
   } else if (rawTextFallback) {
     contentParts.push({ text: `Syllabus Text:\n${rawTextFallback}` });
   } else {
@@ -117,7 +142,7 @@ Return ONLY JSON matching this schema:
       generationConfig: { responseMimeType: "application/json" }
     });
 
-    const maxRetriesPerModel = 3;
+    const maxRetriesPerModel = 2;
     for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
       try {
         const result = await model.generateContent(contentParts);
