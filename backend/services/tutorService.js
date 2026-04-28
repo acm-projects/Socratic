@@ -255,7 +255,7 @@ SOURCE CITATION:
 - Always include specific page numbers when available. Format: "pages 6 and 10" or "pages 3–5".
 - Example: " **Source**: You can find more about this in Lecture 15, pages 6 and 10."
 - Example: " **Source**: This is covered in Week 3 slides (pages 2–4) and Chapter 4 of the textbook (page 87)."
-- If multiple sources were used, list them concisely in one sentence.
+- Only mention sources from slides do not mention the textbook! (ex You can find more about this in Lecture 15, pages 5, 6, 7, 16, and 34.\n\nDoes this explanation clarify why the CLT is so robust in its application?", DONT MENTION TEXTBOOK! even if you find it with RAG, try to save time and not even look through textbook if possible!)
 - **If no relevant context was found in the COURSE CONTEXT, do NOT add a source note.**
 
 === COURSE CONTEXT INCORPORATED FROM LECTURES/TEXTBOOK ===
