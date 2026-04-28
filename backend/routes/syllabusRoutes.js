@@ -104,14 +104,14 @@ router.post('/save', async (req, res, next) => {
 // Helper to normalize class codes (CS/CE/SE3345 -> CS3345, CS-3341.001 -> CS3341)
 const normalizeCode = (code) => {
   if (!code) return null;
-  
+
   const alphaMatch = code.match(/[a-zA-Z]+/);
   const numericMatch = code.match(/\d+/);
-  
+
   if (alphaMatch && numericMatch) {
     return (alphaMatch[0] + numericMatch[0]).toUpperCase().trim();
   }
-  
+
   // Fallback to basic cleaning if matches fail
   return code.split('.')[0].replace(/[^a-zA-Z0-9]/g, '').toUpperCase().trim();
 };
@@ -142,7 +142,7 @@ router.post('/upload', upload.any(), async (req, res, next) => {
     let extractedData = null;
     try {
       extractedData = await syllabusService.extractSyllabusData(file.buffer, null);
-      
+
       // If class_code wasn't provided, use the one from AI
       const finalClassCode = class_code || extractedData?.courseCode;
 
@@ -185,7 +185,7 @@ router.post('/upload', upload.any(), async (req, res, next) => {
 
     } catch (extractErr) {
       console.warn(`[Syllabus] ⚠️ Automated extraction failed:`, extractErr.message);
-      
+
       // If extraction failed but we have a class_code, we at least save the URL
       if (class_code) {
         const subjectMatch = class_code.match(/[a-zA-Z]+/);
@@ -198,7 +198,7 @@ router.post('/upload', upload.any(), async (req, res, next) => {
         );
         return res.json({ message: "Syllabus uploaded, but extraction failed.", class_code });
       }
-      
+
       res.status(400).json({ error: "Syllabus upload failed: Could not determine class code." });
     }
   } catch (error) {

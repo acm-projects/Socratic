@@ -117,7 +117,7 @@ Return ONLY JSON matching this schema:
       generationConfig: { responseMimeType: "application/json" }
     });
 
-    const maxRetriesPerModel = 2;
+    const maxRetriesPerModel = 3;
     for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
       try {
         const result = await model.generateContent(contentParts);
@@ -141,10 +141,16 @@ Return ONLY JSON matching this schema:
       } catch (error) {
         lastError = error;
         // Handle 503 (Service Unavailable) or 429 (Rate Limit) with wait and retry
-        const isRetryable = error.message && (error.message.includes("503") || error.message.includes("Service Unavailable") || error.message.includes("429"));
+        const isRetryable = error.message && (
+          error.message.includes("503") ||
+          error.message.includes("Service Unavailable") ||
+          error.message.includes("429") ||
+          error.message.includes("RESOURCE_EXHAUSTED") ||
+          error.message.includes("quota")
+        );
 
         if (isRetryable && attempt < maxRetriesPerModel) {
-          const waitTime = Math.pow(2, attempt) * 1000;
+          const waitTime = attempt === 1 ? 5000 : 10000;
           console.warn(`[Syllabus] ⚠️  Retryable Error (${modelId}, attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
           await new Promise(resolve => setTimeout(resolve, waitTime));
           continue; // Try same model again

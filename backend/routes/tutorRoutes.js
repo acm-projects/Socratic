@@ -262,7 +262,7 @@ router.post('/chat', async (req, res, next) => {
         const is503 = err.message?.includes('503') || err.message?.includes('Service Unavailable');
         const is429 = err.message?.includes('429');
         if ((is503 || is429) && attempt < MAX_TUTOR_RETRIES) {
-          const delay = attempt === 1 ? 5000 : 12000;
+          const delay = attempt === 1 ? 5000 : 7000;
           console.warn(`[Tutor] ⚠️ Attempt ${attempt} failed, retrying in ${delay}ms...`);
           await new Promise(r => setTimeout(r, delay));
         } else {
