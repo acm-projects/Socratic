@@ -26,30 +26,6 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
     throw new Error("Missing GEMINI_API_KEY in backend/.env file.");
   }
 
-  // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    generationConfig: { responseMimeType: "application/json" }
-  });
-
-  // PREPARE CONTENT (Direct PDF if available, otherwise text)
-  let contentParts = [];
-
-  if (fileBuffer) {
-    console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
-    contentParts.push({
-      inlineData: {
-        data: Buffer.from(fileBuffer).toString("base64"),
-        mimeType: "application/pdf"
-      }
-    });
-  } else if (rawTextFallback) {
-    contentParts.push({ text: `Syllabus Text:\n${rawTextFallback}` });
-  } else {
-    throw new Error("No PDF file or pdfText provided.");
-  }
-
   const prompt = `Extract all relevant course information into the requested JSON format.
 
 TOPIC EXTRACTION RULES (apply in strict order):
@@ -129,7 +105,7 @@ Return ONLY JSON matching this schema:
     const claudePrompt = prompt + `\n\n=== SYLLABUS TEXT ===\n${pdfText.slice(0, 50000)}`;
 
     const response = await anthropic.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: "claude-haiku-4-5",
       max_tokens: 4096,
       messages: [{ role: "user", content: claudePrompt }],
       system: "You are a syllabus extraction expert. Return ONLY valid JSON matching the requested schema. No conversational text."
