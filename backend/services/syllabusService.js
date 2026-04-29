@@ -29,7 +29,7 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
+    model: "gemini-2.5-flash-lite",
     generationConfig: { responseMimeType: "application/json" }
   });
 
@@ -135,7 +135,7 @@ Return ONLY JSON matching this schema:
   console.log(`[Syllabus] 📦 Content parts count: ${contentParts.length}`);
   console.log("[Syllabus] 🤖 Starting Gemini extraction loop...");
 
-  const modelsToTry = ["gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.5-pro"];
+  const modelsToTry = ["gemini-2.5-flash-lite", "gemini-3.1-flash-lite-preview", "gemini-2.5-pro"];
   let lastError;
   let totalAttempts = 0;
 
