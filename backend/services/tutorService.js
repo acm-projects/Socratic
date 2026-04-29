@@ -1,4 +1,4 @@
-const { ChatGoogleGenerativeAI } = require('@langchain/google-genai');
+const { ChatAnthropic } = require('@langchain/anthropic');
 const { ChatPromptTemplate, MessagesPlaceholder, PromptTemplate } = require('@langchain/core/prompts');
 const { RunnableSequence, RunnableWithMessageHistory } = require('@langchain/core/runnables');
 const { StructuredOutputParser } = require('@langchain/core/output_parsers');
@@ -7,33 +7,34 @@ const { BaseChatMessageHistory } = require('@langchain/core/chat_history');
 const pool = require('../db');
 require('dotenv').config({ path: __dirname + '/../.env' });
 
-const TARGET_MODEL = "gemini-2.5-flash";
+// Claude Haiku is the primary model for all tutor and scoring tasks
+const TARGET_MODEL = "claude-haiku-4-5";
 
 // --- Robust LLM Configuration ---
 function getRobustLLM(temperature = 0.2, maxRetries = 1) {
-  const primary = new ChatGoogleGenerativeAI({
+  const primary = new ChatAnthropic({
     model: TARGET_MODEL,
-    apiKey: process.env.GEMINI_API_KEY,
+    apiKey: process.env.ANTHROPIC_API_KEY,
     temperature,
     maxRetries,
   });
 
-  const fallbackPro = new ChatGoogleGenerativeAI({
-    model: "gemini-2.5-pro",
-    apiKey: process.env.GEMINI_API_KEY,
+  const fallbackSonnet = new ChatAnthropic({
+    model: "claude-sonnet-4-5",
+    apiKey: process.env.ANTHROPIC_API_KEY,
     temperature,
     maxRetries: 1,
   });
 
-  const fallbackLite = new ChatGoogleGenerativeAI({
-    model: "gemini-3-flash-preview",
-    apiKey: process.env.GEMINI_API_KEY,
+  const fallbackHaiku = new ChatAnthropic({
+    model: "claude-3-5-haiku-20241022",
+    apiKey: process.env.ANTHROPIC_API_KEY,
     temperature,
     maxRetries: 1,
   });
 
   return primary.withFallbacks({
-    fallbacks: [fallbackLite, fallbackPro]
+    fallbacks: [fallbackHaiku, fallbackSonnet]
   });
 }
 
@@ -42,30 +43,29 @@ function getRobustLLM(temperature = 0.2, maxRetries = 1) {
  * Uses the Lite model for <1s latency.
  */
 function getFastLLM() {
-  const primary = new ChatGoogleGenerativeAI({
-    model: "gemini-2.5-flash-lite",
-    apiKey: process.env.GEMINI_API_KEY,
+  const primary = new ChatAnthropic({
+    model: TARGET_MODEL,
+    apiKey: process.env.ANTHROPIC_API_KEY,
     temperature: 0.1,
-    maxRetries: 2, // Non-zero retries for transient 503s
+    maxRetries: 2,
   });
 
-  // Fallback to high-token 2.0+ models as per user requirement
-  const fallbackPro = new ChatGoogleGenerativeAI({
-    model: "gemini-2.5-pro",
-    apiKey: process.env.GEMINI_API_KEY,
+  const fallbackHaiku = new ChatAnthropic({
+    model: "claude-3-5-haiku-20241022",
+    apiKey: process.env.ANTHROPIC_API_KEY,
     temperature: 0.1,
     maxRetries: 1,
   });
 
-  const fallbackLite = new ChatGoogleGenerativeAI({
-    model: "gemini-3-flash-preview",
-    apiKey: process.env.GEMINI_API_KEY,
+  const fallbackSonnet = new ChatAnthropic({
+    model: "claude-sonnet-4-5",
+    apiKey: process.env.ANTHROPIC_API_KEY,
     temperature: 0.1,
     maxRetries: 1,
   });
 
   return primary.withFallbacks({
-    fallbacks: [fallbackLite, fallbackPro]
+    fallbacks: [fallbackHaiku, fallbackSonnet]
   });
 }
 
@@ -98,11 +98,11 @@ const evaluatorPrompt = PromptTemplate.fromTemplate(`
   {format_instructions}
 `);
 
-const getScoringModel = (modelName) => new ChatGoogleGenerativeAI({
+const getScoringModel = (modelName) => new ChatAnthropic({
   model: modelName,
-  apiKey: process.env.GEMINI_API_KEY,
+  apiKey: process.env.ANTHROPIC_API_KEY,
   temperature: 0.1,
-  maxRetries: 0 // retry if model fails for some reason
+  maxRetries: 0
 });
 
 /**
@@ -113,9 +113,9 @@ const getScoringModel = (modelName) => new ChatGoogleGenerativeAI({
 
 async function evaluateQuestion({ input, classCode, topicName }) {
   const models = [
-    { name: "gemini-2.5-flash", label: "Standard (Primary - Most Stable)" },
-    { name: "gemini-2.5-pro", label: "Pro (High Tokens Fallback)" },
-    { name: "gemini-3-flash-preview", label: "Lite (Speed Fallback)" }
+    { name: "claude-haiku-4-5", label: "Haiku (Primary - Most Stable)" },
+    { name: "claude-3-5-haiku-20241022", label: "Haiku 3.5 (Fallback)" },
+    { name: "claude-sonnet-4-5", label: "Sonnet (High Quality Fallback)" }
   ];
 
   const scoringPrompt = await evaluatorPrompt.format({
