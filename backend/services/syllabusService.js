@@ -130,13 +130,17 @@ Return ONLY JSON matching this schema:
 
   contentParts.unshift({ text: prompt });
 
-  console.log("[Syllabus] 🤖 Sending direct PDF to Native Google SDK...");
+  const payloadType = contentParts.some(p => p.inlineData) ? 'binary PDF blob' : 'parsed text';
+  console.log(`[Syllabus] 📦 Payload type: ${payloadType}`);
+  console.log(`[Syllabus] 📦 Content parts count: ${contentParts.length}`);
+  console.log("[Syllabus] 🤖 Starting Gemini extraction loop...");
 
   const modelsToTry = ["gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.5-pro"];
   let lastError;
+  let totalAttempts = 0;
 
   for (const modelId of modelsToTry) {
-    console.log(`[Syllabus] 🤖 Attempting extraction with model: ${modelId}...`);
+    console.log(`[Syllabus] 🔄 Switching to model: ${modelId}`);
     const model = genAI.getGenerativeModel({
       model: modelId,
       generationConfig: { responseMimeType: "application/json" }
@@ -144,10 +148,16 @@ Return ONLY JSON matching this schema:
 
     const maxRetriesPerModel = 2;
     for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
+      totalAttempts++;
+      console.log(`[Syllabus] 🚀 [${modelId}] Attempt ${attempt}/${maxRetriesPerModel} (global attempt #${totalAttempts}) — calling Gemini API...`);
       try {
+        const callStart = Date.now();
         const result = await model.generateContent(contentParts);
         const response = await result.response;
+        const elapsed = Date.now() - callStart;
+        console.log(`[Syllabus] ⏱️  [${modelId}] Gemini responded in ${elapsed}ms`);
         const aiResponseText = response.text();
+        console.log(`[Syllabus] 📝 [${modelId}] Raw response length: ${aiResponseText.length} chars`);
         const aiGeneratedData = JSON.parse(aiResponseText);
 
         console.log(`[Syllabus] 📄 Raw AI Output received from ${modelId}:`, JSON.stringify(aiGeneratedData, null, 2));
@@ -156,33 +166,39 @@ Return ONLY JSON matching this schema:
         console.log("[Syllabus] 🔍 Validating against schema...");
         try {
           const validatedData = syllabusSchema.parse(aiGeneratedData);
-          console.log(`[Syllabus] ✅ Validation successful using ${modelId}.`);
+          console.log(`[Syllabus] ✅ Validation successful using ${modelId} (attempt #${totalAttempts}).`);
           return validatedData;
         } catch (zodErr) {
           console.error(`[Syllabus] ❌ Schema Validation FAILED for ${modelId}.`);
+          console.error(`[Syllabus] ❌ Zod errors:`, JSON.stringify(zodErr.errors, null, 2));
           zodErr.rawData = aiGeneratedData;
           throw zodErr;
         }
       } catch (error) {
         lastError = error;
-        // Handle 503 (Service Unavailable) or 429 (Rate Limit) with wait and retry
-        const isRetryable = error.message && (
-          error.message.includes("503") ||
-          error.message.includes("Service Unavailable") ||
-          error.message.includes("429") ||
-          error.message.includes("RESOURCE_EXHAUSTED") ||
-          error.message.includes("quota")
-        );
+        const is503 = error.message?.includes("503") || error.message?.includes("Service Unavailable");
+        const is429 = error.message?.includes("429");
+        const isExhausted = error.message?.includes("RESOURCE_EXHAUSTED") || error.message?.includes("quota");
+        const isRetryable = is503 || is429 || isExhausted;
+
+        console.error(`[Syllabus] ❌ [${modelId}] Attempt ${attempt} FAILED:`);
+        console.error(`[Syllabus]    Error type : ${error.name || 'Unknown'}`);
+        console.error(`[Syllabus]    Message    : ${error.message}`);
+        console.error(`[Syllabus]    Is 503     : ${is503}`);
+        console.error(`[Syllabus]    Is 429     : ${is429}`);
+        console.error(`[Syllabus]    Is EXHAUSTED: ${isExhausted}`);
+        console.error(`[Syllabus]    Is retryable: ${isRetryable}`);
 
         if (isRetryable && attempt < maxRetriesPerModel) {
           const waitTime = attempt === 1 ? 5000 : 10000;
-          console.warn(`[Syllabus] ⚠️  Retryable Error (${modelId}, attempt ${attempt}). Retrying in ${waitTime / 1000}s...`);
+          console.warn(`[Syllabus] ⏳ [${modelId}] Retryable error. Waiting ${waitTime / 1000}s before retry...`);
           await new Promise(resolve => setTimeout(resolve, waitTime));
-          continue; // Try same model again
+          continue;
         }
 
-        console.error(`[Syllabus] ❌ Extraction failed for ${modelId} (Attempt ${attempt}):`, error.message);
-        break; // Break retry loop, try next model
+        console.error(`[Syllabus] ⏭️  [${modelId}] No more retries (attempt=${attempt}, maxRetries=${maxRetriesPerModel}, retryable=${isRetryable}). Moving to next model.`);
+        break;
+
       }
     }
   }
