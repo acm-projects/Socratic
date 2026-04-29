@@ -29,7 +29,7 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   // NATIVE GOOGLE SDK EXTRACTION (Optimized for speed/efficiency)
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-2.5-flash",
     generationConfig: { responseMimeType: "application/json" }
   });
 
@@ -37,38 +37,13 @@ const extractSyllabusData = async (fileBuffer, rawTextFallback) => {
   let contentParts = [];
 
   if (fileBuffer) {
-    // Parse PDF to text first — text payloads are ~10x smaller than binary blobs
-    // and are far less likely to be throttled by the Gemini API under high load.
-    if (PDFParse) {
-      try {
-        console.log("[Syllabus] 📄 Parsing PDF to text for lighter Gemini payload...");
-        const parsed = await PDFParse(fileBuffer);
-        const extractedText = parsed.text?.trim();
-        if (extractedText && extractedText.length > 100) {
-          contentParts.push({ text: `Syllabus Text:\n${extractedText}` });
-          console.log(`[Syllabus] 📄 PDF parsed to text (${extractedText.length} chars). Sending as text.`);
-        } else {
-          throw new Error("Parsed text too short, falling back to binary.");
-        }
-      } catch (parseErr) {
-        console.warn("[Syllabus] ⚠️ PDF text parse failed, falling back to binary blob:", parseErr.message);
-        contentParts.push({
-          inlineData: {
-            data: Buffer.from(fileBuffer).toString("base64"),
-            mimeType: "application/pdf"
-          }
-        });
+    console.log("[Syllabus] 📄 Preparing raw PDF for Gemini...");
+    contentParts.push({
+      inlineData: {
+        data: Buffer.from(fileBuffer).toString("base64"),
+        mimeType: "application/pdf"
       }
-    } else {
-      // pdf-parse not available, send binary blob directly
-      console.log("[Syllabus] 📄 Preparing raw PDF for Gemini (pdf-parse unavailable)...");
-      contentParts.push({
-        inlineData: {
-          data: Buffer.from(fileBuffer).toString("base64"),
-          mimeType: "application/pdf"
-        }
-      });
-    }
+    });
   } else if (rawTextFallback) {
     contentParts.push({ text: `Syllabus Text:\n${rawTextFallback}` });
   } else {
@@ -128,84 +103,55 @@ Return ONLY JSON matching this schema:
   "topics": ["Apply all topic extraction rules above. Each entry is one clean, specific concept in Title Case. The word 'and' inside a topic is always lowercase. Never use '+'. Split compound entries unless inseparable. Strip filler openers. Minimum 15 entries for a full course."]
 }`;
 
-  contentParts.unshift({ text: prompt });
-
-  const payloadType = contentParts.some(p => p.inlineData) ? 'binary PDF blob' : 'parsed text';
-  console.log(`[Syllabus] 📦 Payload type: ${payloadType}`);
-  console.log(`[Syllabus] 📦 Content parts count: ${contentParts.length}`);
-  console.log("[Syllabus] 🤖 Starting Gemini extraction loop...");
-
-  const modelsToTry = ["gemini-2.5-flash-lite", "gemini-3.1-flash-lite-preview", "gemini-2.5-pro"];
-  let lastError;
-  let totalAttempts = 0;
-
-  for (const modelId of modelsToTry) {
-    console.log(`[Syllabus] 🔄 Switching to model: ${modelId}`);
-    const model = genAI.getGenerativeModel({
-      model: modelId,
-      generationConfig: { responseMimeType: "application/json" }
-    });
-
-    const maxRetriesPerModel = 2;
-    for (let attempt = 1; attempt <= maxRetriesPerModel; attempt++) {
-      totalAttempts++;
-      console.log(`[Syllabus] 🚀 [${modelId}] Attempt ${attempt}/${maxRetriesPerModel} (global attempt #${totalAttempts}) — calling Gemini API...`);
-      try {
-        const callStart = Date.now();
-        const result = await model.generateContent(contentParts);
-        const response = await result.response;
-        const elapsed = Date.now() - callStart;
-        console.log(`[Syllabus] ⏱️  [${modelId}] Gemini responded in ${elapsed}ms`);
-        const aiResponseText = response.text();
-        console.log(`[Syllabus] 📝 [${modelId}] Raw response length: ${aiResponseText.length} chars`);
-        const aiGeneratedData = JSON.parse(aiResponseText);
-
-        console.log(`[Syllabus] 📄 Raw AI Output received from ${modelId}:`, JSON.stringify(aiGeneratedData, null, 2));
-
-        // Validate with Zod
-        console.log("[Syllabus] 🔍 Validating against schema...");
-        try {
-          const validatedData = syllabusSchema.parse(aiGeneratedData);
-          console.log(`[Syllabus] ✅ Validation successful using ${modelId} (attempt #${totalAttempts}).`);
-          return validatedData;
-        } catch (zodErr) {
-          console.error(`[Syllabus] ❌ Schema Validation FAILED for ${modelId}.`);
-          console.error(`[Syllabus] ❌ Zod errors:`, JSON.stringify(zodErr.errors, null, 2));
-          zodErr.rawData = aiGeneratedData;
-          throw zodErr;
-        }
-      } catch (error) {
-        lastError = error;
-        const is503 = error.message?.includes("503") || error.message?.includes("Service Unavailable");
-        const is429 = error.message?.includes("429");
-        const isExhausted = error.message?.includes("RESOURCE_EXHAUSTED") || error.message?.includes("quota");
-        const isRetryable = is503 || is429 || isExhausted;
-
-        console.error(`[Syllabus] ❌ [${modelId}] Attempt ${attempt} FAILED:`);
-        console.error(`[Syllabus]    Error type : ${error.name || 'Unknown'}`);
-        console.error(`[Syllabus]    Message    : ${error.message}`);
-        console.error(`[Syllabus]    Is 503     : ${is503}`);
-        console.error(`[Syllabus]    Is 429     : ${is429}`);
-        console.error(`[Syllabus]    Is EXHAUSTED: ${isExhausted}`);
-        console.error(`[Syllabus]    Is retryable: ${isRetryable}`);
-
-        if (isRetryable && attempt < maxRetriesPerModel) {
-          const waitTime = attempt === 1 ? 5000 : 10000;
-          console.warn(`[Syllabus] ⏳ [${modelId}] Retryable error. Waiting ${waitTime / 1000}s before retry...`);
-          await new Promise(resolve => setTimeout(resolve, waitTime));
-          continue;
-        }
-
-        console.error(`[Syllabus] ⏭️  [${modelId}] No more retries (attempt=${attempt}, maxRetries=${maxRetriesPerModel}, retryable=${isRetryable}). Moving to next model.`);
-        break;
-
-      }
-    }
+  // NATIVE ANTHROPIC EXTRACTION (Optimized for reliability)
+  if (!process.env.ANTHROPIC_API_KEY) {
+    throw new Error("Missing ANTHROPIC_API_KEY in backend/.env file.");
   }
 
-  // If we reach here, all models failed
-  console.error("[Syllabus] 🛑 All models failed to extract syllabus data.");
-  throw lastError || new Error("Failed to extract syllabus data after trying multiple models.");
+  const Anthropic = require("@anthropic-ai/sdk");
+  const anthropic = new Anthropic.default({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+  console.log("[Syllabus] 🤖 Sending syllabus text to Claude 3.5 Haiku...");
+
+  try {
+    let pdfText = "";
+    if (fileBuffer && PDFParse) {
+      const pdfData = await PDFParse(fileBuffer);
+      pdfText = pdfData.text || "";
+    } else {
+      pdfText = rawTextFallback || "";
+    }
+
+    if (!pdfText.trim()) {
+      throw new Error("No text could be extracted from the syllabus PDF.");
+    }
+
+    const claudePrompt = prompt + `\n\n=== SYLLABUS TEXT ===\n${pdfText.slice(0, 50000)}`;
+
+    const response = await anthropic.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 4096,
+      messages: [{ role: "user", content: claudePrompt }],
+      system: "You are a syllabus extraction expert. Return ONLY valid JSON matching the requested schema. No conversational text."
+    });
+
+    const rawText = response.content[0].text;
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("Claude returned no JSON block");
+
+    const aiGeneratedData = JSON.parse(jsonMatch[0]);
+    console.log("[Syllabus] 📄 Raw AI Output received from Claude:", JSON.stringify(aiGeneratedData, null, 2));
+
+    // Validate with Zod
+    console.log("[Syllabus] 🔍 Validating against schema...");
+    const validatedData = syllabusSchema.parse(aiGeneratedData);
+    console.log("[Syllabus] ✅ Validation successful using Claude 3.5 Haiku.");
+    return validatedData;
+
+  } catch (error) {
+    console.error("[Syllabus] ❌ Claude Extraction failed:", error.message);
+    throw error;
+  }
 };
 
 const saveSyllabusData = async (payload) => {
