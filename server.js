@@ -841,9 +841,10 @@ app.post("/class-engagement", async (req, res) => {
 
 app.get("/classes/:code/materials", async (req, res) => {
   try {
+    const { user_id } = req.query;
     const result = await pool.query(
-      "SELECT * FROM course_materials WHERE class_code = $1 ORDER BY uploaded_at DESC",
-      [req.params.code]
+      "SELECT * FROM course_materials WHERE class_code = $1 AND user_id = $2 ORDER BY uploaded_at DESC",
+      [req.params.code, user_id]
     )
     res.json(result.rows)
   } catch (error) {
